@@ -32,3 +32,5 @@ numbers_drawer_right = (height_right_upper - height_drawer_extreme) // (height_d
 
 print("\nThe number of drawers to the left is  : ", numbers_drawer_left)
 print("\nThe number of drawers to the right is : ", numbers_drawer_right)
+
+# Test
