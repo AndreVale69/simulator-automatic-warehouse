@@ -9,3 +9,19 @@ def check_negative_value(string_to_print):
             break
 
     return value
+
+
+def check_answer(answer: str):
+    escape = False
+
+    while True:
+        if answer == "N":
+            escape = True
+            break
+        else:
+            if answer != "Y":
+                answer = str(input("Enter only Y or N if you wanna continue or no! Continue? [Y/N] "))
+            else:
+                break
+
+    return escape
