@@ -1,5 +1,5 @@
-from inspect import indentsize
-from operator import countOf
+#from inspect import indentsize     TODO REMOVE!
+#from operator import countOf       TODO REMOVE!
 import numpy as np
 import useful_functions as us_fun
 import bash_graphic_construction as bash_grap
@@ -8,45 +8,22 @@ import bash_graphic_construction as bash_grap
 __height_btw_drawers = 25
 __height_space = 50
 
-# Insert all information of automatic warehouse
-print("Enter all information of automatic warehouse below\n\n")
-
-print("Create left column...\n\n")
-
 # Contains the measurements of the size of the drawers
 type = np.dtype([("name", "U30"), ("height", "uint32")])
 data_left_column = np.array([], dtype=type)
+data_right_column = np.array([], dtype=type)
 
-escape = False
-index = 0
-while escape == False:
-    print (index)
-    choice = int(input("\nSelect:\n"
-                       "1) Enter 1 empty space (50/space);\n"
-                       "2) Enter (input) empty space (50/space);\n"
-                       "3) Enter height 1 drawer.\n"
-                       "Choice: "))
-    if choice == 1:
-        data_left_column = np.insert(data_left_column, index, ("Space", __height_space))
-        index += 1
-    else:
-        if choice == 2:
-            how_many = us_fun.check_negative_value("Enter the number of blanks: ")
-            for i in range(how_many):
-                data_left_column = np.insert(data_left_column, index, ("Space", __height_space))
-                index += 1
-        else:
-            if choice == 3:
-                height_drawer = us_fun.check_negative_value("Enter the height of a drawer: ")
-                data_left_column = np.insert(data_left_column, index, ("Drawer", height_drawer))
-                index += 1
-            else:
-                print("ERROR!!! Enter 1, 2 or 3!")
+# Insert all information of automatic warehouse
+print("Enter all information of automatic warehouse below\n\n")
 
-    answer = str(input("Continue? [Y/N] "))
-    escape = us_fun.check_answer(answer)
+print("Create left column...\n")
+us_fun.column_construction(data_left_column)
+
+print("Create right column...\n")
+us_fun.column_construction(data_right_column)
 
 print(data_left_column)
+print(data_right_column)
 
 # Count number of drawers left
 #for i in data_left_column:
