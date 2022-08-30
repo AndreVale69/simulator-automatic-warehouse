@@ -1,12 +1,7 @@
-#from inspect import indentsize     TODO REMOVE!
-#from operator import countOf       TODO REMOVE!
 import numpy as np
 import useful_functions as us_fun
+import warehouse_operations as ware_op
 import bash_graphic_construction as bash_grap
-
-# Default variables
-__height_btw_drawers = 25
-__height_space = 50
 
 # Contains the measurements of the size of the drawers
 type = np.dtype([("name", "U30"), ("height", "uint32")])
@@ -16,38 +11,42 @@ data_right_column = np.array([], dtype=type)
 # Insert all information of automatic warehouse
 print("Enter all information of automatic warehouse below\n\n")
 
-print("Create left column...\n")
-us_fun.column_construction(data_left_column)
+if int(input("Debug mode? [Yes = 1 / No = 0]: ")) == 1:
+    data_left_column = np.array([(), (), (), (), (), ()])   # TODO INSERT TEMPLATE
+    data_right_column = np.array([(), (), (), (), (), ()])  # TODO INSERT TEMPLATE
+else:
+    print("Create left column...\n")
+    data_left_column = ware_op.column_construction(data_left_column)
 
-print("Create right column...\n")
-us_fun.column_construction(data_right_column)
+    print("\n\nCreate right column...")
+    data_right_column = ware_op.column_construction(data_right_column)
+
+    storage_area = int(input("Insert height storage area: "))
+    data_right_column = np.insert(data_right_column, data_right_column.size + 1, ("Hole", storage_area))
+
+    buffer_area = int(input("Insert height buffer area: "))
+    data_right_column = np.insert(data_right_column, data_right_column.size + 1, ("Hole", buffer_area))
+
+    hole = int(input("Insert height right hole: "))
+    data_right_column = np.insert(data_right_column, data_right_column.size + 1, ("Hole", hole))
 
 print(data_left_column)
 print(data_right_column)
 
-# Count number of drawers left
-#for i in data_left_column:
-    #if data_left_column[i] == 
-    #numbers_drawer_left = 
+numbers_drawer_left = ware_op.count_drawers(data_left_column)
+numbers_drawer_right = ware_op.count_drawers(data_right_column)
+numbers_space_left = ware_op.count_space(data_left_column)
+numbers_space_right = ware_op.count_space(data_right_column)
 
-#height_left = us_fun.check_negative_value("Height left column (meters)          : ")
-#height_right_upper = us_fun.check_negative_value("Height right column - Upper (meters) : ")
-# Insert height of a drawer
-#height_drawer_extreme = us_fun.check_negative_value("Height last drawer                   : ")
-#height_drawer_left = us_fun.check_negative_value("Height drawer left column            : ")
-#height_drawer_right_upper = us_fun.check_negative_value("Height drawer right column           : ")
+print("\nNumbers drawers left : " + numbers_drawer_left)
+print("Numbers drawers right: " + numbers_drawer_right)
+print("Numbers space left   : " + numbers_space_left)
+print("Numbers space right  : " + numbers_space_right)
 
-# TODO check height drawer is lower thank height_left
+height_left_column = ware_op.height_left_column(data_left_column)
+height_right_column = ware_op.height_right_column(data_right_column, storage_area, buffer_area, hole)
+height_warehouse = height_left_column if height_left_column > height_right_column else height_right_column
 
-# Count number of drawers left and right (upper)
-#numbers_drawer_left = (height_left - height_drawer_extreme) // \
-#                      (height_drawer_left + __height_btw_drawers)
-
-#numbers_drawer_right = (height_right_upper - height_drawer_extreme) // \
-#                       (height_drawer_right_upper + __height_btw_drawers)
-
-#print("\nThe number of drawers to the left is  : ", numbers_drawer_left)
-#print("\nThe number of drawers to the right is : ", numbers_drawer_right)
 
 #bash_grap.print_warehouse(height_left,
 #                          height_right_upper,
