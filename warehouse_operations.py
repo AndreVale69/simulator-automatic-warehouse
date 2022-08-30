@@ -29,7 +29,7 @@ def column_construction(data_column: np.ndarray):
                 if choice == 3:
                     while True:
                         height_drawer = us_fun.check_negative_value("Enter the height of a drawer: ")
-                        if (height_column % __height_btw_drawers) != 0:
+                        if (height_drawer % __height_btw_drawers) != 0:
                             print("\nPlease enter a multiple of 25!!!\n")
                         else:
                             break

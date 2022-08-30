@@ -1,4 +1,5 @@
 import numpy as np
+import debug_library as debug
 import useful_functions as us_fun
 import warehouse_operations as ware_op
 import bash_graphic_construction as bash_grap
@@ -12,8 +13,8 @@ data_right_column = np.array([], dtype=type)
 print("Enter all information of automatic warehouse below\n\n")
 
 if int(input("Debug mode? [Yes = 1 / No = 0]: ")) == 1:
-    data_left_column = np.array([(), (), (), (), (), ()])   # TODO INSERT TEMPLATE
-    data_right_column = np.array([(), (), (), (), (), ()])  # TODO INSERT TEMPLATE
+    data_left_column = debug.create_left_column(data_left_column)
+    data_right_column = debug.create_right_column(data_right_column)
 else:
     print("Create left column...\n")
     data_left_column = ware_op.column_construction(data_left_column)
@@ -22,13 +23,13 @@ else:
     data_right_column = ware_op.column_construction(data_right_column)
 
     storage_area = int(input("Insert height storage area: "))
-    data_right_column = np.insert(data_right_column, data_right_column.size + 1, ("Hole", storage_area))
+    data_right_column = np.insert(data_right_column, data_right_column.size, ("Storage", storage_area))
 
     buffer_area = int(input("Insert height buffer area: "))
-    data_right_column = np.insert(data_right_column, data_right_column.size + 1, ("Hole", buffer_area))
+    data_right_column = np.insert(data_right_column, data_right_column.size, ("Buffer", buffer_area))
 
     hole = int(input("Insert height right hole: "))
-    data_right_column = np.insert(data_right_column, data_right_column.size + 1, ("Hole", hole))
+    data_right_column = np.insert(data_right_column, data_right_column.size, ("Hole", hole))
 
 print(data_left_column)
 print(data_right_column)
