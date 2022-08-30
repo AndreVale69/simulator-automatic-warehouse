@@ -15,6 +15,15 @@ print("Enter all information of automatic warehouse below\n\n")
 if int(input("Debug mode? [Yes = 1 / No = 0]: ")) == 1:
     data_left_column = debug.create_left_column(data_left_column)
     data_right_column = debug.create_right_column(data_right_column)
+    for i in range(data_right_column.size):
+        if data_right_column[i][0] == "Storage":
+            storage_area = data_right_column[i][1]
+        else:
+            if data_right_column[i][0] == "Buffer":
+                buffer_area = data_right_column[i][1]
+            else:
+                if data_right_column[i][0] == "Hole":
+                    hole = data_right_column[i][1]
 else:
     print("Create left column...\n")
     data_left_column = ware_op.column_construction(data_left_column)
@@ -39,14 +48,18 @@ numbers_drawer_right = ware_op.count_drawers(data_right_column)
 numbers_space_left = ware_op.count_space(data_left_column)
 numbers_space_right = ware_op.count_space(data_right_column)
 
-print("\nNumbers drawers left : " + numbers_drawer_left)
-print("Numbers drawers right: " + numbers_drawer_right)
-print("Numbers space left   : " + numbers_space_left)
-print("Numbers space right  : " + numbers_space_right)
+print("\nNumbers drawers left : " + str(numbers_drawer_left))
+print("Numbers drawers right: " + str(numbers_drawer_right))
+print("Numbers space left   : " + str(numbers_space_left))
+print("Numbers space right  : " + str(numbers_space_right))
 
 height_left_column = ware_op.height_left_column(data_left_column)
 height_right_column = ware_op.height_right_column(data_right_column, storage_area, buffer_area, hole)
 height_warehouse = height_left_column if height_left_column > height_right_column else height_right_column
+
+print("Height left column        : " + str(height_left_column))
+print("Height right column       : " + str(height_right_column))
+print("Height automatic warehouse: " + str(height_warehouse))
 
 
 #bash_grap.print_warehouse(height_left,

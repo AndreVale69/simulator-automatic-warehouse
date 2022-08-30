@@ -72,7 +72,7 @@ def height_left_column(data_column: np.ndarray):
     height_column = __height_btw_drawers
 
     for i in range(data_column.size):
-        if data_column[i][0] == "Space" and data_column[i + 1][0] == "Space":
+        if i < (data_column.size - 2) and data_column[i][0] == "Space" and data_column[i + 1][0] == "Space":
             height_column += data_column[i][1]
         else:
             height_column += __height_btw_drawers + data_column[i][1]
