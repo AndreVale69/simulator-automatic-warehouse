@@ -69,26 +69,27 @@ def count_space(data_column: np.ndarray):
 
 # Calculate height of left column
 def height_left_column(data_column: np.ndarray):
-    height_column = __height_btw_drawers
-
-    for i in range(data_column.size):
-        if i < (data_column.size - 2) and data_column[i][0] == "Space" and data_column[i + 1][0] == "Space":
-            height_column += data_column[i][1]
-        else:
-            height_column += __height_btw_drawers + data_column[i][1]
-
-    return height_column
+    return algorithm_calculate_height(data_column)
 
 
 # Calculate height of right column
 def height_right_column(data_column: np.ndarray, storage_area: int, buffer_area: int, hole: int):
     height_column = __height_btw_drawers + buffer_area + __height_btw_drawers + storage_area + hole
-    
 
+    height_column = algorithm_calculate_height(data_column, height_column)
+
+    if data_column[0][0] == "Drawer":
+        height_column -= __height_btw_drawers
+
+    return height_column
+
+
+def algorithm_calculate_height(data_column: np.ndarray, height_column: int = 0):
     for i in range(data_column.size):
-        if data_column[i][0] == "Space" and data_column[i + 1][0] == "Space":
+        if data_column[i][0] == "Space":
             height_column += data_column[i][1]
         else:
-            height_column += __height_btw_drawers + data_column[i][1]
+            if data_column[i][0] == "Drawer":
+                height_column += __height_btw_drawers + data_column[i][1]
 
     return height_column
