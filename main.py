@@ -12,6 +12,8 @@ data_right_column = np.array([], dtype=type)
 # Insert all information of automatic warehouse
 print("Enter all information of automatic warehouse below\n\n")
 
+# Create a automatic warehouse with default height, otherwise creare with custom height
+# TODO the height of left column and the height of right column must be the same!
 if int(input("Debug mode? [Yes = 1 / No = 0]: ")) == 1:
     data_left_column = debug.create_left_column(data_left_column)
     data_right_column = debug.create_right_column(data_right_column)
@@ -40,9 +42,11 @@ else:
     hole = int(input("Insert height right hole: "))
     data_right_column = np.insert(data_right_column, data_right_column.size, ("Hole", hole))
 
+# Check arrays
 print(data_left_column)
 print(data_right_column)
 
+# Some information...
 numbers_drawer_left = ware_op.count_drawers(data_left_column)
 numbers_drawer_right = ware_op.count_drawers(data_right_column)
 numbers_space_left = ware_op.count_space(data_left_column)
@@ -61,7 +65,10 @@ print("Height left column        : " + str(height_left_column))
 print("Height right column       : " + str(height_right_column))
 print("Height automatic warehouse: " + str(height_warehouse))
 
+# Print warehouse; TODO to finish :(
+bash_grap.print_warehouse(data_right_column)
 
+# OLD function
 #bash_grap.print_warehouse(height_left,
 #                          height_right_upper,
 #                          height_drawer_extreme,
