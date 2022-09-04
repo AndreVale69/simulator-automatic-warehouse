@@ -1,18 +1,37 @@
-def print_warehouse(height_left: int,
-                    height_right_upper: int,
-                    height_drawer_extreme: int,
-                    height_drawer_left: int,
-                    height_drawer_right_upper: int,
-                    numbers_drawer_left: int,
-                    numbers_drawer_right: int):
+import numpy as np
+
+def print_warehouse(data_left_column: np.ndarray, data_right_column: np.ndarray):
+    index_left = data_left_column.size
+    index_right = data_right_column.size
+
+    # TODO create warehouse print function
+    while True:
+        if data_left_column[index_left][0] == "Space":
+            # Print space
+            print()
+        else:
+            if data_left_column[index_left][0] == "Drawer":
+                # Print drawer
+                print()
+            else:
+                if data_column[index][0] == "Hole":
+                    # Print hole
+                    print()
+                else:
+                    # Print drawer
+                    print()
+        
+
+            
+
     print_line(10)
     print_space(10)
     print_line(10, True)
 
-    for i in range(height_drawer_extreme // 100):
-        print_slash(False, numbers_drawer_left - i)
-        print_space(8)
-        print_slash()
+    #for i in range(height_drawer_extreme // 100):
+    #    print_slash(False, numbers_drawer_left - i)
+    #    print_space(8)
+    #    print_slash()
 
     print_line(10)
 
