@@ -1,0 +1,42 @@
+[('Drawer', 100) ('Space',  25) ('Space',  25) ('Space',  25)
+ ('Space',  25) ('Space',  25) ('Space',  25) ('Space',  25)
+ ('Space',  25) ('Space',  25) ('Space',  25) ('Space',  25)
+ ('Space',  25) ('Space',  25) ('Space',  25) ('Space',  25)
+ ('Space',  25) ('Space',  25) ('Drawer', 200) ('Drawer', 200)
+ ('Space',  25) ('Space',  25) ('Space',  25) ('Space',  25)
+ ('Space',  25) ('Space',  25) ('Space',  25)]
+[('Storage', 100) ('Buffer', 100) ('Hole', 500) ('Drawer', 100)
+ ('Drawer', 300)]
+
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx          xxxxxxxxxx
+
+xxxxxxxxxx
+
+xxxxxxxxxx
+
+xxxxxxxxxx
+
+xxxxxxxxxx
+
+xxxxxxxxxx
+
+xxxxxxxxxx
+
+xxxxxxxxxx
