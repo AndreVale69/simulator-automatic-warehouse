@@ -93,12 +93,15 @@ def height_left_column(data_column: np.ndarray):
 
 
 # Calculate height of right column
-def height_right_column(data_column: np.ndarray, storage_area: int, buffer_area: int, hole: int):
+def height_right_column(data_column: np.ndarray):
+    storage_area = data_column[0][1]
+    buffer_area = data_column[1][1]
+    hole = data_column[2][1]
     height_column = __height_btw_drawers + buffer_area + __height_btw_drawers + storage_area + hole
 
     height_column = algorithm_calculate_height(data_column, height_column)
 
-    if data_column[0][0] == "Drawer":
+    if data_column[3][0] == "Drawer":
         height_column -= __height_btw_drawers
 
     return height_column
