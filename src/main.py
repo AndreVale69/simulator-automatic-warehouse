@@ -5,11 +5,9 @@ from src.material import Material
 # create warehouse
 material = Material(123, "name", 256, 789, 12345)
 material2 = Material(234, "abc", 564, 987, 00000)
-drawer = Drawer()
-warehouse = Warehouse()
+drawer = Drawer([material, material2])
+warehouse = Warehouse(1000)
 
-drawer.add_material(material)
-drawer.add_material(material2)
-warehouse.add_drawer(drawer, 0)
-drawer.print_array()
-warehouse.print_warehouse()
+# add a drawer to a warehouse
+
+warehouse.add_drawer(drawer)
