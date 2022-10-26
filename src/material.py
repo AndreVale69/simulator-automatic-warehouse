@@ -6,7 +6,18 @@ class Material:
     __width = 0
     __barcode = 0
 
-    def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
+    __max_height_material = 200
+
+    # TODO: temp choice height_warehouse
+    def __init__(self, barcode: int, name: str, height: int, length: int, width: int, height_warehouse):
+
+        # check height of a material
+        if height > height_warehouse:
+            raise ValueError("The height of element " +
+                             name +
+                             " is too high (max height: " +
+                             str(self.__max_height_material) + ")")
+
         self.__barcode = barcode
         self.__name = name
         self.__height = height
