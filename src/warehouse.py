@@ -45,9 +45,14 @@ class Warehouse(object):
         for i in range(tmp_arr[0] - 1):
             self.__warehouse.pop(tmp_arr[1])
 
+    # TODO: to finish
     def remove_drawer(self, drawer: Drawer):
-        # TODO: to finish
-        print("To finish")
+        for i in range(len(self.__warehouse)):
+            if self.__warehouse[i] is drawer:
+                for j in range(Drawer.get_max_num_space(self.__warehouse[i])):
+                    self.__warehouse.insert(i, 25)
+
+                self.__warehouse.remove(drawer)
 
     def __count_minimum_space(self, num_space: int):
         # set var
@@ -60,20 +65,30 @@ class Warehouse(object):
                 # count number of space
                 if self.__warehouse[i] == 25:
                     count = count + 1
-            else:
-                # otherwise, if its minimum or it's the end of array
-                if ((count < min_space) & (count >= num_space)) | (i == len(self.__warehouse)):
-                    min_space = count
-                    if i == len(self.__warehouse):
+                else:
+                    #print("Count: " + str(count))
+                    # otherwise, if its minimum or it's the end of array
+                    if (count < min_space) & (count >= num_space):
+                        min_space = count
                         start_index = i - count
-                    else:
-                        start_index = (i - 1) - count
 
-                # restart the count with reset
+                    # restart the count with reset
+                    count = 0
+            else:
+                if (count < min_space) & (count >= num_space):
+                    min_space = count
+                    start_index = i - count
+
                 count = 0
 
         # if warehouse is empty
         if min_space == self.__height:
+            # double check
+            for i in range(len(self.__warehouse)):
+                # if it isn't empty
+                if isinstance(self.__warehouse[i], Drawer):
+                    raise IndexError("There isn't any space for this drawer.")
+
             min_space = len(self.__warehouse)
 
         # alloc only minimum space
