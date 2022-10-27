@@ -5,14 +5,14 @@ class Material:
     __length = 0
     __width = 0
     __barcode = 0
-
-    __max_height_material = 200
+    # maximum height of a material to fit into a drawer
+    __max_height_material = 300
 
     # TODO: temp choice height_warehouse
-    def __init__(self, barcode: int, name: str, height: int, length: int, width: int, height_warehouse):
+    def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
 
         # check height of a material
-        if height > height_warehouse:
+        if height > self.__max_height_material:
             raise ValueError("The height of element " +
                              name +
                              " is too high (max height: " +
