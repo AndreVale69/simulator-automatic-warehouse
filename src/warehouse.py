@@ -6,14 +6,13 @@ class Warehouse(object):
     # __warehouse = np.array([], dtype=__type)
     __warehouse_left = []
     __warehouse_right = []
-    __height = 0
-    __minimum_height = 500
+    __minimum_height = 500  # TODO: to remove
     # deposit percentage
-    __dep_perc = 32
+    __dep_perc = 32  # TODO: to remove
     # buffer and storage area percentage
-    __bs_perc = 32
+    __bs_perc = 32  # TODO: to remove
     # hole percentage
-    __hole_perc = 36
+    __hole_perc = 36  # TODO: to remove
 
     def __init__(self, height: int):
         self.__height = height
@@ -43,10 +42,10 @@ class Warehouse(object):
     def set_height(self, height: int):
         self.__height = height
 
-    def get_height(self):
+    def get_height(self) -> int:
         return self.__height
 
-    def get_warehouse(self):
+    def get_warehouse(self) -> []:
         return self.__warehouse_left
 
     def add_drawer(self, drawer: Drawer):
