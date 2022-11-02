@@ -1,5 +1,5 @@
 from src.drawer import Drawer
-from src.useful_func import read_height_json
+from src.useful_func import read_value_of_const_json
 
 
 class Warehouse(object):
@@ -8,15 +8,11 @@ class Warehouse(object):
     __warehouse_left = []
     __warehouse_right = []
 
-    # deposit percentage
-    __dep_perc = 32  # TODO: to remove
-    # buffer and storage area percentage
-    __bs_perc = 32  # TODO: to remove
     # hole percentage
     __hole_perc = 36  # TODO: to remove
 
     def __init__(self, height: int):
-        minimum_height = read_height_json("minimum_height")
+        minimum_height = read_value_of_const_json("minimum_height")
 
         self.__height = height
 
@@ -31,8 +27,8 @@ class Warehouse(object):
             self.__warehouse_left.append(25)
 
         # creation of space right
-        height_dep = (self.__dep_perc * height) // 100
-        height_bs = (self.__bs_perc * height) // 100
+        height_dep = read_value_of_const_json("deposit_height")
+        height_bs = read_value_of_const_json("buf_stor_height")
 
         # buffer area
         self.__warehouse_right.append(height_bs // 2)
