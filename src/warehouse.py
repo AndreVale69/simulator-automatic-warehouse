@@ -1,4 +1,5 @@
 from src.drawer import Drawer
+from src.useful_func import read_value_of_const_json
 
 
 class Warehouse(object):
@@ -6,22 +7,19 @@ class Warehouse(object):
     # __warehouse = np.array([], dtype=__type)
     __warehouse_left = []
     __warehouse_right = []
-    __height = 0
-    __minimum_height = 500
-    # deposit percentage
-    __dep_perc = 32
-    # buffer and storage area percentage
-    __bs_perc = 32
+
     # hole percentage
-    __hole_perc = 36
+    __hole_perc = 36  # TODO: to remove
 
     def __init__(self, height: int):
+        minimum_height = read_value_of_const_json("minimum_height")
+
         self.__height = height
 
         # error
-        if height < self.__minimum_height:
+        if height < minimum_height:
             raise ValueError("The height is too low, please digit a value grater/equal than " +
-                             str(self.__minimum_height))
+                             str(minimum_height))
 
         # creation of space left
         num_space_left = height // 25
@@ -29,8 +27,8 @@ class Warehouse(object):
             self.__warehouse_left.append(25)
 
         # creation of space right
-        height_dep = (self.__dep_perc * height) // 100
-        height_bs = (self.__bs_perc * height) // 100
+        height_dep = read_value_of_const_json("deposit_height")
+        height_bs = read_value_of_const_json("buf_stor_height")
 
         # buffer area
         self.__warehouse_right.append(height_bs // 2)
@@ -43,10 +41,10 @@ class Warehouse(object):
     def set_height(self, height: int):
         self.__height = height
 
-    def get_height(self):
+    def get_height(self) -> int:
         return self.__height
 
-    def get_warehouse(self):
+    def get_warehouse(self) -> []:
         return self.__warehouse_left
 
     def add_drawer(self, drawer: Drawer):
