@@ -1,4 +1,5 @@
 from src.drawer import Drawer
+from src.useful_func import read_height_json
 
 
 class Warehouse(object):
@@ -6,7 +7,7 @@ class Warehouse(object):
     # __warehouse = np.array([], dtype=__type)
     __warehouse_left = []
     __warehouse_right = []
-    __minimum_height = 500  # TODO: to remove
+
     # deposit percentage
     __dep_perc = 32  # TODO: to remove
     # buffer and storage area percentage
@@ -15,12 +16,14 @@ class Warehouse(object):
     __hole_perc = 36  # TODO: to remove
 
     def __init__(self, height: int):
+        minimum_height = read_height_json("minimum_height")
+
         self.__height = height
 
         # error
-        if height < self.__minimum_height:
+        if height < minimum_height:
             raise ValueError("The height is too low, please digit a value grater/equal than " +
-                             str(self.__minimum_height))
+                             str(minimum_height))
 
         # creation of space left
         num_space_left = height // 25

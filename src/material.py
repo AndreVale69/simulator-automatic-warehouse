@@ -1,17 +1,17 @@
-# TODO: improve this class
-class Material:
-    # maximum height of a material to fit into a drawer
-    __max_height_material = 300
+from src.useful_func import read_height_json
 
-    # TODO: temp choice height_warehouse
+
+class Material:
     def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
+        # maximum height of a material to fit into a drawer
+        max_height_material = read_height_json("max_height_material")
 
         # check height of a material
-        if height > self.__max_height_material:
+        if height > max_height_material:
             raise ValueError("The height of element " +
                              name +
                              " is too high (max height: " +
-                             str(self.__max_height_material) + ")")
+                             str(max_height_material) + ")")
 
         self.__barcode = barcode
         self.__name = name
