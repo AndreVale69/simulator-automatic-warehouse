@@ -1,15 +1,13 @@
 from src.drawer import Drawer
 from src.useful_func import read_value_of_const_json
+# from src.status_warehouse.status import Status
+from src.status_warehouse.left_column import LeftColumn
+# from src.status_warehouse.right_column import RightColumn
 
 
-class Warehouse(object):
-    # __type = np.dtype([("name", "U30"), ("drawer", Drawer)])
-    # __warehouse = np.array([], dtype=__type)
+class Warehouse:
     __warehouse_left = []
     __warehouse_right = []
-
-    # hole percentage
-    __hole_perc = 36  # TODO: to remove
 
     def __init__(self, height: int):
         minimum_height = read_value_of_const_json("minimum_height")
@@ -25,6 +23,9 @@ class Warehouse(object):
         num_space_left = height // 25
         for i in range(num_space_left):
             self.__warehouse_left.append(25)
+
+        # TODO: temp
+        left = LeftColumn(self.__warehouse_left)
 
         # creation of space right
         height_dep = read_value_of_const_json("deposit_height")
