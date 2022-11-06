@@ -1,31 +1,22 @@
 from src.drawer import Drawer
 from src.useful_func import read_value_of_const_json
-# from src.status_warehouse.status import Status
-from src.status_warehouse.left_column import LeftColumn
-# from src.status_warehouse.right_column import RightColumn
+from src.status_warehouse.Container.drawerContainer import DrawerContainer
+from src.status_warehouse.Container.column import Column
 
 
 class Warehouse:
     __warehouse_left = []
     __warehouse_right = []
 
-    def __init__(self, height: int):
-        minimum_height = read_value_of_const_json("minimum_height")
+    def __init__(self):
+        self.__height = read_value_of_const_json("height_warehouse")
 
-        self.__height = height
-
-        # error
-        if height < minimum_height:
-            raise ValueError("The height is too low, please digit a value grater/equal than " +
-                             str(minimum_height))
+        # container = Column([], self.__height)
 
         # creation of space left
-        num_space_left = height // 25
+        num_space_left = self.__height // 25
         for i in range(num_space_left):
             self.__warehouse_left.append(25)
-
-        # TODO: temp
-        left = LeftColumn(self.__warehouse_left)
 
         # creation of space right
         height_dep = read_value_of_const_json("deposit_height")
