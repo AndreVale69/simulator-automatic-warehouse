@@ -1,4 +1,4 @@
-from status_warehouse.Container.drawerContainer import DrawerContainer
+from src.status_warehouse.Container.drawerContainer import DrawerContainer
 
 
 class Carousel(DrawerContainer):
