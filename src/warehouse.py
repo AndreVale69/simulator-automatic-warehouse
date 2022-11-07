@@ -1,34 +1,68 @@
 from src.drawer import Drawer
-from src.useful_func import read_value_of_const_json
+from src.material import Material
+from src.useful_func import obt_value_json
+from src.status_warehouse.Container.drawerContainer import DrawerContainer
+from src.status_warehouse.Container.column import Column
+from src.status_warehouse.Container.carousel import Carousel
 
 
-class Warehouse(object):
-    # __type = np.dtype([("name", "U30"), ("drawer", Drawer)])
-    # __warehouse = np.array([], dtype=__type)
+class Warehouse:
     __warehouse_left = []
     __warehouse_right = []
 
-    # hole percentage
-    __hole_perc = 36  # TODO: to remove
+    def __init__(self):
+        self.__height = obt_value_json("height_warehouse")
 
-    def __init__(self, height: int):
-        minimum_height = read_value_of_const_json("minimum_height")
+        # TODO: to rmv DEBUG
+        # material = Material(123, "name", 256, 789, 12345)
+        # material2 = Material(234, "abc", 126, 987, 00000)
+        # drawer = Drawer([material, material2])
+        # material3 = Material(567, "def", 128, 564, 0)
+        # drawer2 = Drawer([material3])
 
-        self.__height = height
+        # container_left = Column(self.__height)
+        # container_left.add_drawer(0, drawer)
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
 
-        # error
-        if height < minimum_height:
-            raise ValueError("The height is too low, please digit a value grater/equal than " +
-                             str(minimum_height))
+        # print(container_left.check_minimum_space(drawer2))
 
+        # container_left.remove_drawer(drawer)
+
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
+
+        # print(container_left.check_minimum_space(drawer2))
+
+        # container_left = Carousel(self.__height)
+        # container_left.add_drawer(True, drawer)
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
+
+        # container_left.remove_drawer(drawer)
+
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
+
+        # container_left.add_drawer(False, drawer2)
+
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
+
+        # TODO: opt this class
         # creation of space left
-        num_space_left = height // 25
+        num_space_left = self.__height // 25
         for i in range(num_space_left):
             self.__warehouse_left.append(25)
 
         # creation of space right
-        height_dep = read_value_of_const_json("deposit_height")
-        height_bs = read_value_of_const_json("buf_stor_height")
+        height_dep = obt_value_json("deposit_height")
+        height_bs = obt_value_json("buffer_height")
 
         # buffer area
         self.__warehouse_right.append(height_bs // 2)
@@ -142,7 +176,6 @@ class Warehouse(object):
                 if isinstance(__warehouse[i], Drawer):
                     # raise IndexError("There isn't any space for this drawer.")
                     return -1
-
             min_space = len(__warehouse)
 
         # alloc only minimum space

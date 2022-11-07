@@ -3,7 +3,7 @@ from src.drawer import Drawer
 from src.material import Material
 
 # create warehouse
-warehouse = Warehouse(500)
+warehouse = Warehouse()
 
 material = Material(123, "name", 256, 789, 12345)
 material2 = Material(234, "abc", 126, 987, 00000)
