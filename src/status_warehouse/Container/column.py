@@ -1,4 +1,3 @@
-from src.useful_func import obt_value_json
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.drawer import Drawer

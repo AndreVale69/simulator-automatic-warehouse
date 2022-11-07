@@ -29,7 +29,7 @@ class Carousel(DrawerContainer):
             else:
                 return False
         else:
-            if isinstance(self.get_container()[buffer], type(EmptyEntry)):
+            if isinstance(self.get_container()[buffer], type(EmptyEntry())):
                 for i in range(buffer, hole + buffer):
                     self.get_container()[i] = drawer
                 return True

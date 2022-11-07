@@ -14,11 +14,11 @@ class Warehouse:
         self.__height = obt_value_json("height_warehouse")
 
         # TODO: to rmv DEBUG
-        material = Material(123, "name", 256, 789, 12345)
-        material2 = Material(234, "abc", 126, 987, 00000)
-        drawer = Drawer([material, material2])
-        material3 = Material(567, "def", 128, 564, 0)
-        drawer2 = Drawer([material3])
+        # material = Material(123, "name", 256, 789, 12345)
+        # material2 = Material(234, "abc", 126, 987, 00000)
+        # drawer = Drawer([material, material2])
+        # material3 = Material(567, "def", 128, 564, 0)
+        # drawer2 = Drawer([material3])
 
         # container_left = Column(self.__height)
         # container_left.add_drawer(0, drawer)
@@ -36,14 +36,29 @@ class Warehouse:
 
         # print(container_left.check_minimum_space(drawer2))
 
-        container_left = Carousel(self.__height)
-        container_left.add_drawer(True, drawer)
+        # container_left = Carousel(self.__height)
+        # container_left.add_drawer(True, drawer)
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
 
+        # container_left.remove_drawer(drawer)
+
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
+
+        # container_left.add_drawer(False, drawer2)
+
+        # print("------------------------------------------------------")
+        # print(container_left.get_container())
+        # print("------------------------------------------------------")
+
+        # TODO: opt this class
         # creation of space left
         num_space_left = self.__height // 25
         for i in range(num_space_left):
             self.__warehouse_left.append(25)
-        print(num_space_left)
 
         # creation of space right
         height_dep = obt_value_json("deposit_height")
