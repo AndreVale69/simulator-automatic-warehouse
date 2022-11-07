@@ -1,8 +1,7 @@
 {
-  "max_height_material"  : 300,
-  "height_warehouse"     : 1000,
-  "deposit_height"       : 320,
-  "hole_height"          : 360,
-  "buf_stor_height"      : 320,
-  "default_height_space" : 25
+  "height_warehouse"      : 1000,
+  "deposit_height"        : 320,
+  "hole_height"           : 360,
+  "buffer_height"         : 320,
+  "default_height_space"  : 25
 }

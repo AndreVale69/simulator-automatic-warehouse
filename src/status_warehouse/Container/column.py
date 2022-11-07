@@ -1,4 +1,4 @@
-from src.useful_func import read_value_of_const_json
+from src.useful_func import obt_value_json
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.drawer import Drawer
@@ -8,7 +8,6 @@ class Column(DrawerContainer):
     def __init__(self, height: int):
         super().__init__(height)
 
-    # override
     def check_minimum_space(self, drawer: Drawer) -> list:
         min_space = self.get_height()
         count = 0
@@ -70,6 +69,4 @@ class Column(DrawerContainer):
 
     # override
     def remove_drawer(self, drawer: Drawer):
-        for i in range(len(self.get_container())):
-            if self.get_container()[i] is drawer:
-                self.get_container()[i] = EmptyEntry()
+        super().remove_drawer(drawer)

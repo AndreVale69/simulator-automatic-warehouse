@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from src.useful_func import read_value_of_const_json
+from src.useful_func import obt_value_json
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.drawer import Drawer
 
@@ -9,7 +9,7 @@ class DrawerContainer:
         # initialize main vars
         self.__container = []
         self.__height = height
-        self.__num_entries = self.__height // read_value_of_const_json("default_height_space")
+        self.__num_entries = self.__height // obt_value_json("default_height_space")
 
         # create container
         for i in range(self.__num_entries):
@@ -28,6 +28,7 @@ class DrawerContainer:
     def add_drawer(self, index: int, drawer: Drawer):
         pass
 
-    @abstractmethod
     def remove_drawer(self, drawer: Drawer):
-        pass
+        for i in range(len(self.get_container())):
+            if self.get_container()[i] is drawer:
+                self.get_container()[i] = EmptyEntry()

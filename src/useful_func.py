@@ -1,12 +1,14 @@
 import json
 
 
-def read_value_of_const_json(keyword):
+def obt_value_json(keyword) -> int:
     """
     Read a specific data inside JSON file.
-    :param keyword: constant search inside JSON file.
-    :return: constant.
+
+    :param keyword: constant search inside JSON file
+    :return: value found
     """
+
     # opening JSON file
     f = open("../resource/info.json")
 

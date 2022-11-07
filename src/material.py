@@ -1,10 +1,10 @@
-from src.useful_func import read_value_of_const_json
+from src.useful_func import obt_value_json
 
 
 class Material:
     def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
         # maximum height of a material to fit into a drawer
-        max_height_material = read_value_of_const_json("max_height_material")
+        max_height_material = obt_value_json("buffer_height")
 
         # check height of a material
         if height > max_height_material:
