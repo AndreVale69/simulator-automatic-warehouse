@@ -5,8 +5,8 @@ from src.drawer import Drawer
 
 
 class Column(DrawerContainer):
-    def __init__(self, height: int, pos_y: int):
-        super().__init__(height, pos_y)
+    def __init__(self, height: int, pos_x: int):
+        super().__init__(height, pos_x)
 
     def check_minimum_space(self, max_space: int) -> list:
         min_space = self.get_height()
@@ -66,7 +66,7 @@ class Column(DrawerContainer):
 
         while how_many > 0:
             # initialize positions
-            drawer_entry = DrawerEntry(index, super().get_pos_y())
+            drawer_entry = DrawerEntry(super().get_pos_x(), index)
             # connect Drawer to entry
             drawer_entry.add_drawer(drawer)
             # add to container

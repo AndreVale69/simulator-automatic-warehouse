@@ -6,19 +6,19 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class DrawerContainer:
-    def __init__(self, height: int, pos_y: int):
+    def __init__(self, height: int, pos_x: int):
         # initialize main vars
         self.__container = []
         self.__height = height
         def_space = obt_value_json("default_height_space")
         self.__num_entries = self.__height // def_space
         self.__buffer = obt_value_json("buffer_height") // def_space
-        self.__hole = obt_value_json("hole_height") // def_space
-        self.__pos_y = pos_y
+        self.__deposit = obt_value_json("deposit_height") // def_space
+        self.__pos_x = pos_x
 
         # create container
         for i in range(self.__num_entries):
-            self.__container.append(EmptyEntry(i, self.__pos_y))
+            self.__container.append(EmptyEntry(i, self.__pos_x))
 
     def get_height(self) -> int:
         return self.__height
@@ -32,11 +32,11 @@ class DrawerContainer:
     def get_buffer(self) -> int:
         return self.__buffer
 
-    def get_hole(self) -> int:
-        return self.__hole
+    def get_deposit(self) -> int:
+        return self.__deposit
 
-    def get_pos_y(self) -> int:
-        return self.__pos_y
+    def get_pos_x(self) -> int:
+        return self.__pos_x
 
     @abstractmethod
     def add_drawer(self, index: int, drawer: DrawerEntry):
@@ -62,5 +62,3 @@ class DrawerContainer:
 
         except StopIteration as e:
             print(str(e) + "\nNo element to remove found")
-
-

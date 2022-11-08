@@ -1,7 +1,11 @@
 {
   "height_warehouse"      : 1000,
-  "deposit_height"        : 320,
+  "horizontal_right_col"  : 250,
+  "horizontal_left_col"   : 200,
+  "storage_height"        : 320,
   "hole_height"           : 360,
-  "buffer_height"         : 320,
-  "default_height_space"  : 25
+  "deposit_height"        : 160,
+  "buffer_height"         : 160,
+  "default_height_space"  : 25,
+  "speed_per_sec"         : 1
 }
