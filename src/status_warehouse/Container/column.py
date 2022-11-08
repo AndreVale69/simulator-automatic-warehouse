@@ -1,33 +1,36 @@
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
+from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.drawer import Drawer
 
 
 class Column(DrawerContainer):
-    def __init__(self, height: int):
-        super().__init__(height)
+    def __init__(self, height: int, pos_y: int):
+        super().__init__(height, pos_y)
 
-    def check_minimum_space(self, drawer: Drawer) -> list:
+    def check_minimum_space(self, max_space: int) -> list:
         min_space = self.get_height()
         count = 0
         start_index = 0
-        num_space = drawer.get_max_num_space()
         container = self.get_container()
 
+        ############################
+        # Minimum search algorithm #
+        ############################
         for i in range(len(container) + 1):
             if i != len(container):
                 # count number of space
-                if isinstance(container[i], type(EmptyEntry())):
+                if isinstance(container[i], EmptyEntry):
                     count = count + 1
                 else:
                     # otherwise, if its minimum and there is enough space
-                    if (count < min_space) & (count >= num_space):
+                    if (count < min_space) & (count >= max_space):
                         min_space = count
                         start_index = i - count
                     # restart the count with reset
                     count = 0
             else:
-                if (count < min_space) & (count >= num_space):
+                if (count < min_space) & (count >= max_space):
                     min_space = count
                     start_index = i - count
                 # restart the count with reset
@@ -47,11 +50,11 @@ class Column(DrawerContainer):
             min_space = len(container)
 
         # alloc only minimum space
-        if min_space > num_space:
-            min_space = num_space
+        if min_space > max_space:
+            min_space = max_space
         else:
             # otherwise there isn't any space
-            if min_space < num_space:
+            if min_space < max_space:
                 # raise IndexError("There isn't any space for this drawer.")
                 return [-1, -1]
 
@@ -62,7 +65,12 @@ class Column(DrawerContainer):
         how_many = drawer.get_max_num_space()
 
         while how_many > 0:
-            self.get_container()[index] = drawer
+            # initialize positions
+            drawer_entry = DrawerEntry(index, super().get_pos_y())
+            # connect Drawer to entry
+            drawer_entry.add_drawer(drawer)
+            # add to container
+            self.get_container()[index] = drawer_entry
             index += 1
             how_many -= 1
 
