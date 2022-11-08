@@ -10,7 +10,7 @@ def obt_value_json(keyword) -> int:
     """
 
     # opening JSON file
-    f = open("../resource/info.json")
+    f = open("../rsc/info.json")
 
     # returns JSON object as a dictionary
     data = json.load(f)
