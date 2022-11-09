@@ -90,7 +90,15 @@ from src.simulation import Floor
 # warehouse.add_drawer(Drawer([Material(753, "uvz", 17, 346, 0, warehouse.get_height())]))
 # warehouse.print_warehouse()
 # print()
+warehouse = Warehouse()
 
-env = simpy.Environment
-floor = Floor(env)
-# env.run(until=15)
+material = Material(123, "name", 160, 789, 12345)
+material2 = Material(234, "abc", 126, 987, 00000)
+drawer = Drawer([material, material2])
+
+containers = warehouse.get_container()
+containers[0].add_drawer(5, drawer)
+
+env = simpy.Environment()
+floor = Floor(env, warehouse, drawer)
+env.run(until=15)

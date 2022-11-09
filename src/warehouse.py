@@ -1,9 +1,6 @@
-from src.drawer import Drawer
-from src.material import Material
 from src.useful_func import obt_value_json
 from src.status_warehouse.Container.column import Column
 from src.status_warehouse.Container.carousel import Carousel
-from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class Warehouse:
@@ -21,12 +18,12 @@ class Warehouse:
         # print("------------------------------------------------------")
         # print(container_left.get_container())
         # print("------------------------------------------------------")
-        # print(container_left.check_minimum_space(drawer2.get_max_num_space()))
+        # print(check_minimum_space([container_left], drawer2.get_max_num_space()))
         # container_left.remove_drawer(drawer)
         # print("------------------------------------------------------")
         # print(container_left.get_container())
         # print("------------------------------------------------------")
-        # print(container_left.check_minimum_space(drawer2.get_max_num_space()))
+        # print(check_minimum_space([container_left], drawer2.get_max_num_space()))
         # container_left = Carousel(self.__height, 1)
         # container_left.add_drawer(True, drawer)
         # print("------------------------------------------------------")
@@ -43,13 +40,13 @@ class Warehouse:
 
         container_left = Column(self.__height, 1)
         container_right = Column(self.__height, 0)
-        self.__container = [container_left, container_right]
+        self.__container = [container_right, container_left]
         self.__carousel = Carousel(self.__height, 0)
 
     def get_height(self) -> int:
         return self.__height
 
-    def get_container(self) -> list:
+    def get_container(self) -> list[Column]:
         return self.__container
 
     def get_carousel(self) -> Carousel:
