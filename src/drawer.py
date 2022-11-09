@@ -1,4 +1,3 @@
-from src.useful_func import obt_value_json
 from src.material import Material
 
 
@@ -33,6 +32,7 @@ class Drawer:
 
     # private method to calculate maximum height of a drawer
     def __calculate_max_height(self):
+        from src.useful_func import obt_value_json
         def_space = obt_value_json("default_height_space")
 
         # set max to first element
@@ -56,12 +56,3 @@ class Drawer:
         else:
             # odd, approx the next
             self.__num_space = (self.__max_height // def_space) + 1
-
-    # TODO: debug
-    def print_array(self):
-        for i in range(len(self.__items)):
-            print(Material.get_barcode(self.__items[i]))
-            print(Material.get_name(self.__items[i]))
-            print(Material.get_height(self.__items[i]))
-            print(Material.get_length(self.__items[i]))
-            print(Material.get_width(self.__items[i]))
