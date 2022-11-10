@@ -27,9 +27,10 @@ class Floor(object):
             print("Time %5d - Start load a drawer" % self.env.now)
             yield self.env.process(self.__load(col, drawer, pos_to_insert))
 
-            Column.remove_drawer(col, drawer)
+            col.remove_drawer(drawer)
 
     def __load(self, col_add: Column, drawer: Drawer, pos: int):
+        # TODO check m * m/s -> m^2/s
         horiz_move = (obt_value_json("horizontal_left_col") / 100) * obt_value_json("speed_per_sec")
         yield self.env.timeout(horiz_move)
         col_add.add_drawer(pos, drawer)

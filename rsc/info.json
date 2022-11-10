@@ -1,4 +1,15 @@
 {
+  "columns":[
+    {
+      "": "rxcol"
+    },
+    {
+      "": "sxcol"
+    }
+  ],
+  "carousel": {
+    "": "carousel_descr"
+  },
   "height_warehouse"      : 1000,
   "horizontal_right_col"  : 250,
   "horizontal_left_col"   : 200,

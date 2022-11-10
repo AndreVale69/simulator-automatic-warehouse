@@ -98,6 +98,7 @@ drawer = Drawer([material, material2])
 
 containers = warehouse.get_container()
 containers[0].add_drawer(5, drawer)
+# containers[0].remove_drawer(drawer)
 
 env = simpy.Environment()
 floor = Floor(env, warehouse, drawer)

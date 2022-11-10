@@ -57,7 +57,7 @@ class DrawerContainer:
                 raise StopIteration
             else:
                 for i in range(len(self.get_container())):
-                    if self.get_container()[i] is occurrence:
+                    if self.get_container()[i] == occurrence:
                         self.get_container()[i] = EmptyEntry(occurrence.get_pos_x(), occurrence.get_pos_y())
 
         except StopIteration as e:
