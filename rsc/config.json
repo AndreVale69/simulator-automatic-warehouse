@@ -1,0 +1,22 @@
+{
+  "columns":[
+    {
+      "": "rxcol",
+      "horizontal_right_col"  : 250,
+      "storage_height"        : 320
+    },
+    {
+      "": "sxcol",
+      "horizontal_left_col" : 200
+    }
+  ],
+  "carousel": {
+    "": "carousel_descr",
+    "hole_height"     : 360,
+    "deposit_height"  : 160,
+    "buffer_height"   : 160
+  },
+  "height_warehouse"      : 1000,
+  "default_height_space"  : 25,
+  "speed_per_sec"         : 1
+}

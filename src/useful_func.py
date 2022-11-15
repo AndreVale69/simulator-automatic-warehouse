@@ -4,7 +4,7 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
-def obt_value_json(keyword) -> int:
+def obt_value_json(keyword: str) -> int:
     """
     Read a specific data inside JSON file.
 
@@ -14,17 +14,34 @@ def obt_value_json(keyword) -> int:
     """
 
     # opening JSON file
-    f = open("../rsc/info.json")
+    with open("../rsc/config.json", 'r') as json_file:
+        # returns JSON object as a dictionary
+        json_data = json.load(json_file)
 
-    # returns JSON object as a dictionary
-    data = json.load(f)
+    # jsonpath_expression = parse()
 
     # closing JSON file
-    f.close()
+    json_file.close()
 
     try:
-        # take const
-        return data[keyword]
+        # if the value isn't inside a list
+        if keyword in json_data:
+            return json_data[keyword]
+        else:
+            # for each element inside the dictionary
+            for i in json_data:
+                # manipulate list element
+                if isinstance(json_data[i], list):
+                    for j in range(len(json_data[i])):
+                        # each element of the list is a dictionary type, so try to find the element
+                        if keyword in json_data[i][j]:
+                            return json_data[i][j][keyword]
+                else:
+                    # manipulate dictionary element
+                    if isinstance(json_data[i], dict):
+                        # try to find the element
+                        if keyword in json_data[i]:
+                            return json_data[i][keyword]
     except KeyError as e:
         print(str(e) + "\nValue not found")
 
