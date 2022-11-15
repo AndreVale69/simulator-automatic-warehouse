@@ -11,11 +11,12 @@ class Column(DrawerContainer):
     def add_drawer(self, index: int, drawer: Drawer):
         how_many = drawer.get_max_num_space()
 
+        # initialize positions
+        drawer_entry = DrawerEntry(super().get_pos_x(), index)
+        # connect Drawer to entry
+        drawer_entry.add_drawer(drawer)
+
         while how_many > 0:
-            # initialize positions
-            drawer_entry = DrawerEntry(super().get_pos_x(), index)
-            # connect Drawer to entry
-            drawer_entry.add_drawer(drawer)
             # add to container
             self.get_container()[index] = drawer_entry
             index += 1

@@ -39,7 +39,7 @@ class DrawerContainer:
         return self.__pos_x
 
     @abstractmethod
-    def add_drawer(self, index: int, drawer: DrawerEntry):
+    def add_drawer(self, index: int, drawer: Drawer):
         pass
 
     def remove_drawer(self, drawer: Drawer):
@@ -47,18 +47,22 @@ class DrawerContainer:
 
         try:
             # finding the first occurrence
+            # search inside the column
             for i in range(len(self.get_container())):
+                # if an element of the column is DrawerEntry, so the drawer is full...
                 if isinstance(self.get_container()[i], DrawerEntry):
+                    # ... and if the DrawerEntry object is linked to the same drawer object
                     if DrawerEntry.get_drawer(self.get_container()[i]) == drawer:
+                        # take DrawerEntry object
                         occurrence = self.get_container()[i]
                         break
-            # if there isn't any drawer -> error!
+            # if there isn't any drawer raise StopIteration error!
             if occurrence == 0:
                 raise StopIteration
             else:
+                # search inside the column all the occurrences and substitute with EmptyEntry
                 for i in range(len(self.get_container())):
                     if self.get_container()[i] == occurrence:
                         self.get_container()[i] = EmptyEntry(occurrence.get_pos_x(), occurrence.get_pos_y())
-
         except StopIteration as e:
             print(str(e) + "\nNo element to remove found")

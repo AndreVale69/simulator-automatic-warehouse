@@ -1,3 +1,5 @@
+import copy
+
 from src.useful_func import obt_value_json
 from src.status_warehouse.Container.column import Column
 from src.status_warehouse.Container.carousel import Carousel
@@ -37,11 +39,13 @@ class Warehouse:
         # print("------------------------------------------------------")
         # print(container_left.get_container())
         # print("------------------------------------------------------")
-
-        container_left = Column(self.__height, 1)
-        container_right = Column(self.__height, 0)
-        self.__container = [container_right, container_left]
+        self.__container = []
         self.__carousel = Carousel(self.__height, 0)
+
+    def __copy__(self):
+        copy_instance = Warehouse()
+        copy_instance.__container = copy.deepcopy(self.get_container())
+        return copy_instance
 
     def get_height(self) -> int:
         return self.__height
@@ -51,3 +55,6 @@ class Warehouse:
 
     def get_carousel(self) -> Carousel:
         return self.__carousel
+
+    def add_container(self, container: Column):
+        self.get_container().append(container)
