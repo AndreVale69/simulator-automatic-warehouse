@@ -114,4 +114,4 @@ containers[0].add_drawer(5, drawer)
 
 env = simpy.Environment()
 floor = Floor(env, warehouse, drawer)
-env.run(until=15)
+env.run(until=500)

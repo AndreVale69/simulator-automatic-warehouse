@@ -17,6 +17,21 @@ class Material:
         self.__length = length
         self.__width = width
 
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if isinstance(other, Material):
+            return self.get_barcode() == other.get_barcode() and \
+                   self.get_name() == other.get_name() and \
+                   self.get_height() == other.get_height() and \
+                   self.get_length() == other.get_length() and \
+                   self.get_width() == other.get_width()
+        else:
+            return NotImplemented
+
+    def __hash__(self):
+        """Overrides the default implementation"""
+        return hash((self.get_barcode(), self.get_name(), self.get_height(), self.get_length(), self.get_width()))
+
     def get_barcode(self) -> int:
         return self.__barcode
 
