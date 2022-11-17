@@ -1,0 +1,74 @@
+\documentclass[a4paper]{article}
+\usepackage[italian]{babel}
+\usepackage[italian]{isodate}  		% formato delle date in italiano
+\usepackage{enumitem}				% gestione delle liste
+\usepackage{pifont}					% pacchetto con elenchi carini
+\usepackage[x11names]{xcolor}		% colori aggiuntivi
+% Link ipertestuali per l'indice
+\usepackage{xcolor}
+\usepackage[linkcolor=black, citecolor=blue, urlcolor=cyan]{hyperref}
+\hypersetup{
+	colorlinks=true
+}
+
+\newcommand{\dquotes}[1]{``#1''}
+
+\begin{document}
+	\title{Changelog}
+	\date{\today}
+	\maketitle
+	
+	\newpage
+	
+	\section*{Main Improves}
+	
+	\begin{itemize}[label=\ding{51}]
+		\item Il file \textsf{JSON} adesso è suddiviso in aree più chiare ed è stato rinominato.
+		
+		\item La ricerca all'interno di \textsf{useful\_func.py} è stata migliorata e generalizzata. Tuttavia si potrebbe rompere nel caso si facciano più annidamenti.
+		
+		\item All'interno di \textsf{drawerContainer.py}:
+			\begin{itemize}
+				\item Modificato il parametro della funzione add\_drawer da \textsf{DrawerEntry} a \textsf{Drawer}.
+				
+				\item Modificata la funzione di rimozione, adesso rimuove gli oggetti in modo corretto. Inoltre, nella funzione sono stati aggiunti dei commenti per comprendere meglio il funzionamento.
+				
+				\item Adesso la funzione crea due liste diverse a seconda dell'oggetto (\textsf{Column} o \textsf{Carousel}).
+			\end{itemize}
+		
+		\item All'interno di \textsf{drawer.py}:
+			\begin{itemize}
+				\item Risolto il problema dell'inizializzazione senza oggetti \textsf{Material}, modificando l'assegnazione della variabile \textsf{list}.
+				
+				\item Ottimizzato il ritorno degli oggetti della classe grazie alla risoluzione del problema dell'inizializzazione senza oggetti.
+				
+				\item Eseguito \dquotes{\emph{override}} dei metodi \textsf{equals (\_\_eq\_\_)} e \textsf{hash (\_\_hash\_\_)}.
+			\end{itemize}
+		
+		\item All'interno di \textsf{warehouse.py}:
+			\begin{itemize}
+				\item Rimossa la dichiarazione delle istanze dalle colonne dal costrutto \textsf{\_\_init\_\_} e aggiunte nel \textsf{main.py} per aumentare la generalizzazione.
+				
+				\item Aggiunto il metodo per aggiungere colonne (\textsf{add\_container}).
+				
+				\item Eseguito \dquotes{\emph{override}} del metodo \textsf{\_\_copy\_\_}.
+			\end{itemize}
+		
+		\item All'interno di \textsf{simulation.py}:
+			\begin{itemize}
+				\item Copiati i valori del \textsf{JSON} nei campi della classe.
+				
+				\item Iniziata una prima costruzione degli eventi.
+			\end{itemize}
+		
+		\item All'interno di \textsf{material.py}:
+			\begin{itemize}
+				\item Eseguito \dquotes{\emph{override}} dei metodi \textsf{equals (\_\_eq\_\_)} e \textsf{hash (\_\_hash\_\_)}.
+			\end{itemize}
+		
+		\item All'interno di \textsf{carousel.py}:
+			\begin{itemize}
+				\item Modificata la funzione d'aggiunta di un cassetto all'interno del \emph{buffer} o del deposito.
+			\end{itemize}
+	\end{itemize}
+\end{document}
