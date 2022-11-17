@@ -11,16 +11,14 @@ class Drawer:
 
     def __eq__(self, other):
         """Overrides the default implementation"""
-        if isinstance(other, Drawer):
-            return self.get_items() == other.get_items() and \
-                   self.get_max_height() == other.get_max_height() and \
-                   self.get_max_num_space() == other.get_max_num_space()
-        else:
-            return NotImplemented
+        # TODO check
+        return isinstance(other,
+                          Drawer) and self.get_items() == other.get_items() and self.get_max_height() == other.get_max_height() and self.get_max_num_space() == other.get_max_num_space()
 
     def __hash__(self):
         """Overrides the default implementation"""
-        return hash((frozenset(self.get_items()), self.get_max_height(), self.get_max_num_space()))
+        # TODO check
+        return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
 
     def get_items(self):
         return self.__items

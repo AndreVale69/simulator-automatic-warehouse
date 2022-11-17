@@ -21,7 +21,7 @@ def obt_value_json(keyword: str) -> int:
     # jsonpath_expression = parse()
 
     # closing JSON file
-    json_file.close()
+    # json_file.close()
 
     try:
         # if the value isn't inside a list

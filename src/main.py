@@ -107,6 +107,7 @@ material2 = Material(234, "abc", 126, 987, 00000)
 drawer = Drawer([material, material2])
 
 warehouse.get_carousel().add_drawer(True, drawer)
+wh2 = copy.deepcopy(warehouse)
 
 env = simpy.Environment()
 floor = Floor(env, warehouse, drawer)

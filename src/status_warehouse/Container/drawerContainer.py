@@ -4,6 +4,7 @@ from src.drawer import Drawer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
+
 class DrawerContainer:
     def __init__(self, height: int, pos_x: int):
         from src.status_warehouse.Container.carousel import Carousel
@@ -44,7 +45,7 @@ class DrawerContainer:
     def get_num_entries(self) -> int:
         return self.__num_entries
 
-    def get_container(self) -> list:
+    def get_container(self) -> list[DrawerEntry]:
         return self.__container
 
     def get_buffer(self) -> int:
@@ -76,7 +77,10 @@ class DrawerContainer:
                 # if an element of the column is DrawerEntry, so the drawer is full...
                 if isinstance(self.get_container()[i], DrawerEntry):
                     # ... and if the DrawerEntry object is linked to the same drawer object
-                    if DrawerEntry.get_drawer(self.get_container()[i]) == drawer:
+                    # TODO
+                    # fix DrawerEntry.get_drawer(self.get_container()[i])
+                    # with self.get_container()[i].get_drawer()
+                    if self.get_container()[i].get_drawer() == drawer:
                         # take DrawerEntry object
                         occurrence = self.get_container()[i]
                         break

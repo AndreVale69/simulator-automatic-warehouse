@@ -115,5 +115,5 @@ class Floor(object):
     def __vertical_move(self, start_pos: int, end_pos: int):
         index_distance = abs(end_pos - start_pos)
         eff_distance = index_distance * self.get_def_space()
-        vertical_move = (eff_distance / 100) * self.get_speed_per_sec()
+        vertical_move = (eff_distance / 100) / self.get_speed_per_sec()
         yield self.env.timeout(vertical_move)
