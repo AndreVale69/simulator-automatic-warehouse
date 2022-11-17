@@ -3,7 +3,7 @@
     {
       "": "rxcol",
       "horizontal_right_col"  : 250,
-      "storage_height"        : 320
+      "storage_height"        : 325
     },
     {
       "": "sxcol",
@@ -12,9 +12,9 @@
   ],
   "carousel": {
     "": "carousel_descr",
-    "hole_height"     : 360,
-    "deposit_height"  : 160,
-    "buffer_height"   : 160
+    "hole_height"     : 375,
+    "deposit_height"  : 150,
+    "buffer_height"   : 150
   },
   "height_warehouse"      : 1000,
   "default_height_space"  : 25,

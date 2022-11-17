@@ -1,5 +1,13 @@
 class Material:
     def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
+        """
+
+        :param barcode: unique id of a material
+        :param name: name of a material
+        :param height: height of a material
+        :param length: length of a material
+        :param width: width of a material
+        """
         from src.useful_func import obt_value_json
         # maximum height of a material to fit into a drawer
         max_height_material = obt_value_json("hole_height")

@@ -18,31 +18,30 @@ class Carousel(DrawerContainer):
         :param drawer: To show or to save
         :return: True there is space and the operation is successes, False there isn't space and the operation is failed
         """
-        def_space = obt_value_json("default_height_space")
-        store = obt_value_json("storage_height") // def_space
-        hole = obt_value_json("hole_height") // def_space
+        store = super().get_storage()
+        hole = super().get_hole()
         buf = super().get_buffer()
         dep = super().get_deposit()
+        valid_index = store + hole
         if to_show:
             # check if it's empty
-            if isinstance(self.get_container()[0], EmptyEntry):
+            if isinstance(self.get_container()[valid_index], EmptyEntry):
                 for i in range(buf):
                     # initialize positions
-                    y = store + hole
-                    drawer_entry = DrawerEntry(super().get_pos_x(), y + i)
+                    drawer_entry = DrawerEntry(super().get_pos_x(), valid_index + i)
                     # connect Drawer to entry
                     drawer_entry.add_drawer(drawer)
                     # add to container
-                    self.get_container()[i] = drawer_entry
+                    self.get_container()[valid_index + i] = drawer_entry
                 return True
             else:
                 return False
         else:
-            if isinstance(self.get_container()[buf], EmptyEntry):
-                for i in range(buf, dep + buf):
+            valid_index = valid_index + dep
+            if isinstance(self.get_container()[valid_index], EmptyEntry):
+                for i in range(valid_index, len(self.get_container())):
                     # initialize positions
-                    y = store + hole + dep
-                    drawer_entry = DrawerEntry(super().get_pos_x(), y + (i - buf))
+                    drawer_entry = DrawerEntry(super().get_pos_x(), i)
                     # connect Drawer to entry
                     drawer_entry.add_drawer(drawer)
                     # add to container

@@ -13,6 +13,7 @@ class Warehouse:
 
     def __copy__(self):
         copy_instance = Warehouse()
+        copy_instance.__carousel = copy.deepcopy(self.get_carousel())
         copy_instance.__container = copy.deepcopy(self.get_container())
         return copy_instance
 
