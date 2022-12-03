@@ -6,13 +6,13 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class DrawerContainer:
-    def __init__(self, height: int, pos_x: int):
+    def __init__(self, pos_x: int):
         from src.status_warehouse.Container.carousel import Carousel
         from src.status_warehouse.Container.column import Column
 
         # initialize main vars
         self.__container = []
-        self.__height = height
+        self.__height = obt_value_json("height_warehouse")
         def_space = obt_value_json("default_height_space")
         self.__storage = obt_value_json("storage_height") // def_space
         self.__hole = obt_value_json("hole_height") // def_space
@@ -45,7 +45,7 @@ class DrawerContainer:
     def get_num_entries(self) -> int:
         return self.__num_entries
 
-    def get_container(self) -> list[DrawerEntry]:
+    def get_container(self) -> list:
         return self.__container
 
     def get_buffer(self) -> int:

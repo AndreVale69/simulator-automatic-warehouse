@@ -1,4 +1,3 @@
-from src.useful_func import obt_value_json
 from src.drawer import Drawer
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
@@ -6,8 +5,8 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class Carousel(DrawerContainer):
-    def __init__(self, height: int, pos_x: int):
-        super().__init__(height, pos_x)
+    def __init__(self, pos_x: int):
+        super().__init__(pos_x)
 
     # override
     def add_drawer(self, to_show: bool, drawer: Drawer) -> bool:

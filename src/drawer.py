@@ -3,10 +3,13 @@ from src.material import Material
 
 class Drawer:
     def __init__(self, items: list = None):
+        from src.useful_func import obt_value_json
+
         # items inside the drawer
         if items is None:
             items = []
         self.__items = items.copy()
+        self.def_space = obt_value_json("default_height_space")
         self.__calculate_max_height()
 
     def __eq__(self, other):
@@ -40,10 +43,12 @@ class Drawer:
         """
         return self.__num_space
 
+    def __get_def_space(self) -> int:
+        return self.def_space
+
     # private method to calculate maximum height of a drawer
     def __calculate_max_height(self):
-        from src.useful_func import obt_value_json
-        def_space = obt_value_json("default_height_space")
+        def_space = self.__get_def_space()
 
         try:
             # set tmp max to first element
@@ -67,6 +72,6 @@ class Drawer:
             else:
                 # odd, approx the next
                 self.__num_space = (self.__max_height // def_space) + 1
-        except IndexError as e:
+        except IndexError:
             self.__max_height = None
             self.__num_space = None

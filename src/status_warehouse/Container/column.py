@@ -4,8 +4,8 @@ from src.drawer import Drawer
 
 
 class Column(DrawerContainer):
-    def __init__(self, height: int, pos_x: int):
-        super().__init__(height, pos_x)
+    def __init__(self, pos_x: int):
+        super().__init__(pos_x)
 
     # override
     def add_drawer(self, index: int, drawer: Drawer):

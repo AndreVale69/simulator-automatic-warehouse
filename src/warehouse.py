@@ -9,7 +9,7 @@ class Warehouse:
     def __init__(self):
         self.__height = obt_value_json("height_warehouse")
         self.__container = []
-        self.__carousel = Carousel(self.__height, 0)
+        self.__carousel = Carousel(0)
 
     def __deepcopy__(self):
         copy_instance = Warehouse()
