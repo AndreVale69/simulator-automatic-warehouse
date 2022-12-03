@@ -7,6 +7,14 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 class Carousel(DrawerContainer):
     def __init__(self, pos_x: int):
         super().__init__(pos_x)
+        # insert None value to indicate that are invalid positions
+        valid_index = super().get_storage() + super().get_hole()
+        for i in range(valid_index):
+            super().get_container().append(None)
+
+        # create container
+        for i in range(valid_index, super().get_num_entries()):
+            super().get_container().append(EmptyEntry(i, pos_x))
 
     # override
     def add_drawer(self, to_show: bool, drawer: Drawer) -> bool:

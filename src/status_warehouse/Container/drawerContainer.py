@@ -7,40 +7,22 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 class DrawerContainer:
     def __init__(self, pos_x: int):
-        from src.status_warehouse.Container.carousel import Carousel
-        from src.status_warehouse.Container.column import Column
-
         # initialize main vars
         self.__container = []
         self.__height = obt_value_json("height_warehouse")
-        def_space = obt_value_json("default_height_space")
-        self.__storage = obt_value_json("storage_height") // def_space
-        self.__hole = obt_value_json("hole_height") // def_space
-        self.__deposit = obt_value_json("deposit_height") // def_space
-        self.__buffer = obt_value_json("buffer_height") // def_space
+        self.def_space = obt_value_json("default_height_space")
+        self.__storage = obt_value_json("storage_height") // self.get_def_space()
+        self.__hole = obt_value_json("hole_height") // self.get_def_space()
+        self.__deposit = obt_value_json("deposit_height") // self.get_def_space()
+        self.__buffer = obt_value_json("buffer_height") // self.get_def_space()
+        self.__num_entries = self.get_height() // self.get_def_space()
         self.__pos_x = pos_x
-
-        # check if is output column or not
-        if (type(self) is Column) and self.__pos_x == 0:
-            print(type(self))
-            self.__num_entries = self.__storage // def_space
-        else:
-            self.__num_entries = self.__height // def_space
-
-        # check if is carousel to create container
-        valid_index = 0
-        if type(self) is Carousel:
-            valid_index = self.__storage + self.__hole
-            # insert None value to indicate that are invalid positions
-            for i in range(valid_index):
-                self.__container.append(None)
-
-        # create container
-        for i in range(valid_index, self.__num_entries):
-            self.__container.append(EmptyEntry(i, self.__pos_x))
 
     def get_height(self) -> int:
         return self.__height
+
+    def get_def_space(self) -> int:
+        return self.def_space
 
     def get_num_entries(self) -> int:
         return self.__num_entries
@@ -62,6 +44,9 @@ class DrawerContainer:
 
     def get_hole(self) -> int:
         return self.__hole
+
+    def set_num_entries(self, num_entries: int):
+        self.__num_entries = num_entries
 
     @abstractmethod
     def add_drawer(self, index: int, drawer: Drawer):
