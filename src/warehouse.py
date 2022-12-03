@@ -11,7 +11,7 @@ class Warehouse:
         self.__container = []
         self.__carousel = Carousel(self.__height, 0)
 
-    def __copy__(self):
+    def __deepcopy__(self):
         copy_instance = Warehouse()
         copy_instance.__carousel = copy.deepcopy(self.get_carousel())
         copy_instance.__container = copy.deepcopy(self.get_container())
