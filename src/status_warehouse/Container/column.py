@@ -13,7 +13,7 @@ class Column(DrawerContainer):
 
         # create container
         for i in range(super().get_num_entries()):
-            super().get_container().append(EmptyEntry(i, pos_x))
+            super().add_item_to_container(EmptyEntry(pos_x, i))
 
     # override
     def add_drawer(self, index: int, drawer: Drawer):

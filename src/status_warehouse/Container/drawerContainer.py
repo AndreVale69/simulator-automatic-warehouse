@@ -48,6 +48,9 @@ class DrawerContainer:
     def set_num_entries(self, num_entries: int):
         self.__num_entries = num_entries
 
+    def add_item_to_container(self, element):
+        self.get_container().append(element)
+
     @abstractmethod
     def add_drawer(self, index: int, drawer: Drawer):
         pass
