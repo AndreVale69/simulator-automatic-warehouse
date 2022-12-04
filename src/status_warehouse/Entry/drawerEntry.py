@@ -14,7 +14,7 @@ class DrawerEntry(Entry):
         self.drawer = copy.deepcopy(self.drawer, memo)
         return newone
 
-    def get_drawer(self):
+    def get_drawer(self) -> Drawer:
         return self.drawer
 
     def add_drawer(self, drawer: Drawer):

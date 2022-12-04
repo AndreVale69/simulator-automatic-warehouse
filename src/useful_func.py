@@ -64,6 +64,23 @@ def search_drawer(list_obj: list, drawer: Drawer) -> DrawerEntry:
     raise StopIteration("No element found")
 
 
+# def tmp(list_col: list, drawer: Drawer) -> DrawerEntry:
+#     from src.status_warehouse.Container.column import Column
+#
+#     for j in range(len(list_col)):
+#         for i in range(len(Column.get_container(list_col[j]))):
+#             if isinstance(Column.get_container(list_col[j])[i], DrawerEntry):
+#                 flag = 0
+#                 for k in range(len(DrawerEntry.get_drawer(Column.get_container(list_col[j])[i]).get_items())):
+#                     if DrawerEntry.get_drawer(Column.get_container(list_col[j])[i]).get_items()[k].get_barcode() == \
+#                             drawer.get_items()[k].get_barcode():
+#                         flag = flag + 1
+#                 if flag == len(DrawerEntry.get_drawer(Column.get_container(list_col[j])[i]).get_items()):
+#                     return Column.get_container(list_col[j])[i]
+#
+#     raise StopIteration("No element found")
+
+
 def check_minimum_space(list_obj: list, space_req: int) -> list:
     """
     Algorithm to decide where insert a drawer.

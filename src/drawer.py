@@ -13,6 +13,9 @@ class Drawer:
         self.def_space = obt_value_json("default_height_space")
         self.__calculate_max_height()
 
+        self.best_x = None
+        self.best_y = None
+
     def __eq__(self, other):
         """Overrides the default implementation"""
         # TODO check
@@ -49,6 +52,18 @@ class Drawer:
         :return: number of occupied spaces in the warehouse
         """
         return self.num_space
+
+    def get_best_x(self) -> int:
+        return self.best_x
+
+    def get_best_y(self) -> int:
+        return self.best_y
+
+    def set_best_x(self, pos_x: int):
+        self.best_x = pos_x
+
+    def set_best_y(self, pos_y: int):
+        self.best_y = pos_y
 
     def __get_def_space(self) -> int:
         return self.def_space

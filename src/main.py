@@ -1,11 +1,10 @@
 import copy
 
-import simpy
 from src.warehouse import Warehouse
 from src.drawer import Drawer
 from src.material import Material
-from src.simulation import Floor
 from src.status_warehouse.Container.column import Column
+
 
 warehouse = Warehouse()
 
@@ -23,10 +22,6 @@ drawer2 = Drawer([material3])
 warehouse.get_carousel().add_drawer(True, drawer)
 warehouse.get_carousel().add_drawer(False, drawer2)
 
-
 wh2 = copy.deepcopy(warehouse)
 
-env = simpy.Environment()
-floor = Floor(env, warehouse, drawer)
-env.process(floor.insert(drawer))
-env.run(until=10)
+warehouse.run_simulation(20, drawer)
