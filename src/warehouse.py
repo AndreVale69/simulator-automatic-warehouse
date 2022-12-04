@@ -7,9 +7,9 @@ from src.status_warehouse.Container.carousel import Carousel
 
 class Warehouse:
     def __init__(self):
-        self.__height = obt_value_json("height_warehouse")
-        self.__container = []
-        self.__carousel = Carousel(0)
+        self.height = obt_value_json("height_warehouse")
+        self.container = []
+        self.carousel = Carousel(0)
 
     # def __deepcopy__(self):
     #     copy_instance = Warehouse()
@@ -20,18 +20,18 @@ class Warehouse:
     def __deepcopy__(self, memo):
         newone = type(self)()
         newone.__dict__.update(self.__dict__)
-        self.__carousel = copy.deepcopy(self.__carousel, memo)
-        self.__container = copy.deepcopy(self.__container, memo)
+        self.carousel = copy.deepcopy(self.carousel, memo)
+        self.container = copy.deepcopy(self.container, memo)
         return newone
 
     def get_height(self) -> int:
-        return self.__height
+        return self.height
 
     def get_container(self) -> list[Column]:
-        return self.__container
+        return self.container
 
     def get_carousel(self) -> Carousel:
-        return self.__carousel
+        return self.carousel
 
     def add_container(self, container: Column):
         self.get_container().append(container)

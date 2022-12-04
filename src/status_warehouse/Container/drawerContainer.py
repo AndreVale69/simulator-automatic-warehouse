@@ -9,59 +9,59 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 class DrawerContainer:
     def __init__(self, pos_x: int):
         # initialize main vars
-        self.__container = []
-        self.__height = obt_value_json("height_warehouse")
+        self.container = []
+        self.height = obt_value_json("height_warehouse")
         self.def_space = obt_value_json("default_height_space")
-        self.__storage = obt_value_json("storage_height") // self.get_def_space()
-        self.__hole = obt_value_json("hole_height") // self.get_def_space()
-        self.__deposit = obt_value_json("deposit_height") // self.get_def_space()
-        self.__buffer = obt_value_json("buffer_height") // self.get_def_space()
-        self.__num_entries = self.get_height() // self.get_def_space()
-        self.__pos_x = pos_x
+        self.storage = obt_value_json("storage_height") // self.get_def_space()
+        self.hole = obt_value_json("hole_height") // self.get_def_space()
+        self.deposit = obt_value_json("deposit_height") // self.get_def_space()
+        self.buffer = obt_value_json("buffer_height") // self.get_def_space()
+        self.num_entries = self.get_height() // self.get_def_space()
+        self.pos_x = pos_x
 
     def __deepcopy__(self, memo):
         newone = type(self)(self.get_pos_x())
         newone.__dict__.update(self.__dict__)
-        self.__container = copy.deepcopy(self.__container, memo)
-        self.__height = copy.deepcopy(self.__height, memo)
+        self.container = copy.deepcopy(self.container, memo)
+        self.height = copy.deepcopy(self.height, memo)
         self.def_space = copy.deepcopy(self.def_space, memo)
-        self.__storage = copy.deepcopy(self.__storage, memo)
-        self.__hole = copy.deepcopy(self.__hole, memo)
-        self.__deposit = copy.deepcopy(self.__deposit, memo)
-        self.__buffer = copy.deepcopy(self.__buffer, memo)
-        self.__num_entries = copy.deepcopy(self.__num_entries, memo)
-        self.__pos_x = copy.deepcopy(self.__pos_x, memo)
+        self.storage = copy.deepcopy(self.storage, memo)
+        self.hole = copy.deepcopy(self.hole, memo)
+        self.deposit = copy.deepcopy(self.deposit, memo)
+        self.buffer = copy.deepcopy(self.buffer, memo)
+        self.num_entries = copy.deepcopy(self.num_entries, memo)
+        self.pos_x = copy.deepcopy(self.pos_x, memo)
         return newone
 
     def get_height(self) -> int:
-        return self.__height
+        return self.height
 
     def get_def_space(self) -> int:
         return self.def_space
 
     def get_num_entries(self) -> int:
-        return self.__num_entries
+        return self.num_entries
 
     def get_container(self) -> list:
-        return self.__container
+        return self.container
 
     def get_buffer(self) -> int:
-        return self.__buffer
+        return self.buffer
 
     def get_deposit(self) -> int:
-        return self.__deposit
+        return self.deposit
 
     def get_pos_x(self) -> int:
-        return self.__pos_x
+        return self.pos_x
 
     def get_storage(self) -> int:
-        return self.__storage
+        return self.storage
 
     def get_hole(self) -> int:
-        return self.__hole
+        return self.hole
 
     def set_num_entries(self, num_entries: int):
-        self.__num_entries = num_entries
+        self.num_entries = num_entries
 
     def add_item_to_container(self, element):
         self.get_container().append(element)

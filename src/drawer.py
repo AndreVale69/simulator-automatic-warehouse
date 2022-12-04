@@ -9,7 +9,7 @@ class Drawer:
         # items inside the drawer
         if items is None:
             items = []
-        self.__items = copy.deepcopy(items)
+        self.items = copy.deepcopy(items)
         self.def_space = obt_value_json("default_height_space")
         self.__calculate_max_height()
 
@@ -27,28 +27,28 @@ class Drawer:
     def __deepcopy__(self, memo):
         newone = type(self)(self.get_items())
         newone.__dict__.update(self.__dict__)
-        self.__items = copy.deepcopy(self.get_items(), memo)
+        self.items = copy.deepcopy(self.get_items(), memo)
         return newone
 
     def get_items(self):
-        return self.__items
+        return self.items
 
     def add_material(self, material: Material):
         # insert in tail
-        self.__items.append(material)
+        self.items.append(material)
         self.__calculate_max_height()
 
     def get_max_height(self) -> int:
         """
         :return: maximum height of a material inside drawer
         """
-        return self.__max_height
+        return self.max_height
 
     def get_max_num_space(self) -> int:
         """
         :return: number of occupied spaces in the warehouse
         """
-        return self.__num_space
+        return self.num_space
 
     def __get_def_space(self) -> int:
         return self.def_space
@@ -59,26 +59,26 @@ class Drawer:
 
         try:
             # set tmp max to first element
-            tmp_max_height = Material.get_height(self.__items[0])
+            tmp_max_height = self.items[0].get_height
 
             # search max
-            for i in range(1, len(self.__items)):
-                height = Material.get_height(self.__items[i])
+            for i in range(1, len(self.items)):
+                height = self.items[i].get_height
 
                 if height > tmp_max_height:
                     tmp_max_height = height
 
             # save max height
             # maximum height of a drawer based on the elements present
-            self.__max_height = tmp_max_height
+            self.max_height = tmp_max_height
 
             # Check if is even or odd
-            if (self.__max_height % def_space) == 0:
+            if (self.max_height % def_space) == 0:
                 # even
-                self.__num_space = self.__max_height // def_space
+                self.num_space = self.max_height // def_space
             else:
                 # odd, approx the next
-                self.__num_space = (self.__max_height // def_space) + 1
+                self.num_space = (self.max_height // def_space) + 1
         except IndexError:
-            self.__max_height = None
-            self.__num_space = None
+            self.max_height = None
+            self.num_space = None
