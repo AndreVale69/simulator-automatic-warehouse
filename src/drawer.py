@@ -30,7 +30,7 @@ class Drawer:
         self.items = copy.deepcopy(self.get_items(), memo)
         return newone
 
-    def get_items(self):
+    def get_items(self) -> list[Material]:
         return self.items
 
     def add_material(self, material: Material):
@@ -59,11 +59,11 @@ class Drawer:
 
         try:
             # set tmp max to first element
-            tmp_max_height = self.items[0].get_height
+            tmp_max_height = self.get_items()[0].get_height()
 
             # search max
             for i in range(1, len(self.items)):
-                height = self.items[i].get_height
+                height = self.get_items()[i].get_height()
 
                 if height > tmp_max_height:
                     tmp_max_height = height

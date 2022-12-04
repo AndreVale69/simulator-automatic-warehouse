@@ -4,10 +4,11 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
-def obt_value_json(keyword: str) -> int:
+def obt_value_json(keyword: str, col: str = None) -> int:
     """
     Read a specific data inside JSON file.
 
+    :param col: specify name of column (optional)
     :param keyword: constant search inside JSON file.
     :return: value found.
     :exception KeyError: value not found.
@@ -17,11 +18,6 @@ def obt_value_json(keyword: str) -> int:
     with open("../rsc/config.json", 'r') as json_file:
         # returns JSON object as a dictionary
         json_data = json.load(json_file)
-
-    # jsonpath_expression = parse()
-
-    # closing JSON file
-    # json_file.close()
 
     try:
         # if the value isn't inside a list
@@ -34,8 +30,11 @@ def obt_value_json(keyword: str) -> int:
                 if isinstance(json_data[i], list):
                     for j in range(len(json_data[i])):
                         # each element of the list is a dictionary type, so try to find the element
-                        if keyword in json_data[i][j]:
+                        if col is not None and json_data[i][j]["descr"] == col and keyword in json_data[i][j]:
                             return json_data[i][j][keyword]
+                        else:
+                            if keyword in json_data[i][j]:
+                                return json_data[i][j][keyword]
                 else:
                     # manipulate dictionary element
                     if isinstance(json_data[i], dict):
