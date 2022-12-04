@@ -15,6 +15,9 @@ class Column(DrawerContainer):
         for i in range(super().get_num_entries()):
             super().add_item_to_container(EmptyEntry(pos_x, i))
 
+    def __deepcopy__(self, memo):
+        return super().__deepcopy__(memo)
+
     # override
     def add_drawer(self, index: int, drawer: Drawer):
         how_many = drawer.get_max_num_space()

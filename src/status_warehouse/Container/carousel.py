@@ -18,6 +18,9 @@ class Carousel(DrawerContainer):
         for i in range(super().get_num_entries()):
             super().add_item_to_container(EmptyEntry(pos_x, i + first_y))
 
+    def __deepcopy__(self, memo):
+        return super().__deepcopy__(memo)
+
     # override
     def add_drawer(self, to_show: bool, drawer: Drawer) -> bool:
         """

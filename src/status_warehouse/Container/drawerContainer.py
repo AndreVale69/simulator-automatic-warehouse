@@ -1,3 +1,4 @@
+import copy
 from abc import abstractmethod
 from src.useful_func import obt_value_json
 from src.drawer import Drawer
@@ -17,6 +18,20 @@ class DrawerContainer:
         self.__buffer = obt_value_json("buffer_height") // self.get_def_space()
         self.__num_entries = self.get_height() // self.get_def_space()
         self.__pos_x = pos_x
+
+    def __deepcopy__(self, memo):
+        newone = type(self)(self.get_pos_x())
+        newone.__dict__.update(self.__dict__)
+        self.__container = copy.deepcopy(self.__container, memo)
+        self.__height = copy.deepcopy(self.__height, memo)
+        self.def_space = copy.deepcopy(self.def_space, memo)
+        self.__storage = copy.deepcopy(self.__storage, memo)
+        self.__hole = copy.deepcopy(self.__hole, memo)
+        self.__deposit = copy.deepcopy(self.__deposit, memo)
+        self.__buffer = copy.deepcopy(self.__buffer, memo)
+        self.__num_entries = copy.deepcopy(self.__num_entries, memo)
+        self.__pos_x = copy.deepcopy(self.__pos_x, memo)
+        return newone
 
     def get_height(self) -> int:
         return self.__height

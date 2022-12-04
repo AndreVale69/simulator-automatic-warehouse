@@ -1,3 +1,4 @@
+import copy
 from src.material import Material
 
 
@@ -8,7 +9,7 @@ class Drawer:
         # items inside the drawer
         if items is None:
             items = []
-        self.__items = items.copy()
+        self.__items = copy.deepcopy(items)
         self.def_space = obt_value_json("default_height_space")
         self.__calculate_max_height()
 
@@ -22,6 +23,12 @@ class Drawer:
         """Overrides the default implementation"""
         # TODO check
         return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
+
+    def __deepcopy__(self, memo):
+        newone = type(self)(self.get_items())
+        newone.__dict__.update(self.__dict__)
+        self.__items = copy.deepcopy(self.get_items(), memo)
+        return newone
 
     def get_items(self):
         return self.__items

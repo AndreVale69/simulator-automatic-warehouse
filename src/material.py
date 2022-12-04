@@ -40,6 +40,15 @@ class Material:
         """Overrides the default implementation"""
         return hash((self.get_barcode(), self.get_name(), self.get_height(), self.get_length(), self.get_width()))
 
+    def __deepcopy__(self, memo):
+        newone = type(self)(self.get_barcode(),
+                            self.get_name(),
+                            self.get_height(),
+                            self.get_length(),
+                            self.get_width())
+        newone.__dict__.update(self.__dict__)
+        return newone
+
     def get_barcode(self) -> int:
         return self.__barcode
 
