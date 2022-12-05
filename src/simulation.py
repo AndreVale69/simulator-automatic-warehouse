@@ -23,10 +23,10 @@ class Floor(object):
             print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
             yield self.env.process(self.get_warehouse().loading_buffer_and_remove(drawer))
         else:
-            # remove only from container
-            self.get_warehouse().get_carousel().remove_drawer(drawer)
             # unloading drawer
             yield self.env.process(self.get_warehouse().unload(drawer))
+            # remove only from container
+            self.get_warehouse().get_carousel().remove_drawer(drawer)
 
         # move the floor
         print(f"Time {self.env.now:5.2f} - Start vertical move")

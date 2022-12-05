@@ -45,40 +45,32 @@ def obt_value_json(keyword: str, col: str = None) -> int:
         print(str(e) + "\nValue not found")
 
 
-def search_drawer(list_obj: list, drawer: Drawer) -> DrawerEntry:
+def search_drawer(list_col: list, drawer: Drawer) -> DrawerEntry:
     """
-    Search first drawer in relationship with drawer parameter.
+        Search first drawer that have the same items inside (check barcode).
 
-    :param list_obj: list of columns.
-    :param drawer: drawer in relationship with DrawerEntry to search.
-    :return: object in relationship with drawer
+        :param list_col: list of columns.
+        :param drawer: drawer in relationship with DrawerEntry to search.
+        :return: object in relationship with drawer
     """
-    from src.status_warehouse.Container.column import Column
+    from src.status_warehouse.Container.column import DrawerContainer
 
-    for j in range(len(list_obj)):
-        for i in range(len(Column.get_container(list_obj[j]))):
-            if isinstance(Column.get_container(list_obj[j])[i], DrawerEntry):
-                if DrawerEntry.get_drawer(Column.get_container(list_obj[j])[i]) == drawer:
-                    return Column.get_container(list_obj[j])[i]
-
+    # take every column
+    for j in range(len(list_col)):
+        # take every space in the column
+        for i in range(len(DrawerContainer.get_container(list_col[j]))):
+            # check if there is a drawer
+            if isinstance(DrawerContainer.get_container(list_col[j])[i], DrawerEntry):
+                flag = 0
+                # count every item (= Material) inside the drawer
+                for k in range(len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items())):
+                    if DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()[k].get_barcode() == \
+                            drawer.get_items()[k].get_barcode():
+                        flag = flag + 1
+                # if every item is equal (about barcode) -> finish
+                if flag == len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()):
+                    return DrawerContainer.get_container(list_col[j])[i]
     raise StopIteration("No element found")
-
-
-# def tmp(list_col: list, drawer: Drawer) -> DrawerEntry:
-#     from src.status_warehouse.Container.column import Column
-#
-#     for j in range(len(list_col)):
-#         for i in range(len(Column.get_container(list_col[j]))):
-#             if isinstance(Column.get_container(list_col[j])[i], DrawerEntry):
-#                 flag = 0
-#                 for k in range(len(DrawerEntry.get_drawer(Column.get_container(list_col[j])[i]).get_items())):
-#                     if DrawerEntry.get_drawer(Column.get_container(list_col[j])[i]).get_items()[k].get_barcode() == \
-#                             drawer.get_items()[k].get_barcode():
-#                         flag = flag + 1
-#                 if flag == len(DrawerEntry.get_drawer(Column.get_container(list_col[j])[i]).get_items()):
-#                     return Column.get_container(list_col[j])[i]
-#
-#     raise StopIteration("No element found")
 
 
 def check_minimum_space(list_obj: list, space_req: int) -> list:

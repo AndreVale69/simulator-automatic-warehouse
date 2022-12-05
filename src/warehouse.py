@@ -110,7 +110,10 @@ class Warehouse:
         yield self.env.timeout(vertical_move)
 
     def unload(self, drawer: Drawer):
-        pos_x_drawer = search_drawer(self.get_container(), drawer).get_pos_x()
+        try:
+            pos_x_drawer = search_drawer(self.get_container(), drawer).get_pos_x()
+        except StopIteration:
+            pos_x_drawer = search_drawer([self.get_carousel()], drawer).get_pos_x()
         yield self.env.timeout(self.__horiz_move(pos_x_drawer))
 
     def load(self, drawer: Drawer):
