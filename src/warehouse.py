@@ -69,17 +69,28 @@ class Warehouse:
             return False
 
     def loading_buffer_and_remove(self, drawer_to_rmv: Drawer):
-        # TODO: check grater time
         storage = self.get_carousel().get_storage()
         hole = self.get_carousel().get_hole()
         carousel = self.get_carousel().get_container()
         deposit = self.get_carousel().get_deposit()
 
+        # calculate unload time
+        try:
+            pos_x_drawer = search_drawer(self.get_container(), drawer_to_rmv).get_pos_x()
+        except StopIteration:
+            pos_x_drawer = search_drawer([self.get_carousel()], drawer_to_rmv).get_pos_x()
+        unload_time = self.__horiz_move(pos_x_drawer)
+
+        # calculate loading buffer time
         start_pos = DrawerEntry.get_pos_y(carousel[deposit])
         end_pos = storage + hole
+        loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
-        vertical_move = self.vertical_move(start_pos, end_pos)
-        yield self.env.timeout(vertical_move)
+        # choose greater time
+        if unload_time > loading_buffer_time:
+            yield self.env.timeout(unload_time)
+        else:
+            yield self.env.timeout(loading_buffer_time)
 
         # remove from container
         self.get_carousel().remove_drawer(drawer_to_rmv)

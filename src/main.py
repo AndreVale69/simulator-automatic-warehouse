@@ -20,7 +20,7 @@ drawer = Drawer([material, material2])
 drawer2 = Drawer([material3])
 
 warehouse.get_carousel().add_drawer(True, drawer)
-# warehouse.get_carousel().add_drawer(False, drawer2)
+warehouse.get_carousel().add_drawer(False, drawer2)
 
 wh2 = copy.deepcopy(warehouse)
 
