@@ -19,11 +19,11 @@ class Material:
                              " is too high (max height: " +
                              str(max_height_material) + ")")
 
-        self.__barcode = barcode
-        self.__name = name
-        self.__height = height
-        self.__length = length
-        self.__width = width
+        self.barcode = barcode
+        self.name = name
+        self.height = height
+        self.length = length
+        self.width = width
 
     def __eq__(self, other):
         """Overrides the default implementation"""
@@ -40,17 +40,26 @@ class Material:
         """Overrides the default implementation"""
         return hash((self.get_barcode(), self.get_name(), self.get_height(), self.get_length(), self.get_width()))
 
+    def __deepcopy__(self, memo):
+        newone = type(self)(self.get_barcode(),
+                            self.get_name(),
+                            self.get_height(),
+                            self.get_length(),
+                            self.get_width())
+        newone.__dict__.update(self.__dict__)
+        return newone
+
     def get_barcode(self) -> int:
-        return self.__barcode
+        return self.barcode
 
     def get_name(self) -> str:
-        return self.__name
+        return self.name
 
     def get_height(self) -> int:
-        return self.__height
+        return self.height
 
     def get_length(self) -> int:
-        return self.__length
+        return self.length
 
     def get_width(self) -> int:
-        return self.__width
+        return self.width

@@ -1,11 +1,22 @@
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.drawer import Drawer
+from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class Column(DrawerContainer):
-    def __init__(self, height: int, pos_x: int):
-        super().__init__(height, pos_x)
+    def __init__(self, pos_x: int):
+        super().__init__(pos_x)
+        # different height if the column match at the output
+        if pos_x == 0:
+            super().set_num_entries(super().get_storage())
+
+        # create container
+        for i in range(super().get_num_entries()):
+            super().add_item_to_container(EmptyEntry(pos_x, i))
+
+    def __deepcopy__(self, memo):
+        return super().__deepcopy__(memo)
 
     # override
     def add_drawer(self, index: int, drawer: Drawer):

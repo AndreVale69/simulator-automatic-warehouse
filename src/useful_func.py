@@ -4,10 +4,11 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
-def obt_value_json(keyword: str) -> int:
+def obt_value_json(keyword: str, col: str = None) -> int:
     """
     Read a specific data inside JSON file.
 
+    :param col: specify name of column (optional)
     :param keyword: constant search inside JSON file.
     :return: value found.
     :exception KeyError: value not found.
@@ -17,11 +18,6 @@ def obt_value_json(keyword: str) -> int:
     with open("../rsc/config.json", 'r') as json_file:
         # returns JSON object as a dictionary
         json_data = json.load(json_file)
-
-    # jsonpath_expression = parse()
-
-    # closing JSON file
-    # json_file.close()
 
     try:
         # if the value isn't inside a list
@@ -34,8 +30,11 @@ def obt_value_json(keyword: str) -> int:
                 if isinstance(json_data[i], list):
                     for j in range(len(json_data[i])):
                         # each element of the list is a dictionary type, so try to find the element
-                        if keyword in json_data[i][j]:
+                        if col is not None and json_data[i][j]["descr"] == col and keyword in json_data[i][j]:
                             return json_data[i][j][keyword]
+                        else:
+                            if keyword in json_data[i][j]:
+                                return json_data[i][j][keyword]
                 else:
                     # manipulate dictionary element
                     if isinstance(json_data[i], dict):
@@ -46,22 +45,31 @@ def obt_value_json(keyword: str) -> int:
         print(str(e) + "\nValue not found")
 
 
-def search_drawer(list_obj: list, drawer: Drawer) -> DrawerEntry:
+def search_drawer(list_col: list, drawer: Drawer) -> DrawerEntry:
     """
-    Search first drawer in relationship with drawer parameter.
+        Search first drawer that have the same items inside (check barcode).
 
-    :param list_obj: list of columns.
-    :param drawer: drawer in relationship with DrawerEntry to search.
-    :return: object in relationship with drawer
+        :param list_col: list of columns.
+        :param drawer: drawer in relationship with DrawerEntry to search.
+        :return: object in relationship with drawer
     """
-    from src.status_warehouse.Container.column import Column
+    from src.status_warehouse.Container.column import DrawerContainer
 
-    for j in range(len(list_obj)):
-        for i in range(len(Column.get_container(list_obj[j]))):
-            if isinstance(Column.get_container(list_obj[j])[i], DrawerEntry):
-                if DrawerEntry.get_drawer(Column.get_container(list_obj[j])[i]) == drawer:
-                    return Column.get_container(list_obj[j])[i]
-
+    # take every column
+    for j in range(len(list_col)):
+        # take every space in the column
+        for i in range(len(DrawerContainer.get_container(list_col[j]))):
+            # check if there is a drawer
+            if isinstance(DrawerContainer.get_container(list_col[j])[i], DrawerEntry):
+                flag = 0
+                # count every item (= Material) inside the drawer
+                for k in range(len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items())):
+                    if DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()[k].get_barcode() == \
+                            drawer.get_items()[k].get_barcode():
+                        flag = flag + 1
+                # if every item is equal (about barcode) -> finish
+                if flag == len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()):
+                    return DrawerContainer.get_container(list_col[j])[i]
     raise StopIteration("No element found")
 
 

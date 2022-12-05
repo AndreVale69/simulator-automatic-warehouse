@@ -1,3 +1,4 @@
+import copy
 from abc import abstractmethod
 from src.useful_func import obt_value_json
 from src.drawer import Drawer
@@ -6,62 +7,64 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class DrawerContainer:
-    def __init__(self, height: int, pos_x: int):
-        from src.status_warehouse.Container.carousel import Carousel
-        from src.status_warehouse.Container.column import Column
-
+    def __init__(self, pos_x: int):
         # initialize main vars
-        self.__container = []
-        self.__height = height
-        def_space = obt_value_json("default_height_space")
-        self.__storage = obt_value_json("storage_height") // def_space
-        self.__hole = obt_value_json("hole_height") // def_space
-        self.__deposit = obt_value_json("deposit_height") // def_space
-        self.__buffer = obt_value_json("buffer_height") // def_space
-        self.__pos_x = pos_x
+        self.container = []
+        self.height = obt_value_json("height_warehouse")
+        self.def_space = obt_value_json("default_height_space")
+        self.storage = obt_value_json("storage_height") // self.get_def_space()
+        self.hole = obt_value_json("hole_height") // self.get_def_space()
+        self.deposit = obt_value_json("deposit_height") // self.get_def_space()
+        self.buffer = obt_value_json("buffer_height") // self.get_def_space()
+        self.num_entries = self.get_height() // self.get_def_space()
+        self.pos_x = pos_x
 
-        # check if is output column or not
-        if (type(self) is Column) and self.__pos_x == 0:
-            print(type(self))
-            self.__num_entries = self.__storage // def_space
-        else:
-            self.__num_entries = self.__height // def_space
-
-        # check if is carousel to create container
-        valid_index = 0
-        if type(self) is Carousel:
-            valid_index = self.__storage + self.__hole
-            # insert None value to indicate that are invalid positions
-            for i in range(valid_index):
-                self.__container.append(None)
-
-        # create container
-        for i in range(valid_index, self.__num_entries):
-            self.__container.append(EmptyEntry(i, self.__pos_x))
+    def __deepcopy__(self, memo):
+        newone = type(self)(self.get_pos_x())
+        newone.__dict__.update(self.__dict__)
+        self.container = copy.deepcopy(self.container, memo)
+        self.height = copy.deepcopy(self.height, memo)
+        self.def_space = copy.deepcopy(self.def_space, memo)
+        self.storage = copy.deepcopy(self.storage, memo)
+        self.hole = copy.deepcopy(self.hole, memo)
+        self.deposit = copy.deepcopy(self.deposit, memo)
+        self.buffer = copy.deepcopy(self.buffer, memo)
+        self.num_entries = copy.deepcopy(self.num_entries, memo)
+        self.pos_x = copy.deepcopy(self.pos_x, memo)
+        return newone
 
     def get_height(self) -> int:
-        return self.__height
+        return self.height
+
+    def get_def_space(self) -> int:
+        return self.def_space
 
     def get_num_entries(self) -> int:
-        return self.__num_entries
+        return self.num_entries
 
-    def get_container(self) -> list[DrawerEntry]:
-        return self.__container
+    def get_container(self) -> list:
+        return self.container
 
     def get_buffer(self) -> int:
-        return self.__buffer
+        return self.buffer
 
     def get_deposit(self) -> int:
-        return self.__deposit
+        return self.deposit
 
     def get_pos_x(self) -> int:
-        return self.__pos_x
+        return self.pos_x
 
     def get_storage(self) -> int:
-        return self.__storage
+        return self.storage
 
     def get_hole(self) -> int:
-        return self.__hole
+        return self.hole
+
+    def set_num_entries(self, num_entries: int):
+        self.num_entries = num_entries
+
+    def add_item_to_container(self, element):
+        self.get_container().append(element)
 
     @abstractmethod
     def add_drawer(self, index: int, drawer: Drawer):
