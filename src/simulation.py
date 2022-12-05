@@ -10,7 +10,8 @@ class Floor(object):
         self.env = env
         # start the move process everytime an instance is created.
         self.warehouse = copy.deepcopy(warehouse)
-        # self.action = env.process(self.move(drawer))
+        self.pos_x = None
+        self.pos_y = None
 
     def get_warehouse(self) -> Warehouse:
         return self.warehouse
@@ -36,8 +37,12 @@ class Floor(object):
         print(f"Time {self.env.now:5.2f} - Start loading a drawer")
         yield self.env.process(self.get_warehouse().load(drawer))
 
+        # check if there is a drawer in the deposit
+        if self.get_warehouse().check_deposit():
+            print(f"Time {self.env.now:5.2f} - Start come back to deposit position")
+            yield self.env.process(self.get_warehouse().come_back_to_deposit(drawer))
+
         print(f"Time {self.env.now:5.2f} - Finish")
-        # TODO: return to deposit
 
     def remove(self):
         print("Remove")
@@ -46,27 +51,8 @@ class Floor(object):
         print("Search")
         print("Insert or Remove")
 
-    def move(self, drawer: Drawer):
-        while True:
-            print("To rmv")
-            # drawer_entry = search_drawer(self.__warehouse.get_container(), drawer)
-            # minimum = check_minimum_space(self.__warehouse.get_container(),
-            #                               drawer.get_max_num_space())
-            # pos_to_insert = minimum[1]
-            # col = minimum[2]
-            # print(f"Time {self.env.now:5.2f} - Start vertical move")
-            # yield self.env.process(self.__vertical_move(drawer_entry.get_pos_y(), pos_to_insert))
+    def get_pos_x(self):
+        return self.pos_x
 
-            # print(f"Time {self.env.now:5.2f} - Start load a drawer")
-            # yield self.env.process(self.__load(col, drawer, pos_to_insert))
-
-            # col.remove_drawer(drawer)
-
-            # print(f"Time {self.env.now:5.2f} - Start unload the floor")
-            # yield self.env.process(self.__unload())
-
-            # print(f"Time {self.env.now:5.2f} - Start vertical move")
-
-            # print(f"Time {self.env.now:5.2f} - Start return to the hole")
-
-            # print(f"Time {self.env.now:5.2f} - Ready to use!")
+    def get_pos_y(self):
+        return self.pos_y

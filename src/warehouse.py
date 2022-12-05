@@ -61,12 +61,19 @@ class Warehouse:
     def check_buffer(self) -> bool:
         carousel = self.get_carousel().get_container()
         deposit = self.get_carousel().get_deposit()
-        # if the buffer is full
-        if type(carousel[deposit]) is DrawerEntry:
-            # load the drawer inside the deposit
-            return True
-        else:
-            return False
+        return True if type(carousel[deposit]) is DrawerEntry else False
+
+    def check_deposit(self) -> bool:
+        carousel = self.get_carousel().get_container()
+        return True if type(carousel[0]) is DrawerEntry else False
+
+    def come_back_to_deposit(self, drawer_inserted: Drawer):
+        try:
+            first_pos = search_drawer(self.get_container(), drawer_inserted).get_pos_x()
+        except StopIteration:
+            first_pos = search_drawer([self.get_carousel()], drawer_inserted).get_pos_x()
+
+        yield self.env.timeout(self.__horiz_move(first_pos))
 
     def loading_buffer_and_remove(self, drawer_to_rmv: Drawer):
         storage = self.get_carousel().get_storage()
