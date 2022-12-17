@@ -2,6 +2,7 @@ import json
 from src.drawer import Drawer
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
+from status_warehouse.Entry.entry import Entry
 
 
 def obt_value_json(keyword: str, col: str = None) -> int:
@@ -45,7 +46,7 @@ def obt_value_json(keyword: str, col: str = None) -> int:
         print(str(e) + "\nValue not found")
 
 
-def search_drawer(list_col: list, drawer: Drawer) -> DrawerEntry:
+def search_drawer(list_col: list[Entry], drawer: Drawer) -> DrawerEntry:
     """
         Search first drawer that have the same items inside (check barcode).
 
@@ -56,8 +57,10 @@ def search_drawer(list_col: list, drawer: Drawer) -> DrawerEntry:
     from src.status_warehouse.Container.column import DrawerContainer
 
     # take every column
-    for j in range(len(list_col)):
+    for j, element in enumerate(list_col): #range(len(list_col)):
         # take every space in the column
+        element.get_container()
+
         for i in range(len(DrawerContainer.get_container(list_col[j]))):
             # check if there is a drawer
             if isinstance(DrawerContainer.get_container(list_col[j])[i], DrawerEntry):

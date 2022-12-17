@@ -11,6 +11,15 @@ from src.drawer import Drawer
 
 class Warehouse:
     def __init__(self):
+
+        # read file
+        # get params
+        # call __init__()
+
+        # for col_data in json_data["columns"]:
+        #    column = Column(col_data)
+        # same for carousel
+
         self.height = obt_value_json("height_warehouse")
         self.container = []
         self.carousel = Carousel(0)
@@ -22,11 +31,18 @@ class Warehouse:
         self.floor = None
 
     def __deepcopy__(self, memo):
-        newone = type(self)()
-        newone.__dict__.update(self.__dict__)
-        self.carousel = copy.deepcopy(self.carousel, memo)
-        self.container = copy.deepcopy(self.container, memo)
-        return newone
+        copy_oby = Warehouse()
+        copy_oby.height = self.height
+        # add missing copy
+        copy_oby.carousel = copy.deepcopy(self.carousel, memo)
+        copy_oby.container = copy.deepcopy(self.container, memo)
+        return copy_oby
+
+        # newone = type(self)()
+        # newone.__dict__.update(self.__dict__)
+        # self.carousel = copy.deepcopy(self.carousel, memo)
+        # self.container = copy.deepcopy(self.container, memo)
+        # return copy_oby
 
     def get_height(self) -> int:
         return self.height
