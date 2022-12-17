@@ -10,15 +10,14 @@ class DrawerContainer:
     def __init__(self, pos_x: int):
         # initialize main vars
         config: dict = open_config()
-
         self.container = []
         self.height = config["height_warehouse"]
         self.def_space = config["default_height_space"]
-        self.storage = config["columns"][pos_x]["height"] // self.get_def_space()
+        self.height_column = config["columns"][pos_x]["height"] // self.get_def_space()
         self.hole = config["carousel"]["hole_height"] // self.get_def_space()
         self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
         self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
-        self.num_entries = self.get_height() // self.get_def_space()
+        self.num_entries = self.get_height() // self.get_def_space() # TODO: to remove because is the same of the length of the container!!!
         self.pos_x = pos_x
 
     def __deepcopy__(self, memo):
@@ -27,7 +26,7 @@ class DrawerContainer:
         self.container = copy.deepcopy(self.container, memo)
         self.height = copy.deepcopy(self.height, memo)
         self.def_space = copy.deepcopy(self.def_space, memo)
-        self.storage = copy.deepcopy(self.storage, memo)
+        self.height_column = copy.deepcopy(self.height_column, memo)
         self.hole = copy.deepcopy(self.hole, memo)
         self.deposit = copy.deepcopy(self.deposit, memo)
         self.buffer = copy.deepcopy(self.buffer, memo)
@@ -56,8 +55,8 @@ class DrawerContainer:
     def get_pos_x(self) -> int:
         return self.pos_x
 
-    def get_storage(self) -> int:
-        return self.storage
+    def get_height_col(self) -> int:
+        return self.height_column
 
     def get_hole(self) -> int:
         return self.hole
@@ -83,8 +82,8 @@ class DrawerContainer:
                 if isinstance(self.get_container()[i], DrawerEntry):
                     # ... and if the DrawerEntry object is linked to the same drawer object
                     # TODO
-                    # fix DrawerEntry.get_drawer(self.get_container()[i])
-                    # with self.get_container()[i].get_drawer()
+                    # fix DrawerEntry.get_drawer(self.get_cols_container()[i])
+                    # with self.get_cols_container()[i].get_drawer()
                     if self.get_container()[i].get_drawer() == drawer:
                         # take DrawerEntry object
                         occurrence = self.get_container()[i]

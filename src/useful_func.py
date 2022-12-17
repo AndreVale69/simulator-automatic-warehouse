@@ -122,7 +122,7 @@ def __min_search_alg(self, space_req: int) -> list:
     min_space = self.get_height()
     count = 0
     start_index = 0
-    container = self.get_container()
+    container = self.get_cols_container()
 
     ############################
     # Minimum search algorithm #

@@ -9,7 +9,7 @@ class Carousel(DrawerContainer):
         super().__init__(pos_x)
 
         # get first y to start
-        first_y = self.get_storage() + self.get_hole()
+        first_y = self.get_height_col() + self.get_hole()
 
         # set length of entries
         self.set_num_entries(self.get_deposit() + self.get_buffer())
@@ -30,7 +30,7 @@ class Carousel(DrawerContainer):
         :param drawer: To show or to save
         :return: True there is space and the operation is successes, False there isn't space and the operation is failed
         """
-        store = self.get_storage()
+        store = self.get_height_col()
         hole = self.get_hole()
         dep = self.get_deposit()
         first_y = store + hole

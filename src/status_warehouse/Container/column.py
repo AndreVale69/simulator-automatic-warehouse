@@ -5,15 +5,15 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class Column(DrawerContainer):
-    def __init__(self, pos_x: int):
-        super().__init__(pos_x)
+    def __init__(self, info: dict):
+        super().__init__(info["x_offset"])
         # different height if the column match at the output
-        if pos_x == 0:
-            self.set_num_entries(self.get_storage())
+        if info["x_offset"] == 0:
+            self.set_num_entries(self.get_height_col())
 
         # create container
         for i in range(self.get_num_entries()):
-            self.add_item_to_container(EmptyEntry(pos_x, i))
+            self.add_item_to_container(EmptyEntry(info["x_offset"], i))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)

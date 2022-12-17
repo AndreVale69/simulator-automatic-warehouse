@@ -11,19 +11,17 @@ from src.drawer import Drawer
 
 class Warehouse:
     def __init__(self):
-
-        # read file
-        # get params
-        # call __init__()
-
-        # for col_data in json_data["columns"]:
-        #    column = Column(col_data)
-        # same for carousel
         config: dict = open_config()
 
         self.height = config["height_warehouse"]
-        self.container = []
-        self.carousel = Carousel(0)
+        self.columns_container = []
+
+        # add all columns taken from JSON
+        for col_data in config["columns"]:
+            self.add_column(Column(col_data))
+
+        self.carousel = Carousel(config["carousel"])
+
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]
         self.horiz_right_col = config["columns"][0]["horiz_distance"]
@@ -36,7 +34,7 @@ class Warehouse:
         copy_oby.height = self.height
         # add missing copy
         copy_oby.carousel = copy.deepcopy(self.carousel, memo)
-        copy_oby.container = copy.deepcopy(self.container, memo)
+        copy_oby.columns_container = copy.deepcopy(self.columns_container, memo)
         return copy_oby
 
         # newone = type(self)()
@@ -48,8 +46,8 @@ class Warehouse:
     def get_height(self) -> int:
         return self.height
 
-    def get_container(self) -> list[Column]:
-        return self.container
+    def get_cols_container(self) -> list[Column]:
+        return self.columns_container
 
     def get_carousel(self) -> Carousel:
         return self.carousel
@@ -72,8 +70,8 @@ class Warehouse:
     def get_horiz_left_col(self) -> int:
         return self.horiz_left_col
 
-    def add_container(self, container: Column):
-        self.get_container().append(container)
+    def add_column(self, col: Column):
+        self.get_cols_container().append(col)
 
     def check_buffer(self) -> bool:
         carousel = self.get_carousel().get_container()
@@ -89,7 +87,7 @@ class Warehouse:
     def come_back_to_deposit(self, drawer_inserted: Drawer):
         # take current position (y)
         try:
-            curr_pos = search_drawer(self.get_container(), drawer_inserted).get_pos_x()
+            curr_pos = search_drawer(self.get_cols_container(), drawer_inserted).get_pos_x()
         except StopIteration:
             curr_pos = search_drawer([self.get_carousel()], drawer_inserted).get_pos_x()
 
@@ -99,14 +97,14 @@ class Warehouse:
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
     def loading_buffer_and_remove(self, drawer_to_rmv: Drawer):
-        storage = self.get_carousel().get_storage()
+        storage = self.get_carousel().get_height_col()
         hole = self.get_carousel().get_hole()
         carousel = self.get_carousel().get_container()
         deposit = self.get_carousel().get_deposit()
 
         # calculate unload time
         try:
-            pos_x_drawer = search_drawer(self.get_container(), drawer_to_rmv).get_pos_x()
+            pos_x_drawer = search_drawer(self.get_cols_container(), drawer_to_rmv).get_pos_x()
         except StopIteration:
             pos_x_drawer = search_drawer([self.get_carousel()], drawer_to_rmv).get_pos_x()
         unload_time = self.__horiz_move(pos_x_drawer)
@@ -136,11 +134,11 @@ class Warehouse:
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
-        storage = self.get_carousel().get_storage()
+        storage = self.get_carousel().get_height_col()
         hole = self.get_carousel().get_hole()
 
         start_pos = storage + hole
-        minimum = check_minimum_space(self.get_container(), drawer.get_max_num_space())
+        minimum = check_minimum_space(self.get_cols_container(), drawer.get_max_num_space())
         pos_to_insert = minimum[1]
 
         # save temporarily the coordinates
@@ -152,7 +150,7 @@ class Warehouse:
 
     def unload(self, drawer: Drawer):
         try:
-            pos_x_drawer = search_drawer(self.get_container(), drawer).get_pos_x()
+            pos_x_drawer = search_drawer(self.get_cols_container(), drawer).get_pos_x()
         except StopIteration:
             pos_x_drawer = search_drawer([self.get_carousel()], drawer).get_pos_x()
         yield self.env.timeout(self.__horiz_move(pos_x_drawer))
@@ -161,7 +159,7 @@ class Warehouse:
         pos_x_drawer = drawer.get_best_x()
         pos_y_drawer = drawer.get_best_y()
         yield self.env.timeout(self.__horiz_move(pos_x_drawer))
-        self.get_container()[pos_x_drawer].add_drawer(pos_y_drawer, drawer)
+        self.get_cols_container()[pos_x_drawer].add_drawer(pos_y_drawer, drawer)
 
     def __horiz_move(self, pos_col: int):
         if pos_col == 0:
