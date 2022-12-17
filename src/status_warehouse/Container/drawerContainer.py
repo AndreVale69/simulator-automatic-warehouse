@@ -11,37 +11,32 @@ class DrawerContainer:
         # initialize main vars
         config: dict = open_config()
         self.container = []
-        self.height = config["height_warehouse"]
+        self.height_warehouse = config["height_warehouse"]
         self.def_space = config["default_height_space"]
         self.height_column = config["columns"][pos_x]["height"] // self.get_def_space()
         self.hole = config["carousel"]["hole_height"] // self.get_def_space()
         self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
         self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
-        self.num_entries = self.get_height() // self.get_def_space() # TODO: to remove because is the same of the length of the container!!!
         self.pos_x = pos_x
 
     def __deepcopy__(self, memo):
         newone = type(self)(self.get_pos_x())
         newone.__dict__.update(self.__dict__)
         self.container = copy.deepcopy(self.container, memo)
-        self.height = copy.deepcopy(self.height, memo)
+        self.height_warehouse = copy.deepcopy(self.height_warehouse, memo)
         self.def_space = copy.deepcopy(self.def_space, memo)
         self.height_column = copy.deepcopy(self.height_column, memo)
         self.hole = copy.deepcopy(self.hole, memo)
         self.deposit = copy.deepcopy(self.deposit, memo)
         self.buffer = copy.deepcopy(self.buffer, memo)
-        self.num_entries = copy.deepcopy(self.num_entries, memo)
         self.pos_x = copy.deepcopy(self.pos_x, memo)
         return newone
 
     def get_height(self) -> int:
-        return self.height
+        return self.height_warehouse
 
     def get_def_space(self) -> int:
         return self.def_space
-
-    def get_num_entries(self) -> int:
-        return self.num_entries
 
     def get_container(self) -> list:
         return self.container
@@ -60,9 +55,6 @@ class DrawerContainer:
 
     def get_hole(self) -> int:
         return self.hole
-
-    def set_num_entries(self, num_entries: int):
-        self.num_entries = num_entries
 
     def add_item_to_container(self, element):
         self.get_container().append(element)
