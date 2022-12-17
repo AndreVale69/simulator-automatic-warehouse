@@ -2,7 +2,7 @@ import copy
 import simpy
 
 from simpy import Environment
-from src.useful_func import obt_value_json, search_drawer, check_minimum_space
+from src.useful_func import open_config, search_drawer, check_minimum_space
 from src.status_warehouse.Container.column import Column
 from src.status_warehouse.Container.carousel import Carousel
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
@@ -19,14 +19,15 @@ class Warehouse:
         # for col_data in json_data["columns"]:
         #    column = Column(col_data)
         # same for carousel
+        config: dict = open_config()
 
-        self.height = obt_value_json("height_warehouse")
+        self.height = config["height_warehouse"]
         self.container = []
         self.carousel = Carousel(0)
-        self.def_space = obt_value_json("default_height_space")
-        self.speed_per_sec = obt_value_json("speed_per_sec")
-        self.horiz_left_col = obt_value_json("horiz_distance", "sxcol")
-        self.horiz_right_col = obt_value_json("horiz_distance", "rxcol")
+        self.def_space = config["default_height_space"]
+        self.speed_per_sec = config["speed_per_sec"]
+        self.horiz_right_col = config["columns"][0]["horiz_distance"]
+        self.horiz_left_col = config["columns"][1]["horiz_distance"]
         self.env = None
         self.floor = None
 

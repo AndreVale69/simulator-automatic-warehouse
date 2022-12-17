@@ -1,6 +1,6 @@
 import copy
 from abc import abstractmethod
-from src.useful_func import obt_value_json
+from src.useful_func import open_config
 from src.drawer import Drawer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
@@ -9,13 +9,15 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 class DrawerContainer:
     def __init__(self, pos_x: int):
         # initialize main vars
+        config: dict = open_config()
+
         self.container = []
-        self.height = obt_value_json("height_warehouse")
-        self.def_space = obt_value_json("default_height_space")
-        self.storage = obt_value_json("storage_height") // self.get_def_space()
-        self.hole = obt_value_json("hole_height") // self.get_def_space()
-        self.deposit = obt_value_json("deposit_height") // self.get_def_space()
-        self.buffer = obt_value_json("buffer_height") // self.get_def_space()
+        self.height = config["height_warehouse"]
+        self.def_space = config["default_height_space"]
+        self.storage = config["columns"][pos_x]["height"] // self.get_def_space()
+        self.hole = config["carousel"]["hole_height"] // self.get_def_space()
+        self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
+        self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
         self.num_entries = self.get_height() // self.get_def_space()
         self.pos_x = pos_x
 

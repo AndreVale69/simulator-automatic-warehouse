@@ -9,11 +9,11 @@ class Column(DrawerContainer):
         super().__init__(pos_x)
         # different height if the column match at the output
         if pos_x == 0:
-            super().set_num_entries(super().get_storage())
+            self.set_num_entries(self.get_storage())
 
         # create container
-        for i in range(super().get_num_entries()):
-            super().add_item_to_container(EmptyEntry(pos_x, i))
+        for i in range(self.get_num_entries()):
+            self.add_item_to_container(EmptyEntry(pos_x, i))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)
@@ -23,7 +23,7 @@ class Column(DrawerContainer):
         how_many = drawer.get_max_num_space()
 
         # initialize positions
-        drawer_entry = DrawerEntry(super().get_pos_x(), index)
+        drawer_entry = DrawerEntry(self.get_pos_x(), index)
         # connect Drawer to entry
         drawer_entry.add_drawer(drawer)
 

@@ -20,12 +20,12 @@
 	
 	\newpage
 	
-	\section*{Main Improves}
+	\section*{Main Improvements}
 	
 	\begin{itemize}[label=\ding{51}]
-		\item I valori del \textsf{JSON} vengono acquisiti solamente nei costrutti delle classi.
+		\item I valori del \textsf{JSON} vengono letti all'interno del costruttore. La funzione legge il file e restituisce il relativo dizionario. Nel costrutto si provvede a caricare tutti i valori nei specifici campi.
 		
-		\item La ricerca all'interno di \textsf{useful\_func.py} è stata migliorata e generalizzata. Tuttavia si potrebbe rompere nel caso si facciano più annidamenti.
+		\item Rimossi tutti i \textsf{super()} dove era possibile (nei costrutti \textsf{\_\_init\_\_} era impossibile toglierlo).
 		
 		\item All'interno di \textsf{drawerContainer.py}:
 			\begin{itemize}

@@ -2,23 +2,15 @@
   "columns":[
     {
       "description" : "rxcol",
-      "width"  : 250, //column width
-      "height" : -1, //column height
-      "x_offset": -1, //distance from x=0
-      "storage_height" : 325,
-      "horiz_distance" : 250,
-      "content": [
-        {
-          //draweEntry obj
-            // {inside material}
-        }
-      ]
+      "width"  : 250,
+      "height" : 325,
+      "x_offset": -1,
+      "horiz_distance" : 250
     },
     {
       "description": "sxcol",
       "width" : 200,
-      "height" : -1,
-      "storage_height" : 0,
+      "height" : 1000,
       "horiz_distance" : 200
     }
   ],

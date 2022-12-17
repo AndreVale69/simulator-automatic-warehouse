@@ -9,14 +9,14 @@ class Carousel(DrawerContainer):
         super().__init__(pos_x)
 
         # get first y to start
-        first_y = super().get_storage() + super().get_hole()
+        first_y = self.get_storage() + self.get_hole()
 
         # set length of entries
-        super().set_num_entries(super().get_deposit() + super().get_buffer())
+        self.set_num_entries(self.get_deposit() + self.get_buffer())
 
         # create container
-        for i in range(super().get_num_entries()):
-            super().add_item_to_container(EmptyEntry(pos_x, i + first_y))
+        for i in range(self.get_num_entries()):
+            self.add_item_to_container(EmptyEntry(pos_x, i + first_y))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)
@@ -30,16 +30,16 @@ class Carousel(DrawerContainer):
         :param drawer: To show or to save
         :return: True there is space and the operation is successes, False there isn't space and the operation is failed
         """
-        store = super().get_storage()
-        hole = super().get_hole()
-        dep = super().get_deposit()
+        store = self.get_storage()
+        hole = self.get_hole()
+        dep = self.get_deposit()
         first_y = store + hole
         if to_show:
             # check if it's empty
             if isinstance(self.get_container()[0], EmptyEntry):
                 for i in range(dep):
                     # initialize positions
-                    drawer_entry = DrawerEntry(super().get_pos_x(), first_y + i)
+                    drawer_entry = DrawerEntry(self.get_pos_x(), first_y + i)
                     # connect Drawer to entry
                     drawer_entry.add_drawer(drawer)
                     # add to container
@@ -51,7 +51,7 @@ class Carousel(DrawerContainer):
             if isinstance(self.get_container()[dep], EmptyEntry):
                 for i in range(dep, len(self.get_container())):
                     # initialize positions
-                    drawer_entry = DrawerEntry(super().get_pos_x(), first_y + i)
+                    drawer_entry = DrawerEntry(self.get_pos_x(), first_y + i)
                     # connect Drawer to entry
                     drawer_entry.add_drawer(drawer)
                     # add to container
@@ -62,4 +62,4 @@ class Carousel(DrawerContainer):
 
     # override
     def remove_drawer(self, drawer: Drawer):
-        super().remove_drawer(drawer)
+        self.remove_drawer(drawer)

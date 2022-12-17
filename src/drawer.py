@@ -4,13 +4,15 @@ from src.material import Material
 
 class Drawer:
     def __init__(self, items: list = None):
-        from src.useful_func import obt_value_json
+        from src.useful_func import open_config
 
         # items inside the drawer
+        config: dict = open_config()
+
         if items is None:
             items = []
         self.items = copy.deepcopy(items)
-        self.def_space = obt_value_json("default_height_space")
+        self.def_space = config["default_height_space"]
         self.__calculate_max_height()
 
         self.best_x = None

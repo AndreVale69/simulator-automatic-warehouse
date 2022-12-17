@@ -8,9 +8,10 @@ class Material:
         :param length: length of a material
         :param width: width of a material
         """
-        from src.useful_func import obt_value_json
+        from src.useful_func import open_config
         # maximum height of a material to fit into a drawer
-        max_height_material = obt_value_json("hole_height")
+        config: dict = open_config()
+        max_height_material = config["carousel"]["hole_height"]
 
         # check height of a material
         if height > max_height_material:
