@@ -10,9 +10,9 @@ class DrawerEntry(Entry):
         self.drawer = None
 
     def __deepcopy__(self, memo):
-        newone = super().__deepcopy__(memo)
-        self.drawer = copy.deepcopy(self.drawer, memo)
-        return newone
+        copy_obj = super().__deepcopy__(memo)
+        copy_obj.drawer = copy.deepcopy(self.drawer, memo)
+        return copy_obj
 
     def get_drawer(self) -> Drawer:
         return self.drawer

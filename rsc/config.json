@@ -4,13 +4,14 @@
       "description" : "rxcol",
       "width"  : 250,
       "height" : 325,
-      "x_offset": -1,
+      "x_offset": 0,
       "horiz_distance" : 250
     },
     {
       "description": "sxcol",
       "width" : 200,
       "height" : 1000,
+      "x_offset": 1,
       "horiz_distance" : 200
     }
   ],

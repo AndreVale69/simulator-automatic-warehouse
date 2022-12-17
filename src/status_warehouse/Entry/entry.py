@@ -7,11 +7,10 @@ class Entry:
         self.pos_y = pos_y
 
     def __deepcopy__(self, memo):
-        newone = type(self)(self.get_pos_x(), self.get_pos_y())
-        newone.__dict__.update(self.__dict__)
-        self.pos_x = copy.deepcopy(self.get_pos_x(), memo)
-        self.pos_y = copy.deepcopy(self.get_pos_y(), memo)
-        return newone
+        copy_obj = type(self)(self.get_pos_x(), self.get_pos_y())
+        copy_obj.pos_x = self.get_pos_x()
+        copy_obj.pos_y = self.get_pos_y()
+        return copy_obj
 
     def get_pos_x(self):
         return self.pos_x

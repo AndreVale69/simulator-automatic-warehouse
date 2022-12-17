@@ -42,13 +42,17 @@ class Material:
         return hash((self.get_barcode(), self.get_name(), self.get_height(), self.get_length(), self.get_width()))
 
     def __deepcopy__(self, memo):
-        newone = type(self)(self.get_barcode(),
+        copy_obj = Material(self.get_barcode(),
                             self.get_name(),
                             self.get_height(),
                             self.get_length(),
                             self.get_width())
-        newone.__dict__.update(self.__dict__)
-        return newone
+        copy_obj.barcode = self.barcode
+        copy_obj.name = self.name
+        copy_obj.height = self.height
+        copy_obj.length = self.length
+        copy_obj.width = self.width
+        return copy_obj
 
     def get_barcode(self) -> int:
         return self.barcode

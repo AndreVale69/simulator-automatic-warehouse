@@ -30,18 +30,17 @@ class Drawer:
         return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
 
     def __deepcopy__(self, memo):
-        newone = type(self)(self.get_items())
-        newone.__dict__.update(self.__dict__)
-        self.items = copy.deepcopy(self.get_items(), memo)
-        return newone
+        copy_obj = Drawer(self.get_items())
+        copy_obj.items = copy.deepcopy(self.get_items(), memo)
+        copy_obj.def_space = self.def_space
+        copy_obj.max_height = self.max_height
+        copy_obj.num_space = self.num_space
+        copy_obj.best_x = self.best_x
+        copy_obj.best_y = self.best_y
+        return copy_obj
 
     def get_items(self) -> list[Material]:
         return self.items
-
-    def add_material(self, material: Material):
-        # insert in tail
-        self.items.append(material)
-        self.__calculate_max_height()
 
     def get_max_height(self) -> int:
         """
@@ -60,6 +59,11 @@ class Drawer:
 
     def get_best_y(self) -> int:
         return self.best_y
+
+    def add_material(self, material: Material):
+        # insert in tail
+        self.items.append(material)
+        self.__calculate_max_height()
 
     def set_best_x(self, pos_x: int):
         self.best_x = pos_x

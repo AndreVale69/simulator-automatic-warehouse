@@ -20,17 +20,17 @@ class DrawerContainer:
         self.pos_x = pos_x
 
     def __deepcopy__(self, memo):
-        newone = type(self)(self.get_pos_x())
-        newone.__dict__.update(self.__dict__)
-        self.container = copy.deepcopy(self.container, memo)
-        self.height_warehouse = copy.deepcopy(self.height_warehouse, memo)
-        self.def_space = copy.deepcopy(self.def_space, memo)
-        self.height_column = copy.deepcopy(self.height_column, memo)
-        self.hole = copy.deepcopy(self.hole, memo)
-        self.deposit = copy.deepcopy(self.deposit, memo)
-        self.buffer = copy.deepcopy(self.buffer, memo)
-        self.pos_x = copy.deepcopy(self.pos_x, memo)
-        return newone
+        tmp_dict = {"x_offset": self.get_pos_x()}
+        copy_obj = type(self)(tmp_dict)
+        copy_obj.container = copy.deepcopy(self.container, memo)
+        copy_obj.height_warehouse = self.height_warehouse
+        copy_obj.def_space = self.def_space
+        copy_obj.height_column = self.height_column
+        copy_obj.hole = self.hole
+        copy_obj.deposit = self.deposit
+        copy_obj.buffer = self.buffer
+        copy_obj.pos_x = self.pos_x
+        return copy_obj
 
     def get_height(self) -> int:
         return self.height_warehouse

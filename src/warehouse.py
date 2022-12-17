@@ -14,12 +14,11 @@ class Warehouse:
         config: dict = open_config()
 
         self.height = config["height_warehouse"]
-        self.columns_container = []
 
+        self.columns_container = []
         # add all columns taken from JSON
         for col_data in config["columns"]:
             self.add_column(Column(col_data))
-
         self.carousel = Carousel(config["carousel"])
 
         self.def_space = config["default_height_space"]
@@ -32,16 +31,15 @@ class Warehouse:
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
         copy_oby.height = self.height
-        # add missing copy
-        copy_oby.carousel = copy.deepcopy(self.carousel, memo)
         copy_oby.columns_container = copy.deepcopy(self.columns_container, memo)
+        copy_oby.carousel = copy.deepcopy(self.carousel, memo)
+        copy_oby.def_space = self.def_space
+        copy_oby.speed_per_sec = self.speed_per_sec
+        copy_oby.horiz_right_col = self.horiz_right_col
+        copy_oby.horiz_left_col = self.horiz_left_col
+        copy_oby.env = self.env
+        copy_oby.floor = self.floor
         return copy_oby
-
-        # newone = type(self)()
-        # newone.__dict__.update(self.__dict__)
-        # self.carousel = copy.deepcopy(self.carousel, memo)
-        # self.container = copy.deepcopy(self.container, memo)
-        # return copy_oby
 
     def get_height(self) -> int:
         return self.height
