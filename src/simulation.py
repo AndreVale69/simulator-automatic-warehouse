@@ -31,16 +31,15 @@ class Floor(object):
 
     def insert(self, drawer: Drawer): # called from RemoveDrawerFromBay
         print(f"Time {self.env.now:5.2f} - Start unloading a drawer")
+        # unloading drawer
+        yield self.env.process(self.get_warehouse().unload(drawer))
+        # remove only from container
+        self.get_warehouse().get_carousel().remove_drawer(drawer)
 
         # check if the buffer is to load or not
         if self.get_warehouse().check_buffer():
             print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
-            yield self.env.process(self.get_warehouse().loading_buffer_and_remove(drawer))
-        else:
-            # unloading drawer
-            yield self.env.process(self.get_warehouse().unload(drawer))
-            # remove only from container
-            self.get_warehouse().get_carousel().remove_drawer(drawer)
+            yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
 
         # move the floor
         print(f"Time {self.env.now:5.2f} - Start vertical move")

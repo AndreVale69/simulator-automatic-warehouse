@@ -82,7 +82,7 @@ class DrawerContainer:
                     if DrawerEntry.get_drawer(element) == drawer:
                         self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
                         is_remove = True
-            entry_y += 1
+                        entry_y += 1
 
         if not is_remove:
             print("Drawer doesn't removed.")

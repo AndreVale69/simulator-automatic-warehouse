@@ -36,5 +36,7 @@
 		\item \textsf{Deepcopy} implementata, ma perché era necessario copiare di nuovo i valori appena passati all'oggetto? Prendi come esempio la classe \textsf{Material} che è semplice.
 		
 		\item Ogni \textsf{Drawer} ha un campo nella classe che lo collega con la prima \emph{entry} all'interno del \emph{container} delle \emph{entries}. Quindi è stata modificata l'aggiunta dei cassetti in \textsf{Column} e \textsf{Carousel}, è stata migliorata la rimozione dei cassetti e rimossa la funzione di ricerca di un cassetto.
+		
+		\item Il caricamento del \textsf{buffer} avviene solamente dopo che il ripiano che prende i cassetti ha finito il suo movimento, ovvero nel momento in cui è al centro.
 	\end{itemize}
 \end{document}

@@ -92,32 +92,24 @@ class Warehouse:
 
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
-    def loading_buffer_and_remove(self, drawer_to_rmv: Drawer):
+    def loading_buffer_and_remove(self):
         storage = self.get_carousel().get_height_col()
         hole = self.get_carousel().get_hole()
         carousel = self.get_carousel().get_container()
         deposit = self.get_carousel().get_deposit()
-
-        # calculate unload time
-        pos_x_drawer = drawer_to_rmv.get_first_drawerEntry().get_pos_x()
-        unload_time = self.__horiz_move(pos_x_drawer)
 
         # calculate loading buffer time
         start_pos = DrawerEntry.get_pos_y(carousel[deposit])
         end_pos = storage + hole
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
-        # choose greater time
-        if unload_time > loading_buffer_time:
-            yield self.env.timeout(unload_time)
-        else:
-            yield self.env.timeout(loading_buffer_time)
+        yield self.env.timeout(loading_buffer_time)
 
-        # remove from container
-        self.get_carousel().remove_drawer(drawer_to_rmv)
-
-        # insert drawer in correct position (outside)
+        # obtain the drawer inside the buffer
         drawer_to_show = DrawerEntry.get_drawer(carousel[deposit])
+        # remove from buffer
+        self.get_carousel().remove_drawer(drawer_to_show)
+        # and insert drawer in correct position (outside)
         self.get_carousel().add_drawer(True, drawer_to_show)
 
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
