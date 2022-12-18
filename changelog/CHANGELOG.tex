@@ -33,50 +33,8 @@
 		
 		\item Rimosso il campo del numero delle entries, adesso ogni figlio crea il suo array di oggetti senza utilizzare la superclasse.
 		
-		\item Deepcopy implementata, ma perché era necessario copiare di nuovo i valori appena passati all'oggetto? Prendi come esempio la classe \textsf{Material} che è semplice.
+		\item \textsf{Deepcopy} implementata, ma perché era necessario copiare di nuovo i valori appena passati all'oggetto? Prendi come esempio la classe \textsf{Material} che è semplice.
 		
-		\item All'interno di \textsf{drawerContainer.py}:
-			\begin{itemize}
-				\item Modificato il parametro della funzione add\_drawer da \textsf{DrawerEntry} a \textsf{Drawer}.
-				
-				\item Modificata la funzione di rimozione, adesso rimuove gli oggetti in modo corretto. Inoltre, nella funzione sono stati aggiunti dei commenti per comprendere meglio il funzionamento.
-				
-				\item Adesso la funzione crea due liste diverse a seconda dell'oggetto (\textsf{Column} o \textsf{Carousel}).
-			\end{itemize}
-		
-		\item All'interno di \textsf{drawer.py}:
-			\begin{itemize}
-				\item Risolto il problema dell'inizializzazione senza oggetti \textsf{Material}, modificando l'assegnazione della variabile \textsf{list}.
-				
-				\item Ottimizzato il ritorno degli oggetti della classe grazie alla risoluzione del problema dell'inizializzazione senza oggetti.
-				
-				\item Eseguito \dquotes{\emph{override}} dei metodi \textsf{equals (\_\_eq\_\_)} e \textsf{hash (\_\_hash\_\_)}.
-			\end{itemize}
-		
-		\item All'interno di \textsf{warehouse.py}:
-			\begin{itemize}
-				\item Rimossa la dichiarazione delle istanze dalle colonne dal costrutto \textsf{\_\_init\_\_} e aggiunte nel \textsf{main.py} per aumentare la generalizzazione.
-				
-				\item Aggiunto il metodo per aggiungere colonne (\textsf{add\_container}).
-				
-				\item Eseguito \dquotes{\emph{override}} del metodo \textsf{\_\_copy\_\_}.
-			\end{itemize}
-		
-		\item All'interno di \textsf{simulation.py}:
-			\begin{itemize}
-				\item Copiati i valori del \textsf{JSON} nei campi della classe.
-				
-				\item Iniziata una prima costruzione degli eventi.
-			\end{itemize}
-		
-		\item All'interno di \textsf{material.py}:
-			\begin{itemize}
-				\item Eseguito \dquotes{\emph{override}} dei metodi \textsf{equals (\_\_eq\_\_)} e \textsf{hash (\_\_hash\_\_)}.
-			\end{itemize}
-		
-		\item All'interno di \textsf{carousel.py}:
-			\begin{itemize}
-				\item Modificata la funzione d'aggiunta di un cassetto all'interno del \emph{buffer} o del deposito.
-			\end{itemize}
+		\item Ogni \textsf{Drawer} ha un campo nella classe che lo collega con la prima \emph{entry} all'interno del \emph{container} delle \emph{entries}.
 	\end{itemize}
 \end{document}

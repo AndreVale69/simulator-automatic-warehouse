@@ -1,6 +1,5 @@
 import copy
 from abc import abstractmethod
-from src.useful_func import open_config
 from src.drawer import Drawer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
@@ -8,6 +7,8 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 class DrawerContainer:
     def __init__(self, pos_x: int):
+        from src.useful_func import open_config
+
         # initialize main vars
         config: dict = open_config()
         self.container = []

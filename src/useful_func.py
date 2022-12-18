@@ -16,42 +16,6 @@ def open_config() -> dict:
         return json.load(json_file)
 
 
-# def obt_value_json(keyword: str, col: str = None) -> int:
-#     """
-#     Read a specific data inside JSON file.
-#
-#     :param col: specify name of column (optional)
-#     :param keyword: constant search inside JSON file.
-#     :return: value found.
-#     :exception KeyError: value not found.
-#     """
-#
-#     try:
-#         # if the value isn't inside a list
-#         if keyword in json_data:
-#             return json_data[keyword]
-#         else:
-#             # for each element inside the dictionary
-#             for i in json_data:
-#                 # manipulate list element
-#                 if isinstance(json_data[i], list):
-#                     for j in range(len(json_data[i])):
-#                         # each element of the list is a dictionary type, so try to find the element
-#                         if col is not None and json_data[i][j]["descr"] == col and keyword in json_data[i][j]:
-#                             return json_data[i][j][keyword]
-#                         else:
-#                             if keyword in json_data[i][j]:
-#                                 return json_data[i][j][keyword]
-#                 else:
-#                     # manipulate dictionary element
-#                     if isinstance(json_data[i], dict):
-#                         # try to find the element
-#                         if keyword in json_data[i]:
-#                             return json_data[i][keyword]
-#     except KeyError as e:
-#         print(str(e) + "\nValue not found")
-
-
 def search_drawer(list_col: list[Entry], drawer: Drawer) -> DrawerEntry:
     """
         Search first drawer that have the same items inside (check barcode).

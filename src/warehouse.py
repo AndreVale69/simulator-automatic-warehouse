@@ -2,7 +2,6 @@ import copy
 import simpy
 
 from simpy import Environment
-from src.useful_func import open_config, search_drawer, check_minimum_space
 from src.status_warehouse.Container.column import Column
 from src.status_warehouse.Container.carousel import Carousel
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
@@ -11,6 +10,8 @@ from src.drawer import Drawer
 
 class Warehouse:
     def __init__(self):
+        from src.useful_func import open_config
+
         config: dict = open_config()
 
         self.height = config["height_warehouse"]
@@ -83,6 +84,8 @@ class Warehouse:
         return True if type(carousel[0]) is DrawerEntry else False
 
     def come_back_to_deposit(self, drawer_inserted: Drawer):
+        from src.useful_func import search_drawer
+
         # take current position (y)
         try:
             curr_pos = search_drawer(self.get_cols_container(), drawer_inserted).get_pos_x()
@@ -95,6 +98,8 @@ class Warehouse:
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
     def loading_buffer_and_remove(self, drawer_to_rmv: Drawer):
+        from src.useful_func import search_drawer
+
         storage = self.get_carousel().get_height_col()
         hole = self.get_carousel().get_hole()
         carousel = self.get_carousel().get_container()
@@ -132,6 +137,8 @@ class Warehouse:
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
+        from src.useful_func import check_minimum_space
+
         storage = self.get_carousel().get_height_col()
         hole = self.get_carousel().get_hole()
 
@@ -147,6 +154,8 @@ class Warehouse:
         yield self.env.timeout(vertical_move)
 
     def unload(self, drawer: Drawer):
+        from src.useful_func import search_drawer
+
         try:
             pos_x_drawer = search_drawer(self.get_cols_container(), drawer).get_pos_x()
         except StopIteration:

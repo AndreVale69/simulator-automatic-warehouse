@@ -17,18 +17,25 @@ class Column(DrawerContainer):
 
     # override
     def add_drawer(self, index: int, drawer: Drawer):
-        how_many = drawer.get_max_num_space()
+        how_many = drawer.get_max_num_space() + index
 
+        drawer_entry = self.__create_drawerEntry(drawer, index)
+        # connect Entry to Drawer
+        drawer.set_first_drawerEntry(drawer_entry)
+        index += 1
+
+        for index in range(index, how_many):
+            self.__create_drawerEntry(drawer, index)
+
+    def __create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
         # initialize positions
         drawer_entry = DrawerEntry(self.get_pos_x(), index)
-        # connect Drawer to entry
+        # connect Drawer to Entry
         drawer_entry.add_drawer(drawer)
-
-        while how_many > 0:
-            # add to container
-            self.get_container()[index] = drawer_entry
-            index += 1
-            how_many -= 1
+        # add to container
+        self.get_container()[index] = drawer_entry
+        # return the drawer entry just added
+        return drawer_entry
 
     # override
     def remove_drawer(self, drawer: Drawer):

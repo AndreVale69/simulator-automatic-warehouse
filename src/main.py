@@ -3,7 +3,6 @@ import copy
 from src.warehouse import Warehouse
 from src.drawer import Drawer
 from src.material import Material
-from src.status_warehouse.Container.column import Column
 
 
 warehouse = Warehouse()

@@ -1,4 +1,5 @@
 import copy
+
 from src.material import Material
 
 
@@ -15,18 +16,20 @@ class Drawer:
         self.def_space = config["default_height_space"]
         self.__calculate_max_height()
 
+        self.first_drawerEntry = None
         self.best_x = None
         self.best_y = None
 
     def __eq__(self, other):
         """Overrides the default implementation"""
-        # TODO check
         return isinstance(other,
-                          Drawer) and self.get_items() == other.get_items() and self.get_max_height() == other.get_max_height() and self.get_max_num_space() == other.get_max_num_space()
+                          Drawer) and \
+            self.get_items() == other.get_items() and \
+            self.get_max_height() == other.get_max_height() and \
+            self.get_max_num_space() == other.get_max_num_space()
 
     def __hash__(self):
         """Overrides the default implementation"""
-        # TODO check
         return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
 
     def __deepcopy__(self, memo):
@@ -35,6 +38,7 @@ class Drawer:
         copy_obj.def_space = self.def_space
         copy_obj.max_height = self.max_height
         copy_obj.num_space = self.num_space
+        copy_obj.first_drawerEntry = self.first_drawerEntry
         copy_obj.best_x = self.best_x
         copy_obj.best_y = self.best_y
         return copy_obj
@@ -54,6 +58,9 @@ class Drawer:
         """
         return self.num_space
 
+    def get_first_drawerEntry(self):
+        return self.first_drawerEntry
+
     def get_best_x(self) -> int:
         return self.best_x
 
@@ -64,6 +71,9 @@ class Drawer:
         # insert in tail
         self.items.append(material)
         self.__calculate_max_height()
+
+    def set_first_drawerEntry(self, drawer_entry):
+        self.first_drawerEntry = drawer_entry
 
     def set_best_x(self, pos_x: int):
         self.best_x = pos_x
