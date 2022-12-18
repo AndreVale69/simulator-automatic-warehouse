@@ -1,8 +1,6 @@
 import json
 from src.drawer import Drawer
-from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
-from status_warehouse.Entry.entry import Entry
 
 
 def open_config() -> dict:
@@ -16,54 +14,23 @@ def open_config() -> dict:
         return json.load(json_file)
 
 
-def search_drawer(list_col: list[Entry], drawer: Drawer) -> DrawerEntry:
-    """
-        Search first drawer that have the same items inside (check barcode).
-
-        :param list_col: list of columns.
-        :param drawer: drawer in relationship with DrawerEntry to search.
-        :return: object in relationship with drawer
-    """
-    from src.status_warehouse.Container.column import DrawerContainer
-
-    # take every column
-    for j, element in enumerate(list_col):  # range(len(list_col)):
-        # take every space in the column
-        element.get_container()
-
-        for i in range(len(DrawerContainer.get_container(list_col[j]))):
-            # check if there is a drawer
-            if isinstance(DrawerContainer.get_container(list_col[j])[i], DrawerEntry):
-                flag = 0
-                # count every item (= Material) inside the drawer
-                for k in range(len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items())):
-                    if DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()[
-                        k].get_barcode() == \
-                            drawer.get_items()[k].get_barcode():
-                        flag = flag + 1
-                # if every item is equal (about barcode) -> finish
-                if flag == len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()):
-                    return DrawerContainer.get_container(list_col[j])[i]
-    raise StopIteration("No element found")
-
-
-def check_minimum_space(list_obj: list, space_req: int) -> list:
+def check_minimum_space(list_obj: list, space_req: int, height_warehouse: int) -> list:
     """
     Algorithm to decide where insert a drawer.
 
     :param list_obj: list of columns.
     :param space_req: space requested from drawer.
+    :param height_warehouse: the height of warehouse
     :return: if there is a space [space_requested, index_position_where_insert, column_where_insert].
     :exception StopIteration: if there isn't any space.
     """
     result = []
     col = None
-    min_index = obt_value_json("height_warehouse") // obt_value_json("default_height_space")
 
     # calculate minimum space and search lower index
     for i in range(len(list_obj)):
         values = __min_search_alg(list_obj[i], space_req)
-        if values[0] != -1 & values[1] < min_index:
+        if values[0] != -1 & values[1] < height_warehouse:
             result = values.copy()
             col = list_obj[i]
 
@@ -86,7 +53,7 @@ def __min_search_alg(self, space_req: int) -> list:
     min_space = self.get_height()
     count = 0
     start_index = 0
-    container = self.get_cols_container()
+    container = self.get_container()
 
     ############################
     # Minimum search algorithm #

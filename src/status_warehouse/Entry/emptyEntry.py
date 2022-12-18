@@ -1,4 +1,3 @@
-import copy
 from src.status_warehouse.Entry.entry import Entry
 
 

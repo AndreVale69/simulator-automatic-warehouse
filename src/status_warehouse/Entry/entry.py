@@ -1,6 +1,3 @@
-import copy
-
-
 class Entry:
     def __init__(self, pos_x: int, pos_y: int):
         self.pos_x = pos_x

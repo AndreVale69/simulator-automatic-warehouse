@@ -6,7 +6,7 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class DrawerContainer:
-    def __init__(self, pos_x: int):
+    def __init__(self, pos_x):
         from src.useful_func import open_config
 
         # initialize main vars
@@ -21,7 +21,7 @@ class DrawerContainer:
         self.pos_x = pos_x
 
     def __deepcopy__(self, memo):
-        tmp_dict = {"x_offset": self.get_pos_x()}
+        tmp_dict: dict = {"x_offset": self.get_pos_x()}
         copy_obj = type(self)(tmp_dict)
         copy_obj.container = copy.deepcopy(self.container, memo)
         copy_obj.height_warehouse = self.height_warehouse
@@ -65,30 +65,24 @@ class DrawerContainer:
         pass
 
     def remove_drawer(self, drawer: Drawer):
-        occurrence = 0
+        is_remove: bool = False
+        first_entry = drawer.get_first_drawerEntry()
+        # In this way it's incorrect! Try it.
+        # entry_y: int = first_entry.get_pos_y
+        # entry_x: int = first_entry.get_pos_x
+        entry_y: int = DrawerEntry.get_pos_y(first_entry)
+        entry_x: int = DrawerEntry.get_pos_x(first_entry)
 
-        try:
-            # finding the first occurrence
-            # search inside the column
-            for i in range(len(self.get_container())):
-                # if an element of the column is DrawerEntry, so the drawer is full...
-                if isinstance(self.get_container()[i], DrawerEntry):
-                    # ... and if the DrawerEntry object is linked to the same drawer object
-                    # TODO
-                    # fix DrawerEntry.get_drawer(self.get_cols_container()[i])
-                    # with self.get_cols_container()[i].get_drawer()
-                    if self.get_container()[i].get_drawer() == drawer:
-                        # take DrawerEntry object
-                        occurrence = self.get_container()[i]
-                        break
-            # if there isn't any drawer raise StopIteration error!
-            if occurrence == 0:
-                raise StopIteration
-            else:
-                # search inside the column all the occurrences and substitute with EmptyEntry
-                for i in range(len(self.get_container())):
-                    if type(self.get_container()[i]) is type(occurrence):
-                        if DrawerEntry.get_drawer(self.get_container()[i]) == DrawerEntry.get_drawer(occurrence):
-                            self.get_container()[i] = EmptyEntry(occurrence.get_pos_x(), occurrence.get_pos_y())
-        except StopIteration as e:
-            print(str(e) + "\nNo element to remove found")
+        for index, element in enumerate(self.get_container()):
+            # if is a DrawerEntry element
+            if isinstance(element, DrawerEntry):
+                # if they've the same coordinates
+                if DrawerEntry.get_pos_y(element) == entry_y:
+                    # if the drawers are the same (see __eq__ method)
+                    if DrawerEntry.get_drawer(element) == drawer:
+                        self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
+                        is_remove = True
+            entry_y += 1
+
+        if not is_remove:
+            print("Drawer doesn't removed.")

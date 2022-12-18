@@ -84,13 +84,8 @@ class Warehouse:
         return True if type(carousel[0]) is DrawerEntry else False
 
     def come_back_to_deposit(self, drawer_inserted: Drawer):
-        from src.useful_func import search_drawer
-
         # take current position (y)
-        try:
-            curr_pos = search_drawer(self.get_cols_container(), drawer_inserted).get_pos_x()
-        except StopIteration:
-            curr_pos = search_drawer([self.get_carousel()], drawer_inserted).get_pos_x()
+        curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_x()
 
         # take destination position (y)
         dep_pos = DrawerEntry.get_pos_y(self.get_carousel().get_container()[0])
@@ -98,18 +93,13 @@ class Warehouse:
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
     def loading_buffer_and_remove(self, drawer_to_rmv: Drawer):
-        from src.useful_func import search_drawer
-
         storage = self.get_carousel().get_height_col()
         hole = self.get_carousel().get_hole()
         carousel = self.get_carousel().get_container()
         deposit = self.get_carousel().get_deposit()
 
         # calculate unload time
-        try:
-            pos_x_drawer = search_drawer(self.get_cols_container(), drawer_to_rmv).get_pos_x()
-        except StopIteration:
-            pos_x_drawer = search_drawer([self.get_carousel()], drawer_to_rmv).get_pos_x()
+        pos_x_drawer = drawer_to_rmv.get_first_drawerEntry().get_pos_x()
         unload_time = self.__horiz_move(pos_x_drawer)
 
         # calculate loading buffer time
@@ -143,7 +133,9 @@ class Warehouse:
         hole = self.get_carousel().get_hole()
 
         start_pos = storage + hole
-        minimum = check_minimum_space(self.get_cols_container(), drawer.get_max_num_space())
+        minimum = check_minimum_space(self.get_cols_container(),
+                                      drawer.get_max_num_space(),
+                                      self.get_height() // self.get_def_space())
         pos_to_insert = minimum[1]
 
         # save temporarily the coordinates
@@ -154,19 +146,14 @@ class Warehouse:
         yield self.env.timeout(vertical_move)
 
     def unload(self, drawer: Drawer):
-        from src.useful_func import search_drawer
-
-        try:
-            pos_x_drawer = search_drawer(self.get_cols_container(), drawer).get_pos_x()
-        except StopIteration:
-            pos_x_drawer = search_drawer([self.get_carousel()], drawer).get_pos_x()
+        pos_x_drawer = drawer.get_first_drawerEntry().get_pos_x()
         yield self.env.timeout(self.__horiz_move(pos_x_drawer))
 
     def load(self, drawer: Drawer):
         pos_x_drawer = drawer.get_best_x()
         pos_y_drawer = drawer.get_best_y()
         yield self.env.timeout(self.__horiz_move(pos_x_drawer))
-        self.get_cols_container()[pos_x_drawer].add_drawer(pos_y_drawer, drawer)
+        self.get_cols_container()[pos_x_drawer].    add_drawer(pos_y_drawer, drawer)
 
     def __horiz_move(self, pos_col: int):
         if pos_col == 0:
