@@ -112,6 +112,8 @@ class Warehouse:
         # and insert drawer in correct position (outside)
         self.get_carousel().add_drawer(True, drawer_to_show)
 
+        print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
+
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
         index_distance = abs(end_pos - start_pos)
         eff_distance = index_distance * self.get_def_space()

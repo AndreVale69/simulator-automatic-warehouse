@@ -39,7 +39,7 @@ class Floor(object):
         # check if the buffer is to load or not
         if self.get_warehouse().check_buffer():
             print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
-            yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
+            self.env.process(self.get_warehouse().loading_buffer_and_remove())
 
         # move the floor
         print(f"Time {self.env.now:5.2f} - Start vertical move")
