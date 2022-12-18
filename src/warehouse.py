@@ -141,15 +141,15 @@ class Warehouse:
 
     def unload(self, drawer: Drawer):
         pos_x_drawer = drawer.get_first_drawerEntry().get_pos_x()
-        yield self.env.timeout(self.__horiz_move(pos_x_drawer))
+        yield self.env.timeout(self.horiz_move(pos_x_drawer))
 
     def load(self, drawer: Drawer):
         pos_x_drawer = drawer.get_best_x()
         pos_y_drawer = drawer.get_best_y()
-        yield self.env.timeout(self.__horiz_move(pos_x_drawer))
-        self.get_cols_container()[pos_x_drawer].    add_drawer(pos_y_drawer, drawer)
+        yield self.env.timeout(self.horiz_move(pos_x_drawer))
+        self.get_cols_container()[pos_x_drawer].add_drawer(pos_y_drawer, drawer)
 
-    def __horiz_move(self, pos_col: int):
+    def horiz_move(self, pos_col: int):
         if pos_col == 0:
             return (self.get_horiz_right_col() / 100) / self.get_speed_per_sec()
         else:

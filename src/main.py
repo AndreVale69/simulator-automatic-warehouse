@@ -18,4 +18,4 @@ warehouse.get_carousel().add_drawer(False, drawer2)
 
 wh2 = copy.deepcopy(warehouse)
 
-warehouse.run_simulation(20, drawer)
+warehouse.run_simulation(40, drawer)
