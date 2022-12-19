@@ -37,6 +37,8 @@
 		
 		\item Ogni \textsf{Drawer} ha un campo nella classe che lo collega con la prima \emph{entry} all'interno del \emph{container} delle \emph{entries}. Quindi è stata modificata l'aggiunta dei cassetti in \textsf{Column} e \textsf{Carousel}, è stata migliorata la rimozione dei cassetti e rimossa la funzione di ricerca di un cassetto.
 		
-		\item Il caricamento del \textsf{buffer} avviene solamente dopo che il ripiano che prende i cassetti ha finito il suo movimento, ovvero nel momento in cui è al centro.	
+		\item Il caricamento del \textsf{buffer} avviene solamente dopo che il ripiano che prende i cassetti ha finito il suo movimento, ovvero nel momento in cui è al centro.
+		
+		\item Adesso la classe \textsf{Simulation} avvia la simulazione mandando in esecuzione un evento dopo l'altro. Quindi, sono state create $n$-classi per $n$-eventi (o azioni).
 	\end{itemize}
 \end{document}

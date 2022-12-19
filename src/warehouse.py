@@ -30,6 +30,7 @@ class Warehouse:
         self.horiz_left_col = config["columns"][1]["horiz_distance"]
         self.env = None
         self.floor = None
+        self.supp_drawer = None
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
@@ -71,16 +72,30 @@ class Warehouse:
     def get_horiz_left_col(self) -> int:
         return self.horiz_left_col
 
+    def get_drawer_of_support(self) -> Drawer:
+        return self.supp_drawer
+
     def add_column(self, col: Column):
         self.get_cols_container().append(col)
 
+    def set_drawer_of_support(self, drawer: Drawer):
+        self.supp_drawer = drawer
+
     def check_buffer(self) -> bool:
+        """
+        Check the buffer
+        :return: True if is full, False otherwise
+        """
         carousel = self.get_carousel().get_container()
         deposit = self.get_carousel().get_deposit()
         # check if the first position of buffer have a Drawer
         return True if type(carousel[deposit]) is DrawerEntry else False
 
     def check_deposit(self) -> bool:
+        """
+        Check the deposit
+        :return: True if is full, False otherwise
+        """
         carousel = self.get_carousel().get_container()
         # check if the first position of deposit have a Drawer
         return True if type(carousel[0]) is DrawerEntry else False
@@ -160,7 +175,7 @@ class Warehouse:
     def gen_rand_material(self):
         from src.material import Material
 
-        # TODO: to insert in JSON file
+        # TODO: to insert in JSON file (?)
         name_materials = ['Shirt',
                           'Pasta',
                           'Tomato',
@@ -178,11 +193,12 @@ class Warehouse:
 
         return Material(barcode, name, height, length, width)
 
-    def run_simulation(self, time: int, drawer: Drawer):
-        from src.simulation import Floor
+    def run_simulation(self, time: int):
+        from src.simulation import Simulation
 
         self.env = simpy.Environment()
-        self.floor = Floor(self.env, self)
+        self.floor = Simulation(self.env, self)
 
-        self.get_environment().process(self.get_floor().insert(drawer))
+        self.get_environment().process(self.floor.simulate_actions(self.floor.insert_material_and_alloc_drawer))
+
         self.get_environment().run(until=time)

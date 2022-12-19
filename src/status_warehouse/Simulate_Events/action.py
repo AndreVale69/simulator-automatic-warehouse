@@ -7,6 +7,7 @@ from src.drawer import Drawer
 
 class Action:
     def __init__(self, env: Environment, warehouse: Warehouse, floor):
+        self.drawer = None
         self.env = env
         self.warehouse = warehouse
         self.floor = floor
@@ -21,5 +22,5 @@ class Action:
         return self.floor
 
     @abstractmethod
-    def simulate_action(self, drawer: Drawer):
+    def simulate_action(self):
         pass
