@@ -11,19 +11,17 @@ class InsertDrawerInWarehouse(Action):
 
     # override
     def simulate_action(self, drawer: Drawer):
-        print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
-        yield self.env.timeout(2)
+        from src.status_warehouse.Simulate_Events.insert_material import InsertMaterial
+        from src.status_warehouse.Simulate_Events.unload_drawer import UnloadDrawer
+        from src.status_warehouse.Simulate_Events.show_buffer import ShowBuffer
 
-        print(f"Time {self.env.now:5.2f} - Start unloading a drawer")
-        # unloading drawer
-        yield self.env.process(self.get_warehouse().unload(drawer))
-        # remove only from container
-        self.get_warehouse().get_carousel().remove_drawer(drawer)
+        yield self.env.process(InsertMaterial(self.env, self.warehouse, self.floor).simulate_action())
+
+        yield self.env.process(UnloadDrawer(self.env, self.warehouse, self.floor).simulate_action(drawer))
 
         # check if the buffer is to load or not
-        if self.get_warehouse().check_buffer():
-            print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
-            self.env.process(self.get_warehouse().loading_buffer_and_remove())
+        # if self.get_warehouse().check_buffer():
+        self.env.process(ShowBuffer(self.env, self.warehouse, self.floor).simulate_action())
 
         # move the floor
         print(f"Time {self.env.now:5.2f} - Start vertical move")

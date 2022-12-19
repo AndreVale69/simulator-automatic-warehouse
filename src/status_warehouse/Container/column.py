@@ -10,7 +10,7 @@ class Column(DrawerContainer):
 
         # create container
         for i in range(self.get_height_col()):
-            self.add_item_to_container(EmptyEntry(info["x_offset"], i))
+            self.create_new_space(EmptyEntry(info["x_offset"], i))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)

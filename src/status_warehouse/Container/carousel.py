@@ -13,7 +13,7 @@ class Carousel(DrawerContainer):
 
         # create container
         for i in range(self.get_deposit() + self.get_buffer()):
-            self.add_item_to_container(EmptyEntry(0, i + first_y))
+            self.create_new_space(EmptyEntry(0, i + first_y))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)

@@ -57,7 +57,7 @@ class DrawerContainer:
     def get_hole(self) -> int:
         return self.hole
 
-    def add_item_to_container(self, element):
+    def create_new_space(self, element):
         self.get_container().append(element)
 
     @abstractmethod

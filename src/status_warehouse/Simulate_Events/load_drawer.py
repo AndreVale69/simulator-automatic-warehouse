@@ -5,7 +5,7 @@ from src.drawer import Drawer
 from src.simulation import Floor
 
 
-class RemoveDrawerFromWarehouse(Action):
+class LoadDrawer(Action):
     def __init__(self, env: Environment, warehouse: Warehouse, floor: Floor):
         super().__init__(env, warehouse, floor)
 

@@ -1,4 +1,6 @@
 import copy
+import random
+
 import simpy
 
 from simpy import Environment
@@ -154,6 +156,27 @@ class Warehouse:
             return (self.get_horiz_right_col() / 100) / self.get_speed_per_sec()
         else:
             return (self.get_horiz_left_col() / 100) / self.get_speed_per_sec()
+
+    def gen_rand_material(self):
+        from src.material import Material
+
+        # TODO: to insert in JSON file
+        name_materials = ['Shirt',
+                          'Pasta',
+                          'Tomato',
+                          'Bottle',
+                          'Tablet',
+                          'Helmet']
+
+        # multiply for current time to avoid the same barcode
+        barcode = random.randint(100_000_000, 999_999_999) * self.env.now
+        name = random.choice(name_materials)
+        # height max is buffer height = 150
+        height = random.randint(25, 150)
+        length = random.randint(25, 150)
+        width = random.randint(25, 150)
+
+        return Material(barcode, name, height, length, width)
 
     def run_simulation(self, time: int, drawer: Drawer):
         from src.simulation import Floor

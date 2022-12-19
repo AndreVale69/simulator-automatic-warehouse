@@ -7,7 +7,7 @@ from src.material import Material
 
 warehouse = Warehouse()
 
-material = Material(123, "name1", 160, 789, 12345)
+material = Material(123, "name1", 150, 789, 12345)
 material2 = Material(234, "name2", 126, 987, 00000)
 material3 = Material(567, "name3", 100, 123, 45678)
 drawer = Drawer([material, material2])
