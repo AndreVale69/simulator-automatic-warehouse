@@ -6,7 +6,7 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 class Column(DrawerContainer):
     def __init__(self, info: dict):
-        super().__init__(info["x_offset"])
+        super().__init__(info["height"], info["x_offset"])
 
         # create container
         for i in range(self.get_height_col()):
@@ -29,7 +29,7 @@ class Column(DrawerContainer):
 
     def __create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
         # initialize positions
-        drawer_entry = DrawerEntry(self.get_pos_x(), index)
+        drawer_entry = DrawerEntry(self.get_offset_x(), index)
         # connect Drawer to Entry
         drawer_entry.add_drawer(drawer)
         # add to container

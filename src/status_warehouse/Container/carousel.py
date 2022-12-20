@@ -6,14 +6,15 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 class Carousel(DrawerContainer):
     def __init__(self, info: dict):
-        super().__init__(0)
+        height_carousel = info["deposit_height"] + info["buffer_height"]
+        super().__init__(height_carousel, info["x_offset"])
 
         # get first y to start
         first_y = self.get_height_col() + self.get_hole()
 
         # create container
         for i in range(self.get_deposit() + self.get_buffer()):
-            self.create_new_space(EmptyEntry(0, i + first_y))
+            self.create_new_space(EmptyEntry(self.get_offset_x(), i + first_y))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)
@@ -56,7 +57,7 @@ class Carousel(DrawerContainer):
 
     def __create_drawerEntry(self, drawer: Drawer, first_y: int, index: int) -> DrawerEntry:
         # initialize positions
-        drawer_entry = DrawerEntry(self.get_pos_x(), first_y + index)
+        drawer_entry = DrawerEntry(self.get_offset_x(), first_y + index)
         # connect Drawer to entry
         drawer_entry.add_drawer(drawer)
         # add to container

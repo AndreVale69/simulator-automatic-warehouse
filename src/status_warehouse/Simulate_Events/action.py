@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from simpy import Environment
+
 # from src.simulation import Floor
 from src.warehouse import Warehouse
-from src.drawer import Drawer
 
 
 class Action:

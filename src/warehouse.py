@@ -1,9 +1,8 @@
 import copy
 import random
-
 import simpy
-
 from simpy import Environment
+
 from src.status_warehouse.Container.column import Column
 from src.status_warehouse.Container.carousel import Carousel
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
@@ -34,15 +33,15 @@ class Warehouse:
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
-        copy_oby.height = self.height
-        copy_oby.columns_container = copy.deepcopy(self.columns_container, memo)
-        copy_oby.carousel = copy.deepcopy(self.carousel, memo)
-        copy_oby.def_space = self.def_space
-        copy_oby.speed_per_sec = self.speed_per_sec
-        copy_oby.horiz_right_col = self.horiz_right_col
-        copy_oby.horiz_left_col = self.horiz_left_col
-        copy_oby.env = self.env
-        copy_oby.floor = self.floor
+        copy_oby.height = self.get_height()
+        copy_oby.columns_container = copy.deepcopy(self.get_cols_container(), memo)
+        copy_oby.carousel = copy.deepcopy(self.get_carousel(), memo)
+        copy_oby.def_space = self.get_def_space()
+        copy_oby.speed_per_sec = self.get_speed_per_sec()
+        copy_oby.horiz_right_col = self.get_horiz_right_col()
+        copy_oby.horiz_left_col = self.get_horiz_left_col()
+        copy_oby.env = self.get_environment()
+        copy_oby.floor = self.get_floor()
         return copy_oby
 
     def get_height(self) -> int:
@@ -102,7 +101,7 @@ class Warehouse:
 
     def come_back_to_deposit(self, drawer_inserted: Drawer):
         # take current position (y)
-        curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_x()
+        curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
 
         # take destination position (y)
         dep_pos = DrawerEntry.get_pos_y(self.get_carousel().get_container()[0])
@@ -151,7 +150,7 @@ class Warehouse:
 
         # save temporarily the coordinates
         drawer.set_best_y(minimum[1])
-        drawer.set_best_x(Column.get_pos_x(minimum[2]))
+        drawer.set_best_offset_x(Column.get_offset_x(minimum[2]))
 
         vertical_move = self.vertical_move(start_pos, pos_to_insert)
         yield self.env.timeout(vertical_move)
@@ -161,10 +160,18 @@ class Warehouse:
         yield self.env.timeout(self.horiz_move(pos_x_drawer))
 
     def load(self, drawer: Drawer):
-        pos_x_drawer = drawer.get_best_x()
+        pos_x_drawer = drawer.get_best_offset_x()
         pos_y_drawer = drawer.get_best_y()
         yield self.env.timeout(self.horiz_move(pos_x_drawer))
-        self.get_cols_container()[pos_x_drawer].add_drawer(pos_y_drawer, drawer)
+
+        # calculate the minimum offset between the columns
+        min_offset = self.get_cols_container()[0].get_offset_x()
+        index = 0
+        for i, column in enumerate(self.get_cols_container()):
+            if min_offset < column.get_offset_x():
+                min_offset = column.get_offset_x()
+                index = i
+        self.get_cols_container()[index].add_drawer(pos_y_drawer, drawer)
 
     def horiz_move(self, pos_col: int):
         if pos_col == 0:

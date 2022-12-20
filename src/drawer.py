@@ -17,7 +17,7 @@ class Drawer:
         self.__calculate_max_height()
 
         self.first_drawerEntry = None
-        self.best_x = None
+        self.best_offset_x = None
         self.best_y = None
 
     def __eq__(self, other):
@@ -39,7 +39,7 @@ class Drawer:
         copy_obj.max_height = self.max_height
         copy_obj.num_space = self.num_space
         copy_obj.first_drawerEntry = self.first_drawerEntry
-        copy_obj.best_x = self.best_x
+        copy_obj.best_offset_x = self.best_offset_x
         copy_obj.best_y = self.best_y
         return copy_obj
 
@@ -61,8 +61,8 @@ class Drawer:
     def get_first_drawerEntry(self):
         return self.first_drawerEntry
 
-    def get_best_x(self) -> int:
-        return self.best_x
+    def get_best_offset_x(self) -> int:
+        return self.best_offset_x
 
     def get_best_y(self) -> int:
         return self.best_y
@@ -75,8 +75,8 @@ class Drawer:
     def set_first_drawerEntry(self, drawer_entry):
         self.first_drawerEntry = drawer_entry
 
-    def set_best_x(self, pos_x: int):
-        self.best_x = pos_x
+    def set_best_offset_x(self, offset_x: int):
+        self.best_offset_x = offset_x
 
     def set_best_y(self, pos_y: int):
         self.best_y = pos_y

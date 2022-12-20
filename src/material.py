@@ -9,6 +9,7 @@ class Material:
         :param width: width of a material
         """
         from src.useful_func import open_config
+
         # maximum height of a material to fit into a drawer
         config: dict = open_config()
         max_height_material = config["carousel"]["buffer_height"]
