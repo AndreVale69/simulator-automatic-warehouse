@@ -6,11 +6,11 @@ from src.warehouse import Warehouse
 
 
 class Action:
-    def __init__(self, env: Environment, warehouse: Warehouse, floor):
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation):
         self.drawer = None
         self.env = env
         self.warehouse = warehouse
-        self.floor = floor
+        self.simulation = simulation
 
     def get_env(self):
         return self.env
@@ -18,8 +18,8 @@ class Action:
     def get_warehouse(self):
         return self.warehouse
 
-    def get_floor(self):
-        return self.floor
+    def get_simulation(self):
+        return self.simulation
 
     @abstractmethod
     def simulate_action(self):

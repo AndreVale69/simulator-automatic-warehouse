@@ -7,8 +7,8 @@ from src.simulation import Simulation
 
 
 class InsertMaterial(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, floor: Simulation):
-        super().__init__(env, warehouse, floor)
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
+        super().__init__(env, warehouse, simulation)
 
     # override
     def simulate_action(self):
@@ -18,7 +18,7 @@ class InsertMaterial(Action):
         # generate random material
         mat_to_put = self.get_warehouse().gen_rand_material()
         # take the drawer that is outside
-        drawer_output: Drawer = DrawerEntry.get_drawer(self.get_warehouse().get_carousel().get_container()[0])
+        drawer_output: Drawer = self.get_warehouse().get_carousel().get_container()[0].get_drawer()
         # add the material
         drawer_output.add_material(mat_to_put)
         # add a reference to the drawer

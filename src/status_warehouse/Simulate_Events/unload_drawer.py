@@ -7,8 +7,8 @@ from src.simulation import Simulation
 
 
 class UnloadDrawer(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, floor: Simulation):
-        super().__init__(env, warehouse, floor)
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
+        super().__init__(env, warehouse, simulation)
 
     # override
     def simulate_action(self):
@@ -18,4 +18,4 @@ class UnloadDrawer(Action):
         # remove only from container
         self.get_warehouse().get_carousel().remove_drawer(self.get_warehouse().get_drawer_of_support())
         # trigger buffer.py process
-        self.get_floor().get_comm_chan().put("Check the buffer...")
+        self.get_simulation().get_comm_chan().put("Check the buffer...")

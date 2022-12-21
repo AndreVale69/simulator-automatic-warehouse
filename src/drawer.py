@@ -35,12 +35,12 @@ class Drawer:
     def __deepcopy__(self, memo):
         copy_obj = Drawer(self.get_items())
         copy_obj.items = copy.deepcopy(self.get_items(), memo)
-        copy_obj.def_space = self.def_space
-        copy_obj.max_height = self.max_height
-        copy_obj.num_space = self.num_space
-        copy_obj.first_drawerEntry = self.first_drawerEntry
-        copy_obj.best_offset_x = self.best_offset_x
-        copy_obj.best_y = self.best_y
+        copy_obj.def_space = self.__get_def_space()
+        copy_obj.max_height = self.get_max_height()
+        copy_obj.num_space = self.get_max_num_space()
+        copy_obj.first_drawerEntry = self.get_first_drawerEntry()
+        copy_obj.best_offset_x = self.get_best_offset_x()
+        copy_obj.best_y = self.get_best_y()
         return copy_obj
 
     def get_items(self) -> list[Material]:

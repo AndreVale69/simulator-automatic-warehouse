@@ -13,12 +13,13 @@ class Warehouse:
     def __init__(self):
         from src.useful_func import open_config
 
+        # open JSON configuration file
         config: dict = open_config()
 
         self.height = config["height_warehouse"]
 
-        self.columns_container = []
         # add all columns taken from JSON
+        self.columns_container = []
         for col_data in config["columns"]:
             self.add_column(Column(col_data))
         self.carousel = Carousel(config["carousel"])
@@ -109,20 +110,20 @@ class Warehouse:
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
     def loading_buffer_and_remove(self):
-        storage = self.get_carousel().get_height_col()
-        hole = self.get_carousel().get_hole()
-        carousel = self.get_carousel().get_container()
-        deposit = self.get_carousel().get_deposit()
+        storage: int = self.get_carousel().get_height_col()
+        hole: int = self.get_carousel().get_hole()
+        carousel: list = self.get_carousel().get_container()
+        deposit: int = self.get_carousel().get_deposit()
 
         # calculate loading buffer time
-        start_pos = DrawerEntry.get_pos_y(carousel[deposit])
+        start_pos = carousel[deposit].get_pos_y()
         end_pos = storage + hole
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
         yield self.env.timeout(loading_buffer_time)
 
         # obtain the drawer inside the buffer
-        drawer_to_show = DrawerEntry.get_drawer(carousel[deposit])
+        drawer_to_show = carousel[deposit].get_drawer()
         # remove from buffer
         self.get_carousel().remove_drawer(drawer_to_show)
         # and insert drawer in correct position (outside)

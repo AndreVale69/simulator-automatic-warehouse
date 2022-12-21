@@ -7,8 +7,8 @@ from src.simulation import Simulation
 
 
 class GoToDepositDrawer(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, floor: Simulation):
-        super().__init__(env, warehouse, floor)
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
+        super().__init__(env, warehouse, simulation)
 
     # override
     def simulate_action(self):

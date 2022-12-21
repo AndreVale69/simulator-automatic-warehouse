@@ -72,20 +72,17 @@ class DrawerContainer:
 
     def remove_drawer(self, drawer: Drawer):
         is_remove: bool = False
-        first_entry = drawer.get_first_drawerEntry()
-        # In this way it's incorrect! Try it.
-        # entry_y: int = first_entry.get_pos_y
-        # entry_x: int = first_entry.get_pos_x
-        entry_y: int = DrawerEntry.get_pos_y(first_entry)
-        entry_x: int = DrawerEntry.get_pos_x(first_entry)
+        first_entry: DrawerEntry = drawer.get_first_drawerEntry()
+        entry_y: int = first_entry.get_pos_y()
+        entry_x: int = first_entry.get_pos_x()
 
         for index, element in enumerate(self.get_container()):
             # if is a DrawerEntry element
             if isinstance(element, DrawerEntry):
                 # if they've the same coordinates
-                if DrawerEntry.get_pos_y(element) == entry_y:
+                if element.get_pos_y() == entry_y:
                     # if the drawers are the same (see __eq__ method)
-                    if DrawerEntry.get_drawer(element) == drawer:
+                    if element.get_drawer() == drawer:
                         self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
                         is_remove = True
                         entry_y += 1
