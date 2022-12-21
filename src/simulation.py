@@ -1,4 +1,7 @@
 import copy
+
+
+import simpy
 from simpy import Environment
 
 from src.warehouse import Warehouse
@@ -25,14 +28,14 @@ class Simulation(object):
                                                  GoToDepositDrawer(self.env, self.get_warehouse(), self),
                                                  LoadDrawer(self.env, self.get_warehouse(), self),
                                                  ComeBackToDeposit(self.env, self.get_warehouse(), self)]
-        # self.tmp = 2
-        # self.machine = simpy.Resource(env, self.tmp)
+        # communication channel
+        self.comm_chan = simpy.Store(env)
 
     def simulate_actions(self, action_list: list[Action]):
         # an action can be a: MoveDrawer, InsertMaterial, RemoveMaterial, ExtractDrawerInBay, RemoveDrawerFromBay, etc.
-        # active control of Buffer
-        self.env.process(self.buffer.simulate_action())
-        # execute the operations
+        # run "control of buffer" process
+        self.env.process(self.get_buffer().simulate_action())
+        # run the actions
         for action in action_list:
             yield self.env.process(action.simulate_action())
 
@@ -47,5 +50,8 @@ class Simulation(object):
     def get_warehouse(self) -> Warehouse:
         return self.warehouse
 
-    # def get_machine(self):
-    #     return self.machine
+    def get_comm_chan(self):
+        return self.comm_chan
+
+    def get_buffer(self):
+        return self.buffer

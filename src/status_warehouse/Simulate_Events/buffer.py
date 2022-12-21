@@ -13,13 +13,8 @@ class Buffer(Action):
     # override
     def simulate_action(self):
         while True:
-            # DEBUG:
-            # print(f"Time {self.env.now:5.2f} - Check the buffer...")
-            # check if the buffer is to load or not
+            msg = yield self.get_floor().get_comm_chan().get()
+            print(msg)
             if self.get_warehouse().check_buffer() and not self.get_warehouse().check_deposit():
                 print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
                 yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
-            else:
-                # DEBUG:
-                # print(f"Time {self.env.now:5.2f} - No item! Go to sleep :)")
-                yield self.env.timeout(0.001)

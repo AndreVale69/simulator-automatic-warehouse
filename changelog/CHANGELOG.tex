@@ -37,10 +37,10 @@
 		
 		\item Ogni \textsf{Drawer} ha un campo nella classe che lo collega con la prima \emph{entry} all'interno del \emph{container} delle \emph{entries}. Quindi è stata modificata l'aggiunta dei cassetti in \textsf{Column} e \textsf{Carousel}, è stata migliorata la rimozione dei cassetti e rimossa la funzione di ricerca di un cassetto.
 		
-		\item Il caricamento del \textsf{buffer} avviene solamente dopo che il ripiano che prende i cassetti ha finito il suo movimento, ovvero nel momento in cui è al centro.
+		\item Le coordinate sono state migliorate. Quindi, la $y$ rappresenta l'altezza (zero dall'alto), come prima, e la $x$ rappresenta l'offset. Più è piccolo il valore di offset, più la colonna è vicina all'uscita e di conseguenza la colonna con offset più piccolo è quella d'uscita.
 		
 		\item Adesso la classe \textsf{Simulation} avvia la simulazione mandando in esecuzione un evento dopo l'altro. Quindi, sono state create $n$-classi per $n$-eventi (o azioni).
 		
-		\item Le coordinate sono state migliorate. Quindi, la $y$ rappresenta l'altezza (zero dall'alto), come prima, e la $x$ rappresenta l'offset. Più è piccolo il valore di offset, più la colonna è vicina all'uscita e di conseguenza la colonna con offset più piccolo è quella d'uscita.
+		\item Il controllo del \textsf{buffer} avviene solamente dopo che la baia ha finito il suo movimento orizzontale, ovvero nel momento in cui è al centro. Il processo che controlla il buffer, attende che un altro processo lo attivi tramite il canale di comunicazione di \emph{simpy} chiamato \textsf{Store} (\emph{pipeline}). Per esempio, nell'inserimento di un materiale il processo di controllo viene svegliato solamente alla fine del processo di movimento orizzontale iniziale.
 	\end{itemize}
 \end{document}

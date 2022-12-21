@@ -131,8 +131,11 @@ class Warehouse:
         print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
 
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
+        # calculate the distance of index between two points
         index_distance = abs(end_pos - start_pos)
+        # calculate effective distance with real measures
         eff_distance = index_distance * self.get_def_space()
+        # formula of vertical move
         vertical_move = (eff_distance / 100) / self.get_speed_per_sec()
         return vertical_move
 
@@ -206,6 +209,6 @@ class Warehouse:
         self.env = simpy.Environment()
         self.floor = Simulation(self.env, self)
 
-        self.get_environment().process(self.floor.simulate_actions(self.floor.insert_material_and_alloc_drawer))
+        self.get_environment().process(self.get_floor().simulate_actions(self.floor.insert_material_and_alloc_drawer))
 
         self.get_environment().run(until=time)

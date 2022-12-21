@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.21)  20 DEC 2022 22:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.21)  21 DEC 2022 19:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -337,9 +337,9 @@ LaTeX Warning: No \author given.
 
 {c:/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 42.
+(Font)              <7> on input line 40.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 42.
+(Font)              <5> on input line 40.
  [2]
 (./CHANGELOG.aux)
 Package rerunfilecheck Info: File `CHANGELOG.out' has not changed.
@@ -348,11 +348,11 @@ Package rerunfilecheck Info: File `CHANGELOG.out' has not changed.
 Here is how much of TeX's memory you used:
  10629 strings out of 475075
  167588 string characters out of 5783001
- 554522 words of memory out of 5000000
+ 555522 words of memory out of 5000000
  31907 multiletter control sequences out of 15000+600000
  474240 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,6n,77p,379b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,6n,77p,525b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/tex
 live/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2022
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2022/texmf-dis
@@ -360,7 +360,7 @@ t/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2022/texmf-dist/fonts/ty
 pe1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public
 /amsfonts/cm/cmss10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmti10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on CHANGELOG.pdf (2 pages, 84036 bytes).
+Output written on CHANGELOG.pdf (2 pages, 85171 bytes).
 PDF statistics:
  58 PDF objects out of 1000 (max. 8388607)
  37 compressed objects within 1 object stream
