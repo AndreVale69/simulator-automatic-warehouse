@@ -1,46 +1,51 @@
 import copy
 from abc import abstractmethod
-from src.useful_func import obt_value_json
+
 from src.drawer import Drawer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class DrawerContainer:
-    def __init__(self, pos_x: int):
+    def __init__(self, height_col: int, offset_x: int, width: int):
+        from src.useful_func import open_config
+
         # initialize main vars
+        config: dict = open_config()
         self.container = []
-        self.height = obt_value_json("height_warehouse")
-        self.def_space = obt_value_json("default_height_space")
-        self.storage = obt_value_json("storage_height") // self.get_def_space()
-        self.hole = obt_value_json("hole_height") // self.get_def_space()
-        self.deposit = obt_value_json("deposit_height") // self.get_def_space()
-        self.buffer = obt_value_json("buffer_height") // self.get_def_space()
-        self.num_entries = self.get_height() // self.get_def_space()
-        self.pos_x = pos_x
+        self.height_warehouse = config["height_warehouse"]
+        self.def_space = config["default_height_space"]
+        self.hole = config["carousel"]["hole_height"] // self.get_def_space()
+        self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
+        self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
+        self.width = width
+        self.height_column = height_col // self.get_def_space()
+        self.offset_x = offset_x
 
     def __deepcopy__(self, memo):
-        newone = type(self)(self.get_pos_x())
-        newone.__dict__.update(self.__dict__)
-        self.container = copy.deepcopy(self.container, memo)
-        self.height = copy.deepcopy(self.height, memo)
-        self.def_space = copy.deepcopy(self.def_space, memo)
-        self.storage = copy.deepcopy(self.storage, memo)
-        self.hole = copy.deepcopy(self.hole, memo)
-        self.deposit = copy.deepcopy(self.deposit, memo)
-        self.buffer = copy.deepcopy(self.buffer, memo)
-        self.num_entries = copy.deepcopy(self.num_entries, memo)
-        self.pos_x = copy.deepcopy(self.pos_x, memo)
-        return newone
+        info: dict = {
+            "height": self.get_height_col(),
+            "x_offset": self.get_offset_x(),
+            "width": self.get_width(),
+            "deposit_height": self.get_deposit() * self.get_def_space(),
+            "buffer_height": self.get_buffer() * self.get_def_space()
+        }
+        copy_obj = type(self)(info)
+        copy_obj.container = copy.deepcopy(self.container, memo)
+        copy_obj.height_warehouse = self.get_height()
+        copy_obj.def_space = self.get_def_space()
+        copy_obj.height_column = self.get_height_col()
+        copy_obj.hole = self.get_hole()
+        copy_obj.deposit = self.get_deposit()
+        copy_obj.buffer = self.get_buffer()
+        copy_obj.offset_x = self.get_offset_x()
+        return copy_obj
 
     def get_height(self) -> int:
-        return self.height
+        return self.height_warehouse
 
     def get_def_space(self) -> int:
         return self.def_space
-
-    def get_num_entries(self) -> int:
-        return self.num_entries
 
     def get_container(self) -> list:
         return self.container
@@ -51,19 +56,19 @@ class DrawerContainer:
     def get_deposit(self) -> int:
         return self.deposit
 
-    def get_pos_x(self) -> int:
-        return self.pos_x
+    def get_offset_x(self) -> int:
+        return self.offset_x
 
-    def get_storage(self) -> int:
-        return self.storage
+    def get_height_col(self) -> int:
+        return self.height_column
 
     def get_hole(self) -> int:
         return self.hole
 
-    def set_num_entries(self, num_entries: int):
-        self.num_entries = num_entries
+    def get_width(self) -> int:
+        return self.width
 
-    def add_item_to_container(self, element):
+    def create_new_space(self, element):
         self.get_container().append(element)
 
     @abstractmethod
@@ -71,30 +76,21 @@ class DrawerContainer:
         pass
 
     def remove_drawer(self, drawer: Drawer):
-        occurrence = 0
+        is_remove: bool = False
+        first_entry: DrawerEntry = drawer.get_first_drawerEntry()
+        entry_y: int = first_entry.get_pos_y()
+        entry_x: int = first_entry.get_offset_x()
 
-        try:
-            # finding the first occurrence
-            # search inside the column
-            for i in range(len(self.get_container())):
-                # if an element of the column is DrawerEntry, so the drawer is full...
-                if isinstance(self.get_container()[i], DrawerEntry):
-                    # ... and if the DrawerEntry object is linked to the same drawer object
-                    # TODO
-                    # fix DrawerEntry.get_drawer(self.get_container()[i])
-                    # with self.get_container()[i].get_drawer()
-                    if self.get_container()[i].get_drawer() == drawer:
-                        # take DrawerEntry object
-                        occurrence = self.get_container()[i]
-                        break
-            # if there isn't any drawer raise StopIteration error!
-            if occurrence == 0:
-                raise StopIteration
-            else:
-                # search inside the column all the occurrences and substitute with EmptyEntry
-                for i in range(len(self.get_container())):
-                    if type(self.get_container()[i]) is type(occurrence):
-                        if DrawerEntry.get_drawer(self.get_container()[i]) == DrawerEntry.get_drawer(occurrence):
-                            self.get_container()[i] = EmptyEntry(occurrence.get_pos_x(), occurrence.get_pos_y())
-        except StopIteration as e:
-            print(str(e) + "\nNo element to remove found")
+        for index, element in enumerate(self.get_container()):
+            # if is a DrawerEntry element
+            if isinstance(element, DrawerEntry):
+                # if they've the same coordinates
+                if element.get_pos_y() == entry_y:
+                    # if the drawers are the same (see __eq__ method)
+                    if element.get_drawer() == drawer:
+                        self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
+                        is_remove = True
+                        entry_y += 1
+
+        if not is_remove:
+            print("Drawer doesn't removed.")

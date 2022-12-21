@@ -1,45 +1,50 @@
 import copy
+
 from src.material import Material
 
 
 class Drawer:
     def __init__(self, items: list = None):
-        from src.useful_func import obt_value_json
+        from src.useful_func import open_config
 
         # items inside the drawer
+        config: dict = open_config()
+
         if items is None:
             items = []
         self.items = copy.deepcopy(items)
-        self.def_space = obt_value_json("default_height_space")
+        self.def_space = config["default_height_space"]
         self.__calculate_max_height()
 
-        self.best_x = None
+        self.first_drawerEntry = None
+        self.best_offset_x = None
         self.best_y = None
 
     def __eq__(self, other):
         """Overrides the default implementation"""
-        # TODO check
         return isinstance(other,
-                          Drawer) and self.get_items() == other.get_items() and self.get_max_height() == other.get_max_height() and self.get_max_num_space() == other.get_max_num_space()
+                          Drawer) and \
+            self.get_items() == other.get_items() and \
+            self.get_max_height() == other.get_max_height() and \
+            self.get_max_num_space() == other.get_max_num_space()
 
     def __hash__(self):
         """Overrides the default implementation"""
-        # TODO check
         return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
 
     def __deepcopy__(self, memo):
-        newone = type(self)(self.get_items())
-        newone.__dict__.update(self.__dict__)
-        self.items = copy.deepcopy(self.get_items(), memo)
-        return newone
+        copy_obj = Drawer(self.get_items())
+        copy_obj.items = copy.deepcopy(self.get_items(), memo)
+        copy_obj.def_space = self.__get_def_space()
+        copy_obj.max_height = self.get_max_height()
+        copy_obj.num_space = self.get_max_num_space()
+        copy_obj.first_drawerEntry = self.get_first_drawerEntry()
+        copy_obj.best_offset_x = self.get_best_offset_x()
+        copy_obj.best_y = self.get_best_y()
+        return copy_obj
 
     def get_items(self) -> list[Material]:
         return self.items
-
-    def add_material(self, material: Material):
-        # insert in tail
-        self.items.append(material)
-        self.__calculate_max_height()
 
     def get_max_height(self) -> int:
         """
@@ -53,14 +58,25 @@ class Drawer:
         """
         return self.num_space
 
-    def get_best_x(self) -> int:
-        return self.best_x
+    def get_first_drawerEntry(self):
+        return self.first_drawerEntry
+
+    def get_best_offset_x(self) -> int:
+        return self.best_offset_x
 
     def get_best_y(self) -> int:
         return self.best_y
 
-    def set_best_x(self, pos_x: int):
-        self.best_x = pos_x
+    def add_material(self, material: Material):
+        # insert in tail
+        self.items.append(material)
+        self.__calculate_max_height()
+
+    def set_first_drawerEntry(self, drawer_entry):
+        self.first_drawerEntry = drawer_entry
+
+    def set_best_offset_x(self, offset_x: int):
+        self.best_offset_x = offset_x
 
     def set_best_y(self, pos_y: int):
         self.best_y = pos_y

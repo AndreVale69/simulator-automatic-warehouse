@@ -1,98 +1,37 @@
 import json
+
 from src.drawer import Drawer
-from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
-from status_warehouse.Entry.entry import Entry
 
 
-def obt_value_json(keyword: str, col: str = None) -> int:
+def open_config() -> dict:
     """
-    Read a specific data inside JSON file.
-
-    :param col: specify name of column (optional)
-    :param keyword: constant search inside JSON file.
-    :return: value found.
-    :exception KeyError: value not found.
+    Read the config file
+    :return: config file
     """
-
     # opening JSON file
     with open("../rsc/config.json", 'r') as json_file:
         # returns JSON object as a dictionary
-        json_data = json.load(json_file)
-
-    try:
-        # if the value isn't inside a list
-        if keyword in json_data:
-            return json_data[keyword]
-        else:
-            # for each element inside the dictionary
-            for i in json_data:
-                # manipulate list element
-                if isinstance(json_data[i], list):
-                    for j in range(len(json_data[i])):
-                        # each element of the list is a dictionary type, so try to find the element
-                        if col is not None and json_data[i][j]["descr"] == col and keyword in json_data[i][j]:
-                            return json_data[i][j][keyword]
-                        else:
-                            if keyword in json_data[i][j]:
-                                return json_data[i][j][keyword]
-                else:
-                    # manipulate dictionary element
-                    if isinstance(json_data[i], dict):
-                        # try to find the element
-                        if keyword in json_data[i]:
-                            return json_data[i][keyword]
-    except KeyError as e:
-        print(str(e) + "\nValue not found")
+        return json.load(json_file)
 
 
-def search_drawer(list_col: list[Entry], drawer: Drawer) -> DrawerEntry:
-    """
-        Search first drawer that have the same items inside (check barcode).
-
-        :param list_col: list of columns.
-        :param drawer: drawer in relationship with DrawerEntry to search.
-        :return: object in relationship with drawer
-    """
-    from src.status_warehouse.Container.column import DrawerContainer
-
-    # take every column
-    for j, element in enumerate(list_col): #range(len(list_col)):
-        # take every space in the column
-        element.get_container()
-
-        for i in range(len(DrawerContainer.get_container(list_col[j]))):
-            # check if there is a drawer
-            if isinstance(DrawerContainer.get_container(list_col[j])[i], DrawerEntry):
-                flag = 0
-                # count every item (= Material) inside the drawer
-                for k in range(len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items())):
-                    if DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()[k].get_barcode() == \
-                            drawer.get_items()[k].get_barcode():
-                        flag = flag + 1
-                # if every item is equal (about barcode) -> finish
-                if flag == len(DrawerEntry.get_drawer(DrawerContainer.get_container(list_col[j])[i]).get_items()):
-                    return DrawerContainer.get_container(list_col[j])[i]
-    raise StopIteration("No element found")
-
-
-def check_minimum_space(list_obj: list, space_req: int) -> list:
+def check_minimum_space(list_obj: list, space_req: int, height_warehouse: int) -> list:
     """
     Algorithm to decide where insert a drawer.
 
     :param list_obj: list of columns.
     :param space_req: space requested from drawer.
+    :param height_warehouse: the height of warehouse
     :return: if there is a space [space_requested, index_position_where_insert, column_where_insert].
     :exception StopIteration: if there isn't any space.
     """
     result = []
     col = None
-    min_index = obt_value_json("height_warehouse") // obt_value_json("default_height_space")
 
     # calculate minimum space and search lower index
     for i in range(len(list_obj)):
         values = __min_search_alg(list_obj[i], space_req)
-        if values[0] != -1 & values[1] < min_index:
+        if values[0] != -1 & values[1] < height_warehouse:
             result = values.copy()
             col = list_obj[i]
 

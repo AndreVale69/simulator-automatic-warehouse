@@ -5,33 +5,39 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class Column(DrawerContainer):
-    def __init__(self, pos_x: int):
-        super().__init__(pos_x)
-        # different height if the column match at the output
-        if pos_x == 0:
-            super().set_num_entries(super().get_storage())
+    def __init__(self, info: dict):
+        super().__init__(info["height"], info["x_offset"], info["width"])
+
+        self.width = info["width"]
 
         # create container
-        for i in range(super().get_num_entries()):
-            super().add_item_to_container(EmptyEntry(pos_x, i))
+        for i in range(self.get_height_col()):
+            self.create_new_space(EmptyEntry(info["x_offset"], i))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)
 
     # override
     def add_drawer(self, index: int, drawer: Drawer):
-        how_many = drawer.get_max_num_space()
+        how_many = drawer.get_max_num_space() + index
 
+        drawer_entry = self.__create_drawerEntry(drawer, index)
+        # connect Entry to Drawer
+        drawer.set_first_drawerEntry(drawer_entry)
+        index += 1
+
+        for index in range(index, how_many):
+            self.__create_drawerEntry(drawer, index)
+
+    def __create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
         # initialize positions
-        drawer_entry = DrawerEntry(super().get_pos_x(), index)
-        # connect Drawer to entry
+        drawer_entry = DrawerEntry(self.get_offset_x(), index)
+        # connect Drawer to Entry
         drawer_entry.add_drawer(drawer)
-
-        while how_many > 0:
-            # add to container
-            self.get_container()[index] = drawer_entry
-            index += 1
-            how_many -= 1
+        # add to container
+        self.get_container()[index] = drawer_entry
+        # return the drawer entry just added
+        return drawer_entry
 
     # override
     def remove_drawer(self, drawer: Drawer):

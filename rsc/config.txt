@@ -1,7 +1,0 @@
-max_height_material     :   maximum height of a material to fit into a drawer
-                            [Material]
-
-minimum_height          :   minimum height of a warehouse
-                            [Warehouse]
-
-default_height_space    :   single space inside warehouse

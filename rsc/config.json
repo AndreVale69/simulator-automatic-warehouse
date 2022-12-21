@@ -1,32 +1,28 @@
 {
   "columns":[
     {
-      "description" : "rxcol",
-      "width"  : 250, //column width
-      "height" : -1, //column height
-      "x_offset": -1, //distance from x=0
-      "storage_height" : 325,
-      "horiz_distance" : 250,
-      "content": [
-        {
-          //draweEntry obj
-            // {inside material}
-        }
-      ]
+      "description"     : "rxcol",
+      "width"           : 250,
+      "height"          : 325,
+      "offset_formula"  : "width / 2",
+      "x_offset"        : 125
     },
     {
-      "description": "sxcol",
-      "width" : 200,
-      "height" : -1,
-      "storage_height" : 0,
-      "horiz_distance" : 200
+      "description"     : "sxcol",
+      "width"           : 200,
+      "height"          : 1000,
+      "offset_formula"  : "(sxcol.width / 2) + rxcol.offset + 250",
+      "x_offset"        : 475
     }
   ],
   "carousel": {
-    "description": "carousel_descr",
+    "description"     : "carousel_descr",
+    "width"           : 250,
     "hole_height"     : 375,
     "deposit_height"  : 150,
-    "buffer_height"   : 150
+    "buffer_height"   : 150,
+    "offset_formula"  : "width / 2",
+    "x_offset"        : 125
   },
   "height_warehouse"      : 1000,
   "default_height_space"  : 25,

@@ -8,9 +8,11 @@ class Material:
         :param length: length of a material
         :param width: width of a material
         """
-        from src.useful_func import obt_value_json
+        from src.useful_func import open_config
+
         # maximum height of a material to fit into a drawer
-        max_height_material = obt_value_json("hole_height")
+        config: dict = open_config()
+        max_height_material = config["carousel"]["buffer_height"]
 
         # check height of a material
         if height > max_height_material:
@@ -41,13 +43,17 @@ class Material:
         return hash((self.get_barcode(), self.get_name(), self.get_height(), self.get_length(), self.get_width()))
 
     def __deepcopy__(self, memo):
-        newone = type(self)(self.get_barcode(),
+        copy_obj = Material(self.get_barcode(),
                             self.get_name(),
                             self.get_height(),
                             self.get_length(),
                             self.get_width())
-        newone.__dict__.update(self.__dict__)
-        return newone
+        copy_obj.barcode = self.get_barcode()
+        copy_obj.name = self.get_name()
+        copy_obj.height = self.get_height()
+        copy_obj.length = self.get_length()
+        copy_obj.width = self.get_width()
+        return copy_obj
 
     def get_barcode(self) -> int:
         return self.barcode
