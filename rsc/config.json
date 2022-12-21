@@ -5,20 +5,19 @@
       "width"           : 250,
       "height"          : 325,
       "offset_formula"  : "width / 2",
-      "x_offset"        : 125,
-      "horiz_distance"  : 250
+      "x_offset"        : 125
     },
     {
       "description"     : "sxcol",
       "width"           : 200,
       "height"          : 1000,
       "offset_formula"  : "(sxcol.width / 2) + rxcol.offset + 250",
-      "x_offset"        : 475,
-      "horiz_distance"  : 200
+      "x_offset"        : 475
     }
   ],
   "carousel": {
     "description"     : "carousel_descr",
+    "width"           : 250,
     "hole_height"     : 375,
     "deposit_height"  : 150,
     "buffer_height"   : 150,

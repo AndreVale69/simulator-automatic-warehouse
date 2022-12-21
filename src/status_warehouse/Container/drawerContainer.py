@@ -7,7 +7,7 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class DrawerContainer:
-    def __init__(self, height_col: int, offset_x: int):
+    def __init__(self, height_col: int, offset_x: int, width: int):
         from src.useful_func import open_config
 
         # initialize main vars
@@ -18,6 +18,7 @@ class DrawerContainer:
         self.hole = config["carousel"]["hole_height"] // self.get_def_space()
         self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
         self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
+        self.width = width
         self.height_column = height_col // self.get_def_space()
         self.offset_x = offset_x
 
@@ -25,6 +26,7 @@ class DrawerContainer:
         info: dict = {
             "height": self.get_height_col(),
             "x_offset": self.get_offset_x(),
+            "width": self.get_width(),
             "deposit_height": self.get_deposit() * self.get_def_space(),
             "buffer_height": self.get_buffer() * self.get_def_space()
         }
@@ -63,6 +65,9 @@ class DrawerContainer:
     def get_hole(self) -> int:
         return self.hole
 
+    def get_width(self) -> int:
+        return self.width
+
     def create_new_space(self, element):
         self.get_container().append(element)
 
@@ -74,7 +79,7 @@ class DrawerContainer:
         is_remove: bool = False
         first_entry: DrawerEntry = drawer.get_first_drawerEntry()
         entry_y: int = first_entry.get_pos_y()
-        entry_x: int = first_entry.get_pos_x()
+        entry_x: int = first_entry.get_offset_x()
 
         for index, element in enumerate(self.get_container()):
             # if is a DrawerEntry element

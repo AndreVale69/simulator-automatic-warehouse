@@ -7,7 +7,7 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 class Carousel(DrawerContainer):
     def __init__(self, info: dict):
         height_carousel = info["deposit_height"] + info["buffer_height"]
-        super().__init__(height_carousel, info["x_offset"])
+        super().__init__(height_carousel, info["x_offset"], info["width"])
 
         # get first y to start
         first_y = self.get_height_col() + self.get_hole()

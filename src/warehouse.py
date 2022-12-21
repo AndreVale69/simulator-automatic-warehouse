@@ -26,8 +26,6 @@ class Warehouse:
 
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]
-        self.horiz_right_col = config["columns"][0]["horiz_distance"]
-        self.horiz_left_col = config["columns"][1]["horiz_distance"]
         self.env = None
         self.floor = None
         self.supp_drawer = None
@@ -39,8 +37,6 @@ class Warehouse:
         copy_oby.carousel = copy.deepcopy(self.get_carousel(), memo)
         copy_oby.def_space = self.get_def_space()
         copy_oby.speed_per_sec = self.get_speed_per_sec()
-        copy_oby.horiz_right_col = self.get_horiz_right_col()
-        copy_oby.horiz_left_col = self.get_horiz_left_col()
         copy_oby.env = self.get_environment()
         copy_oby.floor = self.get_floor()
         return copy_oby
@@ -65,12 +61,6 @@ class Warehouse:
 
     def get_speed_per_sec(self) -> int:
         return self.speed_per_sec
-
-    def get_horiz_right_col(self) -> int:
-        return self.horiz_right_col
-
-    def get_horiz_left_col(self) -> int:
-        return self.horiz_left_col
 
     def get_drawer_of_support(self) -> Drawer:
         return self.supp_drawer
@@ -160,28 +150,44 @@ class Warehouse:
         yield self.env.timeout(vertical_move)
 
     def unload(self, drawer: Drawer):
-        pos_x_drawer = drawer.get_first_drawerEntry().get_pos_x()
-        yield self.env.timeout(self.horiz_move(pos_x_drawer))
+        offset_x_drawer = drawer.get_first_drawerEntry().get_offset_x()
+        yield self.env.timeout(self.horiz_move(offset_x_drawer))
 
     def load(self, drawer: Drawer):
         pos_x_drawer = drawer.get_best_offset_x()
         pos_y_drawer = drawer.get_best_y()
         yield self.env.timeout(self.horiz_move(pos_x_drawer))
+        index = self.__minimum_offset(self.get_cols_container())
+        self.get_cols_container()[index].add_drawer(pos_y_drawer, drawer)
 
-        # calculate the minimum offset between the columns
-        min_offset = self.get_cols_container()[0].get_offset_x()
+    def horiz_move(self, offset_x: int):
+        """
+        Search in the column/carousel where is the drawer
+        :param offset_x: offset of the drawer to search
+        :return: the time estimated
+        """
+        # check the carousel
+        if self.get_carousel().get_offset_x() == offset_x:
+            return (self.get_carousel().get_width() / 100) / self.get_speed_per_sec()
+        else:
+            # check every column
+            for elem in self.get_cols_container():
+                if elem.get_offset_x() == offset_x:
+                    return (elem.get_width() / 100) / self.get_speed_per_sec()
+
+    def __minimum_offset(self, container) -> int:
+        """
+        Calculate the minimum offset between the columns
+        :param container: list of columns or carousels
+        :return: the index of the list
+        """
+        min_offset = container[0].get_offset_x()
         index = 0
         for i, column in enumerate(self.get_cols_container()):
             if min_offset < column.get_offset_x():
                 min_offset = column.get_offset_x()
                 index = i
-        self.get_cols_container()[index].add_drawer(pos_y_drawer, drawer)
-
-    def horiz_move(self, pos_col: int):
-        if pos_col == 0:
-            return (self.get_horiz_right_col() / 100) / self.get_speed_per_sec()
-        else:
-            return (self.get_horiz_left_col() / 100) / self.get_speed_per_sec()
+        return index
 
     def gen_rand_material(self):
         from src.material import Material

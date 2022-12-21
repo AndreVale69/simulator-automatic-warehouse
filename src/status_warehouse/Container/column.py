@@ -6,7 +6,9 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 class Column(DrawerContainer):
     def __init__(self, info: dict):
-        super().__init__(info["height"], info["x_offset"])
+        super().__init__(info["height"], info["x_offset"], info["width"])
+
+        self.width = info["width"]
 
         # create container
         for i in range(self.get_height_col()):
