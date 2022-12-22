@@ -16,6 +16,7 @@ class Buffer(Action):
             # wait until the communication channel is empty
             msg = yield self.get_simulation().get_comm_chan().get()
             print(msg)
+            # TODO: nuova variabile di aiuto che gestisca il problema di a
             # check the buffer and the deposit
             if self.get_warehouse().check_buffer() and not self.get_warehouse().check_deposit():
                 print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")

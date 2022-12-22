@@ -21,7 +21,9 @@ class InsertMaterial(Action):
         drawer_output: Drawer = self.get_warehouse().get_carousel().get_container()[0].get_drawer()
         # add the material
         drawer_output.add_material(mat_to_put)
+        # TODO: "crea" evento estrai cassetto
         # add a reference to the drawer
         self.get_warehouse().set_drawer_of_support(drawer_output)
+        # TODO: timeout nel costrutto con param
         # estimate a time of the action
         yield self.env.timeout(2)
