@@ -48,6 +48,7 @@ class Material:
                             self.get_height(),
                             self.get_length(),
                             self.get_width())
+        # TODO: to rmv doppioni
         copy_obj.barcode = self.get_barcode()
         copy_obj.name = self.get_name()
         copy_obj.height = self.get_height()

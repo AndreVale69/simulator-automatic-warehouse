@@ -17,5 +17,7 @@ class UnloadDrawer(Action):
         yield self.env.process(self.get_warehouse().unload(self.get_warehouse().get_drawer_of_support()))
         # remove only from container
         self.get_warehouse().get_carousel().remove_drawer(self.get_warehouse().get_drawer_of_support())
+        # TODO: check_carousel se empty o meno (buffer)
+        # TODO: se ha un elemento crea processo buffer.py
         # trigger buffer.py process
         self.get_simulation().get_comm_chan().put("Check the buffer...")

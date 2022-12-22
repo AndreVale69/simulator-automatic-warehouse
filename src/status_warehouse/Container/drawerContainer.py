@@ -1,5 +1,5 @@
-import copy
 from abc import abstractmethod
+import copy
 
 from src.drawer import Drawer
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
@@ -23,6 +23,7 @@ class DrawerContainer:
         self.offset_x = offset_x
 
     def __deepcopy__(self, memo):
+        # TODO: implementare nelle sottoclassi + metodo abs in drawerContainer
         info: dict = {
             "height": self.get_height_col(),
             "x_offset": self.get_offset_x(),
@@ -83,14 +84,14 @@ class DrawerContainer:
 
         for index, element in enumerate(self.get_container()):
             # if is a DrawerEntry element
-            if isinstance(element, DrawerEntry):
-                # if they've the same coordinates
-                if element.get_pos_y() == entry_y:
-                    # if the drawers are the same (see __eq__ method)
-                    if element.get_drawer() == drawer:
-                        self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
-                        is_remove = True
-                        entry_y += 1
+            # if they've the same coordinates
+            # if the drawers are the same (see __eq__ method)
+            if isinstance(element, DrawerEntry) and \
+                    element.get_pos_y() == entry_y and \
+                    element.get_drawer() == drawer:
+                self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
+                is_remove = True
+                entry_y += 1
 
         if not is_remove:
             print("Drawer doesn't removed.")

@@ -78,6 +78,7 @@ class Warehouse:
         """
         carousel = self.get_carousel().get_container()
         deposit = self.get_carousel().get_deposit()
+        # TODO: get_deposit_container -> Carousel
         # check if the first position of buffer have a Drawer
         return True if type(carousel[deposit]) is DrawerEntry else False
 
@@ -189,10 +190,12 @@ class Warehouse:
                 index = i
         return index
 
+    # TODO: gen_rand della popolazione del warehouse in base ai parametri (quanti cassetti, quanti materiali)
+
+    # TODO: in Material
     def gen_rand_material(self):
         from src.material import Material
 
-        # TODO: to insert in JSON file (?)
         name_materials = ['Shirt',
                           'Pasta',
                           'Tomato',
@@ -209,6 +212,8 @@ class Warehouse:
         width = random.randint(25, 150)
 
         return Material(barcode, name, height, length, width)
+
+    # TODO: get_rand_materials in base al parametro crea materiali chiamando gen_rand_material()
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation

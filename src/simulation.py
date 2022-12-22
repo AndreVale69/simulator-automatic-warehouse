@@ -28,6 +28,9 @@ class Simulation(object):
                                                  GoToDepositDrawer(self.env, self.get_warehouse(), self),
                                                  LoadDrawer(self.env, self.get_warehouse(), self),
                                                  ComeBackToDeposit(self.env, self.get_warehouse(), self)]
+
+        # self.search_material_and_remove
+
         # communication channel
         self.comm_chan = simpy.Store(env)
 
@@ -38,14 +41,6 @@ class Simulation(object):
         # run the actions
         for action in action_list:
             yield self.env.process(action.simulate_action())
-
-    #
-    # def simulate_action(self, action: Action):
-    #     # special case: two extract drawer in sequence
-    #     #               1) standard execution
-    #     #               2) second drawer goes into the buffer
-    #     #               3) wait empty tray by running a new process for the second drawer
-    #     return action.simulate(self)
 
     def get_warehouse(self) -> Warehouse:
         return self.warehouse

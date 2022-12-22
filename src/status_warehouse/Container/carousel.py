@@ -12,6 +12,7 @@ class Carousel(DrawerContainer):
         # get first y to start
         first_y = self.get_height_col() + self.get_hole()
 
+        # TODO: bastano due variabili
         # create container
         for i in range(self.get_deposit() + self.get_buffer()):
             self.create_new_space(EmptyEntry(self.get_offset_x(), i + first_y))
@@ -32,6 +33,7 @@ class Carousel(DrawerContainer):
         hole = self.get_hole()
         dep = self.get_deposit()
         first_y = store + hole
+        # TODO: rmv to_show controllare solo deposit else buffer
         if to_show:
             # check if it's empty
             if isinstance(self.get_container()[0], EmptyEntry):

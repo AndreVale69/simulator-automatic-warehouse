@@ -5,7 +5,7 @@ from src.warehouse import Warehouse
 # from src.drawer import Drawer
 from src.simulation import Simulation
 
-
+# TODO: il movimento verticale e dx e sx è unico
 class GoToDepositDrawer(Action):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
