@@ -48,12 +48,6 @@ class Material:
                             self.get_height(),
                             self.get_length(),
                             self.get_width())
-        # TODO: to rmv doppioni
-        copy_obj.barcode = self.get_barcode()
-        copy_obj.name = self.get_name()
-        copy_obj.height = self.get_height()
-        copy_obj.length = self.get_length()
-        copy_obj.width = self.get_width()
         return copy_obj
 
     def get_barcode(self) -> int:

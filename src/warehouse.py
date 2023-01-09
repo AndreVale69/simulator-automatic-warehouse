@@ -1,12 +1,13 @@
 import copy
 import random
+
 import simpy
 from simpy import Environment
 
-from src.status_warehouse.Container.column import Column
-from src.status_warehouse.Container.carousel import Carousel
-from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.drawer import Drawer
+from src.status_warehouse.Container.carousel import Carousel
+from src.status_warehouse.Container.column import Column
+from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class Warehouse:
@@ -27,7 +28,7 @@ class Warehouse:
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]
         self.env = None
-        self.floor = None
+        self.simulation = None
         self.supp_drawer = None
 
     def __deepcopy__(self, memo):
@@ -38,7 +39,7 @@ class Warehouse:
         copy_oby.def_space = self.get_def_space()
         copy_oby.speed_per_sec = self.get_speed_per_sec()
         copy_oby.env = self.get_environment()
-        copy_oby.floor = self.get_floor()
+        copy_oby.simulation = self.get_simulation()
         return copy_oby
 
     def get_height(self) -> int:
@@ -53,8 +54,8 @@ class Warehouse:
     def get_environment(self) -> Environment:
         return self.env
 
-    def get_floor(self):
-        return self.floor
+    def get_simulation(self):
+        return self.simulation
 
     def get_def_space(self) -> int:
         return self.def_space
@@ -219,8 +220,9 @@ class Warehouse:
         from src.simulation import Simulation
 
         self.env = simpy.Environment()
-        self.floor = Simulation(self.env, self)
+        self.simulation = Simulation(self.env, self)
 
-        self.get_environment().process(self.get_floor().simulate_actions(self.floor.insert_material_and_alloc_drawer))
+        self.get_environment().process(self.get_simulation().
+                                       simulate_actions(self.get_simulation().insert_material_and_alloc_drawer))
 
         self.get_environment().run(until=time)

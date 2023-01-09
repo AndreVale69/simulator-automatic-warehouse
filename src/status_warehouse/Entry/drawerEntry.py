@@ -1,7 +1,7 @@
 import copy
 
-from src.status_warehouse.Entry.entry import Entry
 from src.drawer import Drawer
+from src.status_warehouse.Entry.entry import Entry
 
 
 class DrawerEntry(Entry):

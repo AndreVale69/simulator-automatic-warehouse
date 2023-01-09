@@ -1,9 +1,9 @@
 from simpy import Environment
 
-from src.status_warehouse.Simulate_Events.action import Action
-from src.warehouse import Warehouse
 from src.drawer import Drawer
 from src.simulation import Simulation
+from src.status_warehouse.Simulate_Events.action import Action
+from src.warehouse import Warehouse
 
 
 class InsertMaterial(Action):
@@ -12,8 +12,6 @@ class InsertMaterial(Action):
 
     # override
     def simulate_action(self):
-        from src.status_warehouse.Entry.drawerEntry import DrawerEntry
-
         print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
         # generate random material
         mat_to_put = self.get_warehouse().gen_rand_material()

@@ -59,24 +59,19 @@ def __min_search_alg(self, space_req: int) -> list:
     ############################
     # Minimum search algorithm #
     ############################
-    for i in range(len(container) + 1):
-        if i != len(container):
-            # count number of space
-            if isinstance(container[i], EmptyEntry):
-                count = count + 1
-            else:
-                # otherwise, if its minimum and there is enough space
-                if (count < min_space) & (count >= space_req):
-                    min_space = count
-                    start_index = i - count
-                # restart the count with reset
-                count = 0
+    for i in range(len(container)):
+        # if the position is empty
+        if isinstance(container[i], EmptyEntry):
+            # count number of spaces
+            count += 1
         else:
+            # otherwise, if it's minimum and there is enough space
             if (count < min_space) & (count >= space_req):
+                # update check values
                 min_space = count
                 start_index = i - count
             # restart the count with reset
-            count = 0  # TODO: check eventually rmv
+            count = 0
 
     # if warehouse is empty
     if min_space == self.get_height():
