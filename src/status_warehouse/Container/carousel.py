@@ -12,20 +12,21 @@ class Carousel(DrawerContainer):
         # get first y to start
         first_y = self.get_height_col() + self.get_hole()
 
-        # TODO: bastano due variabili
-        # create container
-        for i in range(self.get_deposit() + self.get_buffer()):
-            self.create_new_space(EmptyEntry(self.get_offset_x(), i + first_y))
+        # create container with only two positions
+        # create deposit
+        self.create_new_space(EmptyEntry(self.get_offset_x(), first_y))
+        # create buffer
+        self.create_new_space(EmptyEntry(self.get_offset_x(), first_y + (self.get_deposit() + self.get_buffer())))
 
     def __deepcopy__(self, memo):
         return super().__deepcopy__(memo)
 
     # override
-    def add_drawer(self, to_show: bool, drawer: Drawer) -> bool:
+    def add_drawer(self, drawer: Drawer, index: int = None) -> bool:
         """
         Add a drawer in buffer area or show as an output.
 
-        :param to_show: True to show a drawer, otherwise False to put it into buffer area
+        :param index: None
         :param drawer: To show or to save
         :return: True there is space and the operation is successes, False there isn't space and the operation is failed
         """
@@ -33,39 +34,30 @@ class Carousel(DrawerContainer):
         hole = self.get_hole()
         dep = self.get_deposit()
         first_y = store + hole
+
         # TODO: rmv to_show controllare solo deposit else buffer
-        if to_show:
-            # check if it's empty
-            if isinstance(self.get_container()[0], EmptyEntry):
-                drawer_entry = self.__create_drawerEntry(drawer, first_y, 0)
-                # connect Entry to Drawer
-                drawer.set_first_drawerEntry(drawer_entry)
-                for i in range(1, dep):
-                    self.__create_drawerEntry(drawer, first_y, i)
-                return True
-            else:
-                return False
+        # check if it's empty the deposit
+        if isinstance(self.get_container()[0], EmptyEntry):
+            self.create_drawerEntry(drawer, first_y, is_buffer=False)
+            return True
         else:
-            if isinstance(self.get_container()[dep], EmptyEntry):
-                drawer_entry = self.__create_drawerEntry(drawer, first_y, dep)
-                # connect Entry to Drawer
-                drawer.set_first_drawerEntry(drawer_entry)
-                dep += 1
-                for i in range(dep, len(self.get_container())):
-                    self.__create_drawerEntry(drawer, first_y, i)
+            # otherwise, check if it's empty the buffer
+            if isinstance(self.get_container()[1], EmptyEntry):
+                self.create_drawerEntry(drawer, first_y, is_buffer=True)
                 return True
             else:
                 return False
 
-    def __create_drawerEntry(self, drawer: Drawer, first_y: int, index: int) -> DrawerEntry:
+    def create_drawerEntry(self, drawer: Drawer, first_y: int, is_buffer: bool):
         # initialize positions
-        drawer_entry = DrawerEntry(self.get_offset_x(), first_y + index)
+        drawer_entry = DrawerEntry(self.get_offset_x(), first_y + (self.get_deposit() + self.get_buffer())) \
+                        if is_buffer else DrawerEntry(self.get_offset_x(), first_y)
         # connect Drawer to entry
         drawer_entry.add_drawer(drawer)
         # add to container
-        self.get_container()[index] = drawer_entry
-        # return the drawer entry just added
-        return drawer_entry
+        self.get_container()[int(is_buffer)] = drawer_entry
+        # connect Entry just added to relative Drawer
+        drawer.set_first_drawerEntry(drawer_entry)
 
     # override
     def remove_drawer(self, drawer: Drawer):

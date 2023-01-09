@@ -73,7 +73,7 @@ class DrawerContainer:
         self.get_container().append(element)
 
     @abstractmethod
-    def add_drawer(self, index: int, drawer: Drawer):
+    def add_drawer(self, drawer: Drawer, index: int = None):
         pass
 
     def remove_drawer(self, drawer: Drawer):

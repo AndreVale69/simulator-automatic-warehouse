@@ -18,7 +18,7 @@ class Column(DrawerContainer):
         return super().__deepcopy__(memo)
 
     # override
-    def add_drawer(self, index: int, drawer: Drawer):
+    def add_drawer(self, drawer: Drawer, index: int = None):
         how_many = drawer.get_max_num_space() + index
 
         drawer_entry = self.__create_drawerEntry(drawer, index)

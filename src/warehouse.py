@@ -78,10 +78,9 @@ class Warehouse:
         :return: True if is full, False otherwise
         """
         carousel = self.get_carousel().get_container()
-        deposit = self.get_carousel().get_deposit()
         # TODO: get_deposit_container -> Carousel
         # check if the first position of buffer have a Drawer
-        return True if type(carousel[deposit]) is DrawerEntry else False
+        return True if type(carousel[1]) is DrawerEntry else False
 
     def check_deposit(self) -> bool:
         """
@@ -105,21 +104,20 @@ class Warehouse:
         storage: int = self.get_carousel().get_height_col()
         hole: int = self.get_carousel().get_hole()
         carousel: list = self.get_carousel().get_container()
-        deposit: int = self.get_carousel().get_deposit()
 
         # calculate loading buffer time
-        start_pos = carousel[deposit].get_pos_y()
+        start_pos = carousel[1].get_pos_y()
         end_pos = storage + hole
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
         yield self.env.timeout(loading_buffer_time)
 
         # obtain the drawer inside the buffer
-        drawer_to_show = carousel[deposit].get_drawer()
+        drawer_to_show = carousel[1].get_drawer()
         # remove from buffer
         self.get_carousel().remove_drawer(drawer_to_show)
         # and insert drawer in correct position (outside)
-        self.get_carousel().add_drawer(True, drawer_to_show)
+        self.get_carousel().add_drawer(drawer_to_show)
 
         print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
 
@@ -160,7 +158,7 @@ class Warehouse:
         pos_y_drawer = drawer.get_best_y()
         yield self.env.timeout(self.horiz_move(pos_x_drawer))
         index = self.__minimum_offset(self.get_cols_container())
-        self.get_cols_container()[index].add_drawer(pos_y_drawer, drawer)
+        self.get_cols_container()[index].add_drawer(drawer, pos_y_drawer)
 
     def horiz_move(self, offset_x: int):
         """
