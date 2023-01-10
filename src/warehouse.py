@@ -77,43 +77,40 @@ class Warehouse:
         Check the buffer
         :return: True if is full, False otherwise
         """
-        carousel = self.get_carousel().get_container()
-        # TODO: get_deposit_container -> Carousel
         # check if the first position of buffer have a Drawer
-        return True if type(carousel[1]) is DrawerEntry else False
+        return True if type(self.get_carousel().get_buffer_entry()) is DrawerEntry else False
 
     def check_deposit(self) -> bool:
         """
         Check the deposit
         :return: True if is full, False otherwise
         """
-        carousel = self.get_carousel().get_container()
         # check if the first position of deposit have a Drawer
-        return True if type(carousel[0]) is DrawerEntry else False
+        return True if type(self.get_carousel().get_deposit_entry()) is DrawerEntry else False
 
     def come_back_to_deposit(self, drawer_inserted: Drawer):
         # take current position (y)
         curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
 
         # take destination position (y)
-        dep_pos = DrawerEntry.get_pos_y(self.get_carousel().get_container()[0])
+        dep_pos = DrawerEntry.get_pos_y(self.get_carousel().get_deposit_entry())
 
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
     def loading_buffer_and_remove(self):
         storage: int = self.get_carousel().get_height_col()
         hole: int = self.get_carousel().get_hole()
-        carousel: list = self.get_carousel().get_container()
+        buffer: DrawerEntry = self.get_carousel().get_buffer_entry()
 
         # calculate loading buffer time
-        start_pos = carousel[1].get_pos_y()
+        start_pos = buffer.get_pos_y()
         end_pos = storage + hole
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
         yield self.env.timeout(loading_buffer_time)
 
         # obtain the drawer inside the buffer
-        drawer_to_show = carousel[1].get_drawer()
+        drawer_to_show = buffer.get_drawer()
         # remove from buffer
         self.get_carousel().remove_drawer(drawer_to_show)
         # and insert drawer in correct position (outside)
