@@ -23,24 +23,14 @@
 	\section*{Main Improvements}
 	
 	\begin{itemize}[label=\ding{51}]
-		\item I valori del \textsf{JSON} vengono letti all'interno del costruttore. La funzione legge il file e restituisce il relativo dizionario. Nel costrutto si provvede a caricare tutti i valori nei specifici campi.
+		\item Pulizia del codice, migliorato alcune funzioni e commenti.
 		
-		\item Rimossi tutti i \textsf{super()} dove era possibile (nei costrutti \textsf{\_\_init\_\_} era impossibile toglierlo).
+		\item Domanda: il tempo deve essere contato dalla prima posizione in alto o dalla più bassa? Perché il carico e scarico credo avvenga dalla posizione più bassa del cassetto selezionato.
 		
-		\item Modificate alcuni nomi delle variabili per essere conformi ai nomi nel \textsf{JSON}.
+		\item Adesso il carosello ha solo due variabili che gestiscono il deposito visibile all'utente e il \emph{buffer}.
 		
-		\item All'interno del costrutto della classe \textsf{Warehouse} avviene la costruzione delle colonne e del carosello passando ai costrutti le varie informazioni.
+		\item La \textsf{\_\_deepcopy\_\_} è stata implementata all'interno delle sottoclassi. Mi riferisco alle classi astratte \textsf{drawerContainer.py} e \textsf{entry.py}.
 		
-		\item Rimosso il campo del numero delle entries, adesso ogni figlio crea il suo array di oggetti senza utilizzare la superclasse.
-		
-		\item \textsf{Deepcopy} implementata, ma perché era necessario copiare di nuovo i valori appena passati all'oggetto? Prendi come esempio la classe \textsf{Material} che è semplice.
-		
-		\item Ogni \textsf{Drawer} ha un campo nella classe che lo collega con la prima \emph{entry} all'interno del \emph{container} delle \emph{entries}. Quindi è stata modificata l'aggiunta dei cassetti in \textsf{Column} e \textsf{Carousel}, è stata migliorata la rimozione dei cassetti e rimossa la funzione di ricerca di un cassetto.
-		
-		\item Le coordinate sono state migliorate. Quindi, la $y$ rappresenta l'altezza (zero dall'alto), come prima, e la $x$ rappresenta l'offset. Più è piccolo il valore di offset, più la colonna è vicina all'uscita e di conseguenza la colonna con offset più piccolo è quella d'uscita.
-		
-		\item Adesso la classe \textsf{Simulation} avvia la simulazione mandando in esecuzione un evento dopo l'altro. Quindi, sono state create $n$-classi per $n$-eventi (o azioni).
-		
-		\item Il controllo del \textsf{buffer} avviene solamente dopo che la baia ha finito il suo movimento orizzontale, ovvero nel momento in cui è al centro. Il processo che controlla il buffer, attende che un altro processo lo attivi tramite il canale di comunicazione di \emph{simpy} chiamato \textsf{Store} (\emph{pipeline}). Per esempio, nell'inserimento di un materiale il processo di controllo viene svegliato solamente alla fine del processo di movimento orizzontale iniziale.
+		\item Creato un metodo statico in \textsf{material.py} che crea una serie di materiali casuali 
 	\end{itemize}
 \end{document}

@@ -1,4 +1,5 @@
 import copy
+import random
 
 import simpy
 from simpy import Environment
@@ -26,6 +27,7 @@ class Warehouse:
 
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]
+        self.max_height_material = config["carousel"]["buffer_height"] // self.get_def_space()
         self.env = None
         self.simulation = None
         self.supp_drawer = None
@@ -64,6 +66,9 @@ class Warehouse:
 
     def get_drawer_of_support(self) -> Drawer:
         return self.supp_drawer
+
+    def get_max_height_material(self) -> int:
+        return self.max_height_material
 
     def add_column(self, col: Column):
         self.get_cols_container().append(col)
@@ -153,7 +158,7 @@ class Warehouse:
         pos_x_drawer = drawer.get_best_offset_x()
         pos_y_drawer = drawer.get_best_y()
         yield self.env.timeout(self.horiz_move(pos_x_drawer))
-        index = self.__minimum_offset(self.get_cols_container())
+        index = self.minimum_offset(self.get_cols_container())
         self.get_cols_container()[index].add_drawer(drawer, pos_y_drawer)
 
     def horiz_move(self, offset_x: int):
@@ -171,7 +176,7 @@ class Warehouse:
                 if elem.get_offset_x() == offset_x:
                     return (elem.get_width() / 100) / self.get_speed_per_sec()
 
-    def __minimum_offset(self, container) -> int:
+    def minimum_offset(self, container) -> int:
         """
         Calculate the minimum offset between the columns
         :param container: list of columns or carousels
@@ -186,6 +191,53 @@ class Warehouse:
         return index
 
     # TODO: gen_rand della popolazione del warehouse in base ai parametri (quanti cassetti, quanti materiali)
+
+    def gen_rand(self, num_drawers: int, num_materials: int):
+        from src.material import gen_rand_materials
+        from src.useful_func import check_minimum_space
+
+        if num_drawers > num_materials:
+            raise ValueError("Materials must be greater than Drawers.")
+
+        drawers: list[Drawer] = []
+
+        for col in self.get_cols_container():
+            if num_drawers > 0:
+                # how many drawers insert inside the column
+                rand_num_drawers = random.randint(1, num_drawers)
+                for i in range(rand_num_drawers):
+                    # if there are more materials than drawers
+                    if (num_materials - num_drawers) > 1:
+                        # how many materials insert inside the drawer
+                        num_materials_to_put = random.randint(1, num_materials - num_drawers)
+                        num_materials -= num_materials_to_put
+                    else:
+                        num_materials_to_put = 1
+                        num_materials -= 1
+                    # check the height remaining
+                    height_remaining = col.get_height_col() - col.get_entry_occupied()
+                    # and generate material(s)
+                    if height_remaining >= self.get_max_height_material():
+                        material = gen_rand_materials(num_materials_to_put)
+                    else:
+                        material = gen_rand_materials(num_materials_to_put, max_limit=height_remaining)
+                    # insert the material(s) inside drawer
+                    drawers.append(Drawer(material))
+
+                    # insert drawers inside the column
+                    # search maximum height
+                    max_height = 0
+                    index_drawer = 0
+                    for index, drawer in enumerate(drawers):
+                        if drawer.get_max_height() > max_height:
+                            max_height = drawer.get_max_height()
+                            index_drawer = index
+                    drawer_to_insert = drawers[index_drawer]
+                    # looking for the index where put the drawer
+                    index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
+                    # insert the drawer
+                    col.add_drawer(drawer_to_insert, index)
+                    num_drawers -= 1
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation

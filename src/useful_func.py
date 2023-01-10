@@ -15,13 +15,13 @@ def open_config() -> dict:
         return json.load(json_file)
 
 
-def check_minimum_space(list_obj: list, space_req: int, height_warehouse: int) -> list:
+def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -> list:
     """
     Algorithm to decide where insert a drawer.
 
     :param list_obj: list of columns.
     :param space_req: space requested from drawer.
-    :param height_warehouse: the height of warehouse
+    :param height_entry_col: the height of warehouse
     :return: if there is a space [space_requested, index_position_where_insert, column_where_insert].
     :exception StopIteration: if there isn't any space.
     """
@@ -30,8 +30,8 @@ def check_minimum_space(list_obj: list, space_req: int, height_warehouse: int) -
 
     # calculate minimum space and search lower index
     for i in range(len(list_obj)):
-        values = __min_search_alg(list_obj[i], space_req)
-        if values[0] != -1 & values[1] < height_warehouse:
+        values = min_search_alg(list_obj[i], space_req)
+        if values[0] != -1 & values[1] < height_entry_col:
             result = values.copy()
             col = list_obj[i]
 
@@ -43,7 +43,7 @@ def check_minimum_space(list_obj: list, space_req: int, height_warehouse: int) -
         return result
 
 
-def __min_search_alg(self, space_req: int) -> list:
+def min_search_alg(self, space_req: int) -> list:
     """
     Algorithm to calculate a minimum space inside a column.
 

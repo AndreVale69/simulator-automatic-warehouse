@@ -26,19 +26,26 @@ class Column(DrawerContainer):
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
 
+    def get_entry_occupied(self) -> int:
+        num_entry_occupied = 0
+        for entry in self.get_container():
+            if type(entry) is DrawerEntry:
+                num_entry_occupied += 1
+        return num_entry_occupied
+
     # override
     def add_drawer(self, drawer: Drawer, index: int = None):
         how_many = drawer.get_max_num_space() + index
 
-        drawer_entry = self.__create_drawerEntry(drawer, index)
+        drawer_entry = self.create_drawerEntry(drawer, index)
         # connect Entry to Drawer
         drawer.set_first_drawerEntry(drawer_entry)
         index += 1
 
         for index in range(index, how_many):
-            self.__create_drawerEntry(drawer, index)
+            self.create_drawerEntry(drawer, index)
 
-    def __create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
+    def create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
         # initialize positions
         drawer_entry = DrawerEntry(self.get_offset_x(), index)
         # connect Drawer to Entry

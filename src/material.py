@@ -69,14 +69,14 @@ class Material:
         return self.width
 
 
-def gen_rand_materials(how_many: int) -> list[Material]:
+def gen_rand_materials(how_many: int, max_limit: int = None) -> list[Material]:
     materials: list[Material] = []
     for i in range(how_many):
-        materials.append(gen_rand_material())
+        materials.append(gen_rand_material(max_limit))
     return materials
 
 
-def gen_rand_material() -> Material:
+def gen_rand_material(max_limit: int = None) -> Material:
     name_materials = ['Shirt',
                       'Pasta',
                       'Tomato',
@@ -88,7 +88,10 @@ def gen_rand_material() -> Material:
     barcode = random.randint(100_000_000, 999_999_999)
     name = random.choice(name_materials)
     # height max is buffer height = 150
-    height = random.randint(25, 150)
+    if max_limit is None:
+        height = random.randint(25, 150)
+    else:
+        height = random.randint(25, max_limit)
     length = random.randint(25, 150)
     width = random.randint(25, 150)
 

@@ -1,4 +1,5 @@
 import copy
+import random
 
 from src.material import Material
 
@@ -113,3 +114,24 @@ class Drawer:
         except IndexError:
             self.max_height = None
             self.num_space = None
+
+
+def gen_rand_drawers(how_many: int, materials_to_insert: list[Material]) -> list[Drawer]:
+    drawers: list[Drawer] = []
+    for i in range(how_many):
+        # select a random material
+        rand_index = random.randint(0, len(materials_to_insert) - 1)
+        # create a random drawer with a random material
+        drawers.append(Drawer([materials_to_insert[i]]))
+        # remove the material just added
+        materials_to_insert.remove(materials_to_insert[rand_index])
+    # if there are some materials yet
+    while len(materials_to_insert) != 0:
+        # select a random material
+        rand_index_mat = random.randint(0, len(materials_to_insert) - 1)
+        rand_index_draw = random.randint(0, len(drawers) - 1)
+        # add random material inside a random drawer
+        drawers[rand_index_draw].add_material(materials_to_insert[rand_index_mat])
+        # remove the material just added
+        materials_to_insert.remove(materials_to_insert[rand_index_mat])
+    return drawers
