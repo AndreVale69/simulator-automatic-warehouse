@@ -12,11 +12,13 @@ class InsertMaterial(Action):
 
     # override
     def simulate_action(self):
+        from src.material import gen_rand_material
+
         print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
         # generate random material
-        mat_to_put = self.get_warehouse().gen_rand_material()
+        mat_to_put = gen_rand_material()
         # take the drawer that is outside
-        drawer_output: Drawer = self.get_warehouse().get_carousel().get_container()[0].get_drawer()
+        drawer_output: Drawer = self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
         # add the material
         drawer_output.add_material(mat_to_put)
         # TODO: "crea" evento estrai cassetto

@@ -3,6 +3,7 @@ import copy
 import status_warehouse.Entry.drawerEntry
 from src.drawer import Drawer
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
+from src.status_warehouse.Entry.entry import Entry
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
@@ -32,10 +33,10 @@ class Carousel(DrawerContainer):
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
 
-    def get_deposit_entry(self):
+    def get_deposit_entry(self) -> DrawerEntry | EmptyEntry:
         return self.get_container()[0]
 
-    def get_buffer_entry(self):
+    def get_buffer_entry(self) -> DrawerEntry | EmptyEntry:
         return self.get_container()[1]
 
     # override

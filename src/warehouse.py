@@ -1,5 +1,4 @@
 import copy
-import random
 
 import simpy
 from simpy import Environment
@@ -187,29 +186,6 @@ class Warehouse:
         return index
 
     # TODO: gen_rand della popolazione del warehouse in base ai parametri (quanti cassetti, quanti materiali)
-
-    # TODO: in Material
-    def gen_rand_material(self):
-        from src.material import Material
-
-        name_materials = ['Shirt',
-                          'Pasta',
-                          'Tomato',
-                          'Bottle',
-                          'Tablet',
-                          'Helmet']
-
-        # multiply for current time to avoid the same barcode
-        barcode = random.randint(100_000_000, 999_999_999) * self.env.now
-        name = random.choice(name_materials)
-        # height max is buffer height = 150
-        height = random.randint(25, 150)
-        length = random.randint(25, 150)
-        width = random.randint(25, 150)
-
-        return Material(barcode, name, height, length, width)
-
-    # TODO: get_rand_materials in base al parametro crea materiali chiamando gen_rand_material()
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation
