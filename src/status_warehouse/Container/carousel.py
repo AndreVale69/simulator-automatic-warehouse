@@ -1,3 +1,5 @@
+import copy
+
 from src.drawer import Drawer
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
@@ -19,7 +21,15 @@ class Carousel(DrawerContainer):
         self.create_new_space(EmptyEntry(self.get_offset_x(), first_y + (self.get_deposit() + self.get_buffer())))
 
     def __deepcopy__(self, memo):
-        return super().__deepcopy__(memo)
+        info: dict = {
+            "deposit_height": self.get_deposit() * self.get_def_space(),
+            "buffer_height": self.get_buffer() * self.get_def_space(),
+            "x_offset": self.get_offset_x(),
+            "width": self.get_width()
+        }
+        copy_obj = Carousel(info)
+        copy_obj.container = copy.deepcopy(self.get_container(), memo)
+        return copy_obj
 
     # override
     def add_drawer(self, drawer: Drawer, index: int = None) -> bool:
@@ -32,10 +42,8 @@ class Carousel(DrawerContainer):
         """
         store = self.get_height_col()
         hole = self.get_hole()
-        dep = self.get_deposit()
         first_y = store + hole
 
-        # TODO: rmv to_show controllare solo deposit else buffer
         # check if it's empty the deposit
         if isinstance(self.get_container()[0], EmptyEntry):
             self.create_drawerEntry(drawer, first_y, is_buffer=False)

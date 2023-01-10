@@ -1,4 +1,3 @@
-import copy
 from abc import abstractmethod
 
 from src.drawer import Drawer
@@ -22,25 +21,9 @@ class DrawerContainer:
         self.height_column = height_col // self.get_def_space()
         self.offset_x = offset_x
 
+    @abstractmethod
     def __deepcopy__(self, memo):
-        # TODO: implementare nelle sottoclassi + metodo abs in drawerContainer
-        info: dict = {
-            "height": self.get_height_col(),
-            "x_offset": self.get_offset_x(),
-            "width": self.get_width(),
-            "deposit_height": self.get_deposit() * self.get_def_space(),
-            "buffer_height": self.get_buffer() * self.get_def_space()
-        }
-        copy_obj = type(self)(info)
-        copy_obj.container = copy.deepcopy(self.container, memo)
-        copy_obj.height_warehouse = self.get_height()
-        copy_obj.def_space = self.get_def_space()
-        copy_obj.height_column = self.get_height_col()
-        copy_obj.hole = self.get_hole()
-        copy_obj.deposit = self.get_deposit()
-        copy_obj.buffer = self.get_buffer()
-        copy_obj.offset_x = self.get_offset_x()
-        return copy_obj
+        pass
 
     def get_height(self) -> int:
         return self.height_warehouse

@@ -1,3 +1,5 @@
+import copy
+
 from src.drawer import Drawer
 from src.status_warehouse.Container.drawerContainer import DrawerContainer
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
@@ -15,7 +17,14 @@ class Column(DrawerContainer):
             self.create_new_space(EmptyEntry(info["x_offset"], i))
 
     def __deepcopy__(self, memo):
-        return super().__deepcopy__(memo)
+        info: dict = {
+            "height": self.get_height_col(),
+            "x_offset": self.get_offset_x(),
+            "width": self.get_width()
+        }
+        copy_obj = Column(info)
+        copy_obj.container = copy.deepcopy(self.get_container(), memo)
+        return copy_obj
 
     # override
     def add_drawer(self, drawer: Drawer, index: int = None):
