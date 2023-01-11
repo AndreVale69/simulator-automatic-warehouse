@@ -7,8 +7,12 @@ from src.warehouse import Warehouse
 
 
 class InsertMaterial(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, timeout: int):
         super().__init__(env, warehouse, simulation)
+        self.timeout = timeout
+
+    def get_timeout(self) -> int:
+        return self.timeout
 
     # override
     def simulate_action(self):
@@ -24,6 +28,5 @@ class InsertMaterial(Action):
         # TODO: "crea" evento estrai cassetto
         # add a reference to the drawer
         self.get_warehouse().set_drawer_of_support(drawer_output)
-        # TODO: timeout nel costrutto con param
         # estimate a time of the action
-        yield self.env.timeout(2)
+        yield self.env.timeout(self.get_timeout())
