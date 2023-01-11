@@ -190,54 +190,88 @@ class Warehouse:
                 index = i
         return index
 
-    # TODO: gen_rand della popolazione del warehouse in base ai parametri (quanti cassetti, quanti materiali)
-
     def gen_rand(self, num_drawers: int, num_materials: int):
-        from src.material import gen_rand_materials
-        from src.useful_func import check_minimum_space
+        """Generate a random warehouse"""
+        num_cols_full = 0
 
         if num_drawers > num_materials:
             raise ValueError("Materials must be greater than Drawers.")
 
+        # start to populate every column
         for col in self.get_cols_container():
             if num_drawers > 0:
-                # how many drawers insert inside the column
+                # generate random number to decide how many drawers insert inside the column
                 rand_num_drawers = random.randint(1, num_drawers)
-                for i in range(rand_num_drawers):
-                    # if there are more materials than drawers, that is if there are surplus of materials
-                    if (num_materials - num_drawers) > 1:
-                        # how many materials insert inside the drawer
-                        num_materials_to_put = random.randint(1, num_materials - num_drawers)
-                    else:
-                        num_materials_to_put = 1
-                    # check the height remaining
-                    remaining_avail_entry = col.get_height_col() - col.get_entry_occupied()
-                    # and generate material(s)
-                    if remaining_avail_entry >= self.get_max_height_material():
-                        materials = gen_rand_materials(num_materials_to_put)
-                    else:
-                        # if the remaining available entry is less than 1
-                        if remaining_avail_entry < 1:
-                            # stop to put drawers inside this column
-                            break
-                        else:
-                            # insert materials with specific height
-                            materials = gen_rand_materials(num_materials_to_put,
-                                                           max_limit=remaining_avail_entry * self.get_def_space())
-                    # update local counter
-                    num_materials -= num_materials_to_put
-                    # insert the material(s) inside drawer
-                    drawer_to_insert = Drawer(materials)
-                    # looking for the index where put the drawer
-                    index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
-                    # insert the drawer
-                    col.add_drawer(drawer_to_insert, index)
-                    num_drawers -= 1
+                [num_drawers, num_materials, num_cols_full] = self.gen_materials_and_drawer(num_drawers, num_materials,
+                                                                                            rand_num_drawers, col)
+            else:
+                # if there aren't more drawers
+                break
+
+        # if there aren't anything else to add
         if num_drawers == 0 and num_materials == 0:
             print("The creation of random warehouse is completed.")
         else:
-            print(f"Error... num_drawers left: {num_drawers}, num_materials left: {num_materials}")
+            # if there aren't more drawers but some materials...
+            if num_drawers == 0:
+                print(f"num_materials left: {num_materials}")
+            else:
+                # if the warehouse is completely full, terminate
+                if num_cols_full == len(self.get_cols_container()):
+                    print(
+                        f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
+                else:
+                    # otherwise, recursive call
+                    self.gen_rand(num_drawers, num_materials)
 
+    def gen_materials_and_drawer(self, num_drawers: int, num_materials: int, rand_num_drawers: int, col: Column) -> list:
+        """Generate drawers and materials"""
+        from src.material import gen_rand_materials
+
+        num_cols_full = 0
+
+        for i in range(rand_num_drawers):
+            # if there are more materials than drawers, that is if there are surplus of materials
+            if (num_materials - num_drawers) > 1:
+                # how many materials insert inside the drawer
+                num_materials_to_put = random.randint(1, num_materials - num_drawers)
+            else:
+                num_materials_to_put = 1
+            # check the height remaining
+            remaining_avail_entry = col.get_height_col() - col.get_entry_occupied()
+            # and generate material(s)
+            if remaining_avail_entry >= self.get_max_height_material():
+                materials = gen_rand_materials(num_materials_to_put)
+            else:
+                # if the remaining available entry is less than 1
+                if remaining_avail_entry < 1:
+                    # stop to put drawers inside this column
+                    num_cols_full += 1
+                    break
+                else:
+                    # insert materials with specific height
+                    materials = gen_rand_materials(num_materials_to_put,
+                                                   max_limit=remaining_avail_entry * self.get_def_space())
+
+            # update local counter
+            num_materials -= num_materials_to_put
+            # generate the drawer
+            self.gen_drawer(materials, col)
+            # update local counter
+            num_drawers -= 1
+
+        return [num_drawers, num_materials, num_cols_full]
+
+    def gen_drawer(self, materials: list, col: Column):
+        """Generate a Drawer"""
+        from src.useful_func import check_minimum_space
+
+        # insert the material(s) inside drawer
+        drawer_to_insert = Drawer(materials)
+        # looking for the index where put the drawer
+        index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
+        # insert the drawer
+        col.add_drawer(drawer_to_insert, index)
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation
@@ -254,16 +288,41 @@ class Warehouse:
         # opening JSON file
         with open("../tmp/config_warehouse.txt", 'w') as file:
             # header
-            file.write("Warehouse situation")
+            file.write(f"Warehouse situation\n")
             file.write("\n")
-            file.write("~"*40)
+            file.write("~" * 40 + "\n")
             file.write("\n")
+
             # carousel
-            file.write(f"Number of drawers: {self.get_carousel().get_num_drawers()}\n")
-            file.write(f"Number of spaces : {self.get_carousel().get_num_spaces()}\n")
+            file.write(f"Number of drawers   : {self.get_carousel().get_num_drawers()}\n")
+            file.write(f"Number of spaces    : {self.get_carousel().get_num_spaces()}\n")
+            file.write(f"Number of materials : {self.get_carousel().get_num_materials()}\n")
             file.write("Carousel:\n")
             for entry in self.get_carousel().get_container():
                 if type(entry) is DrawerEntry:
                     file.write(f"[{entry}, {entry.get_drawer()}]\n")
                 else:
                     file.write(f"[{entry}]\n")
+            file.write("\n")
+            file.write("~" * 40 + "\n")
+            file.write("\n")
+
+            # columns
+            for column in self.get_cols_container():
+                file.write(f"Number of drawers   : {column.get_num_drawers()}\n")
+                file.write(f"Number of spaces    : {column.get_num_spaces()}\n")
+                file.write(f"Number of materials : {column.get_num_materials()}\n")
+                file.write(f"Column[{column.get_offset_x()}]\n")
+                for entry in column.get_container():
+                    if type(entry) is DrawerEntry:
+                        file.write(f"[{entry}, {entry.get_drawer()}]\n")
+                    else:
+                        file.write(f"[{entry}]\n")
+                file.write("\n")
+                file.write("~" * 40 + "\n")
+                file.write("\n")
+
+        # import subprocess
+        # path_to_notepad = "C:\\Windows\\System32\\notepad.exe"
+        # path_to_file = "../tmp/config_warehouse.txt"
+        # subprocess.call([path_to_notepad, path_to_file])

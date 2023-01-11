@@ -52,22 +52,40 @@ class DrawerContainer:
     def get_width(self) -> int:
         return self.width
 
-    def get_num_drawers(self):
+    def get_num_drawers(self) -> int:
         """How many drawers there are"""
         count = 0
-        for index, entry in enumerate(self.get_container()):
-            if type(entry) is DrawerEntry:
+        index = 0
+        col: list[DrawerEntry | EmptyEntry] = self.get_container()
+        while index < len(col):
+            if type(col[index]) is DrawerEntry:
                 # how many entries occupies the drawer
-                index += entry.get_drawer().get_max_num_space()
+                index += col[index].get_drawer().get_max_num_space()
                 count += 1
+            else:
+                index += 1
         return count
 
-    def get_num_spaces(self):
+    def get_num_spaces(self) -> int:
         """How many spaces there are"""
         count = 0
         for entry in self.get_container():
             if type(entry) is EmptyEntry:
                 count += 1
+        return count
+
+    def get_num_materials(self) -> int:
+        """how many materials there are"""
+        count = 0
+        index = 0
+        col: list[DrawerEntry | EmptyEntry] = self.get_container()
+        while index < len(col):
+            if type(col[index]) is DrawerEntry:
+                count += col[index].get_drawer().get_num_materials()
+                # how many entries occupies the drawer
+                index += col[index].get_drawer().get_max_num_space()
+            else:
+                index += 1
         return count
 
     def create_new_space(self, element):

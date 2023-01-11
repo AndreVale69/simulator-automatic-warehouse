@@ -68,6 +68,9 @@ class Drawer:
     def get_best_y(self) -> int:
         return self.best_y
 
+    def get_num_materials(self) -> int:
+        return len(self.items)
+
     def add_material(self, material: Material):
         # insert in tail
         self.items.append(material)
