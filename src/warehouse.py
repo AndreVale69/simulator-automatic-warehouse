@@ -199,45 +199,45 @@ class Warehouse:
         if num_drawers > num_materials:
             raise ValueError("Materials must be greater than Drawers.")
 
-        drawers: list[Drawer] = []
-
         for col in self.get_cols_container():
             if num_drawers > 0:
                 # how many drawers insert inside the column
                 rand_num_drawers = random.randint(1, num_drawers)
                 for i in range(rand_num_drawers):
-                    # if there are more materials than drawers
+                    # if there are more materials than drawers, that is if there are surplus of materials
                     if (num_materials - num_drawers) > 1:
                         # how many materials insert inside the drawer
                         num_materials_to_put = random.randint(1, num_materials - num_drawers)
-                        num_materials -= num_materials_to_put
                     else:
                         num_materials_to_put = 1
-                        num_materials -= 1
                     # check the height remaining
-                    height_remaining = col.get_height_col() - col.get_entry_occupied()
+                    remaining_avail_entry = col.get_height_col() - col.get_entry_occupied()
                     # and generate material(s)
-                    if height_remaining >= self.get_max_height_material():
-                        material = gen_rand_materials(num_materials_to_put)
+                    if remaining_avail_entry >= self.get_max_height_material():
+                        materials = gen_rand_materials(num_materials_to_put)
                     else:
-                        material = gen_rand_materials(num_materials_to_put, max_limit=height_remaining)
+                        # if the remaining available entry is less than 1
+                        if remaining_avail_entry < 1:
+                            # stop to put drawers inside this column
+                            break
+                        else:
+                            # insert materials with specific height
+                            materials = gen_rand_materials(num_materials_to_put,
+                                                           max_limit=remaining_avail_entry * self.get_def_space())
+                    # update local counter
+                    num_materials -= num_materials_to_put
                     # insert the material(s) inside drawer
-                    drawers.append(Drawer(material))
-
-                    # insert drawers inside the column
-                    # search maximum height
-                    max_height = 0
-                    index_drawer = 0
-                    for index, drawer in enumerate(drawers):
-                        if drawer.get_max_height() > max_height:
-                            max_height = drawer.get_max_height()
-                            index_drawer = index
-                    drawer_to_insert = drawers[index_drawer]
+                    drawer_to_insert = Drawer(materials)
                     # looking for the index where put the drawer
                     index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
                     # insert the drawer
                     col.add_drawer(drawer_to_insert, index)
                     num_drawers -= 1
+        if num_drawers == 0 and num_materials == 0:
+            print("The creation of random warehouse is completed.")
+        else:
+            print(f"Error... num_drawers left: {num_drawers}, num_materials left: {num_materials}")
+
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation
@@ -249,3 +249,21 @@ class Warehouse:
                                        simulate_actions(self.get_simulation().insert_material_and_alloc_drawer))
 
         self.get_environment().run(until=time)
+
+    def save_config(self):
+        # opening JSON file
+        with open("../tmp/config_warehouse.txt", 'w') as file:
+            # header
+            file.write("Warehouse situation")
+            file.write("\n")
+            file.write("~"*40)
+            file.write("\n")
+            # carousel
+            file.write(f"Number of drawers: {self.get_carousel().get_num_drawers()}\n")
+            file.write(f"Number of spaces : {self.get_carousel().get_num_spaces()}\n")
+            file.write("Carousel:\n")
+            for entry in self.get_carousel().get_container():
+                if type(entry) is DrawerEntry:
+                    file.write(f"[{entry}, {entry.get_drawer()}]\n")
+                else:
+                    file.write(f"[{entry}]\n")

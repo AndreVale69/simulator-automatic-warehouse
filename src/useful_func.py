@@ -29,15 +29,15 @@ def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -
     col = None
 
     # calculate minimum space and search lower index
-    for i in range(len(list_obj)):
-        values = min_search_alg(list_obj[i], space_req)
-        if values[0] != -1 & values[1] < height_entry_col:
-            result = values.copy()
-            col = list_obj[i]
+    for column in list_obj:
+        [min_space, start_index] = min_search_alg(column, space_req)
+        if min_space != -1 and start_index < height_entry_col:
+            result = [min_space, start_index]
+            col = column
 
     # if warehouse is full
     if col is None:
-        raise StopIteration("No element found")
+        raise StopIteration("No space found.")
     else:
         result.append(col)
         return result
@@ -51,17 +51,19 @@ def min_search_alg(self, space_req: int) -> list:
     :param space_req: space requested from drawer.
     :return: negative values if there isn't any space, otherwise [space_requested, index_position_where_insert].
     """
-    min_space = self.get_height()
+    min_space = self.get_height_warehouse()
     count = 0
     start_index = 0
     container = self.get_container()
+    index = 0
 
     ############################
     # Minimum search algorithm #
     ############################
-    for i in range(len(container)):
+    for entry in container:
+        index += 1
         # if the position is empty
-        if isinstance(container[i], EmptyEntry):
+        if type(entry) is EmptyEntry:
             # count number of spaces
             count += 1
         else:
@@ -69,23 +71,29 @@ def min_search_alg(self, space_req: int) -> list:
             if (count < min_space) & (count >= space_req):
                 # update check values
                 min_space = count
-                start_index = i - count
+                start_index = index - count
             # restart the count with reset
             count = 0
 
     # if warehouse is empty
-    if min_space == self.get_height():
-        # double security check
-        for i in range(len(container)):
-            # if it isn't empty
-            if isinstance(container[i], Drawer):
-                # raise IndexError("There isn't any space for this drawer.")
-                print("A")
-                return [-1, -1]
-        min_space = len(container)
+    if min_space == self.get_height_warehouse():
+        if count == 0:
+            # double security check
+            for i in range(len(container)):
+                # if it isn't empty
+                if type(container[i]) is Drawer:
+                    # raise IndexError("There isn't any space for this drawer.")
+                    print("A")
+                    return [-1, -1]
+            min_space = len(container)
+        else:
+            # update check values
+            min_space = count
+            start_index = index - count
+
 
     # alloc only minimum space
-    if min_space > space_req:
+    if min_space >= space_req:
         min_space = space_req
     else:
         # otherwise there isn't any space

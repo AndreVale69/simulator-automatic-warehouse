@@ -25,13 +25,13 @@ class DrawerContainer:
     def __deepcopy__(self, memo):
         pass
 
-    def get_height(self) -> int:
+    def get_height_warehouse(self) -> int:
         return self.height_warehouse
 
     def get_def_space(self) -> int:
         return self.def_space
 
-    def get_container(self) -> list:
+    def get_container(self) -> list[DrawerEntry | EmptyEntry]:
         return self.container
 
     def get_buffer(self) -> int:
@@ -51,6 +51,24 @@ class DrawerContainer:
 
     def get_width(self) -> int:
         return self.width
+
+    def get_num_drawers(self):
+        """How many drawers there are"""
+        count = 0
+        for index, entry in enumerate(self.get_container()):
+            if type(entry) is DrawerEntry:
+                # how many entries occupies the drawer
+                index += entry.get_drawer().get_max_num_space()
+                count += 1
+        return count
+
+    def get_num_spaces(self):
+        """How many spaces there are"""
+        count = 0
+        for entry in self.get_container():
+            if type(entry) is EmptyEntry:
+                count += 1
+        return count
 
     def create_new_space(self, element):
         self.get_container().append(element)

@@ -15,8 +15,11 @@ drawer = Drawer([material, material2])
 warehouse.get_carousel().add_drawer(drawer)
 # warehouse.get_carousel().add_drawer(drawer2)
 
-warehouse.gen_rand(10, 10)
+warehouse.gen_rand(10, 50)
 
 # wh2 = copy.deepcopy(warehouse)
 
 warehouse.run_simulation(40)
+
+# TODO: save in .txt file the output configuration
+warehouse.save_config()
