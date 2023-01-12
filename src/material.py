@@ -84,6 +84,7 @@ def gen_rand_material(max_limit: int = None) -> Material:
                       'Tablet',
                       'Helmet']
 
+    # TODO: gen_uuid
     # multiply for current time to avoid the same barcode
     barcode = random.randint(100_000_000, 999_999_999)
     name = random.choice(name_materials)

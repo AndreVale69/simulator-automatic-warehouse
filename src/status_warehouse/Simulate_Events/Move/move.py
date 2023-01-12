@@ -2,13 +2,14 @@ from simpy import Environment
 
 from src.simulation import Simulation
 from src.status_warehouse.Simulate_Events.Move.go_to_deposit_drawer import GoToDepositDrawer
-from src.status_warehouse.Simulate_Events.Move.load_drawer import LoadDrawer
-from src.status_warehouse.Simulate_Events.Move.unload_drawer import UnloadDrawer
+from src.status_warehouse.Simulate_Events.Move.extract_drawer import LoadDrawer
+from src.status_warehouse.Simulate_Events.Move.send_back_drawer import UnloadDrawer
 from src.status_warehouse.Simulate_Events.action import Action
 from src.warehouse import Warehouse
 
 
 class Move(Action):
+    # TODO: aggiugno due parametri: drawer, destinazione (enum: colonna, carousel)
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
         self.unload_drawer = UnloadDrawer(self.get_env(), self.get_warehouse(), self.get_simulation())

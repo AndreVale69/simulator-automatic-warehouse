@@ -192,14 +192,18 @@ class Warehouse:
         """Generate a random warehouse"""
         num_cols_full = 0
 
-        if num_drawers > num_materials:
-            raise ValueError("Materials must be greater than Drawers.")
+        # TODO
+        # if num_drawers > num_materials:
+            # raise ValueError("Materials must be greater than Drawers.")
 
+        # TODO: while e rimuovo la ricorsione
+        # TODO: random.choice
         # start to populate every column
         for col in self.get_cols_container():
             if num_drawers > 0:
                 # generate random number to decide how many drawers insert inside the column
                 rand_num_drawers = random.randint(1, num_drawers)
+
                 [num_drawers, num_materials, num_cols_full] = self.gen_materials_and_drawer(num_drawers, num_materials,
                                                                                             rand_num_drawers, col)
             else:
@@ -266,6 +270,7 @@ class Warehouse:
 
         # insert the material(s) inside drawer
         drawer_to_insert = Drawer(materials)
+        # TODO: add_drawer con algoritmo vanno in warehouse per essere riutilizzate
         # looking for the index where put the drawer
         index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
         # insert the drawer

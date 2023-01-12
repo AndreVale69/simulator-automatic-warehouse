@@ -6,13 +6,13 @@ from src.status_warehouse.Simulate_Events.action import Action
 from src.warehouse import Warehouse
 
 
-class InsertMaterial(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, timeout: int):
+class InsertRandomMaterial(Action):
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         super().__init__(env, warehouse, simulation)
-        self.timeout = timeout
+        self.duration = duration
 
-    def get_timeout(self) -> int:
-        return self.timeout
+    def get_duration(self) -> int:
+        return self.duration
 
     # override
     def simulate_action(self):
@@ -29,4 +29,4 @@ class InsertMaterial(Action):
         # add a reference to the drawer
         self.get_warehouse().set_drawer_of_support(drawer_output)
         # estimate a time of the action
-        yield self.env.timeout(self.get_timeout())
+        yield self.env.timeout(self.get_duration())
