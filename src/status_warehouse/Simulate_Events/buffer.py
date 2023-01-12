@@ -1,9 +1,9 @@
 from simpy import Environment
 
-from src.status_warehouse.Simulate_Events.action import Action
-from src.warehouse import Warehouse
 # from src.drawer import Drawer
 from src.simulation import Simulation
+from src.status_warehouse.Simulate_Events.action import Action
+from src.warehouse import Warehouse
 
 
 class Buffer(Action):
@@ -15,9 +15,8 @@ class Buffer(Action):
         while True:
             # wait until the communication channel is empty
             msg = yield self.get_simulation().get_comm_chan().get()
-            print(msg)
+            # print(msg)
             # TODO: nuova variabile di aiuto che gestisca il problema di a
-            # check the buffer and the deposit
-            if self.get_warehouse().check_buffer() and not self.get_warehouse().check_deposit():
-                print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
-                yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
+            print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
+            yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
+            print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")

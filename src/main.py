@@ -1,9 +1,6 @@
-import copy
-
-from src.warehouse import Warehouse
 from src.drawer import Drawer
 from src.material import Material
-
+from src.warehouse import Warehouse
 
 warehouse = Warehouse()
 
@@ -13,9 +10,13 @@ material3 = Material(567, "name3", 100, 123, 45678)
 drawer = Drawer([material, material2])
 drawer2 = Drawer([material3])
 
-warehouse.get_carousel().add_drawer(True, drawer)
-warehouse.get_carousel().add_drawer(False, drawer2)
+warehouse.get_carousel().add_drawer(drawer)
+warehouse.get_carousel().add_drawer(drawer2)
 
-wh2 = copy.deepcopy(warehouse)
+# warehouse.gen_rand(13, 13)
+
+# wh2 = copy.deepcopy(warehouse)
 
 warehouse.run_simulation(40)
+
+# warehouse.save_config()

@@ -1,12 +1,13 @@
 import copy
 import random
+
 import simpy
 from simpy import Environment
 
-from src.status_warehouse.Container.column import Column
-from src.status_warehouse.Container.carousel import Carousel
-from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 from src.drawer import Drawer
+from src.status_warehouse.Container.carousel import Carousel
+from src.status_warehouse.Container.column import Column
+from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
 class Warehouse:
@@ -26,8 +27,9 @@ class Warehouse:
 
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]
+        self.max_height_material = config["carousel"]["buffer_height"] // self.get_def_space()
         self.env = None
-        self.floor = None
+        self.simulation = None
         self.supp_drawer = None
 
     def __deepcopy__(self, memo):
@@ -38,7 +40,7 @@ class Warehouse:
         copy_oby.def_space = self.get_def_space()
         copy_oby.speed_per_sec = self.get_speed_per_sec()
         copy_oby.env = self.get_environment()
-        copy_oby.floor = self.get_floor()
+        copy_oby.simulation = self.get_simulation()
         return copy_oby
 
     def get_height(self) -> int:
@@ -53,8 +55,8 @@ class Warehouse:
     def get_environment(self) -> Environment:
         return self.env
 
-    def get_floor(self):
-        return self.floor
+    def get_simulation(self):
+        return self.simulation
 
     def get_def_space(self) -> int:
         return self.def_space
@@ -64,6 +66,9 @@ class Warehouse:
 
     def get_drawer_of_support(self) -> Drawer:
         return self.supp_drawer
+
+    def get_max_height_material(self) -> int:
+        return self.max_height_material
 
     def add_column(self, col: Column):
         self.get_cols_container().append(col)
@@ -76,51 +81,44 @@ class Warehouse:
         Check the buffer
         :return: True if is full, False otherwise
         """
-        carousel = self.get_carousel().get_container()
-        deposit = self.get_carousel().get_deposit()
-        # TODO: get_deposit_container -> Carousel
         # check if the first position of buffer have a Drawer
-        return True if type(carousel[deposit]) is DrawerEntry else False
+        return True if type(self.get_carousel().get_buffer_entry()) is DrawerEntry else False
 
     def check_deposit(self) -> bool:
         """
         Check the deposit
         :return: True if is full, False otherwise
         """
-        carousel = self.get_carousel().get_container()
         # check if the first position of deposit have a Drawer
-        return True if type(carousel[0]) is DrawerEntry else False
+        return True if type(self.get_carousel().get_deposit_entry()) is DrawerEntry else False
 
     def come_back_to_deposit(self, drawer_inserted: Drawer):
         # take current position (y)
         curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
 
         # take destination position (y)
-        dep_pos = DrawerEntry.get_pos_y(self.get_carousel().get_container()[0])
+        dep_pos = DrawerEntry.get_pos_y(self.get_carousel().get_deposit_entry())
 
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
     def loading_buffer_and_remove(self):
         storage: int = self.get_carousel().get_height_col()
         hole: int = self.get_carousel().get_hole()
-        carousel: list = self.get_carousel().get_container()
-        deposit: int = self.get_carousel().get_deposit()
+        buffer: DrawerEntry = self.get_carousel().get_buffer_entry()
 
         # calculate loading buffer time
-        start_pos = carousel[deposit].get_pos_y()
+        start_pos = buffer.get_pos_y()
         end_pos = storage + hole
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
         yield self.env.timeout(loading_buffer_time)
 
         # obtain the drawer inside the buffer
-        drawer_to_show = carousel[deposit].get_drawer()
+        drawer_to_show = buffer.get_drawer()
         # remove from buffer
         self.get_carousel().remove_drawer(drawer_to_show)
         # and insert drawer in correct position (outside)
-        self.get_carousel().add_drawer(True, drawer_to_show)
-
-        print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
+        self.get_carousel().add_drawer(drawer_to_show)
 
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
         # calculate the distance of index between two points
@@ -158,8 +156,8 @@ class Warehouse:
         pos_x_drawer = drawer.get_best_offset_x()
         pos_y_drawer = drawer.get_best_y()
         yield self.env.timeout(self.horiz_move(pos_x_drawer))
-        index = self.__minimum_offset(self.get_cols_container())
-        self.get_cols_container()[index].add_drawer(pos_y_drawer, drawer)
+        index = self.minimum_offset(self.get_cols_container())
+        self.get_cols_container()[index].add_drawer(drawer, pos_y_drawer)
 
     def horiz_move(self, offset_x: int):
         """
@@ -176,7 +174,7 @@ class Warehouse:
                 if elem.get_offset_x() == offset_x:
                     return (elem.get_width() / 100) / self.get_speed_per_sec()
 
-    def __minimum_offset(self, container) -> int:
+    def minimum_offset(self, container) -> int:
         """
         Calculate the minimum offset between the columns
         :param container: list of columns or carousels
@@ -190,37 +188,139 @@ class Warehouse:
                 index = i
         return index
 
-    # TODO: gen_rand della popolazione del warehouse in base ai parametri (quanti cassetti, quanti materiali)
+    def gen_rand(self, num_drawers: int, num_materials: int):
+        """Generate a random warehouse"""
+        num_cols_full = 0
 
-    # TODO: in Material
-    def gen_rand_material(self):
-        from src.material import Material
+        if num_drawers > num_materials:
+            raise ValueError("Materials must be greater than Drawers.")
 
-        name_materials = ['Shirt',
-                          'Pasta',
-                          'Tomato',
-                          'Bottle',
-                          'Tablet',
-                          'Helmet']
+        # start to populate every column
+        for col in self.get_cols_container():
+            if num_drawers > 0:
+                # generate random number to decide how many drawers insert inside the column
+                rand_num_drawers = random.randint(1, num_drawers)
+                [num_drawers, num_materials, num_cols_full] = self.gen_materials_and_drawer(num_drawers, num_materials,
+                                                                                            rand_num_drawers, col)
+            else:
+                # if there aren't more drawers
+                break
 
-        # multiply for current time to avoid the same barcode
-        barcode = random.randint(100_000_000, 999_999_999) * self.env.now
-        name = random.choice(name_materials)
-        # height max is buffer height = 150
-        height = random.randint(25, 150)
-        length = random.randint(25, 150)
-        width = random.randint(25, 150)
+        # if there aren't anything else to add
+        if num_drawers == 0 and num_materials == 0:
+            print("The creation of random warehouse is completed.")
+        else:
+            # if there aren't more drawers but some materials...
+            if num_drawers == 0:
+                print(f"num_materials left: {num_materials}")
+            else:
+                # if the warehouse is completely full, terminate
+                if num_cols_full == len(self.get_cols_container()):
+                    print(
+                        f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
+                else:
+                    # otherwise, recursive call
+                    self.gen_rand(num_drawers, num_materials)
 
-        return Material(barcode, name, height, length, width)
+    def gen_materials_and_drawer(self, num_drawers: int, num_materials: int, rand_num_drawers: int, col: Column) -> list:
+        """Generate drawers and materials"""
+        from src.material import gen_rand_materials
 
-    # TODO: get_rand_materials in base al parametro crea materiali chiamando gen_rand_material()
+        num_cols_full = 0
+
+        for i in range(rand_num_drawers):
+            # if there are more materials than drawers, that is if there are surplus of materials
+            if (num_materials - num_drawers) > 1:
+                # how many materials insert inside the drawer
+                num_materials_to_put = random.randint(1, num_materials - num_drawers)
+            else:
+                num_materials_to_put = 1
+            # check the height remaining
+            remaining_avail_entry = col.get_height_col() - col.get_entry_occupied()
+            # and generate material(s)
+            if remaining_avail_entry >= self.get_max_height_material():
+                materials = gen_rand_materials(num_materials_to_put)
+            else:
+                # if the remaining available entry is less than 1
+                if remaining_avail_entry < 1:
+                    # stop to put drawers inside this column
+                    num_cols_full += 1
+                    break
+                else:
+                    # insert materials with specific height
+                    materials = gen_rand_materials(num_materials_to_put,
+                                                   max_limit=remaining_avail_entry * self.get_def_space())
+
+            # update local counter
+            num_materials -= num_materials_to_put
+            # generate the drawer
+            self.gen_drawer(materials, col)
+            # update local counter
+            num_drawers -= 1
+
+        return [num_drawers, num_materials, num_cols_full]
+
+    def gen_drawer(self, materials: list, col: Column):
+        """Generate a Drawer"""
+        from src.useful_func import check_minimum_space
+
+        # insert the material(s) inside drawer
+        drawer_to_insert = Drawer(materials)
+        # looking for the index where put the drawer
+        index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
+        # insert the drawer
+        col.add_drawer(drawer_to_insert, index)
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation
 
         self.env = simpy.Environment()
-        self.floor = Simulation(self.env, self)
+        self.simulation = Simulation(self.env, self)
 
-        self.get_environment().process(self.get_floor().simulate_actions(self.floor.insert_material_and_alloc_drawer))
+        self.get_environment().process(self.get_simulation().
+                                       simulate_actions(self.get_simulation().insert_material_and_alloc_drawer))
 
         self.get_environment().run(until=time)
+
+    def save_config(self):
+        # opening JSON file
+        with open("../tmp/config_warehouse.txt", 'w') as file:
+            # header
+            file.write(f"Warehouse situation\n")
+            file.write("\n")
+            file.write("~" * 40 + "\n")
+            file.write("\n")
+
+            # carousel
+            file.write(f"Number of drawers   : {self.get_carousel().get_num_drawers()}\n")
+            file.write(f"Number of spaces    : {self.get_carousel().get_num_spaces()}\n")
+            file.write(f"Number of materials : {self.get_carousel().get_num_materials()}\n")
+            file.write("Carousel:\n")
+            for entry in self.get_carousel().get_container():
+                if type(entry) is DrawerEntry:
+                    file.write(f"[{entry}, {entry.get_drawer()}]\n")
+                else:
+                    file.write(f"[{entry}]\n")
+            file.write("\n")
+            file.write("~" * 40 + "\n")
+            file.write("\n")
+
+            # columns
+            for column in self.get_cols_container():
+                file.write(f"Number of drawers   : {column.get_num_drawers()}\n")
+                file.write(f"Number of spaces    : {column.get_num_spaces()}\n")
+                file.write(f"Number of materials : {column.get_num_materials()}\n")
+                file.write(f"Column[{column.get_offset_x()}]\n")
+                for entry in column.get_container():
+                    if type(entry) is DrawerEntry:
+                        file.write(f"[{entry}, {entry.get_drawer()}]\n")
+                    else:
+                        file.write(f"[{entry}]\n")
+                file.write("\n")
+                file.write("~" * 40 + "\n")
+                file.write("\n")
+
+        # import subprocess
+        # path_to_notepad = "C:\\Windows\\System32\\notepad.exe"
+        # path_to_file = "../tmp/config_warehouse.txt"
+        # subprocess.call([path_to_notepad, path_to_file])

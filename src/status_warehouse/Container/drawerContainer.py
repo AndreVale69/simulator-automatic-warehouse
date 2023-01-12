@@ -1,9 +1,8 @@
 from abc import abstractmethod
-import copy
 
 from src.drawer import Drawer
-from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
+from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class DrawerContainer:
@@ -22,33 +21,17 @@ class DrawerContainer:
         self.height_column = height_col // self.get_def_space()
         self.offset_x = offset_x
 
+    @abstractmethod
     def __deepcopy__(self, memo):
-        # TODO: implementare nelle sottoclassi + metodo abs in drawerContainer
-        info: dict = {
-            "height": self.get_height_col(),
-            "x_offset": self.get_offset_x(),
-            "width": self.get_width(),
-            "deposit_height": self.get_deposit() * self.get_def_space(),
-            "buffer_height": self.get_buffer() * self.get_def_space()
-        }
-        copy_obj = type(self)(info)
-        copy_obj.container = copy.deepcopy(self.container, memo)
-        copy_obj.height_warehouse = self.get_height()
-        copy_obj.def_space = self.get_def_space()
-        copy_obj.height_column = self.get_height_col()
-        copy_obj.hole = self.get_hole()
-        copy_obj.deposit = self.get_deposit()
-        copy_obj.buffer = self.get_buffer()
-        copy_obj.offset_x = self.get_offset_x()
-        return copy_obj
+        pass
 
-    def get_height(self) -> int:
+    def get_height_warehouse(self) -> int:
         return self.height_warehouse
 
     def get_def_space(self) -> int:
         return self.def_space
 
-    def get_container(self) -> list:
+    def get_container(self) -> list[DrawerEntry | EmptyEntry]:
         return self.container
 
     def get_buffer(self) -> int:
@@ -69,11 +52,47 @@ class DrawerContainer:
     def get_width(self) -> int:
         return self.width
 
+    def get_num_drawers(self) -> int:
+        """How many drawers there are"""
+        count = 0
+        index = 0
+        col: list[DrawerEntry | EmptyEntry] = self.get_container()
+        while index < len(col):
+            if type(col[index]) is DrawerEntry:
+                # how many entries occupies the drawer
+                index += col[index].get_drawer().get_max_num_space()
+                count += 1
+            else:
+                index += 1
+        return count
+
+    def get_num_spaces(self) -> int:
+        """How many spaces there are"""
+        count = 0
+        for entry in self.get_container():
+            if type(entry) is EmptyEntry:
+                count += 1
+        return count
+
+    def get_num_materials(self) -> int:
+        """how many materials there are"""
+        count = 0
+        index = 0
+        col: list[DrawerEntry | EmptyEntry] = self.get_container()
+        while index < len(col):
+            if type(col[index]) is DrawerEntry:
+                count += col[index].get_drawer().get_num_materials()
+                # how many entries occupies the drawer
+                index += col[index].get_drawer().get_max_num_space()
+            else:
+                index += 1
+        return count
+
     def create_new_space(self, element):
         self.get_container().append(element)
 
     @abstractmethod
-    def add_drawer(self, index: int, drawer: Drawer):
+    def add_drawer(self, drawer: Drawer, index: int = None):
         pass
 
     def remove_drawer(self, drawer: Drawer):

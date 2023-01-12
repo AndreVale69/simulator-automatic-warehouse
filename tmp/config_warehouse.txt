@@ -1,0 +1,80 @@
+Warehouse situation
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Number of drawers   : 1
+Number of spaces    : 0
+Number of materials : 2
+Carousel:
+[<src.status_warehouse.Entry.drawerEntry.DrawerEntry object at 0x00000212EDBCAD10>, <src.drawer.Drawer object at 0x00000212EDBCAB30>]
+[<src.status_warehouse.Entry.drawerEntry.DrawerEntry object at 0x00000212EDBCAA70>, <src.drawer.Drawer object at 0x00000212EDBCAC50>]
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Number of drawers   : 0
+Number of spaces    : 13
+Number of materials : 0
+Column[125]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC8D30>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC8C70>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC92A0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9900>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9930>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9960>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9840>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9780>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9AE0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9B10>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC98A0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC99C0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9A20>]
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Number of drawers   : 0
+Number of spaces    : 40
+Number of materials : 0
+Column[475]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9360>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9B40>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9BA0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9C30>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9C90>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9CF0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9D50>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9DB0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9E10>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9E70>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9ED0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9F30>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9F90>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBC9FF0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA050>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA0B0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA110>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA170>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA1D0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA230>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA290>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA2F0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA350>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA3B0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA410>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA470>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA4D0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA530>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA590>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA5F0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA650>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA6B0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA710>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA770>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA7D0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA830>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA890>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA8F0>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA950>]
+[<src.status_warehouse.Entry.emptyEntry.EmptyEntry object at 0x00000212EDBCA9B0>]
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,3 +1,6 @@
+import random
+
+
 class Material:
     def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
         """
@@ -31,10 +34,10 @@ class Material:
         """Overrides the default implementation"""
         if isinstance(other, Material):
             return self.get_barcode() == other.get_barcode() and \
-                   self.get_name() == other.get_name() and \
-                   self.get_height() == other.get_height() and \
-                   self.get_length() == other.get_length() and \
-                   self.get_width() == other.get_width()
+                self.get_name() == other.get_name() and \
+                self.get_height() == other.get_height() and \
+                self.get_length() == other.get_length() and \
+                self.get_width() == other.get_width()
         else:
             return NotImplemented
 
@@ -48,12 +51,6 @@ class Material:
                             self.get_height(),
                             self.get_length(),
                             self.get_width())
-        # TODO: to rmv doppioni
-        copy_obj.barcode = self.get_barcode()
-        copy_obj.name = self.get_name()
-        copy_obj.height = self.get_height()
-        copy_obj.length = self.get_length()
-        copy_obj.width = self.get_width()
         return copy_obj
 
     def get_barcode(self) -> int:
@@ -70,3 +67,32 @@ class Material:
 
     def get_width(self) -> int:
         return self.width
+
+
+def gen_rand_materials(how_many: int, max_limit: int = None) -> list[Material]:
+    materials: list[Material] = []
+    for i in range(how_many):
+        materials.append(gen_rand_material(max_limit))
+    return materials
+
+
+def gen_rand_material(max_limit: int = None) -> Material:
+    name_materials = ['Shirt',
+                      'Pasta',
+                      'Tomato',
+                      'Bottle',
+                      'Tablet',
+                      'Helmet']
+
+    # multiply for current time to avoid the same barcode
+    barcode = random.randint(100_000_000, 999_999_999)
+    name = random.choice(name_materials)
+    # height max is buffer height = 150
+    if max_limit is None:
+        height = random.randint(25, 150)
+    else:
+        height = random.randint(25, max_limit)
+    length = random.randint(25, 150)
+    width = random.randint(25, 150)
+
+    return Material(barcode, name, height, length, width)
