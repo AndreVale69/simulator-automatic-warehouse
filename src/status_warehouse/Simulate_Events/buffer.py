@@ -19,3 +19,4 @@ class Buffer(Action):
             # TODO: nuova variabile di aiuto che gestisca il problema di a
             print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
             yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
+            print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
