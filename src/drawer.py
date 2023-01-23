@@ -115,8 +115,8 @@ class Drawer:
                 # odd, approx the next
                 self.num_space = (self.max_height // def_space) + 1
         except IndexError:
-            self.max_height = None
-            self.num_space = None
+            self.max_height = def_space
+            self.num_space = self.max_height // def_space
 
 
 def gen_rand_drawers(how_many: int, materials_to_insert: list[Material]) -> list[Drawer]:

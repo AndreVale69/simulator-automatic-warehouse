@@ -92,6 +92,13 @@ class Warehouse:
         # check if the first position of deposit have a Drawer
         return True if type(self.get_carousel().get_deposit_entry()) is DrawerEntry else False
 
+    def is_full(self) -> bool:
+        """Verify if there is a space inside the warehouse"""
+        for col in self.get_cols_container():
+            if col.get_entries_free() > 0:
+                return False
+        return True
+
     def come_back_to_deposit(self, drawer_inserted: Drawer):
         # take current position (y)
         curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
@@ -130,8 +137,6 @@ class Warehouse:
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
-        from src.useful_func import check_minimum_space
-
         storage = self.get_carousel().get_height_col()
         hole = self.get_carousel().get_hole()
 
@@ -190,25 +195,20 @@ class Warehouse:
 
     def gen_rand(self, num_drawers: int, num_materials: int):
         """Generate a random warehouse"""
-        num_cols_full = 0
+        warehouse_is_full = False
 
-        # TODO
-        # if num_drawers > num_materials:
-            # raise ValueError("Materials must be greater than Drawers.")
-
-        # TODO: while e rimuovo la ricorsione
-        # TODO: random.choice
-        # start to populate every column
-        for col in self.get_cols_container():
-            if num_drawers > 0:
+        # until there are drawers to insert and the warehouse isn't full
+        while num_drawers > 0 and warehouse_is_full is False:
+            # check available space in warehouse
+            if self.is_full():
+                warehouse_is_full = True
+            else:
+                # choice a random column
+                rand_col: Column = random.choice(self.get_cols_container())
                 # generate random number to decide how many drawers insert inside the column
                 rand_num_drawers = random.randint(1, num_drawers)
-
-                [num_drawers, num_materials, num_cols_full] = self.gen_materials_and_drawer(num_drawers, num_materials,
-                                                                                            rand_num_drawers, col)
-            else:
-                # if there aren't more drawers
-                break
+                [num_drawers, num_materials] = self.gen_materials_and_drawer(num_drawers, num_materials,
+                                                                             rand_num_drawers, rand_col)
 
         # if there aren't anything else to add
         if num_drawers == 0 and num_materials == 0:
@@ -218,63 +218,44 @@ class Warehouse:
             if num_drawers == 0:
                 print(f"num_materials left: {num_materials}")
             else:
-                # if the warehouse is completely full, terminate
-                if num_cols_full == len(self.get_cols_container()):
-                    print(
-                        f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
-                else:
-                    # otherwise, recursive call
-                    self.gen_rand(num_drawers, num_materials)
+                # if the warehouse is completely full
+                print(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
 
-    def gen_materials_and_drawer(self, num_drawers: int, num_materials: int, rand_num_drawers: int, col: Column) -> list:
+    def gen_materials_and_drawer(self, num_drawers: int, num_materials: int,
+                                 rand_num_drawers: int, col: Column) -> list:
         """Generate drawers and materials"""
         from src.material import gen_rand_materials
 
-        num_cols_full = 0
-
-        for i in range(rand_num_drawers):
-            # if there are more materials than drawers, that is if there are surplus of materials
-            if (num_materials - num_drawers) > 1:
-                # how many materials insert inside the drawer
-                num_materials_to_put = random.randint(1, num_materials - num_drawers)
-            else:
-                num_materials_to_put = 1
-            # check the height remaining
-            remaining_avail_entry = col.get_height_col() - col.get_entry_occupied()
-            # and generate material(s)
-            if remaining_avail_entry >= self.get_max_height_material():
+        # generate "rand_num_drawers" drawers
+        for rand_num in range(rand_num_drawers):
+            num_materials_to_put = 0
+            materials = None
+            # check if there are materials to generate
+            if num_materials > 0:
+                # generate a value of materials to insert
+                num_materials_to_put = random.randint(1, num_materials)
                 materials = gen_rand_materials(num_materials_to_put)
+
+            # check if there is space in warehouse
+            remaining_avail_entry = col.get_height_col() - col.get_entries_occupied()
+            if remaining_avail_entry >= 1:
+                # insert empty drawer
+                drawer_to_insert = Drawer(materials)
+                # looking for the index where put the drawer
+                index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
+                # if the height is correct, insert
+                if index != -1:
+                    # insert the drawer
+                    col.add_drawer(drawer_to_insert, index)
+                    # update local counter
+                    num_materials -= num_materials_to_put
+                    num_drawers -= 1
+            # if there isn't space in the column
             else:
-                # if the remaining available entry is less than 1
-                if remaining_avail_entry < 1:
-                    # stop to put drawers inside this column
-                    num_cols_full += 1
-                    break
-                else:
-                    # insert materials with specific height
-                    materials = gen_rand_materials(num_materials_to_put,
-                                                   max_limit=remaining_avail_entry * self.get_def_space())
+                # stop to put drawers inside this column
+                break
 
-            # update local counter
-            num_materials -= num_materials_to_put
-            # generate the drawer
-            self.gen_drawer(materials, col)
-            # update local counter
-            num_drawers -= 1
-
-        return [num_drawers, num_materials, num_cols_full]
-
-    def gen_drawer(self, materials: list, col: Column):
-        """Generate a Drawer"""
-        from src.useful_func import check_minimum_space
-
-        # insert the material(s) inside drawer
-        drawer_to_insert = Drawer(materials)
-        # TODO: add_drawer con algoritmo vanno in warehouse per essere riutilizzate
-        # looking for the index where put the drawer
-        index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
-        # insert the drawer
-        col.add_drawer(drawer_to_insert, index)
+        return [num_drawers, num_materials]
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation
@@ -298,7 +279,7 @@ class Warehouse:
 
             # carousel
             file.write(f"Number of drawers   : {self.get_carousel().get_num_drawers()}\n")
-            file.write(f"Number of spaces    : {self.get_carousel().get_num_spaces()}\n")
+            file.write(f"Number of spaces    : {self.get_carousel().get_entries_free()}\n")
             file.write(f"Number of materials : {self.get_carousel().get_num_materials()}\n")
             file.write("Carousel:\n")
             for entry in self.get_carousel().get_container():
@@ -313,7 +294,7 @@ class Warehouse:
             # columns
             for column in self.get_cols_container():
                 file.write(f"Number of drawers   : {column.get_num_drawers()}\n")
-                file.write(f"Number of spaces    : {column.get_num_spaces()}\n")
+                file.write(f"Number of spaces    : {column.get_entries_free()}\n")
                 file.write(f"Number of materials : {column.get_num_materials()}\n")
                 file.write(f"Column[{column.get_offset_x()}]\n")
                 for entry in column.get_container():
@@ -329,3 +310,91 @@ class Warehouse:
         # path_to_notepad = "C:\\Windows\\System32\\notepad.exe"
         # path_to_file = "../tmp/config_warehouse.txt"
         # subprocess.call([path_to_notepad, path_to_file])
+
+
+def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -> list:
+    """
+    Algorithm to decide where insert a drawer.
+
+    :param list_obj: list of columns.
+    :param space_req: space requested from drawer.
+    :param height_entry_col: the height of warehouse
+    :return: if there is a space [space_requested, index_position_where_insert, column_where_insert].
+    :exception StopIteration: if there isn't any space.
+    """
+    result = []
+    col = None
+
+    # calculate minimum space and search lower index
+    for column in list_obj:
+        [min_space, start_index] = min_search_alg(column, space_req)
+        if min_space != -1 and start_index < height_entry_col:
+            result = [min_space, start_index]
+            col = column
+
+    # if warehouse is full
+    if col is None:
+        return [-1, -1, -1]
+    else:
+        result.append(col)
+        return result
+
+
+def min_search_alg(self, space_req: int) -> list:
+    """
+    Algorithm to calculate a minimum space inside a column.
+
+    :param self: object to calculate minimum space.
+    :param space_req: space requested from drawer.
+    :return: negative values if there isn't any space, otherwise [space_requested, index_position_where_insert].
+    """
+    from src.status_warehouse.Entry.emptyEntry import EmptyEntry
+    min_space = self.get_height_warehouse()
+    count = 0
+    start_index = 0
+    container = self.get_container()
+    index = 0
+
+    ############################
+    # Minimum search algorithm #
+    ############################
+    for entry in container:
+        index += 1
+        # if the position is empty
+        if type(entry) is EmptyEntry:
+            # count number of spaces
+            count += 1
+        else:
+            # otherwise, if it's minimum and there is enough space
+            if (count < min_space) & (count >= space_req):
+                # update check values
+                min_space = count
+                start_index = index - count
+            # restart the count with reset
+            count = 0
+
+    # if warehouse is empty
+    if min_space == self.get_height_warehouse():
+        if count == 0:
+            # double security check
+            for i in range(len(container)):
+                # if it isn't empty
+                if type(container[i]) is Drawer:
+                    # raise IndexError("There isn't any space for this drawer.")
+                    return [-1, -1]
+            min_space = len(container)
+        else:
+            # update check values
+            min_space = count
+            start_index = index - count
+
+    # alloc only minimum space
+    if min_space >= space_req:
+        min_space = space_req
+    else:
+        # otherwise there isn't any space
+        if min_space < space_req:
+            # raise IndexError("There isn't any space for this drawer.")
+            return [-1, -1]
+
+    return [min_space, start_index]

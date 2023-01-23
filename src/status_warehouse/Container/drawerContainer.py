@@ -66,7 +66,14 @@ class DrawerContainer:
                 index += 1
         return count
 
-    def get_num_spaces(self) -> int:
+    def get_entries_occupied(self) -> int:
+        num_entry_occupied = 0
+        for entry in self.get_container():
+            if type(entry) is DrawerEntry:
+                num_entry_occupied += 1
+        return num_entry_occupied
+
+    def get_entries_free(self) -> int:
         """How many spaces there are"""
         count = 0
         for entry in self.get_container():
