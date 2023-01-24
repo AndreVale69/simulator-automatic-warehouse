@@ -7,9 +7,9 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class Carousel(DrawerContainer):
-    def __init__(self, info: dict):
+    def __init__(self, info: dict, warehouse):
         height_carousel = info["deposit_height"] + info["buffer_height"]
-        super().__init__(height_carousel, info["x_offset"], info["width"])
+        super().__init__(height_carousel, info["x_offset"], info["width"], warehouse)
 
         # get first y to start
         first_y = self.get_height_col() + self.get_hole()
@@ -27,7 +27,7 @@ class Carousel(DrawerContainer):
             "x_offset": self.get_offset_x(),
             "width": self.get_width()
         }
-        copy_obj = Carousel(info)
+        copy_obj = Carousel(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
 
@@ -36,6 +36,22 @@ class Carousel(DrawerContainer):
 
     def get_buffer_entry(self) -> DrawerEntry | EmptyEntry:
         return self.get_container()[1]
+
+    def is_buffer_full(self) -> bool:
+        """
+        Check the buffer
+        :return: True if is full, False otherwise
+        """
+        # check if the first position of buffer have a Drawer
+        return True if type(self.get_buffer_entry()) is DrawerEntry else False
+
+    def is_deposit_full(self) -> bool:
+        """
+        Check the deposit
+        :return: True if is full, False otherwise
+        """
+        # check if the first position of deposit have a Drawer
+        return True if type(self.get_deposit_entry()) is DrawerEntry else False
 
     # override
     def add_drawer(self, drawer: Drawer, index: int = None) -> bool:
@@ -75,4 +91,9 @@ class Carousel(DrawerContainer):
 
     # override
     def remove_drawer(self, drawer: Drawer):
+        """Remove a drawer"""
         super().remove_drawer(drawer)
+        # check if the buffer is full or empty
+        if self.is_buffer_full():
+            # trigger buffer.py process
+            self.get_warehouse().get_simulation().get_comm_chan().put("Wake up buffer.py!")

@@ -2,17 +2,13 @@ from simpy import Environment
 
 from src.drawer import Drawer
 from src.simulation import Simulation
-from src.status_warehouse.Simulate_Events.action import Action
+from src.status_warehouse.Simulate_Events.InsertMaterial.insert_material import InsertMaterial
 from src.warehouse import Warehouse
 
 
-class InsertRandomMaterial(Action):
+class InsertRandomMaterial(InsertMaterial):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
-        super().__init__(env, warehouse, simulation)
-        self.duration = duration
-
-    def get_duration(self) -> int:
-        return self.duration
+        super().__init__(env, warehouse, simulation, duration)
 
     # override
     def simulate_action(self):
@@ -25,7 +21,6 @@ class InsertRandomMaterial(Action):
         drawer_output: Drawer = self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
         # add the material
         drawer_output.add_material(mat_to_put)
-        # TODO: "crea" evento estrai cassetto
         # add a reference to the drawer
         self.get_warehouse().set_drawer_of_support(drawer_output)
         # estimate a time of the action

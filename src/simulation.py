@@ -9,10 +9,7 @@ from src.warehouse import Warehouse
 
 class Simulation(object):
     def __init__(self, env: Environment, warehouse: Warehouse):
-        from src.status_warehouse.Simulate_Events.insert_random_material import InsertRandomMaterial
         from src.status_warehouse.Simulate_Events.buffer import Buffer
-        from src.status_warehouse.Simulate_Events.come_back_to_deposit import ComeBackToDeposit
-        from src.status_warehouse.Simulate_Events.Move.move import Move
 
         self.env = env
         # start the move process everytime an instance is created.
@@ -20,13 +17,12 @@ class Simulation(object):
 
         self.buffer = Buffer(self.env, self.get_warehouse(), self)
 
-        self.insert_material_and_alloc_drawer = [InsertRandomMaterial(self.env, self.get_warehouse(), self, duration=2),
-                                                 Move(self.env, self.get_warehouse(), self),
-                                                 ComeBackToDeposit(self.env, self.get_warehouse(), self)]
+        # TODO: deve essere passata da Warehouse la sequenza
+
         # TODO: send_back prende dalla baia il drawer e lo manda all'interno del magazzino usando Move
         # TODO: extract_drawer prende un cassetto dentro il magazzino e lo mette nel carousel
         # TODO: ComeBackToDeposit viene forzata dopo ogni operazione per ritornare al punto di partenza
-        # TODO: InsertMaterial classe abs che ha come figli InsertRandomMaterial e InsertMaterial
+        # -----TODO: InsertMaterial classe abs che ha come figli InsertRandomMaterial e InsertMaterial
         # self.search_material_and_remove
 
         # communication channel

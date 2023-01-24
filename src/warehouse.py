@@ -22,8 +22,8 @@ class Warehouse:
         # add all columns taken from JSON
         self.columns_container = []
         for col_data in config["columns"]:
-            self.add_column(Column(col_data))
-        self.carousel = Carousel(config["carousel"])
+            self.add_column(Column(col_data, self))
+        self.carousel = Carousel(config["carousel"], self)
 
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]
@@ -76,22 +76,6 @@ class Warehouse:
     def set_drawer_of_support(self, drawer: Drawer):
         self.supp_drawer = drawer
 
-    def check_buffer(self) -> bool:
-        """
-        Check the buffer
-        :return: True if is full, False otherwise
-        """
-        # check if the first position of buffer have a Drawer
-        return True if type(self.get_carousel().get_buffer_entry()) is DrawerEntry else False
-
-    def check_deposit(self) -> bool:
-        """
-        Check the deposit
-        :return: True if is full, False otherwise
-        """
-        # check if the first position of deposit have a Drawer
-        return True if type(self.get_carousel().get_deposit_entry()) is DrawerEntry else False
-
     def is_full(self) -> bool:
         """Verify if there is a space inside the warehouse"""
         for col in self.get_cols_container():
@@ -107,6 +91,23 @@ class Warehouse:
         dep_pos = DrawerEntry.get_pos_y(self.get_carousel().get_deposit_entry())
 
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
+
+    def load_in_carousel(self, drawer_to_insert: Drawer):
+        y_dep = DrawerEntry.get_pos_y(self.get_carousel().get_deposit_entry())
+        y_buf = DrawerEntry.get_pos_y(self.get_carousel().get_buffer_entry())
+        # update the y position
+        drawer_to_insert.set_best_y(y_dep)
+        # take current position (y)
+        curr_pos = drawer_to_insert.get_first_drawerEntry().get_pos_y()
+
+        # take destination position (y)
+        if not self.get_carousel().is_buffer_full():
+            yield self.env.timeout(self.vertical_move(curr_pos, y_buf))
+        else:
+            if self.get_carousel().is_deposit_full():
+                raise NotImplementedError("Deposit and buffer are full! Collision!")
+        # and load inside the carousel
+        self.load(drawer_to_insert)
 
     def loading_buffer_and_remove(self):
         storage: int = self.get_carousel().get_height_col()
@@ -156,6 +157,8 @@ class Warehouse:
     def unload(self, drawer: Drawer):
         offset_x_drawer = drawer.get_first_drawerEntry().get_offset_x()
         yield self.env.timeout(self.horiz_move(offset_x_drawer))
+        # remove from container
+        self.get_carousel().remove_drawer(self.get_drawer_of_support())
 
     def load(self, drawer: Drawer):
         pos_x_drawer = drawer.get_best_offset_x()
@@ -259,12 +262,22 @@ class Warehouse:
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation
+        from src.status_warehouse.Simulate_Events.InsertMaterial.insert_random_material import InsertRandomMaterial
+        from src.status_warehouse.Simulate_Events.send_back_drawer import SendBackDrawer
+        from src.status_warehouse.Simulate_Events.Move.come_back_to_deposit import ComeBackToDeposit
+        from src.status_warehouse.enum_warehouse import EnumWarehouse
 
         self.env = simpy.Environment()
         self.simulation = Simulation(self.env, self)
+        insert_material_and_alloc_drawer = [InsertRandomMaterial(self.env, self, self.get_simulation(), duration=2),
+                                            SendBackDrawer(self.env, self, self.get_simulation(),
+                                                           self.get_carousel().get_deposit_entry().get_drawer(),
+                                                           EnumWarehouse.COLUMN.name),
+                                            ComeBackToDeposit(self.env, self, self.get_simulation(),
+                                                              self.get_carousel().get_deposit_entry().get_drawer(),
+                                                              EnumWarehouse.COLUMN.name)]
 
-        self.get_environment().process(self.get_simulation().
-                                       simulate_actions(self.get_simulation().insert_material_and_alloc_drawer))
+        self.get_environment().process(self.get_simulation().simulate_actions(insert_material_and_alloc_drawer))
 
         self.get_environment().run(until=time)
 

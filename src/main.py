@@ -13,7 +13,7 @@ drawer2 = Drawer([material3])
 warehouse.get_carousel().add_drawer(drawer)
 warehouse.get_carousel().add_drawer(drawer2)
 
-warehouse.gen_rand(100, 0)
+# warehouse.gen_rand(100, 0)
 
 # wh2 = copy.deepcopy(warehouse)
 warehouse.run_simulation(40)

@@ -7,8 +7,8 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class Column(DrawerContainer):
-    def __init__(self, info: dict):
-        super().__init__(info["height"], info["x_offset"], info["width"])
+    def __init__(self, info: dict, warehouse):
+        super().__init__(info["height"], info["x_offset"], info["width"], warehouse)
 
         self.width = info["width"]
 
@@ -22,7 +22,7 @@ class Column(DrawerContainer):
             "x_offset": self.get_offset_x(),
             "width": self.get_width()
         }
-        copy_obj = Column(info)
+        copy_obj = Column(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
 

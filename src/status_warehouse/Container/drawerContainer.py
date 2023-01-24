@@ -6,11 +6,12 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class DrawerContainer:
-    def __init__(self, height_col: int, offset_x: int, width: int):
+    def __init__(self, height_col: int, offset_x: int, width: int, warehouse):
         from src.useful_func import open_config
 
         # initialize main vars
         config: dict = open_config()
+        self.warehouse = warehouse
         self.container = []
         self.height_warehouse = config["height_warehouse"]
         self.def_space = config["default_height_space"]
@@ -24,6 +25,9 @@ class DrawerContainer:
     @abstractmethod
     def __deepcopy__(self, memo):
         pass
+
+    def get_warehouse(self):
+        return self.warehouse
 
     def get_height_warehouse(self) -> int:
         return self.height_warehouse
