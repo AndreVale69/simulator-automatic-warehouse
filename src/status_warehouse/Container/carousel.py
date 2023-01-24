@@ -37,6 +37,15 @@ class Carousel(DrawerContainer):
     def get_buffer_entry(self) -> DrawerEntry | EmptyEntry:
         return self.get_container()[1]
 
+    def get_num_drawers(self) -> int:
+        """How many drawers there are"""
+        count = 0
+        if type(self.get_deposit_entry()) is DrawerEntry:
+            count += 1
+        if type(self.get_buffer_entry()) is DrawerEntry:
+            count += 1
+        return count
+
     def is_buffer_full(self) -> bool:
         """
         Check the buffer
@@ -76,7 +85,7 @@ class Carousel(DrawerContainer):
                 self.create_drawerEntry(drawer, first_y, is_buffer=True)
                 return True
             else:
-                raise RuntimeError
+                raise RuntimeError("Collision")
 
     def create_drawerEntry(self, drawer: Drawer, first_y: int, is_buffer: bool):
         # initialize positions
@@ -90,10 +99,11 @@ class Carousel(DrawerContainer):
         drawer.set_first_drawerEntry(drawer_entry)
 
     # override
-    def remove_drawer(self, drawer: Drawer):
+    def remove_drawer(self, drawer: Drawer) -> bool:
         """Remove a drawer"""
-        super().remove_drawer(drawer)
+        is_removed = super().remove_drawer(drawer)
         # check if the buffer is full or empty
         if self.is_buffer_full():
             # trigger buffer.py process
             self.get_warehouse().get_simulation().get_comm_chan().put("Wake up buffer.py!")
+        return is_removed

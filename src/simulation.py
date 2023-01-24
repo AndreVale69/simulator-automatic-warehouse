@@ -17,13 +17,12 @@ class Simulation(object):
 
         self.buffer = Buffer(self.env, self.get_warehouse(), self)
 
-        # TODO: deve essere passata da Warehouse la sequenza
+        # -----: deve essere passata da Warehouse la sequenza
 
-        # TODO: send_back prende dalla baia il drawer e lo manda all'interno del magazzino usando Move
-        # TODO: extract_drawer prende un cassetto dentro il magazzino e lo mette nel carousel
-        # TODO: ComeBackToDeposit viene forzata dopo ogni operazione per ritornare al punto di partenza
-        # -----TODO: InsertMaterial classe abs che ha come figli InsertRandomMaterial e InsertMaterial
-        # self.search_material_and_remove
+        # -----: send_back prende dalla baia il drawer e lo manda all'interno del magazzino usando Move
+        # -----: extract_drawer prende un cassetto dentro il magazzino e lo mette nel carousel
+        # -----: ComeBackToDeposit viene forzata dopo ogni operazione per ritornare al punto di partenza
+        # -----: InsertMaterial classe abs che ha come figli InsertRandomMaterial e InsertMaterial
 
         # communication channel
         self.comm_chan = simpy.Store(env)
@@ -35,6 +34,8 @@ class Simulation(object):
         # run the actions
         for action in action_list:
             yield self.env.process(action.simulate_action())
+
+        print(f"Time {self.env.now:5.2f} - Finish")
 
     def get_warehouse(self) -> Warehouse:
         return self.warehouse

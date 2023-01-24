@@ -23,11 +23,11 @@ class Drawer:
 
     def __eq__(self, other):
         """Overrides the default implementation"""
-        return isinstance(other,
-                          Drawer) and \
+        return isinstance(other, Drawer) and \
             self.get_items() == other.get_items() and \
             self.get_max_height() == other.get_max_height() and \
-            self.get_max_num_space() == other.get_max_num_space()
+            self.get_max_num_space() == other.get_max_num_space() and \
+            self.get_first_drawerEntry() == other.get_first_drawerEntry()
 
     def __hash__(self):
         """Overrides the default implementation"""

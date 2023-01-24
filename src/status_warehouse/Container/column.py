@@ -49,5 +49,6 @@ class Column(DrawerContainer):
         return drawer_entry
 
     # override
-    def remove_drawer(self, drawer: Drawer):
-        super().remove_drawer(drawer)
+    def remove_drawer(self, drawer: Drawer) -> bool:
+        """Remove a drawer"""
+        return super().remove_drawer(drawer)

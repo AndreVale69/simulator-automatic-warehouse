@@ -12,5 +12,5 @@ class Unload(Move):
 
     def simulate_action(self):
         print(f"Time {self.env.now:5.2f} - Start unloading a drawer")
-        yield self.env.process(self.get_warehouse().unload(self.get_warehouse().get_drawer_of_support()))
-        # yield self.env.process(self.get_warehouse().unload(self.get_drawer()))
+        # yield self.env.process(self.get_warehouse().unload(self.get_warehouse().get_drawer_of_support()))
+        yield self.env.process(self.get_warehouse().unload(self.get_drawer()))

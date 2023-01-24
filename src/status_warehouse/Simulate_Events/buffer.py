@@ -15,7 +15,7 @@ class Buffer(Action):
         while True:
             # wait until the communication channel is empty
             msg = yield self.get_simulation().get_comm_chan().get()
-            print(msg)
+            # print(msg)
             # TODO: lock del carousel quando sta caricando il buffer perché potrebbe succedere che due
             # TODO: cassetti si sovrascrivono
             print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")

@@ -70,20 +70,44 @@ class DrawerContainer:
                 index += 1
         return count
 
-    def get_entries_occupied(self) -> int:
+    def get_num_entries_occupied(self) -> int:
+        """How many entries occupied there are"""
         num_entry_occupied = 0
         for entry in self.get_container():
             if type(entry) is DrawerEntry:
                 num_entry_occupied += 1
         return num_entry_occupied
 
-    def get_entries_free(self) -> int:
+    def get_num_entries_free(self) -> int:
         """How many spaces there are"""
         count = 0
         for entry in self.get_container():
             if type(entry) is EmptyEntry:
                 count += 1
         return count
+
+    def get_drawers(self) -> list[Drawer]:
+        """Take every Drawer in the column"""
+        drawers = []
+        index = 0
+        col: list[DrawerEntry | EmptyEntry] = self.get_container()
+        while index < len(col):
+            entry = col[index]
+            if type(entry) is DrawerEntry:
+                # how many entries occupies the drawer
+                index += entry.get_drawer().get_max_num_space()
+                drawers.append(entry.get_drawer())
+            else:
+                index += 1
+        return drawers
+
+    def get_entries_occupied(self) -> list[DrawerEntry]:
+        """Take every DrawerEntry in the column"""
+        entries_occupied = []
+        for entry in self.get_container():
+            if type(entry) is DrawerEntry:
+                entries_occupied.append(entry)
+        return entries_occupied
 
     def get_num_materials(self) -> int:
         """how many materials there are"""
@@ -107,21 +131,20 @@ class DrawerContainer:
         pass
 
     def remove_drawer(self, drawer: Drawer):
+        """Remove a drawer"""
         is_remove: bool = False
         first_entry: DrawerEntry = drawer.get_first_drawerEntry()
         entry_y: int = first_entry.get_pos_y()
         entry_x: int = first_entry.get_offset_x()
 
-        for index, element in enumerate(self.get_container()):
+        for index, entry in enumerate(self.get_container()):
             # if is a DrawerEntry element
             # if they've the same coordinates
             # if the drawers are the same (see __eq__ method)
-            if isinstance(element, DrawerEntry) and \
-                    element.get_pos_y() == entry_y and \
-                    element.get_drawer() == drawer:
+            if isinstance(entry, DrawerEntry) and \
+                    entry.get_pos_y() == entry_y and \
+                    entry.get_drawer() == drawer:
                 self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
                 is_remove = True
                 entry_y += 1
-
-        if not is_remove:
-            print("Drawer doesn't removed.")
+        return is_remove

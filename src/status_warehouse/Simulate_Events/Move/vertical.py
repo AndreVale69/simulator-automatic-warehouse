@@ -3,6 +3,7 @@ from simpy import Environment
 from src.simulation import Simulation
 from src.status_warehouse.Simulate_Events.Move.move import Move
 from src.warehouse import Warehouse, Drawer
+from src.status_warehouse.enum_warehouse import EnumWarehouse
 
 
 class Vertical(Move):
@@ -12,5 +13,7 @@ class Vertical(Move):
 
     def simulate_action(self):
         print(f"Time {self.env.now:5.2f} - Start vertical move")
-        yield self.env.process(self.get_warehouse().allocate_best_pos(self.get_warehouse().get_drawer_of_support()))
-        # yield self.env.process(self.get_warehouse().allocate_best_pos(self.get_drawer()))
+        if self.get_destination() == EnumWarehouse.CAROUSEL.name:
+            yield self.env.process(self.get_warehouse().reach_drawer_height(self.get_drawer()))
+        else:
+            yield self.env.process(self.get_warehouse().allocate_best_pos(self.get_drawer()))
