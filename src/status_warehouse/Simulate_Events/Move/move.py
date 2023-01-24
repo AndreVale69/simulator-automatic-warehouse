@@ -8,7 +8,6 @@ from src.warehouse import Warehouse, Drawer
 
 
 class Move(Action):
-    # TODO: aggiugno due parametri: drawer, destinazione (enum: colonna, carousel)
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
                  destination: str):
         super().__init__(env, warehouse, simulation)

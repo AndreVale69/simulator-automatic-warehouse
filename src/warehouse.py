@@ -374,18 +374,18 @@ class Warehouse:
 
         self.env = simpy.Environment()
         self.simulation = Simulation(self.env, self)
-        insert_material_and_alloc_drawer = [InsertRandomMaterial(self.get_environment(), self, self.get_simulation(),
-                                                                 duration=2),
-                                            SendBackDrawer(self.get_environment(), self, self.get_simulation(),
-                                                           self.get_carousel().get_deposit_entry().get_drawer(),
-                                                           EnumWarehouse.COLUMN.name)]
+        # insert_material_and_alloc_drawer = [InsertRandomMaterial(self.get_environment(), self, self.get_simulation(),
+        #                                                          duration=2),
+        #                                     SendBackDrawer(self.get_environment(), self, self.get_simulation(),
+        #                                                    self.get_carousel().get_deposit_entry().get_drawer(),
+        #                                                    EnumWarehouse.COLUMN.name)]
         # take a drawer
-        # drawer = self.choice_random_drawer()
-        # take_drawer_and_show = [ExtractDrawer(self.get_environment(), self, self.get_simulation(), drawer,
-        #                                       EnumWarehouse.CAROUSEL.name)]
+        drawer = self.choice_random_drawer()
+        take_drawer_and_show = [ExtractDrawer(self.get_environment(), self, self.get_simulation(), drawer,
+                                              EnumWarehouse.CAROUSEL.name)]
 
-        self.get_environment().process(self.get_simulation().simulate_actions(insert_material_and_alloc_drawer))
-        # self.get_environment().process(self.get_simulation().simulate_actions(take_drawer_and_show))
+        # self.get_environment().process(self.get_simulation().simulate_actions(insert_material_and_alloc_drawer))
+        self.get_environment().process(self.get_simulation().simulate_actions(take_drawer_and_show))
 
         self.get_environment().run(until=time)
 

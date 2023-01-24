@@ -11,7 +11,7 @@ drawer = Drawer([material, material2])
 drawer2 = Drawer([material3])
 
 warehouse.get_carousel().add_drawer(drawer)
-warehouse.get_carousel().add_drawer(drawer2)
+# warehouse.get_carousel().add_drawer(drawer2)
 
 warehouse.gen_rand(2, 0)
 

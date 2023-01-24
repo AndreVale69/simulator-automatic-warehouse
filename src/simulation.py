@@ -26,6 +26,7 @@ class Simulation(object):
 
         # communication channel
         self.comm_chan = simpy.Store(env)
+        self.res = simpy.Resource(env, capacity=1)
 
     def simulate_actions(self, action_list: list[Action]):
         # an action can be a: MoveDrawer, InsertMaterial, RemoveMaterial, ExtractDrawerInBay, RemoveDrawerFromBay, etc.
@@ -42,6 +43,9 @@ class Simulation(object):
 
     def get_comm_chan(self):
         return self.comm_chan
+
+    def get_res(self) -> simpy.Resource:
+        return self.res
 
     def get_buffer(self):
         return self.buffer

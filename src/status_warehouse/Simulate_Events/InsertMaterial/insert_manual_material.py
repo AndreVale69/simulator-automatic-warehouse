@@ -18,13 +18,15 @@ class InsertManualMaterial(InsertMaterial):
 
     # override
     def simulate_action(self):
-        print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
-        # take the drawer that is outside
-        drawer_output: Drawer = self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
-        for material in self.get_materials():
-            # add the material
-            drawer_output.add_material(material)
-        # add a reference to the drawer
-        self.get_warehouse().set_drawer_of_support(drawer_output)
-        # estimate a time of the action
-        yield self.env.timeout(self.get_duration())
+        with self.get_simulation().get_res().request() as req:
+            yield req
+            print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
+            # take the drawer that is outside
+            drawer_output: Drawer = self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
+            for material in self.get_materials():
+                # add the material
+                drawer_output.add_material(material)
+            # add a reference to the drawer
+            self.get_warehouse().set_drawer_of_support(drawer_output)
+            # estimate a time of the action
+            yield self.env.timeout(self.get_duration())
