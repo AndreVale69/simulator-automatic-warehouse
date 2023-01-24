@@ -76,6 +76,11 @@ class Drawer:
         self.items.append(material)
         self.__calculate_max_height()
 
+    def remove_material(self, material: Material):
+        # remove
+        self.items.remove(material)
+        self.__calculate_max_height()
+
     def set_first_drawerEntry(self, drawer_entry):
         self.first_drawerEntry = drawer_entry
 

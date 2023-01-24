@@ -197,9 +197,6 @@ class Warehouse:
     def add_column(self, col: Column):
         self.get_cols_container().append(col)
 
-    def set_drawer_of_support(self, drawer: Drawer):
-        self.supp_drawer = drawer
-
     def is_full(self) -> bool:
         """Verify if there is a space inside the warehouse"""
         for col in self.get_cols_container():
@@ -367,8 +364,6 @@ class Warehouse:
 
     def run_simulation(self, time: int):
         from src.simulation import Simulation
-        from src.status_warehouse.Simulate_Events.InsertMaterial.insert_random_material import InsertRandomMaterial
-        from src.status_warehouse.Simulate_Events.send_back_drawer import SendBackDrawer
         from src.status_warehouse.Simulate_Events.extract_drawer import ExtractDrawer
         from src.status_warehouse.enum_warehouse import EnumWarehouse
 
