@@ -11,6 +11,7 @@ class Column(DrawerContainer):
         super().__init__(info["height"], info["x_offset"], info["width"], warehouse)
 
         self.width = info["width"]
+        self.height_last_position = info["height_last_position"] // self.get_def_space()
 
         # create container
         for i in range(self.get_height_col()):
@@ -20,11 +21,15 @@ class Column(DrawerContainer):
         info: dict = {
             "height": self.get_height_col(),
             "x_offset": self.get_offset_x(),
-            "width": self.get_width()
+            "width": self.get_width(),
+            "height_last_position": self.get_height_last_position()
         }
         copy_obj = Column(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
+
+    def get_height_last_position(self) -> int:
+        return self.height_last_position
 
     # override
     def add_drawer(self, drawer: Drawer, index: int = None):

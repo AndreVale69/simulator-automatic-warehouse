@@ -12,7 +12,14 @@ from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 def gen_materials_and_drawer(num_drawers: int, num_materials: int,
                              rand_num_drawers: int, col: Column) -> list:
-    """Generate drawers and materials"""
+    """
+    Generate drawers and materials
+    :param num_drawers: number of drawers to create in the warehouse
+    :param num_materials: number of materials to create in the drawers
+    :param rand_num_drawers: number of drawers to generate
+    :param col: column selected where to put the drawers
+    :return: [number of drawers left, number of materials left]
+    """
     from src.material import gen_rand_materials
 
     # generate "rand_num_drawers" drawers
@@ -86,14 +93,22 @@ def min_search_alg(self, space_req: int) -> list:
     from src.status_warehouse.Entry.emptyEntry import EmptyEntry
     min_space = self.get_height_warehouse()
     count = 0
-    start_index = 0
+    start_index = self.get_height_last_position() - 1
     container = self.get_container()
-    index = 0
+    height_last_pos = self.get_height_last_position()
+    index = height_last_pos
 
     ############################
     # Minimum search algorithm #
     ############################
-    for entry in container:
+
+    # verify the highest position
+    if space_req == height_last_pos:
+        min_space = space_req
+        return [min_space, start_index]
+
+    for i in range(index, len(container)):
+        entry = container[i]
         index += 1
         # if the position is empty
         if type(entry) is EmptyEntry:
@@ -112,9 +127,9 @@ def min_search_alg(self, space_req: int) -> list:
     if min_space == self.get_height_warehouse():
         if count == 0:
             # double security check
-            for i in range(len(container)):
+            for entry in container:
                 # if it isn't empty
-                if type(container[i]) is Drawer:
+                if type(entry) is Drawer:
                     # raise IndexError("There isn't any space for this drawer.")
                     return [-1, -1]
             min_space = len(container)
@@ -123,14 +138,19 @@ def min_search_alg(self, space_req: int) -> list:
             min_space = count
             start_index = index - count
 
-    # alloc only minimum space
-    if min_space >= space_req:
+    # if the last position is better and free
+    if space_req < height_last_pos < min_space and type(container[height_last_pos - 1]) is EmptyEntry:
         min_space = space_req
+        start_index = height_last_pos - 1
     else:
-        # otherwise there isn't any space
-        if min_space < space_req:
-            # raise IndexError("There isn't any space for this drawer.")
-            return [-1, -1]
+        # alloc only minimum space
+        if min_space >= space_req:
+            min_space = space_req
+        else:
+            # otherwise there isn't any space
+            if min_space < space_req:
+                # raise IndexError("There isn't any space for this drawer.")
+                return [-1, -1]
 
     return [min_space, start_index]
 
@@ -428,7 +448,6 @@ class Warehouse:
                 file.write("\n")
                 file.write("~" * 40 + "\n")
                 file.write("\n")
-
         # import subprocess
         # path_to_notepad = "C:\\Windows\\System32\\notepad.exe"
         # path_to_file = "../tmp/config_warehouse.txt"

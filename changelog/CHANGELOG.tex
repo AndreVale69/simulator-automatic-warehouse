@@ -26,5 +26,11 @@
 		\item Generato \textsf{UUID} nella classe \textsf{material.py} per il \emph{barcode}.
 		
 		\item La generazione di elementi casuali avviene selezionando una colonna casuale e inserendo un cassetto con dei materiali oppure vuoto.
+		
+		\item Il tempo viene calcolato dal basso e non dall'alto di un cassetto.
+		
+		\item Per la gestione dell'ultima posizione nel magazzino, ho semplicemente aggiunto un parametro per specificare l'altezza di tale cassetto (nel \textsf{JSON}). Poi, ho modificato l'algoritmo che consente l'aggiunta del cassetto, quindi la struttura dati non è stata modificata.
+		
+		\item Rivoluzionata l'intera simulazione (+ semaforo per gestire l'accesso al carosello, + eventi di rimozione di un materiale), si veda la cartella.
 	\end{itemize}
 \end{document}
