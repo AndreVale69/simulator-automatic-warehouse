@@ -26,7 +26,8 @@ class Simulation(object):
 
         # communication channel
         self.comm_chan = simpy.Store(env)
-        self.res = simpy.Resource(env, capacity=1)
+        # semaphore to
+        self.semaphore_carousel = simpy.Resource(env, capacity=1)
 
     def simulate_actions(self, action_list: list[Action]):
         # an action can be a: MoveDrawer, InsertMaterial, RemoveMaterial, ExtractDrawerInBay, RemoveDrawerFromBay, etc.
@@ -35,17 +36,16 @@ class Simulation(object):
         # run the actions
         for action in action_list:
             yield self.env.process(action.simulate_action())
-
         print(f"Time {self.env.now:5.2f} - Finish")
 
     def get_warehouse(self) -> Warehouse:
         return self.warehouse
 
-    def get_comm_chan(self):
+    def get_comm_chan(self) -> simpy.Store:
         return self.comm_chan
 
-    def get_res(self) -> simpy.Resource:
-        return self.res
+    def get_semaphore_carousel(self) -> simpy.Resource:
+        return self.semaphore_carousel
 
     def get_buffer(self):
         return self.buffer

@@ -197,6 +197,20 @@ class Warehouse:
     def add_column(self, col: Column):
         self.get_cols_container().append(col)
 
+    def minimum_offset(self, container) -> int:
+        """
+        Calculate the minimum offset between the columns
+        :param container: list of columns or carousels
+        :return: the index of the list
+        """
+        min_offset = container[0].get_offset_x()
+        index = 0
+        for i, column in enumerate(self.get_cols_container()):
+            if column.get_offset_x() < min_offset:
+                min_offset = column.get_offset_x()
+                index = i
+        return index
+
     def is_full(self) -> bool:
         """Verify if there is a space inside the warehouse"""
         for col in self.get_cols_container():
@@ -233,13 +247,11 @@ class Warehouse:
         yield self.env.process(self.load(drawer_to_insert, destination))
 
     def loading_buffer_and_remove(self):
-        storage: int = self.get_carousel().get_height_col()
-        hole: int = self.get_carousel().get_hole()
         buffer: DrawerEntry = self.get_carousel().get_buffer_entry()
 
         # calculate loading buffer time
         start_pos = buffer.get_pos_y()
-        end_pos = storage + hole
+        end_pos = self.get_carousel().get_deposit_entry().get_pos_y()
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
         yield self.env.timeout(loading_buffer_time)
@@ -261,31 +273,35 @@ class Warehouse:
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
-        storage = self.get_carousel().get_height_col()
-        hole = self.get_carousel().get_hole()
-
-        start_pos = storage + hole
+        # start position
+        start_pos = self.get_carousel().get_deposit_entry().get_pos_y()
+        # calculate destination position
         minimum = check_minimum_space(self.get_cols_container(),
                                       drawer.get_max_num_space(),
                                       self.get_height() // self.get_def_space())
         pos_to_insert = minimum[1]
-
         # save temporarily the coordinates
         drawer.set_best_y(minimum[1])
         drawer.set_best_offset_x(Column.get_offset_x(minimum[2]))
+        # start the move
         vertical_move = self.vertical_move(start_pos, pos_to_insert)
         yield self.env.timeout(vertical_move)
 
     def reach_drawer_height(self, drawer: Drawer):
+        # save coordinates inside drawer
         drawer.set_best_y(drawer.get_first_drawerEntry().get_pos_y())
         drawer.set_best_offset_x(drawer.get_first_drawerEntry().get_offset_x())
+        # start the move
         vertical_move = self.vertical_move(start_pos=self.get_carousel().get_deposit_entry().get_pos_y(),
                                            end_pos=drawer.get_first_drawerEntry().get_pos_y())
         yield self.env.timeout(vertical_move)
 
     def unload(self, drawer: Drawer):
+        # take x offset
         offset_x_drawer = drawer.get_first_drawerEntry().get_offset_x()
+        # start the move
         yield self.env.timeout(self.horiz_move(offset_x_drawer))
+        # update warehouse
         # if drawer hasn't been removed
         if not self.get_carousel().remove_drawer(drawer):
             # find in a column and terminate
@@ -295,16 +311,21 @@ class Warehouse:
 
     def load(self, drawer: Drawer, destination: str):
         from src.status_warehouse.enum_warehouse import EnumWarehouse
-
+        # take destination coordinates
         dest_x_drawer = drawer.get_best_offset_x()
         dest_y_drawer = drawer.get_best_y()
+        # start the move
         yield self.env.timeout(self.horiz_move(dest_x_drawer))
+        # update warehouse
+        # if destination is carousel, add
         if destination == EnumWarehouse.CAROUSEL.name:
             self.get_carousel().add_drawer(drawer, dest_y_drawer)
         else:
+            # otherwise, check the offset of column
             for col in self.get_cols_container():
                 if col.get_offset_x() == dest_x_drawer:
                     col.add_drawer(drawer, dest_y_drawer)
+                    break
 
     def horiz_move(self, offset_x: int):
         """
@@ -320,20 +341,6 @@ class Warehouse:
             for col in self.get_cols_container():
                 if col.get_offset_x() == offset_x:
                     return (col.get_width() / 100) / self.get_speed_per_sec()
-
-    def minimum_offset(self, container) -> int:
-        """
-        Calculate the minimum offset between the columns
-        :param container: list of columns or carousels
-        :return: the index of the list
-        """
-        min_offset = container[0].get_offset_x()
-        index = 0
-        for i, column in enumerate(self.get_cols_container()):
-            if column.get_offset_x() < min_offset:
-                min_offset = column.get_offset_x()
-                index = i
-        return index
 
     def gen_rand(self, num_drawers: int, num_materials: int):
         """Generate a random warehouse"""

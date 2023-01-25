@@ -18,7 +18,7 @@ class RemoveManualMaterial(InsertMaterial):
 
     # override
     def simulate_action(self):
-        with self.get_simulation().get_res().request() as req:
+        with self.get_simulation().get_semaphore_carousel().request() as req:
             yield req
             print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
             # take the drawer that is outside

@@ -71,9 +71,10 @@ class Carousel(DrawerContainer):
         :param drawer: To show or to save
         :return: True there is space and the operation is successes, False there isn't space and the operation is failed
         """
+        deposit = self.get_deposit()
         store = self.get_height_col()
         hole = self.get_hole()
-        first_y = store + hole
+        first_y = store + hole + deposit
 
         # check if it's empty the deposit
         if isinstance(self.get_container()[0], EmptyEntry):
@@ -89,8 +90,8 @@ class Carousel(DrawerContainer):
 
     def create_drawerEntry(self, drawer: Drawer, first_y: int, is_buffer: bool):
         # initialize positions
-        drawer_entry = DrawerEntry(self.get_offset_x(), first_y + (self.get_deposit() + self.get_buffer())) \
-                        if is_buffer else DrawerEntry(self.get_offset_x(), first_y)
+        drawer_entry = DrawerEntry(self.get_offset_x(), first_y + self.get_buffer()) if is_buffer \
+                  else DrawerEntry(self.get_offset_x(), first_y)
         # connect Drawer to entry
         drawer_entry.add_drawer(drawer)
         # add to container
