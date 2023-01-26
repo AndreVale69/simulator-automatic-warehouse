@@ -28,3 +28,4 @@ class RemoveManualMaterial(InsertMaterial):
                 drawer_output.remove_material(material)
             # estimate a time of the action
             yield self.env.timeout(self.get_duration())
+            # TODO: mettere nella superclasse (anche per insert_material)

@@ -24,10 +24,15 @@ class ExtractDrawer(Move):
         yield self.env.process(ComeBackToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
                                                  self.get_drawer(), self.get_destination()).simulate_action())
         # show the drawer
+        # TODO: implementare il carosello con due risorse
+        # provo ad acquisire la baia e se non ci riesco provo ad acquisire il buffer
         with self.get_simulation().get_semaphore_carousel().request() as req:
             yield req
             print(f"Time {self.env.now:5.2f} - Start to load in the carousel")
+            # TODO: controllo della baia e del buffer vanno fatti prima di eseguire il processo
+            # TODO: con request()
             yield self.env.process(self.get_warehouse().load_in_carousel(self.get_drawer(), self.get_destination()))
         # force to come back to deposit
+        # TODO: se il cassetto è andato in buffer, lancio il processo Buffer.py che prova ad acquisire la risorsa deposito
         yield self.env.process(ComeBackToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
                                                  self.get_drawer(), self.get_destination()).simulate_action())

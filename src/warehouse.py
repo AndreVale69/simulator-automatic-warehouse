@@ -98,6 +98,7 @@ def gen_materials_and_drawer(num_drawers: int, num_materials: int,
     return [num_drawers, num_materials]
 
 
+# TODO:
 def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -> list:
     """
     Algorithm to decide where insert a drawer.
@@ -147,8 +148,9 @@ def min_search_alg(self, space_req: int) -> list:
     ############################
 
     # verify the highest position
+    # TODO: <= perché è la prima posizione e controllo se è occupato
     if space_req == height_last_pos:
-        min_space = space_req
+        min_space = height_last_pos
         return [min_space, start_index]
 
     for i in range(index, len(container)):
@@ -411,7 +413,7 @@ class Warehouse:
         warehouse_is_full = False
 
         # until there are drawers to insert and the warehouse isn't full
-        while num_drawers > 0 and warehouse_is_full is False:
+        while num_drawers > 0 and not warehouse_is_full:
             # check available space in warehouse
             if self.is_full():
                 warehouse_is_full = True
@@ -453,6 +455,7 @@ class Warehouse:
         # self.get_environment().process(self.get_simulation().simulate_actions(insert_material_and_alloc_drawer))
         # self.get_environment().process(self.get_simulation().simulate_actions(take_drawer_and_show))
 
+        # TODO: si vogliono 100 azioni e tramite un ciclo si genera una lista e si mantiene il calcolo balance_wh
         # how many events
         num_send_back = 1
         num_extract_drawer = 1

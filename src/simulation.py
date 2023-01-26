@@ -78,8 +78,9 @@ class Simulation(object):
                         balance_wh += 1
                         num_extract_drawer -= 1
 
+                # TODO: add remove
                 case "ins_mat":
-                    if 0 < balance_wh <= 2 and num_ins_mat > 0:
+                    if 1 <= balance_wh <= 2 and num_ins_mat > 0:
                         action = InsertRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
                         yield self.env.process(action.simulate_action())
                         print(f"\nTime {self.env.now:5.2f} - FINISH INS_MAT\n")
@@ -95,6 +96,7 @@ class Simulation(object):
     def get_comm_chan(self) -> simpy.Store:
         return self.comm_chan
 
+    # TODO: resource carousel buffer and deposit
     def get_semaphore_carousel(self) -> simpy.Resource:
         return self.semaphore_carousel
 
