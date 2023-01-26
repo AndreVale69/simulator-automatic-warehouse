@@ -1,4 +1,5 @@
 import random
+import uuid
 
 
 class Material:
@@ -84,8 +85,8 @@ def gen_rand_material(max_limit: int = None) -> Material:
                       'Tablet',
                       'Helmet']
 
-    # multiply for current time to avoid the same barcode
-    barcode = random.randint(100_000_000, 999_999_999)
+    # UUID to avoid the same barcode
+    barcode = uuid.uuid4().int
     name = random.choice(name_materials)
     # height max is buffer height = 150
     if max_limit is None:

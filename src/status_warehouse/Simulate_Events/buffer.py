@@ -16,7 +16,8 @@ class Buffer(Action):
             # wait until the communication channel is empty
             msg = yield self.get_simulation().get_comm_chan().get()
             # print(msg)
-            # TODO: nuova variabile di aiuto che gestisca il problema di a
-            print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
-            yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
-            print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
+            with self.get_simulation().get_semaphore_carousel().request() as req:
+                yield req
+                print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
+                yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
+                print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")

@@ -8,7 +8,6 @@ from src.warehouse import Warehouse
 
 class Action:
     def __init__(self, env: Environment, warehouse: Warehouse, simulation):
-        self.drawer = None
         self.env = env
         self.warehouse = warehouse
         self.simulation = simulation

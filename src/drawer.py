@@ -23,11 +23,11 @@ class Drawer:
 
     def __eq__(self, other):
         """Overrides the default implementation"""
-        return isinstance(other,
-                          Drawer) and \
+        return isinstance(other, Drawer) and \
             self.get_items() == other.get_items() and \
             self.get_max_height() == other.get_max_height() and \
-            self.get_max_num_space() == other.get_max_num_space()
+            self.get_max_num_space() == other.get_max_num_space() and \
+            self.get_first_drawerEntry() == other.get_first_drawerEntry()
 
     def __hash__(self):
         """Overrides the default implementation"""
@@ -73,7 +73,12 @@ class Drawer:
 
     def add_material(self, material: Material):
         # insert in tail
-        self.items.append(material)
+        self.get_items().append(material)
+        self.__calculate_max_height()
+
+    def remove_material(self, material: Material):
+        # remove
+        self.items.remove(material)
         self.__calculate_max_height()
 
     def set_first_drawerEntry(self, drawer_entry):
@@ -115,8 +120,8 @@ class Drawer:
                 # odd, approx the next
                 self.num_space = (self.max_height // def_space) + 1
         except IndexError:
-            self.max_height = None
-            self.num_space = None
+            self.max_height = def_space
+            self.num_space = self.max_height // def_space
 
 
 def gen_rand_drawers(how_many: int, materials_to_insert: list[Material]) -> list[Drawer]:

@@ -7,10 +7,11 @@ from src.status_warehouse.Entry.emptyEntry import EmptyEntry
 
 
 class Column(DrawerContainer):
-    def __init__(self, info: dict):
-        super().__init__(info["height"], info["x_offset"], info["width"])
+    def __init__(self, info: dict, warehouse):
+        super().__init__(info["height"], info["x_offset"], info["width"], warehouse)
 
         self.width = info["width"]
+        self.height_last_position = info["height_last_position"] // self.get_def_space()
 
         # create container
         for i in range(self.get_height_col()):
@@ -20,18 +21,15 @@ class Column(DrawerContainer):
         info: dict = {
             "height": self.get_height_col(),
             "x_offset": self.get_offset_x(),
-            "width": self.get_width()
+            "width": self.get_width(),
+            "height_last_position": self.get_height_last_position()
         }
-        copy_obj = Column(info)
+        copy_obj = Column(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
 
-    def get_entry_occupied(self) -> int:
-        num_entry_occupied = 0
-        for entry in self.get_container():
-            if type(entry) is DrawerEntry:
-                num_entry_occupied += 1
-        return num_entry_occupied
+    def get_height_last_position(self) -> int:
+        return self.height_last_position
 
     # override
     def add_drawer(self, drawer: Drawer, index: int = None):
@@ -56,5 +54,6 @@ class Column(DrawerContainer):
         return drawer_entry
 
     # override
-    def remove_drawer(self, drawer: Drawer):
-        super().remove_drawer(drawer)
+    def remove_drawer(self, drawer: Drawer) -> bool:
+        """Remove a drawer"""
+        return super().remove_drawer(drawer)

@@ -1,18 +1,20 @@
 {
   "columns":[
     {
-      "description"     : "rxcol",
-      "width"           : 250,
-      "height"          : 325,
-      "offset_formula"  : "width / 2",
-      "x_offset"        : 125
+      "description"           : "rxcol",
+      "width"                 : 250,
+      "height"                : 325,
+      "offset_formula"        : "width / 2",
+      "x_offset"              : 125,
+      "height_last_position"  : 75
     },
     {
-      "description"     : "sxcol",
-      "width"           : 200,
-      "height"          : 1000,
-      "offset_formula"  : "(sxcol.width / 2) + rxcol.offset + 250",
-      "x_offset"        : 475
+      "description"           : "sxcol",
+      "width"                 : 200,
+      "height"                : 1000,
+      "offset_formula"        : "(sxcol.width / 2) + rxcol.offset + 250",
+      "x_offset"              : 475,
+      "height_last_position"  : 75
     }
   ],
   "carousel": {

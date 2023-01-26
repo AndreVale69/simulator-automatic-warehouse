@@ -6,6 +6,11 @@ class Entry:
         self.offset_x = offset_x
         self.pos_y = pos_y
 
+    def __eq__(self, other):
+        return isinstance(other, Entry) and \
+            self.get_offset_x() == other.get_offset_x() and \
+            self.get_pos_y() == other.get_pos_y()
+
     @abstractmethod
     def __deepcopy__(self, memo):
         pass

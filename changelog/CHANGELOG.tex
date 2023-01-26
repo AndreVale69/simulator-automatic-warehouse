@@ -21,24 +21,20 @@
 	\newpage
 	
 	\section*{Main Improvements}
-	
 	\begin{itemize}[label=\ding{51}]
-		\item Pulizia del codice, migliorato alcune funzioni e commenti.
+		\item Generato \textsf{UUID} nella classe \textsf{material.py} per il \emph{barcode}.
 		
-		\item Domanda: il tempo deve essere contato dalla prima posizione in alto o dalla più bassa? Perché il carico e scarico credo avvenga dalla posizione più bassa del cassetto selezionato.
+		\item La generazione di elementi casuali avviene selezionando una colonna casuale e inserendo un cassetto con dei materiali oppure vuoto.
 		
-		\item Adesso il carosello ha solo due variabili che gestiscono il deposito visibile all'utente e il \emph{buffer}.
+		\item Il tempo viene calcolato dal basso e non dall'alto di un cassetto.
 		
-		\item La \textsf{\_\_deepcopy\_\_} è stata implementata all'interno delle sottoclassi. Mi riferisco alle classi astratte \textsf{drawerContainer.py} e \textsf{entry.py}.
+		\item Per la gestione dell'ultima posizione nel magazzino, ho semplicemente aggiunto un parametro per specificare l'altezza di tale cassetto (nel \textsf{JSON}). Poi, ho modificato l'algoritmo che consente l'aggiunta del cassetto, quindi la struttura dati non è stata modificata.
 		
-		\item Creato un metodo statico in \textsf{material.py} che crea una serie di materiali casuali.
-		
-		\item Creata la funzione per stampare la situazione del magazzino (solo di debug?).
-		
-		\item Creata la funzione per generare un magazzino casuale in base ai parametri dati.
-		
-		\item Creata la classe \textsf{Move.py} per generalizzare il movimento di carico, scarico e verticale.
-		
-		\item Adesso il controllo del buffer viene effettuato all'esterno e non all'interno del processo stesso (file \textsf{UnloadDrawer.py})
+		\item Rivoluzionata l'intera simulazione (+ semaforo per gestire l'accesso al carosello, + eventi di rimozione di un materiale), si veda la cartella.
+	\end{itemize}
+	
+	\section*{Domande}
+	\begin{itemize}
+		\item Si blocca tutto nel momento in cui si mettono tutti gli eventi a 1 e nessun drawer in baia.
 	\end{itemize}
 \end{document}
