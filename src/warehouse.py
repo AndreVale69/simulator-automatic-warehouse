@@ -10,6 +10,50 @@ from src.status_warehouse.Container.column import Column
 from src.status_warehouse.Entry.drawerEntry import DrawerEntry
 
 
+def save_config(self):
+    # opening JSON file
+    with open("../tmp/config_warehouse.txt", 'w') as file:
+        # header
+        file.write(f"Warehouse situation\n")
+        file.write("\n")
+        file.write("~" * 40 + "\n")
+        file.write("\n")
+
+        # carousel
+        file.write(f"Number of drawers   : {self.get_carousel().get_num_drawers()}\n")
+        file.write(f"Number of spaces    : {self.get_carousel().get_num_entries_free()}\n")
+        file.write(f"Number of materials : {self.get_carousel().get_num_materials()}\n")
+        file.write("Carousel:\n")
+        for entry in self.get_carousel().get_container():
+            if type(entry) is DrawerEntry:
+                file.write(f"[{entry}, {entry.get_drawer()}]\n")
+            else:
+                file.write(f"[{entry}]\n")
+        file.write("\n")
+        file.write("~" * 40 + "\n")
+        file.write("\n")
+
+        # columns
+        for column in self.get_cols_container():
+            file.write(f"Number of drawers   : {column.get_num_drawers()}\n")
+            file.write(f"Number of spaces    : {column.get_num_entries_free()}\n")
+            file.write(f"Number of materials : {column.get_num_materials()}\n")
+            file.write(f"Column[{column.get_offset_x()}]\n")
+            for entry in column.get_container():
+                if type(entry) is DrawerEntry:
+                    file.write(f"[{entry}, {entry.get_drawer()}]\n")
+                else:
+                    file.write(f"[{entry}]\n")
+            file.write("\n")
+            file.write("~" * 40 + "\n")
+            file.write("\n")
+
+    # import subprocess
+    # path_to_notepad = "C:\\Windows\\System32\\notepad.exe"
+    # path_to_file = "../tmp/config_warehouse.txt"
+    # subprocess.call([path_to_notepad, path_to_file])
+
+
 def gen_materials_and_drawer(num_drawers: int, num_materials: int,
                              rand_num_drawers: int, col: Column) -> list:
     """
@@ -402,56 +446,32 @@ class Warehouse:
         #                                                    self.get_carousel().get_deposit_entry().get_drawer(),
         #                                                    EnumWarehouse.COLUMN.name)]
         # take a drawer
-        drawer = self.choice_random_drawer()
-        take_drawer_and_show = [ExtractDrawer(self.get_environment(), self, self.get_simulation(), drawer,
-                                              EnumWarehouse.CAROUSEL.name)]
+        # drawer = self.choice_random_drawer()
+        # take_drawer_and_show = [ExtractDrawer(self.get_environment(), self, self.get_simulation(), drawer,
+        #                                       EnumWarehouse.CAROUSEL.name)]
 
         # self.get_environment().process(self.get_simulation().simulate_actions(insert_material_and_alloc_drawer))
-        self.get_environment().process(self.get_simulation().simulate_actions(take_drawer_and_show))
+        # self.get_environment().process(self.get_simulation().simulate_actions(take_drawer_and_show))
 
+        # how many events
+        num_send_back = 1
+        num_extract_drawer = 1
+        num_ins_mat = 1
+        # check the values
+        # check positive
+        if num_send_back > 0 and num_extract_drawer > 0:
+            if num_send_back != num_extract_drawer:
+                if not (num_extract_drawer > num_send_back and 0 < (num_extract_drawer - num_send_back) <= 2):
+                    raise ValueError("Difference btw num_extract_drawer and num_send_back must be at most 2.")
+        else:
+            raise ValueError("num_extract_drawer and num_send_back must be grater than 0.")
+        # create list of event alias
+        alias_events = ["send_back", "extract_drawer", "ins_mat"]
+        # create simulation
+        self.get_environment().process(self.get_simulation().simulate_actions(alias_events, num_send_back,
+                                                                              num_extract_drawer, num_ins_mat))
+        # run simulation
         self.get_environment().run(until=time)
-
-    def save_config(self):
-        # opening JSON file
-        with open("../tmp/config_warehouse.txt", 'w') as file:
-            # header
-            file.write(f"Warehouse situation\n")
-            file.write("\n")
-            file.write("~" * 40 + "\n")
-            file.write("\n")
-
-            # carousel
-            file.write(f"Number of drawers   : {self.get_carousel().get_num_drawers()}\n")
-            file.write(f"Number of spaces    : {self.get_carousel().get_num_entries_free()}\n")
-            file.write(f"Number of materials : {self.get_carousel().get_num_materials()}\n")
-            file.write("Carousel:\n")
-            for entry in self.get_carousel().get_container():
-                if type(entry) is DrawerEntry:
-                    file.write(f"[{entry}, {entry.get_drawer()}]\n")
-                else:
-                    file.write(f"[{entry}]\n")
-            file.write("\n")
-            file.write("~" * 40 + "\n")
-            file.write("\n")
-
-            # columns
-            for column in self.get_cols_container():
-                file.write(f"Number of drawers   : {column.get_num_drawers()}\n")
-                file.write(f"Number of spaces    : {column.get_num_entries_free()}\n")
-                file.write(f"Number of materials : {column.get_num_materials()}\n")
-                file.write(f"Column[{column.get_offset_x()}]\n")
-                for entry in column.get_container():
-                    if type(entry) is DrawerEntry:
-                        file.write(f"[{entry}, {entry.get_drawer()}]\n")
-                    else:
-                        file.write(f"[{entry}]\n")
-                file.write("\n")
-                file.write("~" * 40 + "\n")
-                file.write("\n")
-        # import subprocess
-        # path_to_notepad = "C:\\Windows\\System32\\notepad.exe"
-        # path_to_file = "../tmp/config_warehouse.txt"
-        # subprocess.call([path_to_notepad, path_to_file])
 
     def choice_random_drawer(self) -> Drawer:
         """Choose a random drawer from the warehouse"""

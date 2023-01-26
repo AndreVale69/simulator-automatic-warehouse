@@ -73,7 +73,7 @@ class Drawer:
 
     def add_material(self, material: Material):
         # insert in tail
-        self.items.append(material)
+        self.get_items().append(material)
         self.__calculate_max_height()
 
     def remove_material(self, material: Material):
