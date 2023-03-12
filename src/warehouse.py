@@ -460,6 +460,7 @@ class Warehouse:
         num_send_back = 1
         num_extract_drawer = 1
         num_ins_mat = 1
+        num_rmv_mat = 1
         # check the values
         # check positive
         if num_send_back > 0 and num_extract_drawer > 0:
@@ -472,7 +473,8 @@ class Warehouse:
         alias_events = ["send_back", "extract_drawer", "ins_mat"]
         # create simulation
         self.get_environment().process(self.get_simulation().simulate_actions(alias_events, num_send_back,
-                                                                              num_extract_drawer, num_ins_mat))
+                                                                              num_extract_drawer, num_ins_mat,
+                                                                              num_rmv_mat))
         # run simulation
         self.get_environment().run(until=time)
 

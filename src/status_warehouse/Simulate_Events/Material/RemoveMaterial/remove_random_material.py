@@ -8,7 +8,7 @@ from status_warehouse.Simulate_Events.Material.RemoveMaterial.remove_material im
 from src.warehouse import Warehouse
 
 
-class InsertRandomMaterial(RemoveMaterial):
+class RemoveRandomMaterial(RemoveMaterial):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         super().__init__(env, warehouse, simulation, duration)
 

@@ -39,12 +39,13 @@ class Simulation(object):
     #         yield self.env.process(action.simulate_action())
     #     print(f"Time {self.env.now:5.2f} - Finish")
 
-    def simulate_actions(self, alias_list: list, num_send_back, num_extract_drawer, num_ins_mat):
+    def simulate_actions(self, alias_list: list, num_send_back, num_extract_drawer, num_ins_mat, num_rmv_mat):
         from src.status_warehouse.Entry.drawerEntry import DrawerEntry
         from src.status_warehouse.enum_warehouse import EnumWarehouse
         from src.status_warehouse.Simulate_Events.send_back_drawer import SendBackDrawer
         from src.status_warehouse.Simulate_Events.extract_drawer import ExtractDrawer
         from src.status_warehouse.Simulate_Events.Material.InsertMaterial.insert_random_material import InsertRandomMaterial
+        from src.status_warehouse.Simulate_Events.Material.RemoveMaterial.remove_random_material import RemoveRandomMaterial
         # run "control of buffer" process
         self.env.process(self.get_buffer().simulate_action())
         # calculate start balance of wh
@@ -54,7 +55,7 @@ class Simulation(object):
         if type(self.get_warehouse().get_carousel().get_buffer_entry()) is DrawerEntry:
             balance_wh += 1
         # run the actions
-        while (num_send_back + num_extract_drawer + num_ins_mat) > 0:
+        while (num_send_back + num_extract_drawer + num_ins_mat + num_rmv_mat) > 0:
             select_event = random.choice(alias_list)
             match select_event:
                 case "send_back":
@@ -78,13 +79,20 @@ class Simulation(object):
                         balance_wh += 1
                         num_extract_drawer -= 1
 
-                # TODO: add remove
                 case "ins_mat":
                     if 1 <= balance_wh <= 2 and num_ins_mat > 0:
                         action = InsertRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
                         yield self.env.process(action.simulate_action())
                         print(f"\nTime {self.env.now:5.2f} - FINISH INS_MAT\n")
                         num_ins_mat -= 1
+
+                case "rem_mat":
+                    if 1 <= balance_wh <= 2 and num_rmv_mat > 0:
+                        action = RemoveRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
+                        yield self.env.process(action.simulate_action())
+                        print(f"\nTime {self.env.now:5.2f} - FINISH REM_MAT\n")
+                        num_rmv_mat -= 1
+
         print(f"Time {self.env.now:5.2f} - Finish simulation")
 
     def get_environment(self) -> simpy.Environment:
