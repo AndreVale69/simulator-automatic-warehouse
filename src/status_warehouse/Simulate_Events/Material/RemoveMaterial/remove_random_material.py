@@ -14,13 +14,9 @@ class InsertRandomMaterial(InsertMaterial):
 
     # override
     def simulate_action(self):
-        from src.material import gen_rand_material
-
         with self.get_simulation().get_semaphore_carousel().request() as req:
             yield req
-            print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
-            # take the drawer that is outside
-            drawer_output: Drawer = self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
+            drawer_output = super().simulate_action()
             # choice random material
             mat_to_rmv = random.choice(drawer_output.get_items())
             # remove the material

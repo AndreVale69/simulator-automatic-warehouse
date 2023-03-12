@@ -4,9 +4,9 @@ from src.warehouse import Warehouse, save_config
 
 warehouse = Warehouse()
 
-material = Material(123, "name1", 150, 789, 12345)
-material2 = Material(234, "name2", 126, 987, 00000)
-material3 = Material(567, "name3", 100, 123, 45678)
+material = Material(hex(123), "name1", 150, 789, 12345)
+material2 = Material(hex(234), "name2", 126, 987, 00000)
+material3 = Material(hex(567), "name3", 100, 123, 45678)
 # drawer = Drawer([material, material2])
 drawer = Drawer()
 drawer2 = Drawer([material3])

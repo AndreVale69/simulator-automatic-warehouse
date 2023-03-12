@@ -3,7 +3,7 @@ import uuid
 
 
 class Material:
-    def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
+    def __init__(self, barcode: hex, name: str, height: int, length: int, width: int):
         """
 
         :param barcode: unique id of a material
@@ -85,9 +85,8 @@ def gen_rand_material(max_height: int = None) -> Material:
                       'Tablet',
                       'Helmet']
 
-    # UUID to avoid the same barcode
-    # TODO: barcode come stringa, quindi .hex
-    barcode = uuid.uuid4().int
+    # UUID to avoid the same hex barcode
+    barcode = uuid.uuid4().hex
     name = random.choice(name_materials)
     # height max is buffer height = 150
     if max_height is None:

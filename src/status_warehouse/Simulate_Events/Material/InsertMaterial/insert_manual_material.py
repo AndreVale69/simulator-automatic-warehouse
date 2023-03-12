@@ -20,9 +20,7 @@ class InsertManualMaterial(InsertMaterial):
     def simulate_action(self):
         with self.get_simulation().get_semaphore_carousel().request() as req:
             yield req
-            print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
-            # take the drawer that is outside
-            drawer_output: Drawer = self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
+            drawer_output = super().simulate_action()
             for material in self.get_materials():
                 # add the material
                 drawer_output.add_material(material)

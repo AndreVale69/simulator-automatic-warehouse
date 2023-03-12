@@ -114,7 +114,6 @@ class DrawerContainer:
         count = 0
         drawers = self.get_drawers()
         for drawer in drawers:
-            print(f"qui: {drawer.items}")
             count += len(drawer.items)
         return count
 

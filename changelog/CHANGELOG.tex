@@ -22,15 +22,15 @@
 	
 	\section*{Main Improvements}
 	\begin{itemize}[label=\ding{51}]
-		\item Generato \textsf{UUID} nella classe \textsf{material.py} per il \emph{barcode}.
-		
-		\item La generazione di elementi casuali avviene selezionando una colonna casuale e inserendo un cassetto con dei materiali oppure vuoto.
-		
-		\item Il tempo viene calcolato dal basso e non dall'alto di un cassetto.
-		
-		\item Per la gestione dell'ultima posizione nel magazzino, ho semplicemente aggiunto un parametro per specificare l'altezza di tale cassetto (nel \textsf{JSON}). Poi, ho modificato l'algoritmo che consente l'aggiunta del cassetto, quindi la struttura dati non è stata modificata.
-		
-		\item Rivoluzionata l'intera simulazione (+ semaforo per gestire l'accesso al carosello, + eventi di rimozione di un materiale), si veda la cartella.
+		\item Classe \textsf{Material}:
+		\begin{itemize}
+			\item Funzione \textsf{gen\_rand\_material} (generazione casuale di materiali), adesso il \emph{barcode} viene generato come esadecimale.
+		\end{itemize}
+	
+		\item Classi \textsf{InsertMaterial} e \textsf{RemoveMaterial}:
+		\begin{itemize}
+			\item Funzione \textsf{simulate\_action} (simulazione delle azioni), tentativo di ottimizzazione inserendo il codice identico all'interno della superclasse.
+		\end{itemize}
 	\end{itemize}
 	
 	\section*{Domande}

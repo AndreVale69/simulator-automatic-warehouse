@@ -20,12 +20,9 @@ class RemoveManualMaterial(InsertMaterial):
     def simulate_action(self):
         with self.get_simulation().get_semaphore_carousel().request() as req:
             yield req
-            print(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
-            # take the drawer that is outside
-            drawer_output: Drawer = self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
+            drawer_output = super().simulate_action()
             for material in self.get_materials():
                 # remove the material
                 drawer_output.remove_material(material)
             # estimate a time of the action
             yield self.env.timeout(self.get_duration())
-            # TODO: mettere nella superclasse (anche per insert_material)
