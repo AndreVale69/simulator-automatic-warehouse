@@ -2,13 +2,13 @@ import random
 
 from simpy import Environment
 
-from src.drawer import Drawer
+# from src.drawer import Drawer
 from src.simulation import Simulation
-from status_warehouse.Simulate_Events.Material.InsertMaterial.insert_material import InsertMaterial
+from status_warehouse.Simulate_Events.Material.RemoveMaterial.remove_material import RemoveMaterial
 from src.warehouse import Warehouse
 
 
-class InsertRandomMaterial(InsertMaterial):
+class InsertRandomMaterial(RemoveMaterial):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         super().__init__(env, warehouse, simulation, duration)
 
