@@ -470,7 +470,7 @@ class Warehouse:
         else:
             raise ValueError("num_extract_drawer and num_send_back must be grater than 0.")
         # create list of event alias
-        alias_events = ["send_back", "extract_drawer", "ins_mat"]
+        alias_events = ["send_back", "extract_drawer", "ins_mat", "rmv_mat"]
         # create simulation
         self.get_environment().process(self.get_simulation().simulate_actions(alias_events, num_send_back,
                                                                               num_extract_drawer, num_ins_mat,

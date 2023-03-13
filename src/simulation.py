@@ -86,11 +86,11 @@ class Simulation(object):
                         print(f"\nTime {self.env.now:5.2f} - FINISH INS_MAT\n")
                         num_ins_mat -= 1
 
-                case "rem_mat":
+                case "rmv_mat":
                     if 1 <= balance_wh <= 2 and num_rmv_mat > 0:
                         action = RemoveRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
                         yield self.env.process(action.simulate_action())
-                        print(f"\nTime {self.env.now:5.2f} - FINISH REM_MAT\n")
+                        print(f"\nTime {self.env.now:5.2f} - FINISH RMV_MAT\n")
                         num_rmv_mat -= 1
 
         print(f"Time {self.env.now:5.2f} - Finish simulation")
