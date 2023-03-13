@@ -384,7 +384,7 @@ class Warehouse:
         yield self.env.timeout(self.horiz_move(dest_x_drawer))
         # update warehouse
         # if destination is carousel, add
-        if destination == EnumWarehouse.CAROUSEL.name:
+        if destination == EnumWarehouse.CAROUSEL:
             self.get_carousel().add_drawer(drawer, dest_y_drawer)
         else:
             # otherwise, check the offset of column

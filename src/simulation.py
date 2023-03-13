@@ -62,7 +62,7 @@ class Simulation(object):
                     if 0 < balance_wh <= 2 and num_send_back > 0:
                         action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self,
                                                 self.get_warehouse().get_carousel().get_deposit_entry().get_drawer(),
-                                                EnumWarehouse.COLUMN.name)
+                                                EnumWarehouse.COLUMN)
                         yield self.env.process(action.simulate_action())
                         print(f"\nTime {self.env.now:5.2f} - FINISH SEND_BACK\n")
                         balance_wh -= 1
@@ -73,7 +73,7 @@ class Simulation(object):
                         # take a drawer
                         drawer = self.get_warehouse().choice_random_drawer()
                         action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self, drawer,
-                                               EnumWarehouse.CAROUSEL.name)
+                                               EnumWarehouse.CAROUSEL)
                         yield self.env.process(action.simulate_action())
                         print(f"\nTime {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
                         balance_wh += 1

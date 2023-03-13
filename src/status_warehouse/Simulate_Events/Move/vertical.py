@@ -13,8 +13,7 @@ class Vertical(Move):
 
     def simulate_action(self):
         print(f"Time {self.env.now:5.2f} - Start vertical move")
-        # TODO: destination inserisco direttamente EnumWarehouse.CAROUSEL ecc.
-        if self.get_destination() == EnumWarehouse.CAROUSEL.name:
+        if self.get_destination() == EnumWarehouse.CAROUSEL:
             yield self.env.process(self.get_warehouse().reach_drawer_height(self.get_drawer()))
         else:
             yield self.env.process(self.get_warehouse().allocate_best_pos(self.get_drawer()))
