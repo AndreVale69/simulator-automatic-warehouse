@@ -435,46 +435,47 @@ class Warehouse:
                 # if the warehouse is completely full
                 print(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
 
-    def run_simulation(self, time: int):
+    def run_simulation(self, time: int, num_actions: int):
         from src.simulation import Simulation
         from src.status_warehouse.Simulate_Events.extract_drawer import ExtractDrawer
         from src.status_warehouse.enum_warehouse import EnumWarehouse
 
         self.env = simpy.Environment()
         self.simulation = Simulation(self.env, self)
-        # insert_material_and_alloc_drawer = [InsertRandomMaterial(self.get_environment(), self, self.get_simulation(),
-        #                                                          duration=2),
-        #                                     SendBackDrawer(self.get_environment(), self, self.get_simulation(),
-        #                                                    self.get_carousel().get_deposit_entry().get_drawer(),
-        #                                                    EnumWarehouse.COLUMN.name)]
-        # take a drawer
-        # drawer = self.choice_random_drawer()
-        # take_drawer_and_show = [ExtractDrawer(self.get_environment(), self, self.get_simulation(), drawer,
-        #                                       EnumWarehouse.CAROUSEL.name)]
 
-        # self.get_environment().process(self.get_simulation().simulate_actions(insert_material_and_alloc_drawer))
-        # self.get_environment().process(self.get_simulation().simulate_actions(take_drawer_and_show))
-
-        # TODO: si vogliono 100 azioni e tramite un ciclo si genera una lista e si mantiene il calcolo balance_wh
-        # how many events
-        num_send_back = 1
-        num_extract_drawer = 1
-        num_ins_mat = 1
-        num_rmv_mat = 1
-        # check the values
-        # check positive
-        if num_send_back > 0 and num_extract_drawer > 0:
-            if num_send_back != num_extract_drawer:
-                if not (num_extract_drawer > num_send_back and 0 < (num_extract_drawer - num_send_back) <= 2):
-                    raise ValueError("Difference btw num_extract_drawer and num_send_back must be at most 2.")
-        else:
-            raise ValueError("num_extract_drawer and num_send_back must be grater than 0.")
+        balance_wh = 0
         # create list of event alias
         alias_events = ["send_back", "extract_drawer", "ins_mat", "rmv_mat"]
-        # create simulation
-        self.get_environment().process(self.get_simulation().simulate_actions(alias_events, num_send_back,
-                                                                              num_extract_drawer, num_ins_mat,
-                                                                              num_rmv_mat))
+        events_to_simulate = []
+
+        # if the deposit or the buffer are full, then update the counter
+        if type(self.get_carousel().get_deposit_entry()) is DrawerEntry:
+            balance_wh += 1
+        if type(self.get_carousel().get_buffer_entry()) is DrawerEntry:
+            balance_wh += 1
+
+        for num_action in range(num_actions):
+            good_choice = False
+            rand_event = ""
+            while good_choice is False:
+                # select an event
+                rand_event = random.choice(alias_events)
+                # check the if the choice is correct
+                if 0 <= balance_wh <= 1 and (rand_event == "extract_drawer" or
+                                             rand_event == "ins_mat" or
+                                             rand_event == "rmv_mat"):
+                    good_choice = True
+                    if rand_event == "extract_drawer":
+                        balance_wh += 1
+                else:
+                    if 0 < balance_wh <= 2 and rand_event == "send_back":
+                        good_choice = True
+                        balance_wh -= 1
+            events_to_simulate.append(rand_event)
+
+        # create the simulation
+        self.get_environment().process(self.get_simulation().simulate_actions(events_to_simulate))
+
         # run simulation
         self.get_environment().run(until=time)
 

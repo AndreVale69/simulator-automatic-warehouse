@@ -17,9 +17,13 @@ class RemoveRandomMaterial(RemoveMaterial):
         with self.get_simulation().get_semaphore_carousel().request() as req:
             yield req
             drawer_output = super().simulate_action()
-            # choice random material
-            mat_to_rmv = random.choice(drawer_output.get_items())
-            # remove the material
-            drawer_output.remove_material(mat_to_rmv)
-            # estimate a time of the action
-            yield self.env.timeout(self.get_duration())
+            # check if there is a material to remove
+            if len(drawer_output.get_items()) != 0:
+                # choice random material
+                mat_to_rmv = random.choice(drawer_output.get_items())
+                # remove the material
+                drawer_output.remove_material(mat_to_rmv)
+                # estimate a time of the action
+                yield self.env.timeout(self.get_duration())
+            else:
+                print(f"\nTime {self.env.now:5.2f} - No materials to remove\n")

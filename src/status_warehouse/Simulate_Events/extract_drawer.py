@@ -10,7 +10,7 @@ from src.warehouse import Warehouse, Drawer
 
 class ExtractDrawer(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
-                 destination: str):
+                 destination):
         super().__init__(env, warehouse, simulation, drawer, destination)
 
     def simulate_action(self):
