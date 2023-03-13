@@ -98,7 +98,6 @@ def gen_materials_and_drawer(num_drawers: int, num_materials: int,
     return [num_drawers, num_materials]
 
 
-# TODO:
 def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -> list:
     """
     Algorithm to decide where insert a drawer.
@@ -148,8 +147,7 @@ def min_search_alg(self, space_req: int) -> list:
     ############################
 
     # verify the highest position
-    # TODO: <= perché è la prima posizione e controllo se è occupato
-    if space_req == height_last_pos:
+    if type(container[start_index]) is EmptyEntry and space_req <= height_last_pos:
         min_space = height_last_pos
         return [min_space, start_index]
 

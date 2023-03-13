@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.21)  12 MAR 2023 21:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.21)  13 MAR 2023 21:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -341,10 +341,10 @@ Package rerunfilecheck Info: File `CHANGELOG.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 10630 strings out of 475075
- 167603 string characters out of 5783001
+ 10632 strings out of 475075
+ 167619 string characters out of 5783001
  551522 words of memory out of 5000000
- 31905 multiletter control sequences out of 15000+600000
+ 31907 multiletter control sequences out of 15000+600000
  474883 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  72i,6n,77p,247b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -357,7 +357,7 @@ c/amsfonts/cm/cmr17.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmss10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmti1
 0.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/
 texlive/2022/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on CHANGELOG.pdf (2 pages, 84250 bytes).
+Output written on CHANGELOG.pdf (2 pages, 85432 bytes).
 PDF statistics:
  65 PDF objects out of 1000 (max. 8388607)
  42 compressed objects within 1 object stream
