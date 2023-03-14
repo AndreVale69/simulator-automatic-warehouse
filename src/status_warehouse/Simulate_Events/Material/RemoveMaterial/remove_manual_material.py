@@ -18,11 +18,14 @@ class RemoveManualMaterial(RemoveMaterial):
 
     # override
     def simulate_action(self):
-        with self.get_simulation().get_semaphore_carousel().request() as req:
+        with self.get_simulation().get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
-            for material in self.get_materials():
-                # remove the material
-                drawer_output.remove_material(material)
-            # estimate a time of the action
-            yield self.env.timeout(self.get_duration())
+            if len(drawer_output.get_items()) != 0:
+                for material in self.get_materials():
+                    # remove the material
+                    drawer_output.remove_material(material)
+                # estimate a time of the action
+                yield self.env.timeout(self.get_duration())
+            else:
+                print(f"\nTime {self.env.now:5.2f} - No materials to remove\n")

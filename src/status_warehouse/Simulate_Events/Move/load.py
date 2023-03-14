@@ -12,5 +12,4 @@ class Load(Move):
 
     def simulate_action(self):
         print(f"Time {self.env.now:5.2f} - Start loading inside the warehouse")
-        # yield self.env.process(self.get_warehouse().load(self.get_warehouse().get_drawer_of_support()))
         yield self.env.process(self.get_warehouse().load(self.get_drawer(), self.get_destination()))

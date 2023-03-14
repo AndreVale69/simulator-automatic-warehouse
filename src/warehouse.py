@@ -289,14 +289,21 @@ class Warehouse:
         dep_pos = self.get_carousel().get_deposit_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
-    def load_in_carousel(self, drawer_to_insert: Drawer, destination: str):
+    def go_to_buffer(self, drawer_inserted: Drawer):
+        # take current position (y)
+        curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
+        # take destination position (y)
+        buf_pos = self.get_carousel().get_buffer_entry().get_pos_y()
+        yield self.env.timeout(self.vertical_move(curr_pos, buf_pos))
+
+    def load_in_carousel(self, drawer_to_insert: Drawer, destination, load_in_buffer: bool):
         y_dep = self.get_carousel().get_deposit_entry().get_pos_y()
         y_buf = self.get_carousel().get_buffer_entry().get_pos_y()
         # update the y position
         drawer_to_insert.set_best_y(y_dep)
 
         # calculate time to move (y)
-        if self.get_carousel().is_deposit_full():
+        if load_in_buffer:
             # if the deposit is full but the buffer isn't full
             if not self.get_carousel().is_buffer_full():
                 # update the y destination
@@ -435,8 +442,6 @@ class Warehouse:
 
     def run_simulation(self, time: int, num_actions: int):
         from src.simulation import Simulation
-        from src.status_warehouse.Simulate_Events.extract_drawer import ExtractDrawer
-        from src.status_warehouse.enum_warehouse import EnumWarehouse
 
         self.env = simpy.Environment()
         self.simulation = Simulation(self.env, self)
@@ -459,16 +464,16 @@ class Warehouse:
                 # select an event
                 rand_event = random.choice(alias_events)
                 # check the if the choice is correct
-                if 0 <= balance_wh <= 1 and (rand_event == "extract_drawer" or
+                if 1 <= balance_wh <= 2 and (rand_event == "send_back" or
                                              rand_event == "ins_mat" or
                                              rand_event == "rmv_mat"):
                     good_choice = True
-                    if rand_event == "extract_drawer":
-                        balance_wh += 1
-                else:
-                    if 0 < balance_wh <= 2 and rand_event == "send_back":
-                        good_choice = True
+                    if rand_event == "send_back":
                         balance_wh -= 1
+                else:
+                    if 0 <= balance_wh < 2 and rand_event == "extract_drawer":
+                        good_choice = True
+                        balance_wh += 1
             events_to_simulate.append(rand_event)
 
         # create the simulation

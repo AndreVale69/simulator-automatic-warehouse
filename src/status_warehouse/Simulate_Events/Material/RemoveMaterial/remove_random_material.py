@@ -14,7 +14,7 @@ class RemoveRandomMaterial(RemoveMaterial):
 
     # override
     def simulate_action(self):
-        with self.get_simulation().get_semaphore_carousel().request() as req:
+        with self.get_simulation().get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
             # check if there is a material to remove

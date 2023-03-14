@@ -1,41 +1,30 @@
 import copy
-import random
 
 import simpy
 from simpy import Environment
-
-from src.status_warehouse.Simulate_Events.action import Action
 from src.warehouse import Warehouse
 
+# -----: send_back prende dalla baia il drawer e lo manda all'interno del magazzino usando Move
+# -----: extract_drawer prende un cassetto dentro il magazzino e lo mette nel carousel
+# -----: ComeBackToDeposit viene forzata dopo ogni operazione per ritornare al punto di partenza
+# -----: InsertMaterial classe abs che ha come figli InsertRandomMaterial e InsertMaterial
 
-class Simulation(object):
+
+class Simulation:
     def __init__(self, env: Environment, warehouse: Warehouse):
-        from src.status_warehouse.Simulate_Events.buffer import Buffer
-
         self.env = env
         # start the move process everytime an instance is created.
         self.warehouse = copy.deepcopy(warehouse)
 
-        self.buffer = Buffer(self.env, self.get_warehouse(), self)
-
-        # -----: deve essere passata da Warehouse la sequenza
-
-        # -----: send_back prende dalla baia il drawer e lo manda all'interno del magazzino usando Move
-        # -----: extract_drawer prende un cassetto dentro il magazzino e lo mette nel carousel
-        # -----: ComeBackToDeposit viene forzata dopo ogni operazione per ritornare al punto di partenza
-        # -----: InsertMaterial classe abs che ha come figli InsertRandomMaterial e InsertMaterial
-
         # communication channel
         self.comm_chan = simpy.Store(env)
-        # TODO: rmv
-        self.semaphore_carousel = simpy.Resource(env, capacity=1)
         # allocation of carousel resources
         self.res_buffer = simpy.Resource(env, capacity=1)
         self.res_deposit = simpy.Resource(env, capacity=1)
 
     def simulate_actions(self, events_generated: list):
-        from src.status_warehouse.Entry.drawerEntry import DrawerEntry
         from src.status_warehouse.enum_warehouse import EnumWarehouse
+        from src.status_warehouse.Simulate_Events.buffer import Buffer
         from src.status_warehouse.Simulate_Events.send_back_drawer import SendBackDrawer
         from src.status_warehouse.Simulate_Events.extract_drawer import ExtractDrawer
         from src.status_warehouse.Simulate_Events.Material.InsertMaterial.insert_random_material \
@@ -44,8 +33,9 @@ class Simulation(object):
             import RemoveRandomMaterial 
 
         # run "control of buffer" process
-        self.env.process(self.get_buffer().simulate_action())
+        self.env.process(Buffer(self.env, self.get_warehouse(), self).simulate_action())
 
+        # exec all events
         for event in events_generated:
             match event:
                 case "send_back":
@@ -83,16 +73,8 @@ class Simulation(object):
     def get_comm_chan(self) -> simpy.Store:
         return self.comm_chan
 
-    # TODO: resource carousel buffer and deposit
-    # TODO: rmv
-    def get_semaphore_carousel(self) -> simpy.Resource:
-        return self.semaphore_carousel
-
     def get_res_buffer(self) -> simpy.Resource:
         return self.res_buffer
 
     def get_res_deposit(self) -> simpy.Resource:
         return self.res_deposit
-
-    def get_buffer(self):
-        return self.buffer

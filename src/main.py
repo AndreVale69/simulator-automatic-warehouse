@@ -17,7 +17,7 @@ warehouse.get_carousel().add_drawer(drawer2)
 warehouse.gen_rand(8, 0)
 
 # wh2 = copy.deepcopy(warehouse)
-warehouse.run_simulation(time=400, num_actions=10)
+warehouse.run_simulation(time=400, num_actions=100)
 
 save_config(warehouse.get_simulation().get_warehouse())
 

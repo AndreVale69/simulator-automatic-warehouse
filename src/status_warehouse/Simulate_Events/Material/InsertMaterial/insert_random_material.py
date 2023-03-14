@@ -14,7 +14,7 @@ class InsertRandomMaterial(InsertMaterial):
     def simulate_action(self):
         from src.material import gen_rand_material
 
-        with self.get_simulation().get_semaphore_carousel().request() as req:
+        with self.get_simulation().get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
             # generate random material
