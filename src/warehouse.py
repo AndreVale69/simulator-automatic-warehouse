@@ -486,6 +486,8 @@ class Warehouse:
                         balance_wh += 1
             events_to_simulate.append(rand_event)
 
+        print(events_to_simulate)
+
         # create the simulation
         self.get_environment().process(self.get_simulation().simulate_actions(events_to_simulate))
 

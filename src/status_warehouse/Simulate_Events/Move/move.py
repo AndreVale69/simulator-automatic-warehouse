@@ -8,11 +8,13 @@ from src.warehouse import Warehouse, Drawer
 
 
 class Move(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
-                 destination):
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination, drawer=None):
         super().__init__(env, warehouse, simulation)
         self.drawer = drawer
         self.destination = destination
+
+    def set_drawer(self, drawer):
+        self.drawer = drawer
 
     def get_drawer(self):
         return self.drawer

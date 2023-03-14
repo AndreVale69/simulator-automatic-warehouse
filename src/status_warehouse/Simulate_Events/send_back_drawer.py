@@ -11,14 +11,17 @@ from src.warehouse import Warehouse, Drawer
 
 
 class SendBackDrawer(Move):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
-                 destination):
-        super().__init__(env, warehouse, simulation, drawer, destination)
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination):
+        super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):
         with self.get_simulation().get_res_deposit().request() as req:
             # try to take the drawer inside the deposit
             yield req
+            # set the drawer
+            import src
+            src.warehouse.save_config(self.get_warehouse())
+            self.set_drawer(self.get_warehouse().get_carousel().get_deposit_entry().get_drawer())
             # unloading drawer
             yield self.env.process(
                 Unload(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),

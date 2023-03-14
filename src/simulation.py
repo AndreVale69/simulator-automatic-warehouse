@@ -39,16 +39,12 @@ class Simulation:
         for event in events_generated:
             match event:
                 case "send_back":
-                    action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self,
-                                            self.get_warehouse().get_carousel().get_deposit_entry().get_drawer(),
-                                            EnumWarehouse.COLUMN)
+                    action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self, EnumWarehouse.COLUMN)
                     yield self.env.process(action.simulate_action())
                     print(f"\nTime {self.env.now:5.2f} - FINISH SEND_BACK\n")
 
                 case "extract_drawer":
-                    drawer = self.get_warehouse().choice_random_drawer()
-                    action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self, drawer,
-                                           EnumWarehouse.CAROUSEL)
+                    action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self, EnumWarehouse.CAROUSEL)
                     yield self.env.process(action.simulate_action())
                     print(f"\nTime {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
 

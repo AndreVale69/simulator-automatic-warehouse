@@ -9,7 +9,7 @@ from src.warehouse import Warehouse
 class GoToBuffer(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
                  destination: str):
-        super().__init__(env, warehouse, simulation, drawer, destination)
+        super().__init__(env, warehouse, simulation, destination, drawer)
 
     # override
     def simulate_action(self):

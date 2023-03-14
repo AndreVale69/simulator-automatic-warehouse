@@ -11,9 +11,8 @@ from src.warehouse import Warehouse, Drawer
 
 
 class ExtractDrawer(Move):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
-                 destination):
-        super().__init__(env, warehouse, simulation, drawer, destination)
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination):
+        super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):
         # try to release the drawer in the deposit
@@ -28,6 +27,8 @@ class ExtractDrawer(Move):
                 yield self.env.process(self.actions(load_in_buffer=True))
 
     def actions(self, load_in_buffer: bool):
+        # choice a random drawer
+        self.set_drawer(self.get_warehouse().choice_random_drawer())
         # move the floor
         yield self.env.process(Vertical(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),
                                         self.get_destination()).simulate_action())
