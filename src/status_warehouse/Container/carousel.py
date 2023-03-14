@@ -86,7 +86,7 @@ class Carousel(DrawerContainer):
                 self.create_drawerEntry(drawer, first_y, is_buffer=True)
                 return True
             else:
-                raise RuntimeError("Collision")
+                raise RuntimeError("Collision!")
 
     def create_drawerEntry(self, drawer: Drawer, first_y: int, is_buffer: bool):
         # initialize positions

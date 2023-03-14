@@ -3,7 +3,7 @@ import uuid
 
 
 class Material:
-    def __init__(self, barcode: int, name: str, height: int, length: int, width: int):
+    def __init__(self, barcode: hex, name: str, height: int, length: int, width: int):
         """
 
         :param barcode: unique id of a material
@@ -70,14 +70,14 @@ class Material:
         return self.width
 
 
-def gen_rand_materials(how_many: int, max_limit: int = None) -> list[Material]:
+def gen_rand_materials(how_many: int, max_height: int = None) -> list[Material]:
     materials: list[Material] = []
     for i in range(how_many):
-        materials.append(gen_rand_material(max_limit))
+        materials.append(gen_rand_material(max_height))
     return materials
 
 
-def gen_rand_material(max_limit: int = None) -> Material:
+def gen_rand_material(max_height: int = None) -> Material:
     name_materials = ['Shirt',
                       'Pasta',
                       'Tomato',
@@ -85,14 +85,14 @@ def gen_rand_material(max_limit: int = None) -> Material:
                       'Tablet',
                       'Helmet']
 
-    # UUID to avoid the same barcode
-    barcode = uuid.uuid4().int
+    # UUID to avoid the same hex barcode
+    barcode = uuid.uuid4().hex
     name = random.choice(name_materials)
     # height max is buffer height = 150
-    if max_limit is None:
+    if max_height is None:
         height = random.randint(25, 150)
     else:
-        height = random.randint(25, max_limit)
+        height = random.randint(25, max_height)
     length = random.randint(25, 150)
     width = random.randint(25, 150)
 

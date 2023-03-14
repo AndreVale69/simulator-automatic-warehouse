@@ -17,4 +17,6 @@ class RemoveMaterial(Action):
 
     @abstractmethod
     def simulate_action(self):
-        pass
+        print(f"Time {self.env.now:5.2f} - Start removing material from a drawer")
+        # return the drawer that is outside
+        return self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()

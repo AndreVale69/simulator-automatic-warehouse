@@ -147,8 +147,8 @@ def min_search_alg(self, space_req: int) -> list:
     ############################
 
     # verify the highest position
-    if space_req == height_last_pos:
-        min_space = space_req
+    if type(container[start_index]) is EmptyEntry and space_req <= height_last_pos:
+        min_space = height_last_pos
         return [min_space, start_index]
 
     for i in range(index, len(container)):
@@ -222,6 +222,7 @@ class Warehouse:
         self.env = None
         self.simulation = None
         self.supp_drawer = None
+        self.pos_y_floor = self.get_carousel().get_deposit_entry().get_pos_y()
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
@@ -258,6 +259,12 @@ class Warehouse:
     def get_max_height_material(self) -> int:
         return self.max_height_material
 
+    def get_pos_y_floor(self) -> int:
+        return self.pos_y_floor
+
+    def set_pos_y_floor(self, pos: int):
+        self.pos_y_floor = pos
+
     def add_column(self, col: Column):
         self.get_cols_container().append(col)
 
@@ -282,21 +289,28 @@ class Warehouse:
                 return False
         return True
 
-    def come_back_to_deposit(self, drawer_inserted: Drawer):
+    def come_back_to_deposit(self):
         # take current position (y)
-        curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
+        curr_pos = self.get_pos_y_floor()
         # take destination position (y)
         dep_pos = self.get_carousel().get_deposit_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
-    def load_in_carousel(self, drawer_to_insert: Drawer, destination: str):
+    def go_to_buffer(self):
+        # take current position (y)
+        curr_pos = self.get_pos_y_floor()
+        # take destination position (y)
+        buf_pos = self.get_carousel().get_buffer_entry().get_pos_y()
+        yield self.env.timeout(self.vertical_move(curr_pos, buf_pos))
+
+    def load_in_carousel(self, drawer_to_insert: Drawer, destination, load_in_buffer: bool):
         y_dep = self.get_carousel().get_deposit_entry().get_pos_y()
         y_buf = self.get_carousel().get_buffer_entry().get_pos_y()
         # update the y position
         drawer_to_insert.set_best_y(y_dep)
 
         # calculate time to move (y)
-        if self.get_carousel().is_deposit_full():
+        if load_in_buffer:
             # if the deposit is full but the buffer isn't full
             if not self.get_carousel().is_buffer_full():
                 # update the y destination
@@ -318,6 +332,7 @@ class Warehouse:
         end_pos = self.get_carousel().get_deposit_entry().get_pos_y()
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
+        # exec simulate
         yield self.env.timeout(loading_buffer_time)
 
         # obtain the drawer inside the buffer
@@ -334,11 +349,13 @@ class Warehouse:
         eff_distance = index_distance * self.get_def_space()
         # formula of vertical move
         vertical_move = (eff_distance / 100) / self.get_speed_per_sec()
+        # set new y position of the floor
+        self.set_pos_y_floor(end_pos)
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
         # start position
-        start_pos = self.get_carousel().get_deposit_entry().get_pos_y()
+        start_pos = self.get_pos_y_floor()
         # calculate destination position
         minimum = check_minimum_space(self.get_cols_container(),
                                       drawer.get_max_num_space(),
@@ -356,7 +373,7 @@ class Warehouse:
         drawer.set_best_y(drawer.get_first_drawerEntry().get_pos_y())
         drawer.set_best_offset_x(drawer.get_first_drawerEntry().get_offset_x())
         # start the move
-        vertical_move = self.vertical_move(start_pos=self.get_carousel().get_deposit_entry().get_pos_y(),
+        vertical_move = self.vertical_move(start_pos=self.get_pos_y_floor(),
                                            end_pos=drawer.get_first_drawerEntry().get_pos_y())
         yield self.env.timeout(vertical_move)
 
@@ -382,7 +399,7 @@ class Warehouse:
         yield self.env.timeout(self.horiz_move(dest_x_drawer))
         # update warehouse
         # if destination is carousel, add
-        if destination == EnumWarehouse.CAROUSEL.name:
+        if destination == EnumWarehouse.CAROUSEL:
             self.get_carousel().add_drawer(drawer, dest_y_drawer)
         else:
             # otherwise, check the offset of column
@@ -411,7 +428,7 @@ class Warehouse:
         warehouse_is_full = False
 
         # until there are drawers to insert and the warehouse isn't full
-        while num_drawers > 0 and warehouse_is_full is False:
+        while num_drawers > 0 and not warehouse_is_full:
             # check available space in warehouse
             if self.is_full():
                 warehouse_is_full = True
@@ -433,43 +450,47 @@ class Warehouse:
                 # if the warehouse is completely full
                 print(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
 
-    def run_simulation(self, time: int):
+    def run_simulation(self, time: int, num_actions: int):
         from src.simulation import Simulation
-        from src.status_warehouse.Simulate_Events.extract_drawer import ExtractDrawer
-        from src.status_warehouse.enum_warehouse import EnumWarehouse
 
         self.env = simpy.Environment()
         self.simulation = Simulation(self.env, self)
-        # insert_material_and_alloc_drawer = [InsertRandomMaterial(self.get_environment(), self, self.get_simulation(),
-        #                                                          duration=2),
-        #                                     SendBackDrawer(self.get_environment(), self, self.get_simulation(),
-        #                                                    self.get_carousel().get_deposit_entry().get_drawer(),
-        #                                                    EnumWarehouse.COLUMN.name)]
-        # take a drawer
-        # drawer = self.choice_random_drawer()
-        # take_drawer_and_show = [ExtractDrawer(self.get_environment(), self, self.get_simulation(), drawer,
-        #                                       EnumWarehouse.CAROUSEL.name)]
 
-        # self.get_environment().process(self.get_simulation().simulate_actions(insert_material_and_alloc_drawer))
-        # self.get_environment().process(self.get_simulation().simulate_actions(take_drawer_and_show))
-
-        # how many events
-        num_send_back = 1
-        num_extract_drawer = 1
-        num_ins_mat = 1
-        # check the values
-        # check positive
-        if num_send_back > 0 and num_extract_drawer > 0:
-            if num_send_back != num_extract_drawer:
-                if not (num_extract_drawer > num_send_back and 0 < (num_extract_drawer - num_send_back) <= 2):
-                    raise ValueError("Difference btw num_extract_drawer and num_send_back must be at most 2.")
-        else:
-            raise ValueError("num_extract_drawer and num_send_back must be grater than 0.")
+        balance_wh = 0
         # create list of event alias
-        alias_events = ["send_back", "extract_drawer", "ins_mat"]
-        # create simulation
-        self.get_environment().process(self.get_simulation().simulate_actions(alias_events, num_send_back,
-                                                                              num_extract_drawer, num_ins_mat))
+        alias_events = ["send_back", "extract_drawer", "ins_mat", "rmv_mat"]
+        events_to_simulate = []
+
+        # if the deposit or the buffer are full, then update the counter
+        if type(self.get_carousel().get_deposit_entry()) is DrawerEntry:
+            balance_wh += 1
+        if type(self.get_carousel().get_buffer_entry()) is DrawerEntry:
+            balance_wh += 1
+
+        for num_action in range(num_actions):
+            good_choice = False
+            rand_event = ""
+            while good_choice is False:
+                # select an event
+                rand_event = random.choice(alias_events)
+                # check the if the choice is correct
+                if 1 <= balance_wh <= 2 and (rand_event == "send_back" or
+                                             rand_event == "ins_mat" or
+                                             rand_event == "rmv_mat"):
+                    good_choice = True
+                    if rand_event == "send_back":
+                        balance_wh -= 1
+                else:
+                    if 0 <= balance_wh < 2 and rand_event == "extract_drawer":
+                        good_choice = True
+                        balance_wh += 1
+            events_to_simulate.append(rand_event)
+
+        print(events_to_simulate)
+
+        # create the simulation
+        self.get_environment().process(self.get_simulation().simulate_actions(events_to_simulate))
+
         # run simulation
         self.get_environment().run(until=time)
 
