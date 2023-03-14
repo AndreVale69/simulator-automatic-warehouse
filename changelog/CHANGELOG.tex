@@ -35,6 +35,8 @@
 		\item Classe \textsf{Warehouse} e \textsf{Simulation}:
 		\begin{itemize}
 			\item Modifica della generazione di eventi, adesso è molto più generico.
+			\item Cambio della logica di risorse condivise, adesso vengono utilizzate le \dquotes{risorse condivise} e non più le \emph{pipeline} per comunicare. Inoltre il processo \textsf{Buffer} viene eseguito solamente quando necessario e non rimane sempre in ascolto.
+			\item Introdotta la coordinata $y$ all'interno della classe \textsf{Warehouse} e modificate le varie funzioni che ottenevano la coordinata $y$ in modo \emph{hard code}.
 		\end{itemize}
 	\end{itemize}
 	

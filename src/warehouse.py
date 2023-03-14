@@ -222,6 +222,7 @@ class Warehouse:
         self.env = None
         self.simulation = None
         self.supp_drawer = None
+        self.pos_y_floor = self.get_carousel().get_deposit_entry().get_pos_y()
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
@@ -258,6 +259,12 @@ class Warehouse:
     def get_max_height_material(self) -> int:
         return self.max_height_material
 
+    def get_pos_y_floor(self) -> int:
+        return self.pos_y_floor
+
+    def set_pos_y_floor(self, pos: int):
+        self.pos_y_floor = pos
+
     def add_column(self, col: Column):
         self.get_cols_container().append(col)
 
@@ -282,16 +289,16 @@ class Warehouse:
                 return False
         return True
 
-    def come_back_to_deposit(self, drawer_inserted: Drawer):
+    def come_back_to_deposit(self):
         # take current position (y)
-        curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
+        curr_pos = self.get_pos_y_floor()
         # take destination position (y)
         dep_pos = self.get_carousel().get_deposit_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
 
-    def go_to_buffer(self, drawer_inserted: Drawer):
+    def go_to_buffer(self):
         # take current position (y)
-        curr_pos = drawer_inserted.get_first_drawerEntry().get_pos_y()
+        curr_pos = self.get_pos_y_floor()
         # take destination position (y)
         buf_pos = self.get_carousel().get_buffer_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, buf_pos))
@@ -325,6 +332,7 @@ class Warehouse:
         end_pos = self.get_carousel().get_deposit_entry().get_pos_y()
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
+        # exec simulate
         yield self.env.timeout(loading_buffer_time)
 
         # obtain the drawer inside the buffer
@@ -341,11 +349,13 @@ class Warehouse:
         eff_distance = index_distance * self.get_def_space()
         # formula of vertical move
         vertical_move = (eff_distance / 100) / self.get_speed_per_sec()
+        # set new y position of the floor
+        self.set_pos_y_floor(end_pos)
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
         # start position
-        start_pos = self.get_carousel().get_deposit_entry().get_pos_y()
+        start_pos = self.get_pos_y_floor()
         # calculate destination position
         minimum = check_minimum_space(self.get_cols_container(),
                                       drawer.get_max_num_space(),
@@ -363,7 +373,7 @@ class Warehouse:
         drawer.set_best_y(drawer.get_first_drawerEntry().get_pos_y())
         drawer.set_best_offset_x(drawer.get_first_drawerEntry().get_offset_x())
         # start the move
-        vertical_move = self.vertical_move(start_pos=self.get_carousel().get_deposit_entry().get_pos_y(),
+        vertical_move = self.vertical_move(start_pos=self.get_pos_y_floor(),
                                            end_pos=drawer.get_first_drawerEntry().get_pos_y())
         yield self.env.timeout(vertical_move)
 

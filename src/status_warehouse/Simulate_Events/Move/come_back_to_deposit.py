@@ -15,4 +15,4 @@ class ComeBackToDeposit(Move):
     # override
     def simulate_action(self):
         print(f"Time {self.env.now:5.2f} - Start come back to deposit position")
-        yield self.env.process(self.get_warehouse().come_back_to_deposit(self.get_drawer()))
+        yield self.env.process(self.get_warehouse().come_back_to_deposit())

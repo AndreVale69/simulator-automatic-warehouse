@@ -16,7 +16,6 @@ class SendBackDrawer(Move):
         super().__init__(env, warehouse, simulation, drawer, destination)
 
     def simulate_action(self):
-        # TODO: implementare coordinata y del floor in warehouse
         with self.get_simulation().get_res_deposit().request() as req:
             # try to take the drawer inside the deposit
             yield req
@@ -37,6 +36,4 @@ class SendBackDrawer(Move):
         # force to come back to deposit
         yield self.env.process(ComeBackToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
                                                  self.get_drawer(), self.get_destination()).simulate_action())
-
-        # # TODO: implementare coordinata y del floor in warehouse
         # # TODO: ComeBackToDeposit solo se c'è un cassetto, altrimenti lascio il floor lì (salvo coordinata y)
