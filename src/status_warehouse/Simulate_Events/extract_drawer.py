@@ -49,5 +49,5 @@ class ExtractDrawer(Move):
         if load_in_buffer:
             # exec Buffer process
             self.env.process(Buffer(self.get_env(), self.get_warehouse(), self.get_simulation()).simulate_action())
-            yield self.env.process(ComeBackToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
-                                                     self.get_drawer(), self.get_destination()).simulate_action())
+            # check ComeBackToDeposit move
+            super().simulate_action()

@@ -33,7 +33,5 @@ class SendBackDrawer(Move):
         # loading drawer
         yield self.env.process(Load(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),
                                     self.get_destination()).simulate_action())
-        # force to come back to deposit
-        yield self.env.process(ComeBackToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
-                                                 self.get_drawer(), self.get_destination()).simulate_action())
-        # # TODO: ComeBackToDeposit solo se c'è un cassetto, altrimenti lascio il floor lì (salvo coordinata y)
+        # check ComeBackToDeposit move
+        super().simulate_action()
