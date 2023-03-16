@@ -28,7 +28,7 @@ class SendBackDrawer(Move):
                        self.get_destination()).simulate_action())
 
         # exec Buffer process
-        self.env.process(Buffer(self.get_env(), self.get_warehouse(), self.get_simulation()).simulate_action())
+        wait_buff = self.env.process(Buffer(self.get_env(), self.get_warehouse(), self.get_simulation()).simulate_action())
 
         # move the floor
         yield self.env.process(Vertical(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),
@@ -38,3 +38,5 @@ class SendBackDrawer(Move):
                                     self.get_destination()).simulate_action())
         # check ComeBackToDeposit move
         super().simulate_action()
+
+        yield wait_buff

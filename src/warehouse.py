@@ -98,6 +98,7 @@ def gen_materials_and_drawer(num_drawers: int, num_materials: int,
     return [num_drawers, num_materials]
 
 
+# TODO: refactoring
 def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -> list:
     """
     Algorithm to decide where insert a drawer.
@@ -109,20 +110,17 @@ def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -
     :exception StopIteration: if there isn't any space.
     """
     result = []
-    col = None
 
     # calculate minimum space and search lower index
     for column in list_obj:
         [min_space, start_index] = min_search_alg(column, space_req)
         if min_space != -1 and start_index < height_entry_col:
-            result = [min_space, start_index]
-            col = column
+            result = [min_space, start_index, column]
 
     # if warehouse is full
-    if col is None:
+    if len(result) == 0:
         return [-1, -1, -1]
     else:
-        result.append(col)
         return result
 
 
@@ -223,6 +221,7 @@ class Warehouse:
         self.simulation = None
         self.supp_drawer = None
         self.pos_y_floor = self.get_carousel().get_deposit_entry().get_pos_y()
+        # TODO: inserire i tempi e rimuovere gli altri hard code
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
@@ -363,7 +362,10 @@ class Warehouse:
         pos_to_insert = minimum[1]
         # save temporarily the coordinates
         drawer.set_best_y(minimum[1])
-        drawer.set_best_offset_x(Column.get_offset_x(minimum[2]))
+        try:
+            drawer.set_best_offset_x(minimum[2].get_offset_x())
+        except AttributeError as e:
+            pass
         # start the move
         vertical_move = self.vertical_move(start_pos, pos_to_insert)
         yield self.env.timeout(vertical_move)
@@ -504,7 +506,5 @@ class Warehouse:
             else:
                 # otherwise, build the list
                 container_drawer_entry.extend(col.get_drawers())
-        if len(container_drawer_entry) == 0:
-            print("The warehouse is empty!")
-        else:
-            return random.choice(container_drawer_entry)
+        assert len(container_drawer_entry) > 0, "The warehouse is empty!"
+        return random.choice(container_drawer_entry)

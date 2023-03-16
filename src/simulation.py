@@ -33,32 +33,38 @@ class Simulation:
             import RemoveRandomMaterial 
 
         # run "control of buffer" process
-        self.env.process(Buffer(self.env, self.get_warehouse(), self).simulate_action())
+        yield self.env.process(Buffer(self.env, self.get_warehouse(), self).simulate_action())
 
-        # exec all events
-        for event in events_generated:
-            match event:
-                case "send_back":
-                    action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self, EnumWarehouse.COLUMN)
-                    yield self.env.process(action.simulate_action())
-                    print(f"\nTime {self.env.now:5.2f} - FINISH SEND_BACK\n")
+        try:
+            # exec all events
+            for index, event in enumerate(events_generated):
+                match event:
+                    case "send_back":
+                        action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self,
+                                                EnumWarehouse.COLUMN)
+                        yield self.env.process(action.simulate_action())
+                        print(f"\nTime {self.env.now:5.2f} - FINISH SEND_BACK\n")
 
-                case "extract_drawer":
-                    action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self, EnumWarehouse.CAROUSEL)
-                    yield self.env.process(action.simulate_action())
-                    print(f"\nTime {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
+                    case "extract_drawer":
+                        action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self,
+                                               EnumWarehouse.CAROUSEL)
+                        yield self.env.process(action.simulate_action())
+                        print(f"\nTime {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
 
-                case "ins_mat":
-                    action = InsertRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
-                    yield self.env.process(action.simulate_action())
-                    print(f"\nTime {self.env.now:5.2f} - FINISH INS_MAT\n")
+                    case "ins_mat":
+                        action = InsertRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
+                        yield self.env.process(action.simulate_action())
+                        print(f"\nTime {self.env.now:5.2f} - FINISH INS_MAT\n")
 
-                case "rmv_mat":
-                    action = RemoveRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
-                    yield self.env.process(action.simulate_action())
-                    print(f"\nTime {self.env.now:5.2f} - FINISH RMV_MAT\n")
+                    case "rmv_mat":
+                        action = RemoveRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
+                        yield self.env.process(action.simulate_action())
+                        print(f"\nTime {self.env.now:5.2f} - FINISH RMV_MAT\n")
 
-        print(f"Time {self.env.now:5.2f} - Finish simulation")
+            print(f"Time {self.env.now:5.2f} - Finish simulation")
+        except Exception as e:
+            print()
+            raise e
 
     def get_environment(self) -> simpy.Environment:
         return self.env
