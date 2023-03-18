@@ -1,13 +1,12 @@
 from simpy import Environment
 
 from src.simulation import Simulation
-from src.status_warehouse.Simulate_Events.Move.come_back_to_deposit import ComeBackToDeposit
 from src.status_warehouse.Simulate_Events.Move.load import Load
 from src.status_warehouse.Simulate_Events.Move.move import Move
 from src.status_warehouse.Simulate_Events.Move.unload import Unload
 from src.status_warehouse.Simulate_Events.Move.vertical import Vertical
 from src.status_warehouse.Simulate_Events.buffer import Buffer
-from src.warehouse import Warehouse, Drawer
+from src.warehouse import Warehouse
 
 
 class SendBackDrawer(Move):
@@ -36,7 +35,7 @@ class SendBackDrawer(Move):
         # loading drawer
         yield self.env.process(Load(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),
                                     self.get_destination()).simulate_action())
-        # check ComeBackToDeposit move
+        # check GoToDeposit move
         super().simulate_action()
 
         yield wait_buff

@@ -117,6 +117,9 @@ class DrawerContainer:
             count += len(drawer.items)
         return count
 
+    def set_warehouse(self, new_warehouse):
+        self.warehouse = new_warehouse
+
     def create_new_space(self, element):
         self.get_container().append(element)
 
@@ -124,6 +127,7 @@ class DrawerContainer:
     def add_drawer(self, drawer: Drawer, index: int = None):
         pass
 
+    # TODO: to check
     def remove_drawer(self, drawer: Drawer):
         """Remove a drawer"""
         is_remove: bool = False

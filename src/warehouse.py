@@ -38,7 +38,7 @@ def save_config(self):
             file.write(f"Number of drawers   : {column.get_num_drawers()}\n")
             file.write(f"Number of spaces    : {column.get_num_entries_free()}\n")
             file.write(f"Number of materials : {column.get_num_materials()}\n")
-            file.write(f"Column[{column.get_offset_x()}]\n")
+            file.write(f"Offset x Column     : {column.get_offset_x()}\n")
             for entry in column.get_container():
                 if type(entry) is DrawerEntry:
                     file.write(f"[{entry}, {entry.get_drawer()}]\n")
@@ -227,7 +227,10 @@ class Warehouse:
         copy_oby = Warehouse()
         copy_oby.height = self.get_height()
         copy_oby.columns_container = copy.deepcopy(self.get_cols_container(), memo)
+        for col in copy_oby.columns_container:
+            col.set_warehouse(copy_oby)
         copy_oby.carousel = copy.deepcopy(self.get_carousel(), memo)
+        copy_oby.carousel.set_warehouse(copy_oby)
         copy_oby.def_space = self.get_def_space()
         copy_oby.speed_per_sec = self.get_speed_per_sec()
         copy_oby.env = self.get_environment()
@@ -261,6 +264,13 @@ class Warehouse:
     def get_pos_y_floor(self) -> int:
         return self.pos_y_floor
 
+    def get_num_drawers(self) -> int:
+        ris = 0
+        for col in self.get_cols_container():
+            ris += col.get_num_drawers()
+        ris += self.get_carousel().get_num_drawers()
+        return ris
+
     def set_pos_y_floor(self, pos: int):
         self.pos_y_floor = pos
 
@@ -288,12 +298,14 @@ class Warehouse:
                 return False
         return True
 
-    def come_back_to_deposit(self):
+    def go_to_deposit(self):
         # take current position (y)
         curr_pos = self.get_pos_y_floor()
         # take destination position (y)
         dep_pos = self.get_carousel().get_deposit_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
+        # set new y position of the floor
+        self.set_pos_y_floor(dep_pos)
 
     def go_to_buffer(self):
         # take current position (y)
@@ -301,6 +313,8 @@ class Warehouse:
         # take destination position (y)
         buf_pos = self.get_carousel().get_buffer_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, buf_pos))
+        # set new y position of the floor
+        self.set_pos_y_floor(buf_pos)
 
     def load_in_carousel(self, drawer_to_insert: Drawer, destination, load_in_buffer: bool):
         y_dep = self.get_carousel().get_deposit_entry().get_pos_y()
@@ -316,6 +330,8 @@ class Warehouse:
                 drawer_to_insert.set_best_y(y_buf)
                 print(f"Time {self.env.now:5.2f} - Deposit is full! Start vertical move to buffer")
                 yield self.env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
+                # set new y position of the floor
+                self.set_pos_y_floor(y_buf)
                 print(f"Time {self.env.now:5.2f} - Start to load in the buffer")
             else:
                 raise NotImplementedError("Deposit and buffer are full! Collision!")
@@ -348,8 +364,6 @@ class Warehouse:
         eff_distance = index_distance * self.get_def_space()
         # formula of vertical move
         vertical_move = (eff_distance / 100) / self.get_speed_per_sec()
-        # set new y position of the floor
-        self.set_pos_y_floor(end_pos)
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
@@ -369,15 +383,21 @@ class Warehouse:
         # start the move
         vertical_move = self.vertical_move(start_pos, pos_to_insert)
         yield self.env.timeout(vertical_move)
+        # set new y position of the floor
+        self.set_pos_y_floor(pos_to_insert)
 
     def reach_drawer_height(self, drawer: Drawer):
         # save coordinates inside drawer
-        drawer.set_best_y(drawer.get_first_drawerEntry().get_pos_y())
-        drawer.set_best_offset_x(drawer.get_first_drawerEntry().get_offset_x())
+        y = drawer.get_first_drawerEntry().get_pos_y()
+        x = drawer.get_first_drawerEntry().get_offset_x()
+        drawer.set_best_y(y)
+        drawer.set_best_offset_x(x)
         # start the move
         vertical_move = self.vertical_move(start_pos=self.get_pos_y_floor(),
-                                           end_pos=drawer.get_first_drawerEntry().get_pos_y())
+                                           end_pos=y)
         yield self.env.timeout(vertical_move)
+        # set new y position of the floor
+        self.set_pos_y_floor(y)
 
     def unload(self, drawer: Drawer):
         # take x offset
@@ -487,8 +507,6 @@ class Warehouse:
                         good_choice = True
                         balance_wh += 1
             events_to_simulate.append(rand_event)
-
-        print(events_to_simulate)
 
         # create the simulation
         self.get_environment().process(self.get_simulation().simulate_actions(events_to_simulate))

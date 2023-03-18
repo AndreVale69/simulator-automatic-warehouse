@@ -7,7 +7,7 @@ from src.status_warehouse.Simulate_Events.Move.move import Move
 from src.warehouse import Warehouse
 
 
-class ComeBackToDeposit(Move):
+class GoToDeposit(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
                  destination: str):
         super().__init__(env, warehouse, simulation, destination, drawer)
@@ -15,4 +15,4 @@ class ComeBackToDeposit(Move):
     # override
     def simulate_action(self):
         print(f"Time {self.env.now:5.2f} - Start come back to deposit position")
-        yield self.env.process(self.get_warehouse().come_back_to_deposit())
+        yield self.env.process(self.get_warehouse().go_to_deposit())

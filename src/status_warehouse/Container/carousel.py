@@ -102,9 +102,4 @@ class Carousel(DrawerContainer):
     # override
     def remove_drawer(self, drawer: Drawer) -> bool:
         """Remove a drawer"""
-        is_removed = super().remove_drawer(drawer)
-        # check if the buffer is full or empty
-        if self.is_buffer_full():
-            # trigger buffer.py process
-            self.get_warehouse().get_simulation().get_comm_chan().put("Wake up buffer.py!")
-        return is_removed
+        return super().remove_drawer(drawer)

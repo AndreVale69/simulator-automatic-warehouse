@@ -12,6 +12,7 @@ class DrawerEntry(Entry):
     def __deepcopy__(self, memo):
         copy_obj = DrawerEntry(self.get_offset_x(), self.get_pos_y())
         copy_obj.drawer = copy.deepcopy(self.get_drawer(), memo)
+        copy_obj.drawer.set_first_drawerEntry(copy_obj)
         return copy_obj
 
     def get_drawer(self) -> Drawer:
