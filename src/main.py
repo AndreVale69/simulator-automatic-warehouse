@@ -3,6 +3,7 @@ from src.material import Material
 from src.warehouse import Warehouse, save_config
 import random
 
+
 def work(sad, num_actions):
     random.seed(sad)
 
@@ -24,6 +25,7 @@ def work(sad, num_actions):
     warehouse.run_simulation(time=4000, num_actions=num_actions)
 
     save_config(warehouse.get_simulation().get_warehouse())
+
 
 # AttributeError: 'EmptyEntry' object has no attribute 'get_drawer'
 work(705, 10000)

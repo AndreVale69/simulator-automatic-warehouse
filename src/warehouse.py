@@ -99,11 +99,11 @@ def gen_materials_and_drawer(num_drawers: int, num_materials: int,
 
 
 # TODO: refactoring
-def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -> list:
+def check_minimum_space(list_cols: list, space_req: int, height_entry_col: int) -> list:
     """
     Algorithm to decide where insert a drawer.
 
-    :param list_obj: list of columns.
+    :param list_cols: list of columns.
     :param space_req: space requested from drawer.
     :param height_entry_col: the height of warehouse
     :return: if there is a space [space_requested, index_position_where_insert, column_where_insert].
@@ -111,8 +111,9 @@ def check_minimum_space(list_obj: list, space_req: int, height_entry_col: int) -
     """
     result = []
 
+    # TODO: rmv min_space return because is redundant
     # calculate minimum space and search lower index
-    for column in list_obj:
+    for column in list_cols:
         [min_space, start_index] = min_search_alg(column, space_req)
         if min_space != -1 and start_index < height_entry_col:
             result = [min_space, start_index, column]
@@ -135,7 +136,7 @@ def min_search_alg(self, space_req: int) -> list:
     from src.status_warehouse.Entry.emptyEntry import EmptyEntry
     min_space = self.get_height_warehouse()
     count = 0
-    start_index = self.get_height_last_position() - 1
+    start_index = self.get_height_last_position()
     container = self.get_container()
     height_last_pos = self.get_height_last_position()
     index = height_last_pos
@@ -145,7 +146,8 @@ def min_search_alg(self, space_req: int) -> list:
     ############################
 
     # verify the highest position
-    if type(container[start_index]) is EmptyEntry and space_req <= height_last_pos:
+    if type(container[start_index - 1]) is EmptyEntry and space_req <= height_last_pos:
+        start_index = start_index - space_req
         min_space = height_last_pos
         return [min_space, start_index]
 
@@ -367,6 +369,10 @@ class Warehouse:
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
+        if self.env.now > 100:
+            a = self.get_num_drawers()
+            # print()
+
         # start position
         start_pos = self.get_pos_y_floor()
         # calculate destination position
@@ -376,10 +382,7 @@ class Warehouse:
         pos_to_insert = minimum[1]
         # save temporarily the coordinates
         drawer.set_best_y(minimum[1])
-        try:
-            drawer.set_best_offset_x(minimum[2].get_offset_x())
-        except AttributeError as e:
-            pass
+        drawer.set_best_offset_x(minimum[2].get_offset_x())
         # start the move
         vertical_move = self.vertical_move(start_pos, pos_to_insert)
         yield self.env.timeout(vertical_move)
@@ -399,22 +402,31 @@ class Warehouse:
         # set new y position of the floor
         self.set_pos_y_floor(y)
 
-    def unload(self, drawer: Drawer):
+    def unload(self, drawer: Drawer, rmv_from_cols: bool):
         # take x offset
         offset_x_drawer = drawer.get_first_drawerEntry().get_offset_x()
         # start the move
         yield self.env.timeout(self.horiz_move(offset_x_drawer))
         # update warehouse
         # if drawer hasn't been removed
-        if not self.get_carousel().remove_drawer(drawer):
-            # find in a column and terminate
+        if rmv_from_cols:
             for col in self.get_cols_container():
                 if col.remove_drawer(drawer):
                     break
+        else:
+            self.get_carousel().remove_drawer(drawer)
+        # if not self.get_carousel().remove_drawer(drawer):
+        #     # find in a column and terminate
+        #     for col in self.get_cols_container():
+        #         if col.remove_drawer(drawer):
+        #             break
 
     def load(self, drawer: Drawer, destination: str):
         from src.status_warehouse.enum_warehouse import EnumWarehouse
         # take destination coordinates
+        if self.env.now > 45:
+            a = self.get_num_drawers()
+            print()
         dest_x_drawer = drawer.get_best_offset_x()
         dest_y_drawer = drawer.get_best_y()
         # start the move

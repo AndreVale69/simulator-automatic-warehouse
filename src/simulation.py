@@ -52,6 +52,7 @@ class Simulation:
                         yield self.env.process(action.simulate_action())
                         print(f"\nTime {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
                         if self.get_warehouse().get_num_drawers() < 10:
+
                             print()
 
                     case "ins_mat":

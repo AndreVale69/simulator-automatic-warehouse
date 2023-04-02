@@ -22,23 +22,7 @@
 	
 	\section*{Main Improvements}
 	\begin{itemize}[label=\ding{51}]
-		\item Classe \textsf{Material}:
-		\begin{itemize}
-			\item Funzione \textsf{gen\_rand\_material} (generazione casuale di materiali), adesso il \emph{barcode} viene generato come esadecimale.
-		\end{itemize}
-	
-		\item Classi \textsf{InsertMaterial} e \textsf{RemoveMaterial}:
-		\begin{itemize}
-			\item Funzione \textsf{simulate\_action} (simulazione delle azioni), tentativo di ottimizzazione inserendo il codice identico all'interno della superclasse.
-		\end{itemize}
-	
-		\item Classe \textsf{Warehouse} e \textsf{Simulation}:
-		\begin{itemize}
-			\item Modifica della generazione di eventi, adesso è molto più generico.
-			\item Cambio della logica di risorse condivise, adesso vengono utilizzate le \dquotes{risorse condivise} e non più le \emph{pipeline} per comunicare. Inoltre il processo \textsf{Buffer} viene eseguito solamente quando necessario e non rimane sempre in ascolto.
-			\item Introdotta la coordinata $y$ all'interno della classe \textsf{Warehouse} e modificate le varie funzioni che ottenevano la coordinata $y$ in modo \emph{hard code}.
-			\item Il \textsf{floor} ritorna al deposito se e solo se c'è un cassetto all'uscita.
-		\end{itemize}
+		\item Modifica della \textsf{deepcopy}. C'erano dei problemi durante la ricreazione degli oggetti e i puntatori che venivano salvati. Tutto funzionava poiché anche se veniva effettuata la copia, gli oggetti originali non venivano utilizzati e quindi non avveniva nessuna collisione.
 	\end{itemize}
 	
 	\section*{Domande}

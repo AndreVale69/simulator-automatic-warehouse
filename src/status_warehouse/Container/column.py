@@ -22,7 +22,7 @@ class Column(DrawerContainer):
             "height": self.get_height_col(),
             "x_offset": self.get_offset_x(),
             "width": self.get_width(),
-            "height_last_position": self.get_height_last_position()
+            "height_last_position": self.get_height_last_position() * self.get_def_space()
         }
         copy_obj = Column(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
@@ -45,6 +45,7 @@ class Column(DrawerContainer):
 
     def create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
         # initialize positions
+        # TOOD: Forse è qua il problema, perché il firstEntry è settato in cima e non alla base.
         drawer_entry = DrawerEntry(self.get_offset_x(), index)
         # connect Drawer to Entry
         drawer_entry.add_drawer(drawer)
@@ -57,3 +58,4 @@ class Column(DrawerContainer):
     def remove_drawer(self, drawer: Drawer) -> bool:
         """Remove a drawer"""
         return super().remove_drawer(drawer)
+

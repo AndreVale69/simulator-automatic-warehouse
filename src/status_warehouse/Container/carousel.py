@@ -102,4 +102,13 @@ class Carousel(DrawerContainer):
     # override
     def remove_drawer(self, drawer: Drawer) -> bool:
         """Remove a drawer"""
-        return super().remove_drawer(drawer)
+        # return super().remove_drawer(drawer)
+        first_entry: DrawerEntry = drawer.get_first_drawerEntry()
+        entry_y_to_rmv: int = first_entry.get_pos_y()
+        entry_x_to_rmv: int = first_entry.get_offset_x()
+
+        for index, entry in enumerate(self.get_container()):
+            if entry.get_pos_y() == entry_y_to_rmv:
+                self.get_container()[index] = EmptyEntry(entry_x_to_rmv, entry_y_to_rmv)
+                return True
+        return False

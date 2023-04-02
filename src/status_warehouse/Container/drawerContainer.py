@@ -128,7 +128,7 @@ class DrawerContainer:
         pass
 
     # TODO: to check
-    def remove_drawer(self, drawer: Drawer):
+    def remove_drawer(self, drawer: Drawer) -> bool:
         """Remove a drawer"""
         is_remove: bool = False
         first_entry: DrawerEntry = drawer.get_first_drawerEntry()
