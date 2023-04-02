@@ -163,7 +163,7 @@ def min_search_alg(self, space_req: int) -> list:
             if (count < min_space) & (count >= space_req):
                 # update check values
                 min_space = count
-                start_index = index - count
+                start_index = i - count
             # restart the count with reset
             count = 0
 

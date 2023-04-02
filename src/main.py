@@ -22,15 +22,17 @@ def work(sad, num_actions):
     warehouse.gen_rand(8, 0)
 
     # wh2 = copy.deepcopy(warehouse)
-    warehouse.run_simulation(time=4000, num_actions=num_actions)
+    warehouse.run_simulation(time=30_000, num_actions=num_actions)
 
     save_config(warehouse.get_simulation().get_warehouse())
 
 
 # AttributeError: 'EmptyEntry' object has no attribute 'get_drawer'
-work(705, 10000)
+# work(705, 10000)
 
 # AttributeError: 'int' object has no attribute 'offset_x'
 # work(4, 100)
+
+work(705, 100_000)
 
 # work(4, 100)
