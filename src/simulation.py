@@ -34,45 +34,36 @@ class Simulation:
         # run "control of buffer" process
         yield self.env.process(Buffer(self.env, self.get_warehouse(), self).simulate_action())
 
-        try:
-            # exec all events
-            for index, event in enumerate(events_generated):
-                match event:
-                    case "send_back":
-                        action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self,
-                                                EnumWarehouse.COLUMN)
-                        yield self.env.process(action.simulate_action())
-                        print(f"\nTime {self.env.now:5.2f} - FINISH SEND_BACK\n")
-                        if self.get_warehouse().get_num_drawers() < 10:
-                            print()
+        # exec all events
+        for index, event in enumerate(events_generated):
+            match event:
+                case "send_back":
+                    print(f"~ Operation #{index} ~")
+                    action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self,
+                                            EnumWarehouse.COLUMN)
+                    yield self.env.process(action.simulate_action())
+                    print(f"Time {self.env.now:5.2f} - FINISH SEND_BACK\n")
 
-                    case "extract_drawer":
-                        action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self,
-                                               EnumWarehouse.CAROUSEL)
-                        yield self.env.process(action.simulate_action())
-                        print(f"\nTime {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
-                        if self.get_warehouse().get_num_drawers() < 10:
+                case "extract_drawer":
+                    print(f"~ Operation #{index} ~")
+                    action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self,
+                                           EnumWarehouse.CAROUSEL)
+                    yield self.env.process(action.simulate_action())
+                    print(f"Time {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
 
-                            print()
+                case "ins_mat":
+                    print(f"~ Operation #{index} ~")
+                    action = InsertRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
+                    yield self.env.process(action.simulate_action())
+                    print(f"Time {self.env.now:5.2f} - FINISH INS_MAT\n")
 
-                    case "ins_mat":
-                        action = InsertRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
-                        yield self.env.process(action.simulate_action())
-                        print(f"\nTime {self.env.now:5.2f} - FINISH INS_MAT\n")
-                        if self.get_warehouse().get_num_drawers() < 10:
-                            print()
+                case "rmv_mat":
+                    print(f"~ Operation #{index} ~")
+                    action = RemoveRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
+                    yield self.env.process(action.simulate_action())
+                    print(f"Time {self.env.now:5.2f} - FINISH RMV_MAT\n")
 
-                    case "rmv_mat":
-                        action = RemoveRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
-                        yield self.env.process(action.simulate_action())
-                        print(f"\nTime {self.env.now:5.2f} - FINISH RMV_MAT\n")
-                        if self.get_warehouse().get_num_drawers() < 10:
-                            print()
-
-            print(f"Time {self.env.now:5.2f} - Finish simulation")
-        except Exception as e:
-            print()
-            raise e
+        print(f"Time {self.env.now:5.2f} - Finish simulation")
 
     def get_environment(self) -> simpy.Environment:
         return self.env

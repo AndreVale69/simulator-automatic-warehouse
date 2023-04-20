@@ -82,7 +82,7 @@ def gen_materials_and_drawer(num_drawers: int, num_materials: int,
             # insert empty drawer
             drawer_to_insert = Drawer(materials)
             # looking for the index where put the drawer
-            index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[1]
+            index = check_minimum_space([col], drawer_to_insert.get_max_num_space(), col.get_height_col())[0]
             # if the height is correct, insert
             if index != -1:
                 # insert the drawer
@@ -98,7 +98,6 @@ def gen_materials_and_drawer(num_drawers: int, num_materials: int,
     return [num_drawers, num_materials]
 
 
-# TODO: refactoring
 def check_minimum_space(list_cols: list, space_req: int, height_entry_col: int) -> list:
     """
     Algorithm to decide where insert a drawer.
@@ -106,23 +105,27 @@ def check_minimum_space(list_cols: list, space_req: int, height_entry_col: int) 
     :param list_cols: list of columns.
     :param space_req: space requested from drawer.
     :param height_entry_col: the height of warehouse
-    :return: if there is a space [space_requested, index_position_where_insert, column_where_insert].
-    :exception StopIteration: if there isn't any space.
+    :return: if there is a space [index_position_where_insert, column_where_insert].
     """
-    result = []
+    # result struct:
+    # [ min_space requested,
+    #   highest index found in the column,
+    #   pointer to the column ]
+    result = [0, height_entry_col, 0]
 
-    # TODO: rmv min_space return because is redundant
     # calculate minimum space and search lower index
     for column in list_cols:
         [min_space, start_index] = min_search_alg(column, space_req)
-        if min_space != -1 and start_index < height_entry_col:
+        # start_index < result[1]: to choice the lowest index btw columns
+        if min_space != -1 and start_index < result[1]:
             result = [min_space, start_index, column]
 
     # if warehouse is full
-    if len(result) == 0:
-        return [-1, -1, -1]
+    if result[0] == -1:
+        print("The warehouse is full! Please, check the check_minimum_space function")
+        exit(-1)
     else:
-        return result
+        return [result[1], result[2]]
 
 
 def min_search_alg(self, space_req: int) -> list:
@@ -369,20 +372,16 @@ class Warehouse:
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
-        if self.env.now > 100:
-            a = self.get_num_drawers()
-            # print()
-
         # start position
         start_pos = self.get_pos_y_floor()
         # calculate destination position
         minimum = check_minimum_space(self.get_cols_container(),
                                       drawer.get_max_num_space(),
                                       self.get_height() // self.get_def_space())
-        pos_to_insert = minimum[1]
+        pos_to_insert = minimum[0]
         # save temporarily the coordinates
-        drawer.set_best_y(minimum[1])
-        drawer.set_best_offset_x(minimum[2].get_offset_x())
+        drawer.set_best_y(minimum[0])
+        drawer.set_best_offset_x(minimum[1].get_offset_x())
         # start the move
         vertical_move = self.vertical_move(start_pos, pos_to_insert)
         yield self.env.timeout(vertical_move)
@@ -424,9 +423,6 @@ class Warehouse:
     def load(self, drawer: Drawer, destination: str):
         from src.status_warehouse.enum_warehouse import EnumWarehouse
         # take destination coordinates
-        if self.env.now > 45:
-            a = self.get_num_drawers()
-            print()
         dest_x_drawer = drawer.get_best_offset_x()
         dest_y_drawer = drawer.get_best_y()
         # start the move
