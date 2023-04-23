@@ -205,6 +205,7 @@ def min_search_alg(self, space_req: int) -> list:
 class Warehouse:
     def __init__(self):
         from src.useful_func import open_config
+        from src.material import gen_rand_material
 
         # open JSON configuration file
         config: dict = open_config()
@@ -226,7 +227,17 @@ class Warehouse:
         self.simulation = None
         self.supp_drawer = None
         self.pos_y_floor = self.get_carousel().get_deposit_entry().get_pos_y()
-        # TODO: inserire i tempi e rimuovere gli altri hard code
+        # time of simulation
+        self.sim_time = config["simulation"]["time"]
+        # number of actions
+        self.sim_num_actions = config["simulation"]["num_actions"]
+        # generate a configuration based on JSON
+        if config["simulation"]["gen_deposit"] > 0:
+            self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()]))
+        if config["simulation"]["gen_buffer"] > 0:
+            self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()],))
+        self.gen_rand(num_drawers=config["simulation"]["gen_drawers"],
+                      num_materials=config["simulation"]["gen_materials"])
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
@@ -240,6 +251,8 @@ class Warehouse:
         copy_oby.speed_per_sec = self.get_speed_per_sec()
         copy_oby.env = self.get_environment()
         copy_oby.simulation = self.get_simulation()
+        copy_oby.sim_time = self.get_sim_time()
+        copy_oby.sim_num_actions = self.get_sim_num_actions()
         return copy_oby
 
     def get_height(self) -> int:
@@ -275,6 +288,12 @@ class Warehouse:
             ris += col.get_num_drawers()
         ris += self.get_carousel().get_num_drawers()
         return ris
+
+    def get_sim_time(self) -> int:
+        return self.sim_time
+
+    def get_sim_num_actions(self) -> int:
+        return self.sim_num_actions
 
     def set_pos_y_floor(self, pos: int):
         self.pos_y_floor = pos
@@ -480,7 +499,7 @@ class Warehouse:
                 # if the warehouse is completely full
                 print(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
 
-    def run_simulation(self, time: int, num_actions: int):
+    def run_simulation(self):
         from src.simulation import Simulation
 
         self.env = simpy.Environment()
@@ -497,7 +516,7 @@ class Warehouse:
         if type(self.get_carousel().get_buffer_entry()) is DrawerEntry:
             balance_wh += 1
 
-        for num_action in range(num_actions):
+        for num_action in range(self.get_sim_num_actions()):
             good_choice = False
             rand_event = ""
             while good_choice is False:
@@ -520,7 +539,7 @@ class Warehouse:
         self.get_environment().process(self.get_simulation().simulate_actions(events_to_simulate))
 
         # run simulation
-        self.get_environment().run(until=time)
+        self.get_environment().run(until=self.get_sim_time())
 
     def choice_random_drawer(self) -> Drawer:
         """Choose a random drawer from the warehouse"""
