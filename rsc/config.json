@@ -30,8 +30,8 @@
   "default_height_space"  : 25,
   "speed_per_sec"         : 1,
   "simulation": {
-    "time"          : 1000000,
-    "num_actions"   : 500000,
+    "time"          : 10000,
+    "num_actions"   : 500,
     "gen_drawers"   : 8,
     "gen_materials" : 0,
     "INSERT ONLY TRUE (>0) OR FALSE (<=0): "  : 0,
