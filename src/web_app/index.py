@@ -13,9 +13,8 @@ warehouse = Warehouse()
 warehouse.run_simulation()
 cn = Counter(warehouse.get_events_to_simulate())
 
-app = Dash(
-    external_stylesheets=[dbc.themes.BOOTSTRAP]
-)
+BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+app = Dash(external_stylesheets=[BS])
 
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
@@ -44,26 +43,44 @@ app.layout = html.Div(children=[
         figure=fig
     ),
 
-    dbc.Button("Download Graph as SVG", id="btn_svg"),
+    dbc.DropdownMenu(
+            [
+                dbc.DropdownMenuItem(
+                    "SVG", id="dropdown-btn_svg", n_clicks=0
+                ),
+                dbc.DropdownMenuItem(
+                    "PDF", id="dropdown-btn_pdf", n_clicks=0
+                )
+            ],
+            label="Download Graph",
+    ),
     dcc.Download(id="download-svg"),
-
-    dbc.Button("Download Graph as PDF", id="btn_pdf"),
     dcc.Download(id="download-pdf")
+
+    # html.Div([
+    #     dbc.Button("Download Graph as SVG", id="btn_svg", color="primary"),
+    #     dcc.Download(id="download-svg"),
+
+    #     dbc.Button("Download Graph as PDF", id="btn_pdf"),
+    #     dcc.Download(id="download-pdf")
+    # ], className="d-grid gap-2 col-6 mx-auto")
+
+
 ])
 
 
 @app.callback(
     Output("download-svg", "data"),
-    Input("btn_svg", "n_clicks"),
-    Input("btn_pdf", "n_clicks"),
+    Input("dropdown-btn_svg", "n_clicks"),
+    Input("dropdown-btn_pdf", "n_clicks"),
     prevent_initial_call=True
 )
 def download_graph(b_svg, b_pdf):
     extension = ''
     # which button is triggered
-    if "btn_svg" == ctx.triggered_id:
+    if "dropdown-btn_svg" == ctx.triggered_id:
         extension = 'svg'
-    elif "btn_pdf" == ctx.triggered_id:
+    elif "dropdown-btn_pdf" == ctx.triggered_id:
         extension = 'pdf'
     # take graph to download
     fig.write_image(f"./images/graph_actions.{extension}")
