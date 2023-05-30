@@ -1,10 +1,10 @@
 {
-  "columns":[
+  "columns": [
     {
       "description"           : "rxcol",
       "width"                 : 250,
       "height"                : 325,
-      "offset_formula"        : "width / 2",
+      "OFFSET_FORMULA"        : "width / 2",
       "x_offset"              : 125,
       "height_last_position"  : 75
     },
@@ -12,7 +12,7 @@
       "description"           : "sxcol",
       "width"                 : 200,
       "height"                : 1000,
-      "offset_formula"        : "(sxcol.width / 2) + rxcol.offset + 250",
+      "OFFSET_FORMULA"        : "(sxcol.width / 2) + rxcol.offset + 250",
       "x_offset"              : 475,
       "height_last_position"  : 75
     }
@@ -28,5 +28,14 @@
   },
   "height_warehouse"      : 1000,
   "default_height_space"  : 25,
-  "speed_per_sec"         : 1
+  "speed_per_sec"         : 1,
+  "simulation": {
+    "time"          : 10000,
+    "num_actions"   : 500,
+    "gen_drawers"   : 8,
+    "gen_materials" : 0,
+    "INSERT ONLY TRUE (>0) OR FALSE (<=0): "  : 0,
+    "gen_deposit"   : 1,
+    "gen_buffer"    : 1
+  }
 }

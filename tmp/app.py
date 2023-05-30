@@ -32,3 +32,7 @@ app.layout = html.Div(children=[
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+# TODO:
+# dashboard dove si vede il magazzino
+# comandi per eseguire la simulazione e se possibile anche step-by-step
