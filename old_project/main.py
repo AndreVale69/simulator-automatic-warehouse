@@ -83,7 +83,7 @@ print("Height left column        : " + str(height_left_column))
 print("Height right column       : " + str(height_right_column))
 #print("Height automatic warehouse: " + str(height_warehouse))
 
-# Print warehouse; TODO to finish :(
+# Print warehouse; to finish :(
 bgc.print_warehouse(data_left_column, data_right_column, height_left_column, height_right_column)
 
 # OLD function

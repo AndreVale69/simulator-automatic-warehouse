@@ -23,7 +23,6 @@ def print_warehouse(data_left_column: np.ndarray,
     print_line(10, new_line=True)
 
 
-    # TODO create warehouse print function
     while index_left >= 0:
         if tmp_left_column[index_left][0] == "Space":
             # Print space
@@ -114,7 +113,6 @@ def print_x(new_line: bool = False, how_many: int = 10):
         print("x" * how_many, end="")
 
 
-# TODO refactoring the name
 def print_stair():
     print("  ", end="")
     print("=" * 30)

@@ -92,4 +92,4 @@ def download_graph(b_svg, b_pdf):
 # fig.to_image(format="svg", engine="kaleido")
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)

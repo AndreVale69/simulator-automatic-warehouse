@@ -1,4 +1,3 @@
-# TODO Library will remove
 import numpy as np
 
 # Default variables
