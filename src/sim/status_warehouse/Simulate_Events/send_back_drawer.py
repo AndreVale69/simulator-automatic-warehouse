@@ -14,6 +14,8 @@ class SendBackDrawer(Move):
         super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):
+        start_time = self.get_env().now
+
         with self.get_simulation().get_res_deposit().request() as req:
             # try to take the drawer inside the deposit
             yield req
@@ -38,3 +40,9 @@ class SendBackDrawer(Move):
         yield self.env.process(super().simulate_action())
         # wait the buffer process
         yield wait_buff
+
+        end_time = self.get_env().now
+
+        yield self.simulation.get_store_history().put(dict(Action="SendBackDrawer",
+                                                           Start=str(start_time),
+                                                           Finish=str(end_time)))

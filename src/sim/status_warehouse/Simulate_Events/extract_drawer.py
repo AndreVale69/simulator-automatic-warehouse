@@ -15,6 +15,8 @@ class ExtractDrawer(Move):
         super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):
+        start_time = self.get_env().now
+
         # try to release the drawer in the deposit
         if not self.get_warehouse().get_carousel().is_deposit_full():
             with self.get_simulation().get_res_deposit().request() as req:
@@ -32,6 +34,12 @@ class ExtractDrawer(Move):
             yield self.env.process(super().simulate_action())
             # wait the buffer process
             yield wait_buff
+
+        end_time = self.get_env().now
+
+        yield self.simulation.get_store_history().put(dict(Action="ExtractDrawer",
+                                                           Start=str(start_time),
+                                                           Finish=str(end_time)))
 
     def actions(self, load_in_buffer: bool):
         # choice a random drawer

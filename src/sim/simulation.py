@@ -20,6 +20,7 @@ class Simulation:
         # allocation of carousel resources
         self.res_buffer = simpy.Resource(env, capacity=1)
         self.res_deposit = simpy.Resource(env, capacity=1)
+        self.store_history = None
 
     def simulate_actions(self, events_generated: list):
         from sim.status_warehouse.enum_warehouse import EnumWarehouse
@@ -30,6 +31,8 @@ class Simulation:
             import InsertRandomMaterial
         from sim.status_warehouse.Simulate_Events.Material.RemoveMaterial.remove_random_material \
             import RemoveRandomMaterial
+
+        self.store_history = simpy.Store(self.get_environment(), capacity=len(events_generated))
 
         # run "control of buffer" process
         yield self.env.process(Buffer(self.env, self.get_warehouse(), self).simulate_action())
@@ -76,3 +79,12 @@ class Simulation:
 
     def get_res_deposit(self) -> simpy.Resource:
         return self.res_deposit
+
+    def get_store_history(self) -> simpy.Store:
+        return self.store_history
+
+    #def get_store_history_items(self) -> list[dict]:
+    #    """
+    #        Attention! Use yield!
+    #    """
+    #    return self.store_history.get().items()

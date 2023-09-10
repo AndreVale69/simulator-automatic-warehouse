@@ -14,6 +14,8 @@ class InsertRandomMaterial(InsertMaterial):
     def simulate_action(self):
         from sim.material import gen_rand_material
 
+        start_time = self.get_env().now
+
         with self.get_simulation().get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
@@ -23,3 +25,9 @@ class InsertRandomMaterial(InsertMaterial):
             drawer_output.add_material(mat_to_put)
             # estimate a time of the action
             yield self.env.timeout(self.get_duration())
+
+        end_time = self.get_env().now
+
+        yield self.simulation.get_store_history().put(dict(Action="InsertRandomMaterial",
+                                                           Start=str(start_time),
+                                                           Finish=str(end_time)))
