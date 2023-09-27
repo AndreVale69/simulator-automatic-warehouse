@@ -1,4 +1,4 @@
-import random
+import random, datetime
 
 from simpy import Environment
 
@@ -14,7 +14,7 @@ class RemoveRandomMaterial(RemoveMaterial):
 
     # override
     def simulate_action(self):
-        start_time = self.get_env().now
+        start_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         with self.get_simulation().get_res_deposit().request() as req:
             yield req
@@ -30,8 +30,8 @@ class RemoveRandomMaterial(RemoveMaterial):
             else:
                 print(f"\nTime {self.env.now:5.2f} - No materials to remove\n")
 
-        end_time = self.get_env().now
+        end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
-        yield self.simulation.get_store_history().put(dict(Action="InsertRandomMaterial",
-                                                           Start=str(start_time),
-                                                           Finish=str(end_time)))
+        yield self.simulation.get_store_history().put(dict(Action="RemoveRandomMaterial",
+                                                           Start=start_time,
+                                                           Finish=end_time))

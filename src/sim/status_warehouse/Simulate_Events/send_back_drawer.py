@@ -1,3 +1,5 @@
+import datetime
+
 from simpy import Environment
 
 from sim.simulation import Simulation
@@ -14,7 +16,7 @@ class SendBackDrawer(Move):
         super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):
-        start_time = self.get_env().now
+        start_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         with self.get_simulation().get_res_deposit().request() as req:
             # try to take the drawer inside the deposit
@@ -41,8 +43,8 @@ class SendBackDrawer(Move):
         # wait the buffer process
         yield wait_buff
 
-        end_time = self.get_env().now
+        end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         yield self.simulation.get_store_history().put(dict(Action="SendBackDrawer",
-                                                           Start=str(start_time),
-                                                           Finish=str(end_time)))
+                                                           Start=start_time,
+                                                           Finish=end_time))

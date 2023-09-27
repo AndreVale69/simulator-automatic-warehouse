@@ -1,4 +1,5 @@
 from simpy import Environment
+import datetime
 
 # from src.drawer import Drawer
 from sim.simulation import Simulation
@@ -14,7 +15,7 @@ class InsertRandomMaterial(InsertMaterial):
     def simulate_action(self):
         from sim.material import gen_rand_material
 
-        start_time = self.get_env().now
+        start_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         with self.get_simulation().get_res_deposit().request() as req:
             yield req
@@ -26,8 +27,8 @@ class InsertRandomMaterial(InsertMaterial):
             # estimate a time of the action
             yield self.env.timeout(self.get_duration())
 
-        end_time = self.get_env().now
+        end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         yield self.simulation.get_store_history().put(dict(Action="InsertRandomMaterial",
-                                                           Start=str(start_time),
-                                                           Finish=str(end_time)))
+                                                           Start=start_time,
+                                                           Finish=end_time))
