@@ -7,10 +7,17 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
 from pandas import Series, Timestamp
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from src.sim.warehouse import Warehouse
 from collections import Counter
+
+# TODO:
+# - Priority High:
+#   * Remove all garbage code
+#   * Do some refactoring...
+# - Priority Normal:
+#   * Optimize WebPage class, including all calculates of the times inside update_graph() function
 
 
 """
@@ -62,12 +69,22 @@ df = pd.DataFrame(history)
 # Take the minimum and maximum time of the simulation
 min_time_sim: Timestamp = df.min().get('Start')
 max_time_sim: Timestamp = df.max().get('Finish')
-prova1 = min_time_sim.time()
-prova2 = max_time_sim.time()
-prova3 = min_time_sim.date()
-prova4 = max_time_sim.date()
-diff_days: timedelta = prova4 - prova3
-diff_hours = (prova2 - prova1) # See more: https://stackoverflow.com/questions/25265379/how-do-you-get-the-difference-between-two-time-objects-in-python
+# prova1 = min_time_sim.time()
+# prova2 = max_time_sim.time()
+# prova3 = min_time_sim.date()
+# prova4 = max_time_sim.date()
+# prova1_delta: timedelta = timedelta(hours=prova1.hour, minutes=prova1.minute, seconds=prova1.second, microseconds=prova1.microsecond)
+# prova2_delta: timedelta = timedelta(hours=prova2.hour, minutes=prova2.minute, seconds=prova2.second, microseconds=prova2.microsecond)
+# diff_days: timedelta = prova4 - prova3
+# diff_hours: timedelta = prova2_delta - prova1_delta
+
+class WebPage:
+    def __init__(self):
+        self.left_counter: int = 0
+        self.right_counter: int = 0
+        self.actual_left = pd.to_datetime(min_time_sim)
+        self.actual_right = self.actual_left + timedelta(minutes=1)
+web_page = WebPage()
 
 # Create the timeline
 fig = px.timeline(df,
@@ -108,6 +125,8 @@ app.layout = html.Div(children=[
         figure=fig
     ),
 
+    dcc.Download(id="download-graph"),
+
     dbc.DropdownMenu(children=[
             dbc.DropdownMenuItem(
                 children=[html.I(className='bi bi-download'), " SVG"],
@@ -122,7 +141,12 @@ app.layout = html.Div(children=[
         label="Download Graph"
     ),
 
-    dbc.Button([html.I(className='bi bi-arrow-right-circle-fill')], id='btn', n_clicks=0)
+    # go to left
+    dbc.Button([html.I(className='bi bi-arrow-left-circle-fill')], id='btn_left', n_clicks=0),
+    # go to right
+    dbc.Button([html.I(className='bi bi-arrow-right-circle-fill')], id='btn_right', n_clicks=0),
+    # summary
+    dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary', n_clicks=0)
 ])
 
 
@@ -132,9 +156,9 @@ app.layout = html.Div(children=[
     ##########################
 """
 @app.callback(
-    Output("download-svg", "data"),
-    Input("dropdown-btn_svg", "n_clicks"),
-    Input("dropdown-btn_pdf", "n_clicks"),
+    Output("download-graph", "data"),
+    [Input("dropdown-btn_svg", "n_clicks"),
+    Input("dropdown-btn_pdf", "n_clicks")],
     prevent_initial_call=True
 )
 def download_graph(b_svg, b_pdf):
@@ -152,12 +176,24 @@ def download_graph(b_svg, b_pdf):
 
 @app.callback(
     Output('graph-actions', 'figure'),
-    [Input('btn', 'n_clicks')],
+    [Input('btn_right', 'n_clicks'),
+     Input('btn_left', 'n_clicks'),
+     Input('btn_summary', 'n_clicks')],
     prevent_initial_call=True
 )
-def update_graph(n_clicks):
-    return fig.update_xaxes(range=[min_time_sim.get('Start'), max_time_sim.get('Finish')])
-
+def update_graph(clicks_right, clicks_left, clicks_summary):
+    if "btn_right" == ctx.triggered_id:
+        web_page.actual_left = web_page.actual_right
+        web_page.actual_right += timedelta(minutes=1)
+        return fig.update_xaxes(range=[web_page.actual_left,web_page.actual_right])
+    if "btn_left" == ctx.triggered_id:
+        web_page.actual_right = web_page.actual_left
+        web_page.actual_left -= timedelta(minutes=1)
+        return fig.update_xaxes(range=[web_page.actual_left, web_page.actual_right])
+    if "btn_summary" == ctx.triggered_id:
+        web_page.actual_left = pd.to_datetime(min_time_sim)
+        web_page.actual_right = web_page.actual_left + timedelta(minutes=1)
+        return fig.update_xaxes(range=[min_time_sim, max_time_sim])
 
 if __name__ == '__main__':
     app.run_server(debug=False)
