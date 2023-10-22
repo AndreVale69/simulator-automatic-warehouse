@@ -1,23 +1,24 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
-
-from dash import Dash, dcc, html, Input, Output, ctx
+from dash import Dash, dcc, html, Input, Output, ctx, State, clientside_callback
 from simpy import Store
 import dash_bootstrap_components as dbc
+# from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
+# from datetime import datetime, timedelta, date
+# import dash_daq as daq
+# from dash_bootstrap_templates import load_figure_template
 import plotly.express as px
 import pandas as pd
-from pandas import Series, Timestamp
-from datetime import datetime, timedelta, date
+from pandas import Timestamp
 
 from src.sim.warehouse import Warehouse
 from collections import Counter
+from timeline import Timeline
 
 # TODO:
 # - Priority High:
 #   * Remove all garbage code
 #   * Do some refactoring...
-# - Priority Normal:
-#   * Optimize WebPage class, including all calculates of the times inside update_graph() function
 
 
 """
@@ -69,6 +70,7 @@ df = pd.DataFrame(history)
 # Take the minimum and maximum time of the simulation
 min_time_sim: Timestamp = df.min().get('Start')
 max_time_sim: Timestamp = df.max().get('Finish')
+timeline = Timeline(min_time_sim, max_time_sim)
 # prova1 = min_time_sim.time()
 # prova2 = max_time_sim.time()
 # prova3 = min_time_sim.date()
@@ -78,36 +80,30 @@ max_time_sim: Timestamp = df.max().get('Finish')
 # diff_days: timedelta = prova4 - prova3
 # diff_hours: timedelta = prova2_delta - prova1_delta
 
-class WebPage:
-    def __init__(self):
-        self.left_counter: int = 0
-        self.right_counter: int = 0
-        self.actual_left = pd.to_datetime(min_time_sim)
-        self.actual_right = self.actual_left + timedelta(minutes=1)
-web_page = WebPage()
 
 # Create the timeline
 fig = px.timeline(df,
                   x_start="Start", x_end="Finish", y="Action",
-                  range_x=[min_time_sim, max_time_sim])
+                  range_x=[timeline.get_actual_left(), timeline.get_actual_right()])
 fig.update_yaxes(autorange="reversed") # otherwise, tasks are listed from the bottom up
 # If you want a linear timeline:
 # fig.layout.xaxis.type = 'linear'
 fig.layout.xaxis.type = 'date'
+# create slider
+fig.update_xaxes(rangeslider = dict(visible=True, range=[min_time_sim,max_time_sim]))
 # If you want a rangeselector to zoom on each section
 # See more: https://plotly.com/python/range-slider/
 # fig.update_xaxes(
-#     rangeslider_visible = True,
+#     rangeslider = dict(visible=True, range=[min_time_sim,max_time_sim]),
 #     rangeselector = dict(
 #         buttons = list([
-#             dict(count = 1, label = "5m", step = "minute", stepmode = "backward"),
-#             dict(count = 10, label = "10m", step = "minute", stepmode = "backward"),
+#             dict(count = 1, label = "1m", step = "minute", stepmode = "backward"),
+#             dict(count = 5, label = "5m", step = "minute", stepmode = "backward"),
 #             dict(count = 10, label = "10m", step = "minute", stepmode = "todate"),
 #             dict(step = "all")
 #         ])
 #     )
 # )
-
 
 """ 
     ########################
@@ -143,12 +139,13 @@ app.layout = html.Div(children=[
 
     # go to left
     dbc.Button([html.I(className='bi bi-arrow-left-circle-fill')], id='btn_left', n_clicks=0),
+    # text
+    html.H6(id='num_tabs_graph', children=timeline.actual_tabs()),
     # go to right
     dbc.Button([html.I(className='bi bi-arrow-right-circle-fill')], id='btn_right', n_clicks=0),
     # summary
     dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary', n_clicks=0)
 ])
-
 
 """ 
     ##########################
@@ -175,7 +172,8 @@ def download_graph(b_svg, b_pdf):
     )
 
 @app.callback(
-    Output('graph-actions', 'figure'),
+    [Output('graph-actions', 'figure'),
+     Output('num_tabs_graph', 'children')],
     [Input('btn_right', 'n_clicks'),
      Input('btn_left', 'n_clicks'),
      Input('btn_summary', 'n_clicks')],
@@ -183,17 +181,14 @@ def download_graph(b_svg, b_pdf):
 )
 def update_graph(clicks_right, clicks_left, clicks_summary):
     if "btn_right" == ctx.triggered_id:
-        web_page.actual_left = web_page.actual_right
-        web_page.actual_right += timedelta(minutes=1)
-        return fig.update_xaxes(range=[web_page.actual_left,web_page.actual_right])
+        timeline.right_btn_triggered()
     if "btn_left" == ctx.triggered_id:
-        web_page.actual_right = web_page.actual_left
-        web_page.actual_left -= timedelta(minutes=1)
-        return fig.update_xaxes(range=[web_page.actual_left, web_page.actual_right])
+        timeline.left_btn_triggered()
     if "btn_summary" == ctx.triggered_id:
-        web_page.actual_left = pd.to_datetime(min_time_sim)
-        web_page.actual_right = web_page.actual_left + timedelta(minutes=1)
-        return fig.update_xaxes(range=[min_time_sim, max_time_sim])
+        timeline.summary_btn_triggered()
+    return [fig.update_xaxes(
+        range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+        timeline.actual_tabs()]
 
 if __name__ == '__main__':
     app.run_server(debug=False)
