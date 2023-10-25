@@ -110,7 +110,9 @@ fig.update_xaxes(rangeslider = dict(visible=True, range=[min_time_sim,max_time_s
     * Application's layout * 
     ########################
 """
-app.layout = html.Div(children=[
+def serve_layout():
+    # see live updates on: https://dash.plotly.com/live-updates
+    return html.Div(children=[
     html.H1(
         children='Warehouse simulator',
         style={'textAlign': 'center'}
@@ -147,6 +149,8 @@ app.layout = html.Div(children=[
     dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary', n_clicks=0)
 ])
 
+app.layout = serve_layout
+
 """ 
     ##########################
     * Application's callback * 
@@ -182,13 +186,16 @@ def download_graph(b_svg, b_pdf):
 def update_graph(clicks_right, clicks_left, clicks_summary):
     if "btn_right" == ctx.triggered_id:
         timeline.right_btn_triggered()
+
     if "btn_left" == ctx.triggered_id:
         timeline.left_btn_triggered()
+
     if "btn_summary" == ctx.triggered_id:
-        timeline.summary_btn_triggered()
-    return [fig.update_xaxes(
-        range=[timeline.get_actual_left(), timeline.get_actual_right()]),
-        timeline.actual_tabs()]
+        return [fig.update_xaxes(range=[timeline.get_minimum_time(),timeline.get_maximum_time()]),
+                timeline.actual_tabs()]
+
+    return [fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+            timeline.actual_tabs()]
 
 if __name__ == '__main__':
     app.run_server(debug=False)
