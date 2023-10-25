@@ -1,0 +1,6 @@
+simpy~=4.0.2
+plotly~=5.17.0
+pandas~=2.1.1
+dash~=2.14.0
+numpy~=1.26.1
+dash_bootstrap_components~=1.5.0
