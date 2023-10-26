@@ -73,10 +73,17 @@ class Timeline:
         if self._actual_tab < self._tot_tabs:
             self._actual_tab += 1
 
+    def right_end_btn_triggered(self):
+        self._actual_tab = self._tot_tabs
+
     def left_btn_triggered(self):
         # decrease iff it isn't the limit
         if self._actual_tab > 1:
             self._actual_tab -= 1
+
+    def left_end_btn_triggered(self):
+        # decrease iff it isn't the limit
+        self._actual_tab = 1
 
     def summary_btn_triggered(self):
         self._actual_left = self._minimum

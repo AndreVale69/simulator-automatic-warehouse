@@ -113,57 +113,77 @@ fig.update_xaxes(rangeslider = dict(visible=True, range=[min_time_sim,max_time_s
 def serve_layout():
     # see live updates on: https://dash.plotly.com/live-updates
     return html.Div(children=[
-    html.H1(
-        children='Warehouse simulator',
-        style={'textAlign': 'center'}
-    ),
-
-    dcc.Graph(
-        id='graph-actions',
-        figure=fig
-    ),
-
-    dcc.Download(id="download-graph"),
-
-    dbc.Row([
-        dbc.Col([
-            dbc.DropdownMenu(children=[
-                dbc.DropdownMenuItem(
-                    children=[html.I(className='bi bi-download'), " SVG"],
-                    id="dropdown-btn_svg",
-                    n_clicks=0
-                ),
-                dbc.DropdownMenuItem(
-                    children=[html.I(className='bi bi-download'), " PDF"],
-                    id="dropdown-btn_pdf",
-                    n_clicks=0
-                )],
-                label="Download Graph"
+        dbc.Row([
+            html.H1(
+                children='Warehouse simulator',
+                style={'textAlign': 'center'}
             )
         ]),
-        dbc.Col([
-            # go to left
-            dbc.Button([html.I(className='bi bi-arrow-left-circle-fill')], id='btn_left', n_clicks=0),
-        ]),
-        dbc.Col([
-            dbc.InputGroup([
-                # text
-                dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(), step=1,
-                          value=timeline.get_actual_tab()),
-                dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}')
-            ])
+        html.Br(),
+        dbc.Card([
+            dbc.CardHeader(children=html.H4("Timeline of the simulation", className="card-title")),
 
+            dbc.CardBody(
+                [
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.InputGroup([
+                                # go to extreme left
+                                dbc.Button([html.I(className='bi bi-chevron-bar-left')], id='btn_left_end',
+                                           n_clicks=0),
+                                # go to left
+                                dbc.Button([html.I(className='bi bi-chevron-left')], id='btn_left',
+                                           n_clicks=0),
+                                # text
+                                dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(),
+                                          step=1,
+                                          value=timeline.get_actual_tab()),
+                                dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
+                                # go to right
+                                dbc.Button([html.I(className='bi bi-chevron-right')], id='btn_right',
+                                           n_clicks=0),
+                                # go to extreme right
+                                dbc.Button([html.I(className='bi bi-chevron-bar-right')], id='btn_right_end',
+                                           n_clicks=0)
+                            ])
+                        ], width={"size": 2, "offset": 5}),
+                        dbc.Col([
+                            # summary
+                            dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary',
+                                       n_clicks=0)
+                        ], width=1)
+                    ]),
+                    dbc.Row([
+                        dcc.Graph(
+                            id='graph-actions',
+                            figure=fig
+                        )
+                    ])
+                ]
+            ),
+
+            dbc.CardFooter(children=[
+                dbc.Row([
+                    dbc.Col([
+                        dbc.DropdownMenu(children=[
+                            dbc.DropdownMenuItem(
+                                children=[html.I(className='bi bi-download'), " SVG"],
+                                id="dropdown-btn_svg",
+                                n_clicks=0
+                            ),
+                            dbc.DropdownMenuItem(
+                                children=[html.I(className='bi bi-download'), " PDF"],
+                                id="dropdown-btn_pdf",
+                                n_clicks=0
+                            )],
+                            label="Download Graph"
+                        )
+                    ], width=1)
+                ]),
+            ]),
         ]),
-        dbc.Col([
-            # go to right
-            dbc.Button([html.I(className='bi bi-arrow-right-circle-fill')], id='btn_right', n_clicks=0),
-        ]),
-        dbc.Col([
-            # summary
-            dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary', n_clicks=0)
-        ])
+        dcc.Download(id="download-graph")
     ])
-])
 
 app.layout = serve_layout
 
@@ -195,15 +215,23 @@ def download_graph(b_svg, b_pdf):
 @app.callback(
     Output('actual_tab', 'value'),
     [Input('btn_right', 'n_clicks'),
-     Input('btn_left', 'n_clicks')],
+     Input('btn_left', 'n_clicks'),
+     Input('btn_right_end', 'n_clicks'),
+     Input('btn_left_end', 'n_clicks')],
     prevent_initial_call=True
 )
-def update_graph(clicks_right, clicks_left):
+def update_graph(clicks_right, clicks_left, clicks_right_end, clicks_left_end):
     if "btn_right" == ctx.triggered_id:
         timeline.right_btn_triggered()
 
     if "btn_left" == ctx.triggered_id:
         timeline.left_btn_triggered()
+
+    if "btn_right_end" == ctx.triggered_id:
+        timeline.right_end_btn_triggered()
+
+    if "btn_left_end" == ctx.triggered_id:
+        timeline.left_end_btn_triggered()
 
     return timeline.get_actual_tab()
 
