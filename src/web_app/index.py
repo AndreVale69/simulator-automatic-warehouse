@@ -125,29 +125,44 @@ def serve_layout():
 
     dcc.Download(id="download-graph"),
 
-    dbc.DropdownMenu(children=[
-            dbc.DropdownMenuItem(
-                children=[html.I(className='bi bi-download'), " SVG"],
-                id="dropdown-btn_svg",
-                n_clicks=0
-            ),
-            dbc.DropdownMenuItem(
-                children=[html.I(className='bi bi-download'), " PDF"],
-                id="dropdown-btn_pdf",
-                n_clicks=0
-            )],
-        label="Download Graph"
-    ),
+    dbc.Row([
+        dbc.Col([
+            dbc.DropdownMenu(children=[
+                dbc.DropdownMenuItem(
+                    children=[html.I(className='bi bi-download'), " SVG"],
+                    id="dropdown-btn_svg",
+                    n_clicks=0
+                ),
+                dbc.DropdownMenuItem(
+                    children=[html.I(className='bi bi-download'), " PDF"],
+                    id="dropdown-btn_pdf",
+                    n_clicks=0
+                )],
+                label="Download Graph"
+            )
+        ]),
+        dbc.Col([
+            # go to left
+            dbc.Button([html.I(className='bi bi-arrow-left-circle-fill')], id='btn_left', n_clicks=0),
+        ]),
+        dbc.Col([
+            dbc.InputGroup([
+                # text
+                dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(), step=1,
+                          value=timeline.get_actual_tab()),
+                dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}')
+            ])
 
-    # go to left
-    dbc.Button([html.I(className='bi bi-arrow-left-circle-fill')], id='btn_left', n_clicks=0),
-    # text
-    dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(), step=1, value=timeline.get_actual_tab()),
-    html.H6(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
-    # go to right
-    dbc.Button([html.I(className='bi bi-arrow-right-circle-fill')], id='btn_right', n_clicks=0),
-    # summary
-    dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary', n_clicks=0)
+        ]),
+        dbc.Col([
+            # go to right
+            dbc.Button([html.I(className='bi bi-arrow-right-circle-fill')], id='btn_right', n_clicks=0),
+        ]),
+        dbc.Col([
+            # summary
+            dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary', n_clicks=0)
+        ])
+    ])
 ])
 
 app.layout = serve_layout
