@@ -159,7 +159,7 @@ def serve_layout():
                                         dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(),
                                                   step=1,
                                                   value=timeline.get_actual_tab()),
-                                        dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
+                                        dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'), # TODO: fix its value when goes to the limit
                                         # go to right
                                         dbc.Button([html.I(className='bi bi-chevron-right')], id='btn_right',
                                                    n_clicks=0),

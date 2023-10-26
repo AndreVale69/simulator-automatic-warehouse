@@ -96,8 +96,11 @@ class Timeline:
     def set_step(self, minutes: int):
         # TODO: review this, it's a bit dangerous...
         self._step = minutes
-        self.set_actual_tab(self._actual_tab)
         self._tot_tabs = self.calculate_tot_tabs()
+        if self._actual_tab > self._tot_tabs:
+            self.set_actual_tab(self._tot_tabs)
+        else:
+            self.set_actual_tab(self._actual_tab)
 
     def set_actual_tab(self, val_actual_tab: int):
         # updates actual tab
