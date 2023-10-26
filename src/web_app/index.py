@@ -121,68 +121,85 @@ def serve_layout():
             )
         ]),
         html.Br(),
-        dbc.Card([
-            dbc.CardHeader(children=html.H4("Timeline of the simulation", className="card-title")),
-
-            dbc.CardBody(
-                [
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.InputGroup([
-                                # go to extreme left
-                                dbc.Button([html.I(className='bi bi-chevron-bar-left')], id='btn_left_end',
-                                           n_clicks=0),
-                                # go to left
-                                dbc.Button([html.I(className='bi bi-chevron-left')], id='btn_left',
-                                           n_clicks=0),
-                                # text
-                                dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(),
-                                          step=1,
-                                          value=timeline.get_actual_tab()),
-                                dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
-                                # go to right
-                                dbc.Button([html.I(className='bi bi-chevron-right')], id='btn_right',
-                                           n_clicks=0),
-                                # go to extreme right
-                                dbc.Button([html.I(className='bi bi-chevron-bar-right')], id='btn_right_end',
-                                           n_clicks=0)
-                            ])
-                        ], width={"size": 2, "offset": 5}),
-                        dbc.Col([
-                            # summary
-                            dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary',
-                                       n_clicks=0)
-                        ], width=1)
-                    ]),
-                    dbc.Row([
-                        dcc.Graph(
-                            id='graph-actions',
-                            figure=fig
-                        )
-                    ])
-                ]
-            ),
-
-            dbc.CardFooter(children=[
-                dbc.Row([
-                    dbc.Col([
-                        dbc.DropdownMenu(children=[
-                            dbc.DropdownMenuItem(
-                                children=[html.I(className='bi bi-download'), " SVG"],
-                                id="dropdown-btn_svg",
-                                n_clicks=0
-                            ),
-                            dbc.DropdownMenuItem(
-                                children=[html.I(className='bi bi-download'), " PDF"],
-                                id="dropdown-btn_pdf",
-                                n_clicks=0
-                            )],
-                            label="Download Graph"
-                        )
-                    ], width=1)
-                ]),
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("This is the header"),
+                    dbc.CardBody(
+                        [
+                            html.H4("Card title", className="card-title"),
+                            html.P("This is some card text", className="card-text"),
+                        ]
+                    ),
+                    dbc.CardFooter("This is the footer"),
+                ])
             ]),
-        ]),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader(children=html.H4("Timeline of the simulation", className="card-title")),
+
+                    dbc.CardBody(
+                        [
+                            dbc.Row([
+                                dbc.Col([
+                                    dbc.InputGroup([
+                                        # go to extreme left
+                                        dbc.Button([html.I(className='bi bi-chevron-bar-left')], id='btn_left_end',
+                                                   n_clicks=0),
+                                        # go to left
+                                        dbc.Button([html.I(className='bi bi-chevron-left')], id='btn_left',
+                                                   n_clicks=0),
+                                        # text
+                                        dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(),
+                                                  step=1,
+                                                  value=timeline.get_actual_tab()),
+                                        dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
+                                        # go to right
+                                        dbc.Button([html.I(className='bi bi-chevron-right')], id='btn_right',
+                                                   n_clicks=0),
+                                        # go to extreme right
+                                        dbc.Button([html.I(className='bi bi-chevron-bar-right')], id='btn_right_end',
+                                                   n_clicks=0)
+                                    ])
+                                ], width={"size": 'auto', "offset": 4}),
+                                dbc.Col([
+                                    # summary
+                                    dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary',
+                                               n_clicks=0)
+                                ], width=2)
+                            ]),
+                            dbc.Row([
+                                dcc.Graph(
+                                    id='graph-actions',
+                                    figure=fig
+                                )
+                            ])
+                        ]
+                    ),
+
+                    dbc.CardFooter(children=[
+                        dbc.Row([
+                            dbc.Col([
+                                dbc.DropdownMenu(children=[
+                                    dbc.DropdownMenuItem(
+                                        children=[html.I(className='bi bi-download'), " SVG"],
+                                        id="dropdown-btn_svg",
+                                        n_clicks=0
+                                    ),
+                                    dbc.DropdownMenuItem(
+                                        children=[html.I(className='bi bi-download'), " PDF"],
+                                        id="dropdown-btn_pdf",
+                                        n_clicks=0
+                                    )],
+                                    label="Download Graph"
+                                )
+                            ], width=1)
+                        ]),
+                    ]),
+                ])
+            ], width=10)
+        ])
+        ,
         dcc.Download(id="download-graph")
     ])
 
