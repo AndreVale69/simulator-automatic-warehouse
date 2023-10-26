@@ -84,7 +84,8 @@ timeline = Timeline(min_time_sim, max_time_sim)
 # Create the timeline
 fig = px.timeline(df,
                   x_start="Start", x_end="Finish", y="Action",
-                  range_x=[timeline.get_actual_left(), timeline.get_actual_right()])
+                  range_x=[timeline.get_actual_left(), timeline.get_actual_right()],
+                  color="Action")
 fig.update_yaxes(autorange="reversed") # otherwise, tasks are listed from the bottom up
 # If you want a linear timeline:
 # fig.layout.xaxis.type = 'linear'
@@ -206,7 +207,7 @@ def download_graph(b_svg, b_pdf):
     elif "dropdown-btn_pdf" == ctx.triggered_id:
         extension = 'pdf'
     # take graph to download
-    fig.write_image(f"./images/graph_actions.{extension}")
+    fig.write_image(f"./images/graph_actions.{extension}", engine='kaleido')
     return dcc.send_file(
         f"./images/graph_actions.{extension}"
     )
