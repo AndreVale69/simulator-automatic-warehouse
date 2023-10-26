@@ -124,13 +124,19 @@ def serve_layout():
         dbc.Row([
             dbc.Col([
                 dbc.Card([
-                    dbc.CardHeader("This is the header"),
+                    dbc.CardHeader(children=html.H4("Utilities", className="card-title")),
+
                     dbc.CardBody(
                         [
-                            html.H4("Card title", className="card-title"),
-                            html.P("This is some card text", className="card-text"),
+                            dbc.InputGroup([
+                                # text
+                                dbc.Input(id='set_step_graph', type='number', min=1,
+                                          max=timeline.get_tot_tabs(), step=1, placeholder='Change view range'),
+                                dbc.InputGroupText(id='info_step', children='minute/s')
+                            ])
                         ]
                     ),
+
                     dbc.CardFooter("This is the footer"),
                 ])
             ]),
@@ -224,7 +230,7 @@ def download_graph(b_svg, b_pdf):
     elif "dropdown-btn_pdf" == ctx.triggered_id:
         extension = 'pdf'
     # take graph to download
-    fig.write_image(f"./images/graph_actions.{extension}", engine='kaleido')
+    fig.write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
     return dcc.send_file(
         f"./images/graph_actions.{extension}"
     )
@@ -256,19 +262,35 @@ def update_graph(clicks_right, clicks_left, clicks_right_end, clicks_left_end):
 @app.callback(
     Output('graph-actions', 'figure'),
     Output('actual_tab', 'invalid'),
+    Output('num_tabs_graph', 'children'),
+    Output('set_step_graph', 'invalid'),
     Input('btn_summary', 'n_clicks'),
     Input('actual_tab', 'value'),
+    Input('set_step_graph', 'value'),
     prevent_initial_call=True
 )
-def update_graph(clicks_summary, val_actual_tab):
+def update_graph(clicks_summary, val_actual_tab, val_step):
     if 'btn_summary' == ctx.triggered_id:
-        return fig.update_xaxes(range=[timeline.get_minimum_time(),timeline.get_maximum_time()]), False
+        return fig.update_xaxes(
+            range=[timeline.get_minimum_time(),timeline.get_maximum_time()]), False, f'/{timeline.get_tot_tabs()}', False
 
     if 'actual_tab' == ctx.triggered_id and val_actual_tab is not None:
         timeline.set_actual_tab(val_actual_tab)
-        return fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]), False
+        return fig.update_xaxes(
+            range=[timeline.get_actual_left(), timeline.get_actual_right()]), False, f'/{timeline.get_tot_tabs()}', False
 
-    return fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]), True
+    if 'set_step_graph' == ctx.triggered_id and val_step is not None:
+        timeline.set_step(val_step)
+        return fig.update_xaxes(
+            range=[timeline.get_actual_left(), timeline.get_actual_right()]), False, f'/{timeline.get_tot_tabs()}', False
+
+    if val_actual_tab is None:
+        return fig.update_xaxes(
+            range=[timeline.get_actual_left(), timeline.get_actual_right()]), True, f'/{timeline.get_tot_tabs()}', False
+
+    if val_step is None:
+        return fig.update_xaxes(
+            range=[timeline.get_actual_left(), timeline.get_actual_right()]), False, f'/{timeline.get_tot_tabs()}', True
 
 
 if __name__ == '__main__':
