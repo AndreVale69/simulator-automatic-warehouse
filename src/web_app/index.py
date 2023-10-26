@@ -1,6 +1,6 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
-from dash import Dash, dcc, html, Input, Output, ctx, State, clientside_callback
+from dash import Dash, dcc, html, Input, Output, ctx
 from simpy import Store
 import dash_bootstrap_components as dbc
 # from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
@@ -13,7 +13,7 @@ from pandas import Timestamp
 
 from src.sim.warehouse import Warehouse
 from collections import Counter
-from timeline import Timeline
+from web_app.web_components.timeline import Timeline
 
 # TODO:
 # - Priority High:
@@ -142,7 +142,8 @@ def serve_layout():
     # go to left
     dbc.Button([html.I(className='bi bi-arrow-left-circle-fill')], id='btn_left', n_clicks=0),
     # text
-    html.H6(id='num_tabs_graph', children=timeline.actual_tabs()),
+    dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(), step=1, value=timeline.get_actual_tab()),
+    html.H6(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
     # go to right
     dbc.Button([html.I(className='bi bi-arrow-right-circle-fill')], id='btn_right', n_clicks=0),
     # summary
@@ -175,27 +176,39 @@ def download_graph(b_svg, b_pdf):
         f"./images/graph_actions.{extension}"
     )
 
+
 @app.callback(
-    [Output('graph-actions', 'figure'),
-     Output('num_tabs_graph', 'children')],
+    Output('actual_tab', 'value'),
     [Input('btn_right', 'n_clicks'),
-     Input('btn_left', 'n_clicks'),
-     Input('btn_summary', 'n_clicks')],
+     Input('btn_left', 'n_clicks')],
     prevent_initial_call=True
 )
-def update_graph(clicks_right, clicks_left, clicks_summary):
+def update_graph(clicks_right, clicks_left):
     if "btn_right" == ctx.triggered_id:
         timeline.right_btn_triggered()
 
     if "btn_left" == ctx.triggered_id:
         timeline.left_btn_triggered()
 
-    if "btn_summary" == ctx.triggered_id:
-        return [fig.update_xaxes(range=[timeline.get_minimum_time(),timeline.get_maximum_time()]),
-                timeline.actual_tabs()]
+    return timeline.get_actual_tab()
 
-    return [fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
-            timeline.actual_tabs()]
+@app.callback(
+    Output('graph-actions', 'figure'),
+    Output('actual_tab', 'invalid'),
+    Input('btn_summary', 'n_clicks'),
+    Input('actual_tab', 'value'),
+    prevent_initial_call=True
+)
+def update_graph(clicks_summary, val_actual_tab):
+    if 'btn_summary' == ctx.triggered_id:
+        return fig.update_xaxes(range=[timeline.get_minimum_time(),timeline.get_maximum_time()]), False
+
+    if 'actual_tab' == ctx.triggered_id and val_actual_tab is not None:
+        timeline.set_actual_tab(val_actual_tab)
+        return fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]), False
+
+    return fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]), True
+
 
 if __name__ == '__main__':
     app.run_server(debug=False)
