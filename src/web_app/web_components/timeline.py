@@ -86,7 +86,6 @@ class Timeline:
             self._actual_tab -= 1
 
     def left_end_btn_triggered(self):
-        # decrease iff it isn't the limit
         self._actual_tab = 1
 
     def summary_btn_triggered(self):
@@ -94,12 +93,12 @@ class Timeline:
         self._actual_right = self._maximum
 
     def set_step(self, minutes: int):
-        # TODO: review this, it's a bit dangerous...
         self._step = minutes
-        self.set_actual_tab(self._actual_tab)
         self._tot_tabs = self.calculate_tot_tabs()
+        # check limit
+        self.set_actual_view(self._tot_tabs if self._actual_tab > self._tot_tabs else self._actual_tab)
 
-    def set_actual_tab(self, val_actual_tab: int):
+    def set_actual_view(self, val_actual_tab: int):
         # updates actual tab
         self._actual_tab = val_actual_tab
         # updates limits
