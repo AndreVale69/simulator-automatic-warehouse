@@ -1,25 +1,23 @@
-# Run this app with `python app.py` and
+# Run this app with `python index.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
-from dash import Dash, dcc, html, Input, Output, ctx
-from simpy import Store
-import dash_bootstrap_components as dbc
+
 # from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
 # from datetime import datetime, timedelta, date
 # import dash_daq as daq
 # from dash_bootstrap_templates import load_figure_template
+
+import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
+
+from dash import Dash, dcc, html, Input, Output, ctx, State
+from simpy import Store
 from pandas import Timestamp
+from datetime import datetime
 
 from src.sim.warehouse import Warehouse
 from collections import Counter
 from web_app.web_components.timeline import Timeline
-
-# TODO:
-# - Priority High:
-#   * Remove all garbage code
-#   * Do some refactoring...
-
 
 """
     #####################
@@ -39,7 +37,10 @@ cn = Counter(warehouse.get_events_to_simulate())
 """
 # Import bootstrap components
 BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
+app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
+           # this ensures that mobile devices don't rescale your content on small screens
+           # and lets you build mobile optimised layouts
+           meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}])
 
 # See https://plotly.com/python/px-arguments/ for more options
 # df = pd.DataFrame({
@@ -124,15 +125,17 @@ def serve_layout():
         dbc.Row([
             dbc.Col([
                 dbc.Card([
-                    dbc.CardHeader(children=html.H4("Utilities", className="card-title")),
+                    dbc.CardHeader(children=html.H4("Timeline Utilities", className="card-title")),
 
                     dbc.CardBody(
                         [
                             dbc.InputGroup([
-                                # text
-                                dbc.Input(id='set_step_graph', type='number', min=1,
-                                          max=timeline.get_tot_tabs(), step=1, placeholder='Change view range'),
-                                dbc.InputGroupText(id='info_step', children='minute/s')
+                                # info text
+                                dbc.InputGroupText(children='View range:'),
+                                # input text
+                                dbc.Input(id='set_step_graph', type='number', min=1, value=timeline.get_step(),
+                                          max=timeline.get_tot_tabs(), step=1),
+                                dbc.InputGroupText(children='min.')
                             ])
                         ]
                     ),
@@ -237,60 +240,83 @@ def download_graph(b_svg, b_pdf):
 
 
 @app.callback(
-    Output('actual_tab', 'value'),
-    [Input('btn_right', 'n_clicks'),
-     Input('btn_left', 'n_clicks'),
-     Input('btn_right_end', 'n_clicks'),
-     Input('btn_left_end', 'n_clicks')],
-    prevent_initial_call=True
-)
-def update_graph(clicks_right, clicks_left, clicks_right_end, clicks_left_end):
-    if "btn_right" == ctx.triggered_id:
-        timeline.right_btn_triggered()
-
-    if "btn_left" == ctx.triggered_id:
-        timeline.left_btn_triggered()
-
-    if "btn_right_end" == ctx.triggered_id:
-        timeline.right_end_btn_triggered()
-
-    if "btn_left_end" == ctx.triggered_id:
-        timeline.left_end_btn_triggered()
-
-    return timeline.get_actual_tab()
-
-@app.callback(
     Output('graph-actions', 'figure'),
+    Output('actual_tab', 'value'),
     Output('actual_tab', 'invalid'),
     Output('num_tabs_graph', 'children'),
     Output('set_step_graph', 'invalid'),
+
+    Input('btn_right', 'n_clicks'),
+    Input('btn_left', 'n_clicks'),
+    Input('btn_right_end', 'n_clicks'),
+    Input('btn_left_end', 'n_clicks'),
     Input('btn_summary', 'n_clicks'),
+
     Input('actual_tab', 'value'),
     Input('set_step_graph', 'value'),
+
+    State('set_step_graph', 'invalid'),
     prevent_initial_call=True
 )
-def update_graph(clicks_summary, val_actual_tab, val_step):
-    if 'btn_summary' == ctx.triggered_id:
-        return fig.update_xaxes(
-            range=[timeline.get_minimum_time(),timeline.get_maximum_time()]), False, f'/{timeline.get_tot_tabs()}', False
+def update_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
+                      val_actual_tab, val_set_step_graph, state_set_step_graph):
+    # Use switch case because is more efficiently than if-else
+    # Source: https://www.geeksforgeeks.org/switch-vs-else/
+    invalid_actual_tab: bool = True if val_actual_tab is None else False
+    match ctx.triggered_id:
+        case 'btn_right':
+            timeline.right_btn_triggered()
+            if not invalid_actual_tab:
+                timeline.set_actual_view(timeline.get_actual_tab())
 
-    if 'actual_tab' == ctx.triggered_id and val_actual_tab is not None:
-        timeline.set_actual_tab(val_actual_tab)
-        return fig.update_xaxes(
-            range=[timeline.get_actual_left(), timeline.get_actual_right()]), False, f'/{timeline.get_tot_tabs()}', False
+        case 'btn_left':
+            timeline.left_btn_triggered()
+            if not invalid_actual_tab:
+                timeline.set_actual_view(timeline.get_actual_tab())
 
-    if 'set_step_graph' == ctx.triggered_id and val_step is not None:
-        timeline.set_step(val_step)
-        return fig.update_xaxes(
-            range=[timeline.get_actual_left(), timeline.get_actual_right()]), False, f'/{timeline.get_tot_tabs()}', False
+        case 'btn_right_end':
+            timeline.right_end_btn_triggered()
+            if not invalid_actual_tab:
+                timeline.set_actual_view(timeline.get_actual_tab())
 
-    if val_actual_tab is None:
-        return fig.update_xaxes(
-            range=[timeline.get_actual_left(), timeline.get_actual_right()]), True, f'/{timeline.get_tot_tabs()}', False
+        case 'btn_left_end':
+            timeline.left_end_btn_triggered()
+            if not invalid_actual_tab:
+                timeline.set_actual_view(timeline.get_actual_tab())
 
-    if val_step is None:
-        return fig.update_xaxes(
-            range=[timeline.get_actual_left(), timeline.get_actual_right()]), False, f'/{timeline.get_tot_tabs()}', True
+        case 'btn_summary':
+            min_fig: datetime = timeline.get_minimum_time()
+            max_fig: datetime = timeline.get_maximum_time()
+            return (fig.update_xaxes(range=[min_fig, max_fig]),
+                    timeline.get_actual_tab(),
+                    invalid_actual_tab,
+                    f'/{timeline.get_tot_tabs()}',
+                    state_set_step_graph)
+
+        case 'actual_tab':
+            if not invalid_actual_tab:
+                timeline.set_actual_view(val_actual_tab)
+            return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+                    val_actual_tab,
+                    invalid_actual_tab,
+                    f'/{timeline.get_tot_tabs()}',
+                    state_set_step_graph)
+
+        case 'set_step_graph':
+            invalid_val_set_step_graph = True if val_set_step_graph is None else False
+            if not invalid_val_set_step_graph:
+                timeline.set_step(val_set_step_graph)
+            return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+                    timeline.get_actual_tab(),
+                    invalid_actual_tab,
+                    f'/{timeline.get_tot_tabs()}',
+                    invalid_val_set_step_graph)
+
+    return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+            timeline.get_actual_tab(),
+            invalid_actual_tab,
+            f'/{timeline.get_tot_tabs()}',
+            state_set_step_graph)
 
 
 if __name__ == '__main__':
