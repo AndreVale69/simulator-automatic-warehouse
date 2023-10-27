@@ -38,7 +38,7 @@ cn = Counter(warehouse.get_events_to_simulate())
     #########################
 """
 # Import bootstrap components
-BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
 
 # See https://plotly.com/python/px-arguments/ for more options
