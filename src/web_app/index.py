@@ -17,7 +17,7 @@ from datetime import datetime
 
 from src.sim.warehouse import Warehouse
 from collections import Counter
-from web_app.web_components.timeline import Timeline
+from web_app.components.timeline import Timeline
 
 """
     #####################
