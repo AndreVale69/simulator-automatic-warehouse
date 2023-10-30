@@ -237,7 +237,7 @@ class Warehouse:
         if config["simulation"]["gen_deposit"] > 0:
             self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()]))
         if config["simulation"]["gen_buffer"] > 0:
-            self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()],))
+            self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()]))
         self.gen_rand(num_drawers=config["simulation"]["gen_drawers"],
                       num_materials=config["simulation"]["gen_materials"])
 
@@ -545,6 +545,45 @@ class Warehouse:
 
         # run simulation
         self.get_environment().run(until=self.get_sim_time())
+
+    def new_simulation(self, time: int, num_actions: int, num_gen_drawers: int, num_gen_materials: int,
+                       gen_deposit: bool, gen_buffer: bool):
+        """
+        Create a new simulation
+        :param time: # TODO: doc
+        :param num_actions:
+        :param num_gen_drawers:
+        :param num_gen_materials:
+        :param gen_deposit:
+        :param gen_buffer:
+        :return:
+        """
+        from src.sim.material import gen_rand_material
+
+        # clean warehouse datas:
+        # - clean all columns entry
+        for column in self.columns_container:
+            column.reset_container()
+        # - clean all carousel entry
+        self.carousel.reset_container()
+
+        # setting new simulation settings:
+        self.sim_time = time
+        self.sim_num_actions = num_actions
+        if gen_deposit:
+            # create a new one
+            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
+        if gen_buffer:
+            # create a new one
+            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
+
+        # generate drawers and materials
+        self.gen_rand(num_drawers=num_gen_drawers, num_materials=num_gen_materials)
+
+        # run a new simulation
+        # TODO: not yet ready
+        # self.run_simulation()
+
 
     def choice_random_drawer(self) -> Drawer:
         """Choose a random drawer from the warehouse"""

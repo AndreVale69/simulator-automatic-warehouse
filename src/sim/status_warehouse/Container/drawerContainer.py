@@ -145,3 +145,10 @@ class DrawerContainer:
                 is_remove = True
                 entry_y += 1
         return is_remove
+
+    def reset_container(self):
+        """Cleanup column"""
+        for index, entry in enumerate(self.container):
+            # if it's a drawer, remove it (overwriting)
+            if isinstance(entry, DrawerEntry):
+                self.container[index] = EmptyEntry(offset_x=self.offset_x, pos_y=entry.get_pos_y())
