@@ -230,7 +230,8 @@ class Warehouse:
         self.events_to_simulate = []
 
         # time of simulation
-        self.sim_time = config["simulation"]["time"]
+        time_acquired = config["simulation"]["time"]
+        self.sim_time = time_acquired if time_acquired > 0 else None
         # number of actions
         self.sim_num_actions = config["simulation"]["num_actions"]
         # generate a configuration based on JSON
@@ -292,7 +293,7 @@ class Warehouse:
         ris += self.get_carousel().get_num_drawers()
         return ris
 
-    def get_sim_time(self) -> int:
+    def get_sim_time(self) -> int | None:
         return self.sim_time
 
     def get_sim_num_actions(self) -> int:
@@ -527,7 +528,7 @@ class Warehouse:
             while good_choice is False:
                 # select an event
                 rand_event = random.choice(alias_events)
-                # check the if the choice is correct
+                # check if the choice is correct
                 if 1 <= balance_wh <= 2 and (rand_event == "send_back" or
                                              rand_event == "ins_mat" or
                                              rand_event == "rmv_mat"):
@@ -544,10 +545,10 @@ class Warehouse:
         self.get_environment().process(self.get_simulation().simulate_actions(self.get_events_to_simulate()))
 
         # run simulation
-        self.get_environment().run(until=self.get_sim_time())
+        self.get_environment().run(until=self.sim_time)
 
-    def new_simulation(self, time: int, num_actions: int, num_gen_drawers: int, num_gen_materials: int,
-                       gen_deposit: bool, gen_buffer: bool):
+    def new_simulation(self, num_actions: int, num_gen_drawers: int, num_gen_materials: int,
+                       gen_deposit: bool, gen_buffer: bool, time: int=None):
         """
         Create a new simulation
         :param time: # TODO: doc
@@ -580,9 +581,12 @@ class Warehouse:
         # generate drawers and materials
         self.gen_rand(num_drawers=num_gen_drawers, num_materials=num_gen_materials)
 
+        # reset events to simulate list
+        self.events_to_simulate.clear()
+
         # run a new simulation
         # TODO: not yet ready
-        # self.run_simulation()
+        self.run_simulation()
 
 
     def choice_random_drawer(self) -> Drawer:
