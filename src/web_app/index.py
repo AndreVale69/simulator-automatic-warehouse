@@ -244,9 +244,9 @@ def serve_layout():
                     ]),
                 ])
             ], width=10)
-        ])
-        ,
-        dcc.Download(id="download-graph")
+        ]),
+        dcc.Download(id="download-graph"),
+        dcc.Graph(id='prova', figure=fig)
     ])
 
 app.layout = serve_layout
@@ -435,9 +435,12 @@ def update_time_sim_input(time_sim_val, time_sim_readonly):
         return True if time_sim_val is None else False
 
 
-# TODO: DEBUG!
+# TODO: Found bug! If you put 'graph-actions' id inside the Output, it will be a conflict!
+#       The callback connected to 'update_timeline_components' function has 'graph-actions' as Output id.
+#       So you must merge these two functions (update_timeline_components and exec_new_simulation).
+#       In this beta, you can see the new timeline (at the end of the page)
 @app.callback(
-    Output('graph-actions', '_chart_types'),
+    Output('prova', 'figure'),
 
     Input('btn_new_simulation', 'n_clicks'),
 
@@ -465,8 +468,9 @@ def exec_new_simulation(clicks_btn, num_actions_sim, num_drawers_sim, num_materi
                                  num_gen_materials=num_materials_sim,
                                  gen_deposit=True if 'gen_deposit' in checklist_generators else False,
                                  gen_buffer=True if 'gen_buffer' in checklist_generators else False,
-                                 time=time_sim)
+                                 time=time_sim if time_sim != False else None)
 
+        # TODO: duplicated code!!! Think smarter...
         store_obj: Store = warehouse.get_simulation().get_store_history()
         history = list()
         # Create a list of labels, so take only the Action name from the object "store_obj"
@@ -481,7 +485,7 @@ def exec_new_simulation(clicks_btn, num_actions_sim, num_drawers_sim, num_materi
         timeline = Timeline(min_time_sim, max_time_sim)
 
         # Create the timeline
-        fig = px.timeline(df,
+        fig = px.timeline(data_frame=df,
                           x_start="Start", x_end="Finish", y="Action",
                           range_x=[timeline.get_actual_left(), timeline.get_actual_right()],
                           color="Action")
@@ -494,7 +498,7 @@ def exec_new_simulation(clicks_btn, num_actions_sim, num_drawers_sim, num_materi
 
         return fig
 
-    # report errors
+    # TODO: report errors
     return timeline
 
 
