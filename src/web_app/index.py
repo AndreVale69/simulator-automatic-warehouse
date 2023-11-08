@@ -295,80 +295,49 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
 
 
 @app.callback(
-    Output('num_actions_sim', 'value'),
-    Output('num_drawers_sim', 'value'),
-    Output('num_materials_sim', 'value'),
     Output('num_actions_sim', 'invalid'),
+    Input('num_actions_sim', 'value'),
+    prevent_initial_call=True
+)
+def invalid_num_actions_sim(num_actions_sim_val):
+    return True if num_actions_sim_val is None else False
+
+
+@app.callback(
     Output('num_drawers_sim', 'invalid'),
+    Input('num_drawers_sim', 'value'),
+    prevent_initial_call=True
+)
+def invalid_num_drawers_sim(num_drawers_sim_val):
+    return True if num_drawers_sim_val is None else False
+
+
+@app.callback(
     Output('num_materials_sim', 'invalid'),
+    Input('num_materials_sim', 'value'),
+    prevent_initial_call=True
+)
+def invalid_num_materials_sim(num_materials_sim_val):
+    return True if num_materials_sim_val is None else False
+
+
+@app.callback(
     Output('time_sim', 'readonly'),
     Output('time_sim', 'value'),
-
-
-    Input('num_actions_sim', 'value'),
-    Input('num_drawers_sim', 'value'),
-    Input('num_materials_sim', 'value'),
-    Input('checklist_generators', 'value'),
     Input('checkbox_time_sim', 'value'),
-
-
-    State('num_actions_sim', 'value'),
-    State('num_drawers_sim', 'value'),
-    State('num_materials_sim', 'value'),
-    State('num_actions_sim', 'invalid'),
-    State('num_drawers_sim', 'invalid'),
-    State('num_materials_sim', 'invalid'),
-    State('time_sim', 'readonly'),
-    State('checkbox_time_sim', 'value'),
-    State('checklist_generators', 'options'),
+    prevent_initial_call=True
 )
-def update_new_sim_components(
-        # Inputs:
-        actions_val, drawers_val, materials_val, checklist_generators_val, checkbox_time_val,
-        # States:
-        actions_val_state, drawers_val_state, materials_val_state, actions_invalid_state, drawers_invalid_state,
-        materials_invalid_state, checkbox_time_readonly, checkbox_time_value, checklist_generators_options):
-    match ctx.triggered_id:
-        case 'num_actions_sim':
-            actions_invalid_state = True if actions_val is None else False
-
-        case 'num_drawers_sim':
-            drawers_invalid_state = True if drawers_val is None else False
-
-        case 'num_materials_sim':
-            materials_invalid_state = True if materials_val is None else False
-
-        case 'checkbox_time_sim':
-            checkbox_time_readonly = not checkbox_time_val
-            checkbox_time_val = None
-
-        # TODO: to rmv
-        case 'checklist_generators':
-            return (actions_val_state,
-                    drawers_val_state,
-                    materials_val_state,
-                    actions_invalid_state,
-                    drawers_invalid_state,
-                    materials_invalid_state,
-                    checkbox_time_readonly,
-                    checkbox_time_val)
-
-    return (actions_val_state,
-            drawers_val_state,
-            materials_val_state,
-            actions_invalid_state,
-            drawers_invalid_state,
-            materials_invalid_state,
-            checkbox_time_readonly,
-            checkbox_time_val)
+def readonly_input_checkbox_time_sim(checkbox_time_sim_val):
+    return not checkbox_time_sim_val, None
 
 
 @app.callback(
     Output('time_sim', 'invalid'),
     Input('time_sim', 'value'),
-    State('time_sim', 'readonly')
+    State('time_sim', 'readonly'),
+    prevent_initial_call=True
 )
-def update_time_sim_input(time_sim_val, time_sim_readonly):
+def invalid_time_sim(time_sim_val, time_sim_readonly):
     if not time_sim_readonly:
         return True if time_sim_val is None else False
 
@@ -379,25 +348,37 @@ def update_time_sim_input(time_sim_val, time_sim_readonly):
 #       In this beta, you can see the new timeline (at the end of the page)
 @app.callback(
     Output('prova', 'figure'),
+    # triggered values to create eventually errors
+    Output('num_actions_sim', 'value'),
+    Output('num_drawers_sim', 'value'),
+    Output('num_materials_sim', 'value'),
 
     Input('btn_new_simulation', 'n_clicks'),
 
-    State('num_actions_sim', 'value'), # TODO: to check
-    State('num_drawers_sim', 'value'), # TODO: to check
-    State('num_materials_sim', 'value'), # TODO: to check
-    State('checklist_generators', 'value'), # TODO: opt
-    State('checkbox_time_sim', 'value'), # TODO: opt
-    State('time_sim', 'value'), # TODO: it depends from checkbox_time_sim
-    State('graph-actions', 'figure')
+    State('num_actions_sim', 'value'),
+    State('num_drawers_sim', 'value'),
+    State('num_materials_sim', 'value'),
+    State('checklist_generators', 'value'),
+    State('checkbox_time_sim', 'value'),
+    State('time_sim', 'value'),
+    State('graph-actions', 'figure'),
+    prevent_initial_call=True
 )
-def exec_new_simulation(clicks_btn, num_actions_sim, num_drawers_sim, num_materials_sim, checklist_generators, checkbox_time_sim, time_sim, timeline):
+def exec_new_simulation(clicks_btn,
+                        num_actions_sim, num_drawers_sim, num_materials_sim,
+                        checklist_generators, checkbox_time_sim,
+                        time_sim,
+                        timeline):
+    # check if actions number is invalid
     actions_invalid = True if num_actions_sim is None else False
+    # check if drawers number is invalid
     drawers_invalid = True if num_drawers_sim is None else False
+    # check if materials number is invalid
     materials_invalid = True if num_materials_sim is None else False
-    checklist_generators = dict() if checklist_generators is None else checklist_generators
-    time_sim_invalid = False
-    if checkbox_time_sim:
-        time_sim_invalid = True if time_sim is None else False
+    # check if a checkbox (deposit/buffer drawer) has been triggered
+    checklist_generators = {} if checklist_generators is None else checklist_generators
+    # check if a time of the simulation has been triggered and if the time value is not None
+    time_sim_invalid = True if (checkbox_time_sim and time_sim is None) else False
 
     # run new simulation if there are no probs
     if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
@@ -407,12 +388,10 @@ def exec_new_simulation(clicks_btn, num_actions_sim, num_drawers_sim, num_materi
                                  gen_deposit=True if 'gen_deposit' in checklist_generators else False,
                                  gen_buffer=True if 'gen_buffer' in checklist_generators else False,
                                  time=time_sim if time_sim != False else None)
-
         timeline = Timeline(warehouse.get_simulation().get_store_history().items)
-        return timeline.get_figure()
+        return timeline.get_figure(), num_actions_sim, num_drawers_sim, num_materials_sim
 
-    # TODO: report errors
-    return timeline
+    return timeline, num_actions_sim, num_drawers_sim, num_materials_sim
 
 
 if __name__ == '__main__':
