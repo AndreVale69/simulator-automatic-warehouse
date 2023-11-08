@@ -1,4 +1,7 @@
-from pandas import Timestamp
+import plotly.express as px
+import plotly.graph_objs as go
+
+from pandas import Timestamp, DataFrame
 from datetime import timedelta, time
 from datetime import datetime
 from math import ceil
@@ -14,7 +17,9 @@ def _create_timedelta(times: time) -> timedelta:
 
 
 class Timeline:
-    def __init__(self, minimum_time: Timestamp | datetime, maximum_time: Timestamp | datetime, step: int=1):
+    def __init__(self, datas: list[dict], step: int=1):
+        # create dataframe used to Timeline
+        self._df = DataFrame(datas)
         # saves these variables to avoid high calculates computing
         self._total_time: timedelta | None = None
         self._diff_hours: timedelta | None = None
@@ -22,18 +27,39 @@ class Timeline:
         self._maximum_time: time | None = None
         self._minimum_time: time | None = None
 
-        self._minimum: Timestamp | datetime = minimum_time
-        self._maximum: Timestamp | datetime = maximum_time
+        # Take the minimum and maximum time of the simulation
+        self._minimum: Timestamp | datetime = self._df.min().get('Start')
+        self._maximum: Timestamp | datetime = self._df.max().get('Finish')
         # default range value (left to right) 1-minute
         self._step: int = step
         # left time of timeline
-        self._actual_left: datetime = minimum_time
+        self._actual_left: datetime = self._minimum
         # right time of timeline
         self._actual_right: datetime = self._actual_left + timedelta(minutes=self._step)
         # set num. total tabs
         self._tot_tabs: int = self.calculate_tot_tabs()
         # default actual tab
         self._actual_tab: int = 1
+        self._create_timeline_fig()
+
+    def _create_timeline_fig(self):
+        # See https://plotly.com/python/px-arguments/ for more options
+        # Create the timeline
+        self._figure = px.timeline(self._df,
+                          x_start="Start", x_end="Finish", y="Action",
+                          range_x=[self._actual_left, self._actual_right],
+                          color="Action")
+        self._figure.update_yaxes(autorange="reversed")  # otherwise, tasks are listed from the bottom up
+        # If you want a linear timeline:
+        # fig.layout.xaxis.type = 'linear'
+        self._figure.layout.xaxis.type = 'date'
+        # create slider
+        self._figure.update_xaxes(rangeslider=dict(visible=True, range=[self._minimum, self._maximum]))
+        # If you want a rangeselector to zoom on each section
+        # See more: https://plotly.com/python/range-slider/
+
+    def get_figure(self) -> go.Figure:
+        return self._figure
 
     def get_minimum_time(self) -> Timestamp | datetime:
         return self._minimum

@@ -41,70 +41,8 @@ app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
            # and lets you build mobile optimised layouts
            meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}])
 
-# See https://plotly.com/python/px-arguments/ for more options
-# df = pd.DataFrame({
-#     "Actions": ["Send back a drawer", "Extract a drawer", "Insert material", "Remove material"],
-#     "Nums Executions": [cn.get("send_back"), cn.get("extract_drawer"), cn.get("ins_mat"), cn.get("rmv_mat")]
-# })
 
-# fig = px.bar(df, x="Actions", y="Nums Executions", barmode="stack",
-#              title='Number of actions performed', color='Actions')
-
-#prova = [
-#    dict(Action="Job A", Start='2009-01-01', Finish='2009-02-28'),
-#    dict(Action="Job B", Start='2009-03-05', Finish='2009-04-15'),
-#    dict(Action="Job C", Start='2009-02-20', Finish='2009-05-30')
-#]
-#prova.append(dict(Action="Job D", Start='2009-02-20', Finish='2009-05-30'))
-
-# Get the simulation history
-store_obj: Store = warehouse.get_simulation().get_store_history()
-history = list()
-# Create a list of labels, so take only the Action name from the object "store_obj"
-for index in range(store_obj.capacity):
-    history.append(store_obj.get().value)
-
-
-df = pd.DataFrame(history)
-
-# Take the minimum and maximum time of the simulation
-min_time_sim: Timestamp = df.min().get('Start')
-max_time_sim: Timestamp = df.max().get('Finish')
-timeline = Timeline(min_time_sim, max_time_sim)
-# prova1 = min_time_sim.time()
-# prova2 = max_time_sim.time()
-# prova3 = min_time_sim.date()
-# prova4 = max_time_sim.date()
-# prova1_delta: timedelta = timedelta(hours=prova1.hour, minutes=prova1.minute, seconds=prova1.second, microseconds=prova1.microsecond)
-# prova2_delta: timedelta = timedelta(hours=prova2.hour, minutes=prova2.minute, seconds=prova2.second, microseconds=prova2.microsecond)
-# diff_days: timedelta = prova4 - prova3
-# diff_hours: timedelta = prova2_delta - prova1_delta
-
-
-# Create the timeline
-fig = px.timeline(df,
-                  x_start="Start", x_end="Finish", y="Action",
-                  range_x=[timeline.get_actual_left(), timeline.get_actual_right()],
-                  color="Action")
-fig.update_yaxes(autorange="reversed") # otherwise, tasks are listed from the bottom up
-# If you want a linear timeline:
-# fig.layout.xaxis.type = 'linear'
-fig.layout.xaxis.type = 'date'
-# create slider
-fig.update_xaxes(rangeslider = dict(visible=True, range=[min_time_sim,max_time_sim]))
-# If you want a rangeselector to zoom on each section
-# See more: https://plotly.com/python/range-slider/
-# fig.update_xaxes(
-#     rangeslider = dict(visible=True, range=[min_time_sim,max_time_sim]),
-#     rangeselector = dict(
-#         buttons = list([
-#             dict(count = 1, label = "1m", step = "minute", stepmode = "backward"),
-#             dict(count = 5, label = "5m", step = "minute", stepmode = "backward"),
-#             dict(count = 10, label = "10m", step = "minute", stepmode = "todate"),
-#             dict(step = "all")
-#         ])
-#     )
-# )
+timeline = Timeline(warehouse.get_simulation().get_store_history().items)
 
 """ 
     ########################
@@ -217,7 +155,7 @@ def serve_layout():
                             dbc.Row([
                                 dcc.Graph(
                                     id='graph-actions',
-                                    figure=fig
+                                    figure=timeline.get_figure()
                                 )
                             ])
                         ]
@@ -246,7 +184,7 @@ def serve_layout():
             ], width=10)
         ]),
         dcc.Download(id="download-graph"),
-        dcc.Graph(id='prova', figure=fig)
+        dcc.Graph(id='prova', figure=timeline.get_figure())
     ])
 
 app.layout = serve_layout
@@ -270,7 +208,7 @@ def download_graph(b_svg, b_pdf):
     elif "dropdown-btn_pdf" == ctx.triggered_id:
         extension = 'pdf'
     # take graph to download
-    fig.write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
+    timeline.get_figure().write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
     return dcc.send_file(
         f"./images/graph_actions.{extension}"
     )
@@ -324,7 +262,7 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
         case 'btn_summary':
             min_fig: datetime = timeline.get_minimum_time()
             max_fig: datetime = timeline.get_maximum_time()
-            return (fig.update_xaxes(range=[min_fig, max_fig]),
+            return (timeline.get_figure().update_xaxes(range=[min_fig, max_fig]),
                     timeline.get_actual_tab(),
                     invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
@@ -333,7 +271,7 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
         case 'actual_tab':
             if not invalid_actual_tab:
                 timeline.set_actual_view(val_actual_tab)
-            return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+            return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     val_actual_tab,
                     invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
@@ -343,13 +281,13 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             invalid_val_set_step_graph = True if val_set_step_graph is None else False
             if not invalid_val_set_step_graph:
                 timeline.set_step(val_set_step_graph)
-            return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+            return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     timeline.get_actual_tab(),
                     invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
                     invalid_val_set_step_graph)
 
-    return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+    return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
             invalid_actual_tab,
             f'/{timeline.get_tot_tabs()}',
@@ -470,33 +408,8 @@ def exec_new_simulation(clicks_btn, num_actions_sim, num_drawers_sim, num_materi
                                  gen_buffer=True if 'gen_buffer' in checklist_generators else False,
                                  time=time_sim if time_sim != False else None)
 
-        # TODO: duplicated code!!! Think smarter...
-        store_obj: Store = warehouse.get_simulation().get_store_history()
-        history = list()
-        # Create a list of labels, so take only the Action name from the object "store_obj"
-        for index in range(store_obj.capacity):
-            history.append(store_obj.get().value)
-
-        df = pd.DataFrame(history)
-
-        # Take the minimum and maximum time of the simulation
-        min_time_sim: Timestamp = df.min().get('Start')
-        max_time_sim: Timestamp = df.max().get('Finish')
-        timeline = Timeline(min_time_sim, max_time_sim)
-
-        # Create the timeline
-        fig = px.timeline(data_frame=df,
-                          x_start="Start", x_end="Finish", y="Action",
-                          range_x=[timeline.get_actual_left(), timeline.get_actual_right()],
-                          color="Action")
-        fig.update_yaxes(autorange="reversed")  # otherwise, tasks are listed from the bottom up
-        # If you want a linear timeline:
-        # fig.layout.xaxis.type = 'linear'
-        fig.layout.xaxis.type = 'date'
-        # create slider
-        fig.update_xaxes(rangeslider=dict(visible=True, range=[min_time_sim, max_time_sim]))
-
-        return fig
+        timeline = Timeline(warehouse.get_simulation().get_store_history().items)
+        return timeline.get_figure()
 
     # TODO: report errors
     return timeline
