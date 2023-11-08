@@ -17,7 +17,7 @@ from datetime import datetime
 
 from src.sim.warehouse import Warehouse
 from collections import Counter
-from web_app.web_components.timeline import Timeline
+from web_app.components.timeline import Timeline
 
 """
     #####################
@@ -28,7 +28,6 @@ from web_app.web_components.timeline import Timeline
 warehouse = Warehouse()
 warehouse.run_simulation()
 cn = Counter(warehouse.get_events_to_simulate())
-
 
 """
     #########################
@@ -42,70 +41,8 @@ app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
            # and lets you build mobile optimised layouts
            meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}])
 
-# See https://plotly.com/python/px-arguments/ for more options
-# df = pd.DataFrame({
-#     "Actions": ["Send back a drawer", "Extract a drawer", "Insert material", "Remove material"],
-#     "Nums Executions": [cn.get("send_back"), cn.get("extract_drawer"), cn.get("ins_mat"), cn.get("rmv_mat")]
-# })
 
-# fig = px.bar(df, x="Actions", y="Nums Executions", barmode="stack",
-#              title='Number of actions performed', color='Actions')
-
-#prova = [
-#    dict(Action="Job A", Start='2009-01-01', Finish='2009-02-28'),
-#    dict(Action="Job B", Start='2009-03-05', Finish='2009-04-15'),
-#    dict(Action="Job C", Start='2009-02-20', Finish='2009-05-30')
-#]
-#prova.append(dict(Action="Job D", Start='2009-02-20', Finish='2009-05-30'))
-
-# Get the simulation history
-store_obj: Store = warehouse.get_simulation().get_store_history()
-history = list()
-# Create a list of labels, so take only the Action name from the object "store_obj"
-for index in range(store_obj.capacity):
-    history.append(store_obj.get().value)
-
-
-df = pd.DataFrame(history)
-
-# Take the minimum and maximum time of the simulation
-min_time_sim: Timestamp = df.min().get('Start')
-max_time_sim: Timestamp = df.max().get('Finish')
-timeline = Timeline(min_time_sim, max_time_sim)
-# prova1 = min_time_sim.time()
-# prova2 = max_time_sim.time()
-# prova3 = min_time_sim.date()
-# prova4 = max_time_sim.date()
-# prova1_delta: timedelta = timedelta(hours=prova1.hour, minutes=prova1.minute, seconds=prova1.second, microseconds=prova1.microsecond)
-# prova2_delta: timedelta = timedelta(hours=prova2.hour, minutes=prova2.minute, seconds=prova2.second, microseconds=prova2.microsecond)
-# diff_days: timedelta = prova4 - prova3
-# diff_hours: timedelta = prova2_delta - prova1_delta
-
-
-# Create the timeline
-fig = px.timeline(df,
-                  x_start="Start", x_end="Finish", y="Action",
-                  range_x=[timeline.get_actual_left(), timeline.get_actual_right()],
-                  color="Action")
-fig.update_yaxes(autorange="reversed") # otherwise, tasks are listed from the bottom up
-# If you want a linear timeline:
-# fig.layout.xaxis.type = 'linear'
-fig.layout.xaxis.type = 'date'
-# create slider
-fig.update_xaxes(rangeslider = dict(visible=True, range=[min_time_sim,max_time_sim]))
-# If you want a rangeselector to zoom on each section
-# See more: https://plotly.com/python/range-slider/
-# fig.update_xaxes(
-#     rangeslider = dict(visible=True, range=[min_time_sim,max_time_sim]),
-#     rangeselector = dict(
-#         buttons = list([
-#             dict(count = 1, label = "1m", step = "minute", stepmode = "backward"),
-#             dict(count = 5, label = "5m", step = "minute", stepmode = "backward"),
-#             dict(count = 10, label = "10m", step = "minute", stepmode = "todate"),
-#             dict(step = "all")
-#         ])
-#     )
-# )
+timeline = Timeline(warehouse.get_simulation().get_store_history().items)
 
 """ 
     ########################
@@ -125,22 +62,47 @@ def serve_layout():
         dbc.Row([
             dbc.Col([
                 dbc.Card([
-                    dbc.CardHeader(children=html.H4("Timeline Utilities", className="card-title")),
+                    dbc.CardHeader(children=html.H4("New Simulation", className="card-title")),
 
-                    dbc.CardBody(
-                        [
-                            dbc.InputGroup([
-                                # info text
-                                dbc.InputGroupText(children='View range:'),
-                                # input text
-                                dbc.Input(id='set_step_graph', type='number', min=1, value=timeline.get_step(),
-                                          max=timeline.get_tot_tabs(), step=1),
-                                dbc.InputGroupText(children='min.')
+                    dbc.CardBody([
+                        dbc.ListGroup([
+                            dbc.ListGroupItem([
+                                dbc.Label('Total number of actions:'),
+                                dbc.Input(id='num_actions_sim', type='number', min=1, step=1, placeholder='# Actions', required=True) # TODO: add '?' and write in what does it means. You can use also 'info' icon (boostrap)
+                            ]),
+                            dbc.ListGroupItem([
+                                dbc.Label('Total number of drawers:'),
+                                dbc.Input(id='num_drawers_sim', type='number', min=1, step=1, placeholder='# Drawers')
+                            ]),
+                            dbc.ListGroupItem([
+                                dbc.Label('Total number of materials:'),
+                                dbc.Input(id='num_materials_sim', type='number', min=1, step=1, placeholder='# Materials')
+                            ]),
+                            dbc.ListGroupItem([
+                                dbc.Label('Do you want fill carousel?'),
+                                dbc.Checklist(
+                                    options=[
+                                        {"value": "gen_deposit", "label": "Generate deposit drawer"},
+                                        {"value": "gen_buffer", "label": "Generate buffer drawer"},
+                                    ],
+                                    id="checklist_generators",
+                                )
+                            ]),
+                            dbc.ListGroupItem([
+                                dbc.Label('Total time of the simulation:'),
+                                dbc.InputGroup([
+                                    dbc.InputGroupText(dbc.Checkbox(id='checkbox_time_sim', value=False)),
+                                    dbc.Input(id='time_sim', type='number', min=1, step=1, placeholder='Seconds', readonly=True)
+                                ]),
                             ])
-                        ]
-                    ),
+                        ])
+                    ]),
 
-                    dbc.CardFooter("This is the footer"),
+                    dbc.CardFooter([
+                        dbc.Col([
+                            dbc.Button(children='Run new simulation!', id='btn_new_simulation', n_clicks=0)
+                        ], width={'offset': 2})
+                    ]),
                 ])
             ]),
             dbc.Col([
@@ -150,6 +112,19 @@ def serve_layout():
                     dbc.CardBody(
                         [
                             dbc.Row([
+                                dbc.Col([
+                                    dbc.Col([
+                                        dbc.InputGroup([
+                                            # info text
+                                            dbc.InputGroupText(children='View range:'),
+                                            # input text
+                                            dbc.Input(id='set_step_graph', type='number', min=1,
+                                                      value=timeline.get_step(),
+                                                      max=timeline.get_tot_tabs(), step=1),
+                                            dbc.InputGroupText(children='min.')
+                                        ])
+                                    ])
+                                ], width='auto'),
                                 dbc.Col([
                                     dbc.InputGroup([
                                         # go to extreme left
@@ -162,7 +137,7 @@ def serve_layout():
                                         dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(),
                                                   step=1,
                                                   value=timeline.get_actual_tab()),
-                                        dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'), # TODO: fix its value when goes to the limit
+                                            dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'), # TODO: fix its value when goes to the limit
                                         # go to right
                                         dbc.Button([html.I(className='bi bi-chevron-right')], id='btn_right',
                                                    n_clicks=0),
@@ -170,7 +145,7 @@ def serve_layout():
                                         dbc.Button([html.I(className='bi bi-chevron-bar-right')], id='btn_right_end',
                                                    n_clicks=0)
                                     ])
-                                ], width={"size": 'auto', "offset": 4}),
+                                ], width={"size": 'auto', "offset": 2}),
                                 dbc.Col([
                                     # summary
                                     dbc.Button([html.I(className='bi bi-x-circle-fill'), " SUMMARY"], id='btn_summary',
@@ -180,7 +155,7 @@ def serve_layout():
                             dbc.Row([
                                 dcc.Graph(
                                     id='graph-actions',
-                                    figure=fig
+                                    figure=timeline.get_figure()
                                 )
                             ])
                         ]
@@ -207,9 +182,9 @@ def serve_layout():
                     ]),
                 ])
             ], width=10)
-        ])
-        ,
-        dcc.Download(id="download-graph")
+        ]),
+        dcc.Download(id="download-graph"),
+        dcc.Graph(id='prova', figure=timeline.get_figure())
     ])
 
 app.layout = serve_layout
@@ -233,7 +208,7 @@ def download_graph(b_svg, b_pdf):
     elif "dropdown-btn_pdf" == ctx.triggered_id:
         extension = 'pdf'
     # take graph to download
-    fig.write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
+    timeline.get_figure().write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
     return dcc.send_file(
         f"./images/graph_actions.{extension}"
     )
@@ -258,8 +233,8 @@ def download_graph(b_svg, b_pdf):
     State('set_step_graph', 'invalid'),
     prevent_initial_call=True
 )
-def update_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
-                      val_actual_tab, val_set_step_graph, state_set_step_graph):
+def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
+                               val_actual_tab, val_set_step_graph, state_set_step_graph):
     # Use switch case because is more efficiently than if-else
     # Source: https://www.geeksforgeeks.org/switch-vs-else/
     invalid_actual_tab: bool = True if val_actual_tab is None else False
@@ -287,7 +262,7 @@ def update_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_le
         case 'btn_summary':
             min_fig: datetime = timeline.get_minimum_time()
             max_fig: datetime = timeline.get_maximum_time()
-            return (fig.update_xaxes(range=[min_fig, max_fig]),
+            return (timeline.get_figure().update_xaxes(range=[min_fig, max_fig]),
                     timeline.get_actual_tab(),
                     invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
@@ -296,7 +271,7 @@ def update_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_le
         case 'actual_tab':
             if not invalid_actual_tab:
                 timeline.set_actual_view(val_actual_tab)
-            return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+            return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     val_actual_tab,
                     invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
@@ -306,17 +281,117 @@ def update_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_le
             invalid_val_set_step_graph = True if val_set_step_graph is None else False
             if not invalid_val_set_step_graph:
                 timeline.set_step(val_set_step_graph)
-            return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+            return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     timeline.get_actual_tab(),
                     invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
                     invalid_val_set_step_graph)
 
-    return (fig.update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
+    return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
             invalid_actual_tab,
             f'/{timeline.get_tot_tabs()}',
             state_set_step_graph)
+
+
+@app.callback(
+    Output('num_actions_sim', 'invalid'),
+    Input('num_actions_sim', 'value'),
+    prevent_initial_call=True
+)
+def invalid_num_actions_sim(num_actions_sim_val):
+    return True if num_actions_sim_val is None else False
+
+
+@app.callback(
+    Output('num_drawers_sim', 'invalid'),
+    Input('num_drawers_sim', 'value'),
+    prevent_initial_call=True
+)
+def invalid_num_drawers_sim(num_drawers_sim_val):
+    return True if num_drawers_sim_val is None else False
+
+
+@app.callback(
+    Output('num_materials_sim', 'invalid'),
+    Input('num_materials_sim', 'value'),
+    prevent_initial_call=True
+)
+def invalid_num_materials_sim(num_materials_sim_val):
+    return True if num_materials_sim_val is None else False
+
+
+@app.callback(
+    Output('time_sim', 'readonly'),
+    Output('time_sim', 'value'),
+    Input('checkbox_time_sim', 'value'),
+    prevent_initial_call=True
+)
+def readonly_input_checkbox_time_sim(checkbox_time_sim_val):
+    return not checkbox_time_sim_val, None
+
+
+@app.callback(
+    Output('time_sim', 'invalid'),
+    Input('time_sim', 'value'),
+    State('time_sim', 'readonly'),
+    prevent_initial_call=True
+)
+def invalid_time_sim(time_sim_val, time_sim_readonly):
+    if not time_sim_readonly:
+        return True if time_sim_val is None else False
+
+
+# TODO: Found bug! If you put 'graph-actions' id inside the Output, it will be a conflict!
+#       The callback connected to 'update_timeline_components' function has 'graph-actions' as Output id.
+#       So you must merge these two functions (update_timeline_components and exec_new_simulation).
+#       In this beta, you can see the new timeline (at the end of the page)
+@app.callback(
+    Output('prova', 'figure'),
+    # triggered values to create eventually errors
+    Output('num_actions_sim', 'value'),
+    Output('num_drawers_sim', 'value'),
+    Output('num_materials_sim', 'value'),
+
+    Input('btn_new_simulation', 'n_clicks'),
+
+    State('num_actions_sim', 'value'),
+    State('num_drawers_sim', 'value'),
+    State('num_materials_sim', 'value'),
+    State('checklist_generators', 'value'),
+    State('checkbox_time_sim', 'value'),
+    State('time_sim', 'value'),
+    State('graph-actions', 'figure'),
+    prevent_initial_call=True
+)
+def exec_new_simulation(clicks_btn,
+                        num_actions_sim, num_drawers_sim, num_materials_sim,
+                        checklist_generators, checkbox_time_sim,
+                        time_sim,
+                        timeline):
+    # check if actions number is invalid
+    actions_invalid = True if num_actions_sim is None else False
+    # check if drawers number is invalid
+    drawers_invalid = True if num_drawers_sim is None else False
+    # check if materials number is invalid
+    materials_invalid = True if num_materials_sim is None else False
+    # check if a checkbox (deposit/buffer drawer) has been triggered
+    checklist_generators = {} if checklist_generators is None else checklist_generators
+    # check if a time of the simulation has been triggered and if the time value is not None
+    time_sim_invalid = True if (checkbox_time_sim and time_sim is None) else False
+
+    # run new simulation if there are no probs
+    if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
+        warehouse.new_simulation(num_actions=num_actions_sim,
+                                 num_gen_drawers=num_drawers_sim,
+                                 num_gen_materials=num_materials_sim,
+                                 gen_deposit=True if 'gen_deposit' in checklist_generators else False,
+                                 gen_buffer=True if 'gen_buffer' in checklist_generators else False,
+                                 time=time_sim if time_sim != False else None)
+        timeline = Timeline(warehouse.get_simulation().get_store_history().items)
+        return timeline.get_figure(), num_actions_sim, num_drawers_sim, num_materials_sim
+
+    return timeline, num_actions_sim, num_drawers_sim, num_materials_sim
 
 
 if __name__ == '__main__':
