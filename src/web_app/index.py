@@ -9,6 +9,7 @@
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
+import plotly.graph_objs as go
 
 from dash import Dash, dcc, html, Input, Output, ctx, State
 from simpy import Store
@@ -183,8 +184,7 @@ def serve_layout():
                 ])
             ], width=10)
         ]),
-        dcc.Download(id="download-graph"),
-        dcc.Graph(id='prova', figure=timeline.get_figure())
+        dcc.Download(id="download-graph")
     ])
 
 app.layout = serve_layout
@@ -227,10 +227,28 @@ def download_graph(b_svg, b_pdf):
 
     Input('actual_tab', 'value'),
     Input('set_step_graph', 'value'),
+
+    # trigger new simulation button
+    Input('btn_new_simulation', 'n_clicks'),
+
+    State('num_actions_sim', 'value'),
+    State('num_drawers_sim', 'value'),
+    State('num_materials_sim', 'value'),
+    State('checklist_generators', 'value'),
+    State('checkbox_time_sim', 'value'),
+    State('time_sim', 'value'),
+    State('graph-actions', 'figure'),
     prevent_initial_call=True
 )
 def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
-                               val_actual_tab, val_set_step_graph):
+                               val_actual_tab, val_set_step_graph,
+                               # trigger new simulation button
+                               clicks_btn,
+                               num_actions_sim, num_drawers_sim, num_materials_sim,
+                               checklist_generators, checkbox_time_sim,
+                               time_sim,
+                               timeline_old
+                               ):
     # Use switch case because is more efficiently than if-else
     # Source: https://www.geeksforgeeks.org/switch-vs-else/
     is_invalid_actual_tab = True if val_actual_tab is None else False
@@ -275,6 +293,13 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     timeline.get_actual_tab(),
                     f'/{timeline.get_tot_tabs()}')
+
+        case 'btn_new_simulation':
+            return exec_new_simulation(clicks_btn,
+                        num_actions_sim, num_drawers_sim, num_materials_sim,
+                        checklist_generators, checkbox_time_sim,
+                        time_sim,
+                        timeline_old), timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
@@ -354,25 +379,11 @@ def invalid_time_sim(time_sim_val, time_sim_readonly):
 #       The callback connected to 'update_timeline_components' function has 'graph-actions' as Output id.
 #       So you must merge these two functions (update_timeline_components and exec_new_simulation).
 #       In this beta, you can see the new timeline (at the end of the page)
-@app.callback(
-    Output('prova', 'figure'),
-
-    Input('btn_new_simulation', 'n_clicks'),
-
-    State('num_actions_sim', 'value'),
-    State('num_drawers_sim', 'value'),
-    State('num_materials_sim', 'value'),
-    State('checklist_generators', 'value'),
-    State('checkbox_time_sim', 'value'),
-    State('time_sim', 'value'),
-    State('graph-actions', 'figure'),
-    prevent_initial_call=True
-)
 def exec_new_simulation(clicks_btn,
                         num_actions_sim, num_drawers_sim, num_materials_sim,
                         checklist_generators, checkbox_time_sim,
                         time_sim,
-                        timeline_old):
+                        timeline_old) -> go.Figure:
     # check if actions number is invalid
     actions_invalid = True if num_actions_sim is None else False
     # check if drawers number is invalid
