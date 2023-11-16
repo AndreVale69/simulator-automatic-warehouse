@@ -302,27 +302,30 @@ def invalid_actual_tab(actual_tab_val):
 @app.callback(
     Output('num_actions_sim', 'invalid'),
     Input('num_actions_sim', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
     prevent_initial_call=True
 )
-def invalid_num_actions_sim(num_actions_sim_val):
+def invalid_num_actions_sim(num_actions_sim_val, btn_new_simulation_val):
     return True if num_actions_sim_val is None else False
 
 
 @app.callback(
     Output('num_drawers_sim', 'invalid'),
     Input('num_drawers_sim', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
     prevent_initial_call=True
 )
-def invalid_num_drawers_sim(num_drawers_sim_val):
+def invalid_num_drawers_sim(num_drawers_sim_val, btn_new_simulation_val):
     return True if num_drawers_sim_val is None else False
 
 
 @app.callback(
     Output('num_materials_sim', 'invalid'),
     Input('num_materials_sim', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
     prevent_initial_call=True
 )
-def invalid_num_materials_sim(num_materials_sim_val):
+def invalid_num_materials_sim(num_materials_sim_val, btn_new_simulation_val):
     return True if num_materials_sim_val is None else False
 
 
@@ -353,10 +356,6 @@ def invalid_time_sim(time_sim_val, time_sim_readonly):
 #       In this beta, you can see the new timeline (at the end of the page)
 @app.callback(
     Output('prova', 'figure'),
-    # triggered values to create eventually errors
-    Output('num_actions_sim', 'value'),
-    Output('num_drawers_sim', 'value'),
-    Output('num_materials_sim', 'value'),
 
     Input('btn_new_simulation', 'n_clicks'),
 
@@ -373,7 +372,7 @@ def exec_new_simulation(clicks_btn,
                         num_actions_sim, num_drawers_sim, num_materials_sim,
                         checklist_generators, checkbox_time_sim,
                         time_sim,
-                        timeline):
+                        timeline_old):
     # check if actions number is invalid
     actions_invalid = True if num_actions_sim is None else False
     # check if drawers number is invalid
@@ -394,9 +393,9 @@ def exec_new_simulation(clicks_btn,
                                  gen_buffer=True if 'gen_buffer' in checklist_generators else False,
                                  time=time_sim if time_sim != False else None)
         timeline = Timeline(warehouse.get_simulation().get_store_history().items)
-        return timeline.get_figure(), num_actions_sim, num_drawers_sim, num_materials_sim
+        return timeline.get_figure()
 
-    return timeline, num_actions_sim, num_drawers_sim, num_materials_sim
+    return timeline_old
 
 
 if __name__ == '__main__':
