@@ -153,6 +153,7 @@ def serve_layout():
                                                n_clicks=0)
                                 ], width=2)
                             ]),
+                            dbc.Row([dbc.FormText(id='set_step_graph_max_value_hint', children=f'Max value: {timeline.get_tot_tabs()} min.')]),
                             dbc.Row([
                                 dcc.Graph(
                                     id='graph-actions',
@@ -295,15 +296,59 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     f'/{timeline.get_tot_tabs()}')
 
         case 'btn_new_simulation':
-            return exec_new_simulation(clicks_btn,
-                        num_actions_sim, num_drawers_sim, num_materials_sim,
-                        checklist_generators, checkbox_time_sim,
-                        time_sim,
-                        timeline_old), timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
+            # check if actions number is invalid
+            actions_invalid = True if num_actions_sim is None else False
+            # check if drawers number is invalid
+            drawers_invalid = True if num_drawers_sim is None else False
+            # check if materials number is invalid
+            materials_invalid = True if num_materials_sim is None else False
+            # check if a checkbox (deposit/buffer drawer) has been triggered
+            checklist_generators = {} if checklist_generators is None else checklist_generators
+            # check if a time of the simulation has been triggered and if the time value is not None
+            time_sim_invalid = True if (checkbox_time_sim and time_sim is None) else False
+
+            # run new simulation if there are no probs
+            if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
+                warehouse.new_simulation(num_actions=num_actions_sim,
+                                         num_gen_drawers=num_drawers_sim,
+                                         num_gen_materials=num_materials_sim,
+                                         gen_deposit=True if 'gen_deposit' in checklist_generators else False,
+                                         gen_buffer=True if 'gen_buffer' in checklist_generators else False,
+                                         time=time_sim if time_sim != False else None)
+                timeline.__init__(warehouse.get_simulation().get_store_history().items)
+                # check the view range, because if you set 10 min (e.g.) and you run a new simulation,
+                # the range is updated in this way
+                if val_set_step_graph is not None:
+                    timeline.set_step(val_set_step_graph if val_set_step_graph <= timeline.get_tot_tabs() else timeline.get_tot_tabs())
+                    timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()])
+                return timeline.get_figure(), timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
+
+            return timeline_old, timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
             f'/{timeline.get_tot_tabs()}')
+
+
+@app.callback(
+    Output('set_step_graph', 'max'),
+    Output('set_step_graph', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
+    State('set_step_graph', 'value'),
+    prevent_initial_call=True
+)
+def mod(btn_new_simulation_triggered, state_set_step_graph):
+    tot_tabs = timeline.get_tot_tabs()
+    return tot_tabs, state_set_step_graph if state_set_step_graph <= tot_tabs else tot_tabs
+
+
+@app.callback(
+    Output('set_step_graph_max_value_hint', 'children'),
+    Input('btn_new_simulation', 'n_clicks'),
+    prevent_initial_call=True
+)
+def set_message_step_graph_max_value_hint(btn_new_simulation_triggered):
+    return f'Max value: {timeline.get_tot_tabs()} min.'
 
 
 @app.callback(
@@ -373,40 +418,6 @@ def readonly_input_checkbox_time_sim(checkbox_time_sim_val):
 def invalid_time_sim(time_sim_val, time_sim_readonly):
     if not time_sim_readonly:
         return True if time_sim_val is None else False
-
-
-# TODO: Found bug! If you put 'graph-actions' id inside the Output, it will be a conflict!
-#       The callback connected to 'update_timeline_components' function has 'graph-actions' as Output id.
-#       So you must merge these two functions (update_timeline_components and exec_new_simulation).
-#       In this beta, you can see the new timeline (at the end of the page)
-def exec_new_simulation(clicks_btn,
-                        num_actions_sim, num_drawers_sim, num_materials_sim,
-                        checklist_generators, checkbox_time_sim,
-                        time_sim,
-                        timeline_old) -> go.Figure:
-    # check if actions number is invalid
-    actions_invalid = True if num_actions_sim is None else False
-    # check if drawers number is invalid
-    drawers_invalid = True if num_drawers_sim is None else False
-    # check if materials number is invalid
-    materials_invalid = True if num_materials_sim is None else False
-    # check if a checkbox (deposit/buffer drawer) has been triggered
-    checklist_generators = {} if checklist_generators is None else checklist_generators
-    # check if a time of the simulation has been triggered and if the time value is not None
-    time_sim_invalid = True if (checkbox_time_sim and time_sim is None) else False
-
-    # run new simulation if there are no probs
-    if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
-        warehouse.new_simulation(num_actions=num_actions_sim,
-                                 num_gen_drawers=num_drawers_sim,
-                                 num_gen_materials=num_materials_sim,
-                                 gen_deposit=True if 'gen_deposit' in checklist_generators else False,
-                                 gen_buffer=True if 'gen_buffer' in checklist_generators else False,
-                                 time=time_sim if time_sim != False else None)
-        timeline = Timeline(warehouse.get_simulation().get_store_history().items)
-        return timeline.get_figure()
-
-    return timeline_old
 
 
 if __name__ == '__main__':
