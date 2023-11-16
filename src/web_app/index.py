@@ -9,6 +9,7 @@
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
+import plotly.graph_objs as go
 
 from dash import Dash, dcc, html, Input, Output, ctx, State
 from simpy import Store
@@ -137,7 +138,7 @@ def serve_layout():
                                         dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(),
                                                   step=1,
                                                   value=timeline.get_actual_tab()),
-                                            dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'), # TODO: fix its value when goes to the limit
+                                            dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
                                         # go to right
                                         dbc.Button([html.I(className='bi bi-chevron-right')], id='btn_right',
                                                    n_clicks=0),
@@ -152,6 +153,7 @@ def serve_layout():
                                                n_clicks=0)
                                 ], width=2)
                             ]),
+                            dbc.Row([dbc.FormText(id='set_step_graph_max_value_hint', children=f'Max value: {timeline.get_tot_tabs()} min.')]),
                             dbc.Row([
                                 dcc.Graph(
                                     id='graph-actions',
@@ -183,8 +185,7 @@ def serve_layout():
                 ])
             ], width=10)
         ]),
-        dcc.Download(id="download-graph"),
-        dcc.Graph(id='prova', figure=timeline.get_figure())
+        dcc.Download(id="download-graph")
     ])
 
 app.layout = serve_layout
@@ -217,9 +218,7 @@ def download_graph(b_svg, b_pdf):
 @app.callback(
     Output('graph-actions', 'figure'),
     Output('actual_tab', 'value'),
-    Output('actual_tab', 'invalid'),
     Output('num_tabs_graph', 'children'),
-    Output('set_step_graph', 'invalid'),
 
     Input('btn_right', 'n_clicks'),
     Input('btn_left', 'n_clicks'),
@@ -230,33 +229,49 @@ def download_graph(b_svg, b_pdf):
     Input('actual_tab', 'value'),
     Input('set_step_graph', 'value'),
 
-    State('set_step_graph', 'invalid'),
+    # trigger new simulation button
+    Input('btn_new_simulation', 'n_clicks'),
+
+    State('num_actions_sim', 'value'),
+    State('num_drawers_sim', 'value'),
+    State('num_materials_sim', 'value'),
+    State('checklist_generators', 'value'),
+    State('checkbox_time_sim', 'value'),
+    State('time_sim', 'value'),
+    State('graph-actions', 'figure'),
     prevent_initial_call=True
 )
 def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
-                               val_actual_tab, val_set_step_graph, state_set_step_graph):
+                               val_actual_tab, val_set_step_graph,
+                               # trigger new simulation button
+                               clicks_btn,
+                               num_actions_sim, num_drawers_sim, num_materials_sim,
+                               checklist_generators, checkbox_time_sim,
+                               time_sim,
+                               timeline_old
+                               ):
     # Use switch case because is more efficiently than if-else
     # Source: https://www.geeksforgeeks.org/switch-vs-else/
-    invalid_actual_tab: bool = True if val_actual_tab is None else False
+    is_invalid_actual_tab = True if val_actual_tab is None else False
     match ctx.triggered_id:
         case 'btn_right':
-            timeline.right_btn_triggered()
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
+                timeline.right_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_left':
-            timeline.left_btn_triggered()
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
+                timeline.left_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_right_end':
-            timeline.right_end_btn_triggered()
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
+                timeline.right_end_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_left_end':
-            timeline.left_end_btn_triggered()
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
+                timeline.left_end_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_summary':
@@ -264,60 +279,123 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             max_fig: datetime = timeline.get_maximum_time()
             return (timeline.get_figure().update_xaxes(range=[min_fig, max_fig]),
                     timeline.get_actual_tab(),
-                    invalid_actual_tab,
-                    f'/{timeline.get_tot_tabs()}',
-                    state_set_step_graph)
+                    f'/{timeline.get_tot_tabs()}')
 
         case 'actual_tab':
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
                 timeline.set_actual_view(val_actual_tab)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     val_actual_tab,
-                    invalid_actual_tab,
-                    f'/{timeline.get_tot_tabs()}',
-                    state_set_step_graph)
+                    f'/{timeline.get_tot_tabs()}')
 
         case 'set_step_graph':
-            invalid_val_set_step_graph = True if val_set_step_graph is None else False
-            if not invalid_val_set_step_graph:
+            if val_set_step_graph is not None:
                 timeline.set_step(val_set_step_graph)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     timeline.get_actual_tab(),
-                    invalid_actual_tab,
-                    f'/{timeline.get_tot_tabs()}',
-                    invalid_val_set_step_graph)
+                    f'/{timeline.get_tot_tabs()}')
+
+        case 'btn_new_simulation':
+            # check if actions number is invalid
+            actions_invalid = True if num_actions_sim is None else False
+            # check if drawers number is invalid
+            drawers_invalid = True if num_drawers_sim is None else False
+            # check if materials number is invalid
+            materials_invalid = True if num_materials_sim is None else False
+            # check if a checkbox (deposit/buffer drawer) has been triggered
+            checklist_generators = {} if checklist_generators is None else checklist_generators
+            # check if a time of the simulation has been triggered and if the time value is not None
+            time_sim_invalid = True if (checkbox_time_sim and time_sim is None) else False
+
+            # run new simulation if there are no probs
+            if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
+                warehouse.new_simulation(num_actions=num_actions_sim,
+                                         num_gen_drawers=num_drawers_sim,
+                                         num_gen_materials=num_materials_sim,
+                                         gen_deposit=True if 'gen_deposit' in checklist_generators else False,
+                                         gen_buffer=True if 'gen_buffer' in checklist_generators else False,
+                                         time=time_sim if time_sim != False else None)
+                timeline.__init__(warehouse.get_simulation().get_store_history().items)
+                # check the view range, because if you set 10 min (e.g.) and you run a new simulation,
+                # the range is updated in this way
+                if val_set_step_graph is not None:
+                    timeline.set_step(val_set_step_graph if val_set_step_graph <= timeline.get_tot_tabs() else timeline.get_tot_tabs())
+                    timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()])
+                return timeline.get_figure(), timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
+
+            return timeline_old, timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
-            invalid_actual_tab,
-            f'/{timeline.get_tot_tabs()}',
-            state_set_step_graph)
+            f'/{timeline.get_tot_tabs()}')
+
+
+@app.callback(
+    Output('set_step_graph', 'max'),
+    Output('set_step_graph', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
+    State('set_step_graph', 'value'),
+    prevent_initial_call=True
+)
+def mod(btn_new_simulation_triggered, state_set_step_graph):
+    tot_tabs = timeline.get_tot_tabs()
+    return tot_tabs, state_set_step_graph if state_set_step_graph <= tot_tabs else tot_tabs
+
+
+@app.callback(
+    Output('set_step_graph_max_value_hint', 'children'),
+    Input('btn_new_simulation', 'n_clicks'),
+    prevent_initial_call=True
+)
+def set_message_step_graph_max_value_hint(btn_new_simulation_triggered):
+    return f'Max value: {timeline.get_tot_tabs()} min.'
+
+
+@app.callback(
+    Output('set_step_graph', 'invalid'),
+    Input('set_step_graph', 'value'),
+    prevent_initial_call=True
+)
+def invalid_set_step_graph(set_step_graph_val):
+    return True if set_step_graph_val is None else False
+
+
+@app.callback(
+    Output('actual_tab', 'invalid'),
+    Input('actual_tab', 'value'),
+    prevent_initial_call=True
+)
+def invalid_actual_tab(actual_tab_val):
+    return True if actual_tab_val is None else False
 
 
 @app.callback(
     Output('num_actions_sim', 'invalid'),
     Input('num_actions_sim', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
     prevent_initial_call=True
 )
-def invalid_num_actions_sim(num_actions_sim_val):
+def invalid_num_actions_sim(num_actions_sim_val, btn_new_simulation_val):
     return True if num_actions_sim_val is None else False
 
 
 @app.callback(
     Output('num_drawers_sim', 'invalid'),
     Input('num_drawers_sim', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
     prevent_initial_call=True
 )
-def invalid_num_drawers_sim(num_drawers_sim_val):
+def invalid_num_drawers_sim(num_drawers_sim_val, btn_new_simulation_val):
     return True if num_drawers_sim_val is None else False
 
 
 @app.callback(
     Output('num_materials_sim', 'invalid'),
     Input('num_materials_sim', 'value'),
+    Input('btn_new_simulation', 'n_clicks'),
     prevent_initial_call=True
 )
-def invalid_num_materials_sim(num_materials_sim_val):
+def invalid_num_materials_sim(num_materials_sim_val, btn_new_simulation_val):
     return True if num_materials_sim_val is None else False
 
 
@@ -340,58 +418,6 @@ def readonly_input_checkbox_time_sim(checkbox_time_sim_val):
 def invalid_time_sim(time_sim_val, time_sim_readonly):
     if not time_sim_readonly:
         return True if time_sim_val is None else False
-
-
-# TODO: Found bug! If you put 'graph-actions' id inside the Output, it will be a conflict!
-#       The callback connected to 'update_timeline_components' function has 'graph-actions' as Output id.
-#       So you must merge these two functions (update_timeline_components and exec_new_simulation).
-#       In this beta, you can see the new timeline (at the end of the page)
-@app.callback(
-    Output('prova', 'figure'),
-    # triggered values to create eventually errors
-    Output('num_actions_sim', 'value'),
-    Output('num_drawers_sim', 'value'),
-    Output('num_materials_sim', 'value'),
-
-    Input('btn_new_simulation', 'n_clicks'),
-
-    State('num_actions_sim', 'value'),
-    State('num_drawers_sim', 'value'),
-    State('num_materials_sim', 'value'),
-    State('checklist_generators', 'value'),
-    State('checkbox_time_sim', 'value'),
-    State('time_sim', 'value'),
-    State('graph-actions', 'figure'),
-    prevent_initial_call=True
-)
-def exec_new_simulation(clicks_btn,
-                        num_actions_sim, num_drawers_sim, num_materials_sim,
-                        checklist_generators, checkbox_time_sim,
-                        time_sim,
-                        timeline):
-    # check if actions number is invalid
-    actions_invalid = True if num_actions_sim is None else False
-    # check if drawers number is invalid
-    drawers_invalid = True if num_drawers_sim is None else False
-    # check if materials number is invalid
-    materials_invalid = True if num_materials_sim is None else False
-    # check if a checkbox (deposit/buffer drawer) has been triggered
-    checklist_generators = {} if checklist_generators is None else checklist_generators
-    # check if a time of the simulation has been triggered and if the time value is not None
-    time_sim_invalid = True if (checkbox_time_sim and time_sim is None) else False
-
-    # run new simulation if there are no probs
-    if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
-        warehouse.new_simulation(num_actions=num_actions_sim,
-                                 num_gen_drawers=num_drawers_sim,
-                                 num_gen_materials=num_materials_sim,
-                                 gen_deposit=True if 'gen_deposit' in checklist_generators else False,
-                                 gen_buffer=True if 'gen_buffer' in checklist_generators else False,
-                                 time=time_sim if time_sim != False else None)
-        timeline = Timeline(warehouse.get_simulation().get_store_history().items)
-        return timeline.get_figure(), num_actions_sim, num_drawers_sim, num_materials_sim
-
-    return timeline, num_actions_sim, num_drawers_sim, num_materials_sim
 
 
 if __name__ == '__main__':
