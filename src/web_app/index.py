@@ -137,7 +137,7 @@ def serve_layout():
                                         dbc.Input(id='actual_tab', type='number', min=1, max=timeline.get_tot_tabs(),
                                                   step=1,
                                                   value=timeline.get_actual_tab()),
-                                            dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'), # TODO: fix its value when goes to the limit
+                                            dbc.InputGroupText(id='num_tabs_graph', children=f'/{timeline.get_tot_tabs()}'),
                                         # go to right
                                         dbc.Button([html.I(className='bi bi-chevron-right')], id='btn_right',
                                                    n_clicks=0),
@@ -217,7 +217,6 @@ def download_graph(b_svg, b_pdf):
 @app.callback(
     Output('graph-actions', 'figure'),
     Output('actual_tab', 'value'),
-    Output('actual_tab', 'invalid'),
     Output('num_tabs_graph', 'children'),
     Output('set_step_graph', 'invalid'),
 
@@ -231,32 +230,32 @@ def download_graph(b_svg, b_pdf):
     Input('set_step_graph', 'value'),
 
     State('set_step_graph', 'invalid'),
+    State('actual_tab', 'invalid'),
     prevent_initial_call=True
 )
 def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
-                               val_actual_tab, val_set_step_graph, state_set_step_graph):
+                               val_actual_tab, val_set_step_graph, state_set_step_graph, invalid_actual_tab):
     # Use switch case because is more efficiently than if-else
     # Source: https://www.geeksforgeeks.org/switch-vs-else/
-    invalid_actual_tab: bool = True if val_actual_tab is None else False
     match ctx.triggered_id:
         case 'btn_right':
-            timeline.right_btn_triggered()
             if not invalid_actual_tab:
+                timeline.right_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_left':
-            timeline.left_btn_triggered()
             if not invalid_actual_tab:
+                timeline.left_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_right_end':
-            timeline.right_end_btn_triggered()
             if not invalid_actual_tab:
+                timeline.right_end_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_left_end':
-            timeline.left_end_btn_triggered()
             if not invalid_actual_tab:
+                timeline.left_end_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_summary':
@@ -264,7 +263,6 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             max_fig: datetime = timeline.get_maximum_time()
             return (timeline.get_figure().update_xaxes(range=[min_fig, max_fig]),
                     timeline.get_actual_tab(),
-                    invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
                     state_set_step_graph)
 
@@ -273,7 +271,6 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                 timeline.set_actual_view(val_actual_tab)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     val_actual_tab,
-                    invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
                     state_set_step_graph)
 
@@ -283,16 +280,22 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                 timeline.set_step(val_set_step_graph)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     timeline.get_actual_tab(),
-                    invalid_actual_tab,
                     f'/{timeline.get_tot_tabs()}',
                     invalid_val_set_step_graph)
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
-            invalid_actual_tab,
             f'/{timeline.get_tot_tabs()}',
             state_set_step_graph)
 
+
+@app.callback(
+    Output('actual_tab', 'invalid'),
+    Input('actual_tab', 'value'),
+    prevent_initial_call=True
+)
+def invalid_actual_tab(actual_tab_val):
+    return True if actual_tab_val is None else False
 
 @app.callback(
     Output('num_actions_sim', 'invalid'),
