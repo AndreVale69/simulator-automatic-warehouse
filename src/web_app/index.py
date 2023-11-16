@@ -218,7 +218,6 @@ def download_graph(b_svg, b_pdf):
     Output('graph-actions', 'figure'),
     Output('actual_tab', 'value'),
     Output('num_tabs_graph', 'children'),
-    Output('set_step_graph', 'invalid'),
 
     Input('btn_right', 'n_clicks'),
     Input('btn_left', 'n_clicks'),
@@ -228,33 +227,31 @@ def download_graph(b_svg, b_pdf):
 
     Input('actual_tab', 'value'),
     Input('set_step_graph', 'value'),
-
-    State('set_step_graph', 'invalid'),
-    State('actual_tab', 'invalid'),
     prevent_initial_call=True
 )
 def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
-                               val_actual_tab, val_set_step_graph, state_set_step_graph, invalid_actual_tab):
+                               val_actual_tab, val_set_step_graph):
     # Use switch case because is more efficiently than if-else
     # Source: https://www.geeksforgeeks.org/switch-vs-else/
+    is_invalid_actual_tab = True if val_actual_tab is None else False
     match ctx.triggered_id:
         case 'btn_right':
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
                 timeline.right_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_left':
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
                 timeline.left_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_right_end':
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
                 timeline.right_end_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
         case 'btn_left_end':
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
                 timeline.left_end_btn_triggered()
                 timeline.set_actual_view(timeline.get_actual_tab())
 
@@ -263,30 +260,34 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             max_fig: datetime = timeline.get_maximum_time()
             return (timeline.get_figure().update_xaxes(range=[min_fig, max_fig]),
                     timeline.get_actual_tab(),
-                    f'/{timeline.get_tot_tabs()}',
-                    state_set_step_graph)
+                    f'/{timeline.get_tot_tabs()}')
 
         case 'actual_tab':
-            if not invalid_actual_tab:
+            if not is_invalid_actual_tab:
                 timeline.set_actual_view(val_actual_tab)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     val_actual_tab,
-                    f'/{timeline.get_tot_tabs()}',
-                    state_set_step_graph)
+                    f'/{timeline.get_tot_tabs()}')
 
         case 'set_step_graph':
-            invalid_val_set_step_graph = True if val_set_step_graph is None else False
-            if not invalid_val_set_step_graph:
+            if val_set_step_graph is not None:
                 timeline.set_step(val_set_step_graph)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     timeline.get_actual_tab(),
-                    f'/{timeline.get_tot_tabs()}',
-                    invalid_val_set_step_graph)
+                    f'/{timeline.get_tot_tabs()}')
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
-            f'/{timeline.get_tot_tabs()}',
-            state_set_step_graph)
+            f'/{timeline.get_tot_tabs()}')
+
+
+@app.callback(
+    Output('set_step_graph', 'invalid'),
+    Input('set_step_graph', 'value'),
+    prevent_initial_call=True
+)
+def invalid_set_step_graph(set_step_graph_val):
+    return True if set_step_graph_val is None else False
 
 
 @app.callback(
@@ -296,6 +297,7 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
 )
 def invalid_actual_tab(actual_tab_val):
     return True if actual_tab_val is None else False
+
 
 @app.callback(
     Output('num_actions_sim', 'invalid'),
