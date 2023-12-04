@@ -7,13 +7,14 @@
 # from dash_bootstrap_templates import load_figure_template
 
 import dash_bootstrap_components as dbc
-import plotly.express as px
-import pandas as pd
-import plotly.graph_objs as go
+import os
+# import plotly.express as px
+# import pandas as pd
+# import plotly.graph_objs as go
 
-from dash import Dash, dcc, html, Input, Output, ctx, State
-from simpy import Store
-from pandas import Timestamp
+from dash import Dash, dcc, html, Input, Output, ctx, State, DiskcacheManager, CeleryManager
+# from simpy import Store
+# from pandas import Timestamp
 from datetime import datetime
 
 from src.sim.warehouse import Warehouse
@@ -35,14 +36,26 @@ cn = Counter(warehouse.get_events_to_simulate())
     * Set-up all components *
     #########################
 """
+# documentation: https://dash.plotly.com/background-callbacks
+if 'REDIS_URL' in os.environ:
+    # Use Redis & Celery if REDIS_URL set as an env variable
+    from celery import Celery
+    celery_app = Celery(__name__, broker=os.environ['REDIS_URL'], backend=os.environ['REDIS_URL'])
+    background_callback_manager = CeleryManager(celery_app)
+else:
+    # Diskcache for non-production apps when developing locally
+    import diskcache
+    cache = diskcache.Cache("./cache")
+    background_callback_manager = DiskcacheManager(cache)
 # Import bootstrap components
 BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
            # this ensures that mobile devices don't rescale your content on small screens
            # and lets you build mobile optimised layouts
-           meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}])
+           meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
+           background_callback_manager=background_callback_manager)
 
-
+# timeline manager
 timeline = Timeline(warehouse.get_simulation().get_store_history().items)
 
 """ 
@@ -101,7 +114,8 @@ def serve_layout():
 
                     dbc.CardFooter([
                         dbc.Col([
-                            dbc.Button(children='Run new simulation!', id='btn_new_simulation', n_clicks=0)
+                            dbc.Button(children='Run new simulation!', id='btn_new_simulation', n_clicks=0),
+                            # TODO: dbc.Spinner(html.Div(id="loading-output"))
                         ], width={'offset': 2})
                     ]),
                 ])
@@ -215,10 +229,13 @@ def download_graph(b_svg, b_pdf):
     )
 
 
+# TODO: future improvement https://dash.plotly.com/duplicate-callback-outputs
 @app.callback(
     Output('graph-actions', 'figure'),
     Output('actual_tab', 'value'),
     Output('num_tabs_graph', 'children'),
+    Output('set_step_graph_max_value_hint', 'children'),
+    Output('set_step_graph', 'value'),
 
     Input('btn_right', 'n_clicks'),
     Input('btn_left', 'n_clicks'),
@@ -239,7 +256,12 @@ def download_graph(b_svg, b_pdf):
     State('checkbox_time_sim', 'value'),
     State('time_sim', 'value'),
     State('graph-actions', 'figure'),
-    prevent_initial_call=True
+    State('set_step_graph_max_value_hint', 'children'),
+    prevent_initial_call=True,
+    # background=True,
+    # running=[
+    #     (Output('btn_new_simulation', 'disabled'), True, False),
+    # ]
 )
 def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, val_btn_left_end, val_btn_summary,
                                val_actual_tab, val_set_step_graph,
@@ -248,7 +270,8 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                                num_actions_sim, num_drawers_sim, num_materials_sim,
                                checklist_generators, checkbox_time_sim,
                                time_sim,
-                               timeline_old
+                               timeline_old,
+                               set_step_graph_max_value_hint
                                ):
     # Use switch case because is more efficiently than if-else
     # Source: https://www.geeksforgeeks.org/switch-vs-else/
@@ -279,22 +302,29 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             max_fig: datetime = timeline.get_maximum_time()
             return (timeline.get_figure().update_xaxes(range=[min_fig, max_fig]),
                     timeline.get_actual_tab(),
-                    f'/{timeline.get_tot_tabs()}')
+                    f'/{timeline.get_tot_tabs()}',
+                    set_step_graph_max_value_hint,
+                    val_set_step_graph)
 
         case 'actual_tab':
             if not is_invalid_actual_tab:
                 timeline.set_actual_view(val_actual_tab)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     val_actual_tab,
-                    f'/{timeline.get_tot_tabs()}')
+                    f'/{timeline.get_tot_tabs()}',
+                    set_step_graph_max_value_hint,
+                    val_set_step_graph)
 
         case 'set_step_graph':
             if val_set_step_graph is not None:
                 timeline.set_step(val_set_step_graph)
             return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
                     timeline.get_actual_tab(),
-                    f'/{timeline.get_tot_tabs()}')
+                    f'/{timeline.get_tot_tabs()}',
+                    set_step_graph_max_value_hint,
+                    val_set_step_graph)
 
+        # TODO: https://dash.plotly.com/dash-core-components/loading
         case 'btn_new_simulation':
             # check if actions number is invalid
             actions_invalid = True if num_actions_sim is None else False
@@ -321,35 +351,17 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                 if val_set_step_graph is not None:
                     timeline.set_step(val_set_step_graph if val_set_step_graph <= timeline.get_tot_tabs() else timeline.get_tot_tabs())
                     timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()])
-                return timeline.get_figure(), timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
+                return timeline.get_figure(), 1, f'/{timeline.get_tot_tabs()}', f'Max value: {timeline.get_tot_tabs()*timeline.get_step()} min.', timeline.get_step()
 
-            return timeline_old, timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}'
+            return timeline_old, timeline.get_actual_tab(), f'/{timeline.get_tot_tabs()}', set_step_graph_max_value_hint, val_set_step_graph
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
-            f'/{timeline.get_tot_tabs()}')
+            f'/{timeline.get_tot_tabs()}',
+            set_step_graph_max_value_hint,
+            val_set_step_graph)
 
-
-@app.callback(
-    Output('set_step_graph', 'max'),
-    Output('set_step_graph', 'value'),
-    Input('btn_new_simulation', 'n_clicks'),
-    State('set_step_graph', 'value'),
-    prevent_initial_call=True
-)
-def mod(btn_new_simulation_triggered, state_set_step_graph):
-    tot_tabs = timeline.get_tot_tabs()
-    return tot_tabs, state_set_step_graph if state_set_step_graph <= tot_tabs else tot_tabs
-
-
-@app.callback(
-    Output('set_step_graph_max_value_hint', 'children'),
-    Input('btn_new_simulation', 'n_clicks'),
-    prevent_initial_call=True
-)
-def set_message_step_graph_max_value_hint(btn_new_simulation_triggered):
-    return f'Max value: {timeline.get_tot_tabs()} min.'
-
+# TODO: possible issue on warehouse: 100 actions, 5 drawers, 3 materials and buffer/deposit empty
 
 @app.callback(
     Output('set_step_graph', 'invalid'),
