@@ -1,38 +1,33 @@
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
+import dash_bootstrap_components as dbc
+from dash import Input, Output, dcc, html, Dash
 
-from dash import Dash, html, dcc
-import plotly.express as px
-import pandas as pd
+BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
+           # this ensures that mobile devices don't rescale your content on small screens
+           # and lets you build mobile optimised layouts
+           meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}])
 
-app = Dash(__name__)
+progress = html.Div(
+    [
+        dcc.Interval(id="progress-interval", n_intervals=0, interval=500),
+        dbc.Progress(id="progress"),
+    ]
+)
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
+app.layout = progress
 
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+@app.callback(
+    [Output("progress", "value"), Output("progress", "label")],
+    [Input("progress-interval", "n_intervals")],
+)
+def update_progress(n):
+    # check progress of some background process, in this example we'll just
+    # use n_intervals constrained to be in 0-100
+    progress = min(n % 110, 100)
+    print(progress)
+    # only add text after 5% progress to ensure text isn't squashed too much
+    return progress, f"{progress} %" if progress >= 5 else ""
 
-    html.Div(children='''
-        Dash: A web application framework for your data.
-    '''),
-
-    dcc.Graph(
-        id='example-graph',
-        figure=fig
-    )
-])
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run_server(debug=True)
-
-# TODO:
-# dashboard dove si vede il magazzino
-# comandi per eseguire la simulazione e se possibile anche step-by-step

@@ -1,3 +1,4 @@
+.idea
 __pycache__
-tmp
-web_app/cache/
+tmp/*
+web_app/cache/*
