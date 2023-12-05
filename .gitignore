@@ -1,4 +1,4 @@
 .idea
 __pycache__
 tmp/*
-web_app/cache/*
+src/web_app/cache
