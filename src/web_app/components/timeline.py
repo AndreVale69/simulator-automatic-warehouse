@@ -46,9 +46,9 @@ class Timeline:
         # See https://plotly.com/python/px-arguments/ for more options
         # Create the timeline
         self._figure = px.timeline(self._df,
-                          x_start="Start", x_end="Finish", y="Action",
+                          x_start="Start", x_end="Finish", y="Type of Action",
                           range_x=[self._actual_left, self._actual_right],
-                          color="Action")
+                          color="Type of Action")
         self._figure.update_yaxes(autorange="reversed")  # otherwise, tasks are listed from the bottom up
         # If you want a linear timeline:
         # fig.layout.xaxis.type = 'linear'

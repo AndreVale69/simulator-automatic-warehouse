@@ -38,9 +38,11 @@ class ExtractDrawer(Move):
 
         end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
-        yield self.simulation.get_store_history().put(dict(Action="ExtractDrawer",
-                                                           Start=start_time,
-                                                           Finish=end_time))
+        yield self.simulation.get_store_history().put({
+            'Type of Action': "ExtractDrawer",
+            'Start'         : start_time,
+            'Finish'        : end_time
+        })
 
     def actions(self, load_in_buffer: bool):
         # choice a random drawer

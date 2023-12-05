@@ -32,6 +32,8 @@ class RemoveRandomMaterial(RemoveMaterial):
 
         end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
-        yield self.simulation.get_store_history().put(dict(Action="RemoveRandomMaterial",
-                                                           Start=start_time,
-                                                           Finish=end_time))
+        yield self.simulation.get_store_history().put({
+            'Type of Action': "RemoveRandomMaterial",
+            'Start'         : start_time,
+            'Finish'        : end_time
+        })

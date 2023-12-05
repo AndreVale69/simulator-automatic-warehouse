@@ -45,6 +45,8 @@ class SendBackDrawer(Move):
 
         end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
-        yield self.simulation.get_store_history().put(dict(Action="SendBackDrawer",
-                                                           Start=start_time,
-                                                           Finish=end_time))
+        yield self.simulation.get_store_history().put({
+            'Type of Action': "SendBackDrawer",
+            'Start'         : start_time,
+            'Finish'        : end_time
+        })
