@@ -20,14 +20,14 @@ def work(sad: int = None):
     save_config(warehouse.get_simulation().get_warehouse())
 
 if __name__ == "__main__":
-    work(4999)
+    work()
+    # to find any error
     # seed: int = 1000
     # while seed <= 10_000:
     #     try:
     #         work(seed)
     #     except Exception as e:
     #         print(f'SEED: {seed}')
-    #         print(e)
     #         exit(1)
     #     seed += 1
 
@@ -37,3 +37,6 @@ if __name__ == "__main__":
 
 # AttributeError: 'int' object has no attribute 'offset_x'
 # work(4, 100)
+
+# Collision!: remove_drawer doesn't work properly
+# work(4999)

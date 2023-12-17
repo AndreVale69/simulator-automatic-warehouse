@@ -129,22 +129,17 @@ class DrawerContainer:
 
     def remove_drawer(self, drawer: Drawer) -> bool:
         """Remove a drawer"""
-        is_remove: bool = False
-        first_entry: DrawerEntry = drawer.get_first_drawerEntry()
-        entry_y: int = first_entry.get_pos_y()
-        entry_x: int = first_entry.get_offset_x()
+        entries_to_rmv: int = drawer.get_max_num_space()
+        entries_removed: int = 0
 
         for index, entry in enumerate(self.get_container()):
             # if is a DrawerEntry element
-            # if they've the same coordinates
             # if the drawers are the same (see __eq__ method)
-            if isinstance(entry, DrawerEntry) and \
-                    entry.get_pos_y() == entry_y and \
-                    entry.get_drawer() == drawer:
-                self.get_container()[index] = EmptyEntry(entry_x, entry_y + index)
-                is_remove = True
-                entry_y += 1
-        return is_remove
+            if isinstance(entry, DrawerEntry) and entry.get_drawer() == drawer:
+                self.get_container()[index] = EmptyEntry(entry.get_offset_x(), entry.get_pos_y())
+                entries_removed += 1
+                if entries_removed == entries_to_rmv:
+                    return True
 
     def reset_container(self):
         """Cleanup column"""
