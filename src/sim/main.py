@@ -19,8 +19,17 @@ def work(sad: int = None):
     # save the configuration at the end
     save_config(warehouse.get_simulation().get_warehouse())
 
-
-work()
+if __name__ == "__main__":
+    work()
+    # to find any error
+    # seed: int = 1000
+    # while seed <= 10_000:
+    #     try:
+    #         work(seed)
+    #     except Exception as e:
+    #         print(f'SEED: {seed}')
+    #         exit(1)
+    #     seed += 1
 
 # OLD ERRORS
 # AttributeError: 'EmptyEntry' object has no attribute 'get_drawer'
@@ -28,3 +37,6 @@ work()
 
 # AttributeError: 'int' object has no attribute 'offset_x'
 # work(4, 100)
+
+# Collision!: remove_drawer doesn't work properly
+# work(4999)
