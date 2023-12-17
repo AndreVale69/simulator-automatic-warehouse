@@ -31,11 +31,11 @@
   "speed_per_sec"         : 1,
   "simulation": {
     "time"          : 10000,
-    "num_actions"   : 500,
-    "gen_drawers"   : 8,
-    "gen_materials" : 0,
+    "num_actions"   : 100,
+    "gen_drawers"   : 5,
+    "gen_materials" : 3,
     "INSERT ONLY TRUE (>0) OR FALSE (<=0): "  : 0,
-    "gen_deposit"   : 1,
-    "gen_buffer"    : 1
+    "gen_deposit"   : 0,
+    "gen_buffer"    : 0
   }
 }

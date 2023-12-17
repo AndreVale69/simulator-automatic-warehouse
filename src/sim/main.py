@@ -19,8 +19,17 @@ def work(sad: int = None):
     # save the configuration at the end
     save_config(warehouse.get_simulation().get_warehouse())
 
-
-work()
+if __name__ == "__main__":
+    work(4999)
+    # seed: int = 1000
+    # while seed <= 10_000:
+    #     try:
+    #         work(seed)
+    #     except Exception as e:
+    #         print(f'SEED: {seed}')
+    #         print(e)
+    #         exit(1)
+    #     seed += 1
 
 # OLD ERRORS
 # AttributeError: 'EmptyEntry' object has no attribute 'get_drawer'
