@@ -17,7 +17,7 @@ def _create_timedelta(times: time) -> timedelta:
 
 
 class Timeline:
-    def __init__(self, datas: list[dict], step: int=1):
+    def __init__(self, datas: list[dict], step: int = 1):
         # create dataframe used to Timeline
         self._df = DataFrame(datas)
         # saves these variables to avoid high calculates computing
