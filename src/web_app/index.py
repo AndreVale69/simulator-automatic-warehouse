@@ -68,7 +68,7 @@ def serve_layout():
     return html.Div(children=[
         dbc.Row([
             html.H1(
-                children='Automatic Warehouse Simulator',
+                children='Simulator Automatic Warehouse',
                 style={'textAlign': 'center'}
             )
         ]),
