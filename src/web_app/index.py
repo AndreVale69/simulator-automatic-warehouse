@@ -1,6 +1,7 @@
 # Run this app with `python index.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
+import os.path
 import dash_bootstrap_components as dbc
 import diskcache
 
@@ -44,6 +45,10 @@ cn = Counter(warehouse.get_events_to_simulate())
 #     background_callback_manager = DiskcacheManager(cache)
 cache = diskcache.Cache("./cache")
 background_callback_manager = DiskcacheManager(cache)
+# create the path if it doesn't exist.
+# this path will be used by the application to create downloadable graphics
+if not os.path.isdir('./images'):
+    os.mkdir('./images')
 
 # Import bootstrap components
 BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -300,6 +305,8 @@ def download_graph(b_svg, b_pdf):
             extension = 'svg'
         case "dropdown-btn_pdf":
             extension = 'pdf'
+    # create the file
+    open(f"./images/graph_actions.{extension}", "w")
     # take graph to download
     timeline.get_figure().write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
     return dcc.send_file(
@@ -562,4 +569,4 @@ def invalid_time_sim(time_sim_val, time_sim_readonly):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
