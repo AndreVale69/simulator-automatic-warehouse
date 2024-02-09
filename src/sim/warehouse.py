@@ -1,57 +1,13 @@
 import copy
 import random
 
-import simpy
 from simpy import Environment
-
 from sim.drawer import Drawer
 from sim.status_warehouse.Container.carousel import Carousel
 from sim.status_warehouse.Container.column import Column
 from sim.status_warehouse.Entry.drawerEntry import DrawerEntry
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
-
-def save_config(self):
-    # opening JSON file
-    with open("../../tmp/config_warehouse.txt", 'w') as file:
-        # header
-        file.write(f"Warehouse situation\n")
-        file.write("\n")
-        file.write("~" * 40 + "\n")
-        file.write("\n")
-
-        # carousel
-        file.write(f"Number of drawers   : {self.get_carousel().get_num_drawers()}\n")
-        file.write(f"Number of spaces    : {self.get_carousel().get_num_entries_free()}\n")
-        file.write(f"Number of materials : {self.get_carousel().get_num_materials()}\n")
-        file.write("Carousel:\n")
-        for entry in self.get_carousel().get_container():
-            if type(entry) is DrawerEntry:
-                file.write(f"[{entry}, {entry.get_drawer()}]\n")
-            else:
-                file.write(f"[{entry}]\n")
-        file.write("\n")
-        file.write("~" * 40 + "\n")
-        file.write("\n")
-
-        # columns
-        for column in self.get_cols_container():
-            file.write(f"Number of drawers   : {column.get_num_drawers()}\n")
-            file.write(f"Number of spaces    : {column.get_num_entries_free()}\n")
-            file.write(f"Number of materials : {column.get_num_materials()}\n")
-            file.write(f"Offset x Column     : {column.get_offset_x()}\n")
-            for entry in column.get_container():
-                if type(entry) is DrawerEntry:
-                    file.write(f"[{entry}, {entry.get_drawer()}]\n")
-                else:
-                    file.write(f"[{entry}]\n")
-            file.write("\n")
-            file.write("~" * 40 + "\n")
-            file.write("\n")
-
-    # import subprocess
-    # path_to_notepad = "C:\\Windows\\System32\\notepad.exe"
-    # path_to_file = "../tmp/config_warehouse.txt"
-    # subprocess.call([path_to_notepad, path_to_file])
 
 
 def gen_materials_and_drawer(num_drawers: int, num_materials: int,
@@ -204,11 +160,10 @@ def min_search_alg(self, space_req: int) -> list:
 
 class Warehouse:
     def __init__(self):
-        from sim.useful_func import open_config
         from sim.material import gen_rand_material
 
         # open JSON configuration file
-        config: dict = open_config()
+        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         self.height = config["height_warehouse"]
 
@@ -235,12 +190,12 @@ class Warehouse:
         # number of actions
         self.sim_num_actions = config["simulation"]["num_actions"]
         # generate a configuration based on JSON
-        if config["simulation"]["gen_deposit"] > 0:
+        if config["simulation"]["gen_deposit"]:
             self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()]))
-        if config["simulation"]["gen_buffer"] > 0:
+        if config["simulation"]["gen_buffer"]:
             self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()]))
-        self.gen_rand(num_drawers=config["simulation"]["gen_drawers"],
-                      num_materials=config["simulation"]["gen_materials"])
+        self.gen_rand(num_drawers=config["simulation"]["drawers_to_gen"],
+                      num_materials=config["simulation"]["materials_to_gen"])
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
@@ -509,7 +464,7 @@ class Warehouse:
     def run_simulation(self):
         from sim.simulation import Simulation
 
-        self.env = simpy.Environment()
+        self.env = Environment()
         self.simulation = Simulation(self.env, self)
 
         balance_wh = 0

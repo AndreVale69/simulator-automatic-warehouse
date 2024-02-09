@@ -365,8 +365,6 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                                set_step_graph_max,
                                actual_tab_max
                                ):
-    # Use switch case because is more efficiently than if-else
-    # Source: https://www.geeksforgeeks.org/switch-vs-else/
     is_invalid_actual_tab = True if val_actual_tab is None else False
     match ctx.triggered_id:
         case 'btn_right':

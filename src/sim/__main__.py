@@ -1,4 +1,5 @@
-from sim.warehouse import Warehouse, save_config
+from sim.warehouse import Warehouse
+from sim.utils.save_warehouse_state import save_config
 import random
 
 
@@ -8,10 +9,6 @@ def work(sad: int = None):
 
     # gen Warehouse
     warehouse = Warehouse()
-    # value = random.randint(0, 10000)
-    # random.seed(value)
-    # with open("Output.txt", "w") as text_file:
-    #    text_file.write(str(value))
 
     # run simulation
     warehouse.run_simulation()
@@ -21,7 +18,7 @@ def work(sad: int = None):
 
 if __name__ == "__main__":
     work()
-    # to find any error
+    # to find any error - brutal force
     # seed: int = 1000
     # while seed <= 10_000:
     #     try:
@@ -31,7 +28,7 @@ if __name__ == "__main__":
     #         exit(1)
     #     seed += 1
 
-# OLD ERRORS
+# OLD ERRORS:
 # AttributeError: 'EmptyEntry' object has no attribute 'get_drawer'
 # work(705, 10000)
 
