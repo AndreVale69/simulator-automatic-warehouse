@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  simulator_automatic_warehouse:
+    build:
+      context: ../.
+      dockerfile: Dockerfile
+      args:
+        WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/univr/ICE_lab.json
+    network_mode: host
