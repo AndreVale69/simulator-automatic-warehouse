@@ -1,5 +1,5 @@
 import json
-from configuration import WAREHOUSE_CONFIGURATION
+from sim.configuration import WAREHOUSE_CONFIGURATION
 from pathlib import Path
 
 
