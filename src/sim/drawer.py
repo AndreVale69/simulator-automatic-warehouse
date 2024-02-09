@@ -2,18 +2,15 @@ import copy
 import random
 
 from sim.material import Material
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class Drawer:
     def __init__(self, items: list = None):
-        from sim.useful_func import open_config
-
         # items inside the drawer
-        config: dict = open_config()
+        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
-        if items is None:
-            items = []
-        self.items = copy.deepcopy(items)
+        self.items = copy.deepcopy(items if items is not None else [])
         self.def_space = config["default_height_space"]
         self.__calculate_max_height()
 

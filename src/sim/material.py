@@ -1,21 +1,21 @@
 import random
 import uuid
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class Material:
     def __init__(self, barcode: hex, name: str, height: int, length: int, width: int):
         """
+        Class that represents a material that can be found inside a drawer.<br><br>
 
-        :param barcode: unique id of a material
-        :param name: name of a material
-        :param height: height of a material
-        :param length: length of a material
-        :param width: width of a material
+        @param barcode: unique ID of a material
+        @param name: name of a material
+        @param height: height of a material
+        @param length: length of a material
+        @param width: width of a material
         """
-        from sim.useful_func import open_config
-
         # maximum height of a material to fit into a drawer
-        config: dict = open_config()
+        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
         max_height_material = config["carousel"]["buffer_height"]
 
         # check height of a material

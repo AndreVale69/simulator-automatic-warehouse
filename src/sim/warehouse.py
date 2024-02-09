@@ -1,13 +1,12 @@
 import copy
 import random
 
-import simpy
 from simpy import Environment
-
 from sim.drawer import Drawer
 from sim.status_warehouse.Container.carousel import Carousel
 from sim.status_warehouse.Container.column import Column
 from sim.status_warehouse.Entry.drawerEntry import DrawerEntry
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 def save_config(self):
@@ -204,11 +203,10 @@ def min_search_alg(self, space_req: int) -> list:
 
 class Warehouse:
     def __init__(self):
-        from sim.useful_func import open_config
         from sim.material import gen_rand_material
 
         # open JSON configuration file
-        config: dict = open_config()
+        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         self.height = config["height_warehouse"]
 
@@ -509,7 +507,7 @@ class Warehouse:
     def run_simulation(self):
         from sim.simulation import Simulation
 
-        self.env = simpy.Environment()
+        self.env = Environment()
         self.simulation = Simulation(self.env, self)
 
         balance_wh = 0

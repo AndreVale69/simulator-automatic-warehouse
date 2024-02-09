@@ -3,14 +3,13 @@ from abc import abstractmethod
 from sim.drawer import Drawer
 from sim.status_warehouse.Entry.drawerEntry import DrawerEntry
 from sim.status_warehouse.Entry.emptyEntry import EmptyEntry
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class DrawerContainer:
     def __init__(self, height_col: int, offset_x: int, width: int, warehouse):
-        from sim.useful_func import open_config
-
         # initialize main vars
-        config: dict = open_config()
+        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
         self.warehouse = warehouse
         self.container = []
         self.height_warehouse = config["height_warehouse"]
