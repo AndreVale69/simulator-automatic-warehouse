@@ -1,0 +1,87 @@
+# This file contains a detailed explanation of each writable field in the configuration.
+# Note: every measurement is in centimeters.
+
+# The height of the warehouse (cm).
+# It's an important field largely used by the simulator to calculate the simulation time.
+height_warehouse: 1000
+
+# The height (distance) between two drawers.
+default_height_space: 25
+
+# The speed of the platform.
+# It's used by the simulator to calculate the time it takes to move between columns and up and down.
+speed_per_sec: 1
+
+
+# The columns of the warehouse.
+# It is a list of columns that can be found in the automatic warehouse.
+# ---------------------------------------------------------------------
+# NOTE: the column is intended as a storage;
+#       to indicate the bay where the human operator picks materials,
+#       there is another section called carousel.
+#       In that section, you can specify all the specs of it.
+# ---------------------------------------------------------------------
+columns:
+  # Every column is identified by an optional description, used only by the user for readability.
+  - description: "right_column"
+    # The width and the height of the column.
+    # In this case, the height is much lower than the height of the warehouse.
+    # This is because you may have a carousel in the same column (see carousel below).
+    width: 250
+    height: 325
+    # The offset depends on the position of the carousel.
+    # For example, this right_column has a carousel,
+    # so the distance in cm from the carousel to the center of "elevator" is 125 (325 / 2 = 125).
+    offset_formula_description: "width / 2"
+    x_offset: 125
+    # The height of the last position.
+    # Each Automatic Warehouse has a fixed height.
+    # The last position (at the top of the store) where a drawer can be found.
+    height_last_position: 75
+
+  # The following column has a height equal to the height of the warehouse, and the offset is made up of:
+  # the offset of the right column plus the offset of the left column plus the width of the "elevator".
+  - description: "left_column"
+    width: 200
+    height: 1000
+    offset_formula_description: "(left_column.width / 2) + right_column.offset + 250"
+    x_offset: 475
+    height_last_position: 75
+
+
+# The carousel of the warehouse, composed by a buffer and a deposit.
+# At the moment (version 0.0.1) there can only be one carousel in the warehouse.
+# As the column has a description used by the user for readability.
+carousel:
+  description: "carousel-bay_and_buffer"
+  # Note: obviously the width should be the same as the column it is in.
+  #       So in this case, the right column should be the same width.
+  width: 250
+  # The height of the hole.
+  # The hole is the space into which an operator can 'enter' the warehouse to place materials.
+  hole_height: 375
+  # The height of deposit and buffer.
+  deposit_height: 150
+  buffer_height: 150
+  offset_formula_description: "width / 2"
+  x_offset: 125
+
+# The simulation data.
+simulation:
+  # The maximum time of the simulation.
+  # If the total time of the actions performed is greater than the time allotted,
+  # the execution is interrupted.
+  # The time is not necessary, if you want to be sure that each action will be executed, delete this field.
+  time: 10000
+  # The number of actions to be performed.
+  num_actions: 100
+  # The number of drawers to be generated.
+  # At the moment (version 0.0.1), the warehouse is filled from top to bottom.
+  drawers_to_gen: 5
+  # The number of materials to be generated.
+  # The materials are placed in random drawers.
+  materials_to_gen: 3
+  # Specify whether you want a drawer in a deposit and/or in a buffer.
+  # The number of drawers to be created is independent of the value of these fields.
+  gen_deposit: false
+  gen_buffer: false

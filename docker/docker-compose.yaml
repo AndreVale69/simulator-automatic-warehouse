@@ -5,5 +5,5 @@ services:
       context: ../.
       dockerfile: Dockerfile
       args:
-        WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/univr/ICE_lab.json
+        WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/univr/ICE_lab.yaml
     network_mode: host

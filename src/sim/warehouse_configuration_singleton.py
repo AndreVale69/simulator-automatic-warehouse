@@ -1,6 +1,8 @@
-import json
 from sim.configuration import WAREHOUSE_CONFIGURATION
 from pathlib import Path
+from yaml import safe_load
+from json import loads
+from jsonschema import Draft202012Validator
 
 
 class WarehouseConfigurationSingleton:
@@ -23,8 +25,19 @@ class WarehouseConfigurationSingleton:
         project_name = 'simulator-automatic-warehouse'
         project_dir = next(p for p in current_dir.parents if p.parts[-1] == project_name)
 
-        with open(f"{project_dir}/{WAREHOUSE_CONFIGURATION}", 'r') as json_file:
-            self.configuration: dict = json.load(json_file)
+        # load json_schema
+        with open(f"{project_dir}/resources/configuration/json_schema.json", "r") as json_schema:
+            schema: dict = loads(json_schema.read())
+
+        # check that the json schema is valid
+        Draft202012Validator.check_schema(schema)
+
+        # take user configuration
+        with open(f"{project_dir}/{WAREHOUSE_CONFIGURATION}", 'r') as file:
+            self.configuration: dict = safe_load(file)
+
+        # check if it's valid, raises jsonschema.exceptions.ValidationError if the instance is invalid
+        Draft202012Validator(schema).validate(self.configuration)
 
     def get_configuration(self) -> dict:
         """

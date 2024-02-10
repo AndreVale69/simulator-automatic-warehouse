@@ -1,0 +1,39 @@
+height_warehouse: 1000
+default_height_space: 25
+speed_per_sec: 1
+
+
+columns:
+  - description: "right_column"
+    width: 250
+    height: 325
+    offset_formula_description: "width / 2"
+    x_offset: 125
+    height_last_position: 75
+
+  - description: "left_column"
+    width: 200
+    height: 1000
+    offset_formula_description: "(left_column.width / 2) + right_column.offset + 250"
+    x_offset: 475
+    height_last_position: 75
+
+
+carousel:
+  description: "carousel-bay_and_buffer"
+  width: 250
+  hole_height: 375
+  deposit_height: 150
+  buffer_height: 150
+  offset_formula_description: "width / 2"
+  x_offset: 125
+
+
+simulation:
+  # optional
+  # time: 10000
+  num_actions: 100
+  drawers_to_gen: 5
+  materials_to_gen: 3
+  gen_deposit: false
+  gen_buffer: false

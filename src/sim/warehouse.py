@@ -162,12 +162,12 @@ class Warehouse:
     def __init__(self):
         from sim.material import gen_rand_material
 
-        # open JSON configuration file
+        # open YAML configuration file
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         self.height = config["height_warehouse"]
 
-        # add all columns taken from JSON
+        # add all columns taken from YAML
         self.columns_container = []
         # all columns must be added from minimum offset_x to greats offset_x
         # respecting this order
@@ -185,8 +185,7 @@ class Warehouse:
         self.events_to_simulate = []
 
         # time of simulation
-        time_acquired = config["simulation"]["time"]
-        self.sim_time = time_acquired if time_acquired > 0 else None
+        self.sim_time = config["simulation"].get("time", None)
         # number of actions
         self.sim_num_actions = config["simulation"]["num_actions"]
         # generate a configuration based on JSON
