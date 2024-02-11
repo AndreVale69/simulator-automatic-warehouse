@@ -12,6 +12,9 @@ from collections import Counter
 
 from src.sim.warehouse import Warehouse
 from web_app.components.timeline import Timeline
+from web_app.components.navbar import navbar
+from src.web_app.configuration import HOST, PORT, PROXY
+from pages import documentation, not_found_404
 
 """
     #####################
@@ -30,19 +33,6 @@ cn = Counter(warehouse.get_events_to_simulate())
     #########################
 """
 # documentation: https://dash.plotly.com/background-callbacks
-# from dash import CeleryManager
-# if 'REDIS_URL' in os.environ:
-#     # Use Redis & Celery if REDIS_URL set as an env variable
-#     from celery import Celery
-#
-#     celery_app = Celery(__name__, broker=os.environ['REDIS_URL'], backend=os.environ['REDIS_URL'])
-#     background_callback_manager = CeleryManager(celery_app)
-# else:
-#     # Diskcache for non-production apps when developing locally
-#     import diskcache
-#
-#     cache = diskcache.Cache("./cache")
-#     background_callback_manager = DiskcacheManager(cache)
 cache = diskcache.Cache("./cache")
 background_callback_manager = DiskcacheManager(cache)
 # create the path if it doesn't exist.
@@ -56,7 +46,7 @@ app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
            # this ensures that mobile devices don't rescale your content on small screens
            # and lets you build mobile optimised layouts
            meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
-           background_callback_manager=background_callback_manager)
+           background_callback_manager=background_callback_manager, name=__name__)
 
 # timeline manager
 timeline = Timeline(warehouse.get_simulation().get_store_history().items)
@@ -68,9 +58,11 @@ timeline = Timeline(warehouse.get_simulation().get_store_history().items)
 """
 
 
-def serve_layout():
-    # see live updates on: https://dash.plotly.com/live-updates
-    return html.Div(children=[
+# if you don't want to save the state between reloads of the page,
+# see live updates on: https://dash.plotly.com/live-updates#updates-on-page-load
+index_layout = html.Div(children=[
+        navbar,
+        html.Br(),
         dbc.Row([
             html.H1(
                 children='Simulator Automatic Warehouse',
@@ -216,6 +208,21 @@ def serve_layout():
                 ])
             ], width=10)
         ]),
+        html.Br(),
+        dbc.Row([
+            dbc.Col(width=2),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader(children=html.H4("Simulation statistics", className="card-title")),
+                    dbc.CardBody(
+                        [
+                            html.P("This is some card text", className="card-text"),
+                        ]
+                    ),
+                    # dbc.CardFooter() TODO: download the statistics (?)
+                ])
+            ], width=10)
+        ], justify="end"),
         dcc.Download(id="download-graph"),
         dbc.Toast(
             "",
@@ -234,17 +241,44 @@ def serve_layout():
             dismissable=True,
             icon="danger",
             style={"position": "fixed", "top": 10, "right": 10, "width": 350},
-        )
+        ),
     ])
 
+app_layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    html.Div(id='page-content')
+])
 
-app.layout = serve_layout
+app.layout = app_layout
+
+app.validation_layout = html.Div([
+    app_layout,
+    index_layout,
+    documentation.layout,
+    not_found_404.layout
+])
 
 """ 
     ##########################
     * Application's callback * 
     ##########################
 """
+
+
+@app.callback(
+    Output('page-content', 'children'),
+    Input('url', 'pathname')
+)
+def display_page(pathname):
+    match pathname:
+        case '/':
+            return index_layout
+        case '/index':
+            return index_layout
+        case '/documentation':
+            return documentation.layout
+        case _:
+            return not_found_404.layout
 
 
 @app.callback(
@@ -567,4 +601,4 @@ def invalid_time_sim(time_sim_val, time_sim_readonly):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run(host=HOST, port=PORT, proxy=PROXY, debug=False)

@@ -6,4 +6,6 @@ services:
       dockerfile: Dockerfile
       args:
         WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/univr/ICE_lab.yaml
+        HOST: 127.0.0.1
+        PORT: 8050
     network_mode: host
