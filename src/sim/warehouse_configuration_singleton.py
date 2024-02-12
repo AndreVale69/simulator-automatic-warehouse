@@ -42,6 +42,6 @@ class WarehouseConfigurationSingleton:
     def get_configuration(self) -> dict:
         """
         Get the raw configuration from the environment path specified by the user.<br><br>
-        @return: raw configuration extracted via JSON.
+        @return: raw configuration extracted via YAML.
         """
         return self.configuration
