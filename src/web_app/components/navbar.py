@@ -18,5 +18,5 @@ navbar = dbc.NavbarSimple(
                     nav=True, in_navbar=True, label="More"
                 )
             ],
-            brand="Simulator Automatic Warehouse", brand_href="/", color="dark", dark=True,
+            brand="Simulator Automatic Warehouse", brand_href="/", color="dark", dark=True
         )

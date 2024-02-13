@@ -2,9 +2,12 @@
 # visit http://127.0.0.1:8050/ in your web browser.
 
 import os.path
+import shutil
+import sys
 import dash_bootstrap_components as dbc
-import diskcache
 
+from signal import signal, SIGINT, SIGTERM
+from diskcache import Cache
 from dash import Dash, dcc, html, Input, Output, ctx, State, DiskcacheManager
 from datetime import datetime
 from dash.exceptions import PreventUpdate
@@ -15,6 +18,8 @@ from web_app.components.timeline import Timeline
 from web_app.components.navbar import navbar
 from src.web_app.configuration import HOST, PORT, PROXY
 from pages import documentation, not_found_404
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from web_app.utils.layout import create_columns_layout
 
 """
     #####################
@@ -26,6 +31,7 @@ from pages import documentation, not_found_404
 warehouse = Warehouse()
 warehouse.run_simulation()
 cn = Counter(warehouse.get_events_to_simulate())
+warehouse_config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
 """
     #########################
@@ -33,8 +39,7 @@ cn = Counter(warehouse.get_events_to_simulate())
     #########################
 """
 # documentation: https://dash.plotly.com/background-callbacks
-cache = diskcache.Cache("./cache")
-background_callback_manager = DiskcacheManager(cache)
+cache = Cache("./cache")
 # create the path if it doesn't exist.
 # this path will be used by the application to create downloadable graphics
 if not os.path.isdir('./images'):
@@ -46,7 +51,7 @@ app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
            # this ensures that mobile devices don't rescale your content on small screens
            # and lets you build mobile optimised layouts
            meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
-           background_callback_manager=background_callback_manager, name=__name__)
+           background_callback_manager=DiskcacheManager(cache), name=__name__)
 
 # timeline manager
 timeline = Timeline(warehouse.get_simulation().get_store_history().items)
@@ -210,7 +215,68 @@ index_layout = html.Div(children=[
         ]),
         html.Br(),
         dbc.Row([
-            dbc.Col(width=2),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader(children=html.H4("Current configuration", className="card-title")),
+
+                    dbc.CardBody([
+                        dbc.Accordion([
+                            dbc.AccordionItem([
+                                dbc.ListGroup([
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Height warehouse:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['height_warehouse']} cm", disabled=True)
+                                    ]),
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Speed per second:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['speed_per_sec']} cm", disabled=True)
+                                    ])
+                                ])
+                            ], title="General information"),
+                            dbc.AccordionItem([
+                                dbc.Select([
+                                    f"Column {i + 1}" for i, col in enumerate(warehouse_config['columns'])
+                                ], "Column 1", id="config-choose_col"),
+                                html.Br(),
+                                dbc.ListGroup(
+                                    # show column 0 as default
+                                    create_columns_layout(0),
+                                    id="config-show_col"
+                                )
+                            ], title="Columns"),
+                            dbc.AccordionItem([
+                                dbc.ListGroup([
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Width:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['width']} cm", disabled=True)
+                                    ]),
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Hole height:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['hole_height']} cm", disabled=True)
+                                    ]),
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Deposit height:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['deposit_height']} cm", disabled=True)
+                                    ]),
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Buffer height:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['buffer_height']} cm", disabled=True)
+                                    ]),
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Bay height:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['deposit_height'] + warehouse_config['carousel']['buffer_height']} cm", disabled=True)
+                                    ]),
+                                    dbc.ListGroupItem([
+                                        dbc.Label(html.B("Offset:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['x_offset']} cm", disabled=True)
+                                    ]),
+                                ])
+                            ], title="Carousel")
+                        ], start_collapsed=True, always_open=True)
+                    ])
+                ])
+            ],
+                width=2),
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader(children=html.H4("Simulation statistics", className="card-title")),
@@ -599,6 +665,25 @@ def invalid_time_sim(time_sim_val, time_sim_readonly):
     if not time_sim_readonly:
         return True if (time_sim_val is None or time_sim_val == "00:00:00") else False
 
+@app.callback(
+    Output("config-show_col", "children"),
+    Input("config-choose_col", "value"),
+    prevent_initial_call=True
+)
+def config_show_cols(col):
+    return create_columns_layout(num_col=int(col.removeprefix('Column '))-1)
+
+
+def _signal_handler(frame, sig):
+    print("Removing cache folder")
+    try:
+        shutil.rmtree("cache/")
+    except FileNotFoundError:
+        print("Cache folder doesn't exist")
+    sys.exit(0)
+
 
 if __name__ == '__main__':
+    signal(SIGINT, _signal_handler)
+    signal(SIGTERM, _signal_handler)
     app.run(host=HOST, port=PORT, proxy=PROXY, debug=False)
