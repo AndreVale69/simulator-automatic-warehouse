@@ -11,7 +11,7 @@ from diskcache import Cache
 from dash import Dash, dcc, html, Input, Output, ctx, State, DiskcacheManager
 from datetime import datetime
 from dash.exceptions import PreventUpdate
-from collections import Counter
+from pandas import DataFrame
 
 from src.sim.warehouse import Warehouse
 from web_app.components.timeline import Timeline
@@ -20,6 +20,7 @@ from src.web_app.configuration import HOST, PORT, PROXY
 from pages import documentation, not_found_404
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from web_app.utils.layout import create_columns_layout
+from web_app.utils.statistics import order_processing_rate_per_hour
 
 """
     #####################
@@ -30,8 +31,8 @@ from web_app.utils.layout import create_columns_layout
 # Initialize the Warehouse for simulation
 warehouse = Warehouse()
 warehouse.run_simulation()
-cn = Counter(warehouse.get_events_to_simulate())
 warehouse_config = WarehouseConfigurationSingleton.get_instance().get_configuration()
+order_processing_rate = order_processing_rate_per_hour(DataFrame(warehouse.get_simulation().get_store_history().items))
 
 """
     #########################
@@ -280,11 +281,12 @@ index_layout = html.Div(children=[
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader(children=html.H4("Simulation statistics", className="card-title")),
-                    dbc.CardBody(
-                        [
-                            html.P("This is some card text", className="card-text"),
-                        ]
-                    ),
+                    dbc.CardBody([
+                        html.Ul([
+                            # html.Li(f"Order Processing Rate: {order_processing_rate}")
+                            html.Li(f"Order Processing Rate: Work in progress!")
+                        ], className="card-text")
+                    ]),
                     # dbc.CardFooter() TODO: download the statistics (?)
                 ])
             ], width=10)
