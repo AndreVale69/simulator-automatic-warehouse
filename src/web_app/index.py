@@ -20,7 +20,7 @@ from src.web_app.configuration import HOST, PORT, PROXY
 from pages import documentation, not_found_404
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from web_app.utils.layout import create_columns_layout
-from web_app.utils.statistics import order_processing_rate_per_hour
+from sim.utils.warehouse_statistics import WarehouseStatistics
 
 """
     #####################
@@ -32,7 +32,7 @@ from web_app.utils.statistics import order_processing_rate_per_hour
 warehouse = Warehouse()
 warehouse.run_simulation()
 warehouse_config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-order_processing_rate = order_processing_rate_per_hour(DataFrame(warehouse.get_simulation().get_store_history().items))
+warehouse_statistics = WarehouseStatistics(DataFrame(warehouse.get_simulation().get_store_history().items))
 
 """
     #########################
