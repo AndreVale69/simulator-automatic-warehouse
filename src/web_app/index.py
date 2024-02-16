@@ -66,7 +66,8 @@ timeline = Timeline(warehouse.get_simulation().get_store_history().items)
 
 # if you don't want to save the state between reloads of the page,
 # see live updates on: https://dash.plotly.com/live-updates#updates-on-page-load
-index_layout = html.Div(children=[
+def index_layout():
+ return html.Div(children=[
         navbar,
         html.Br(),
         dbc.Row([
@@ -321,7 +322,7 @@ app.layout = app_layout
 
 app.validation_layout = html.Div([
     app_layout,
-    index_layout,
+    index_layout(),
     documentation.layout,
     not_found_404.layout
 ])
@@ -340,9 +341,9 @@ app.validation_layout = html.Div([
 def display_page(pathname):
     match pathname:
         case '/':
-            return index_layout
+            return index_layout()
         case '/index':
-            return index_layout
+            return index_layout()
         case '/documentation':
             return documentation.layout
         case _:
