@@ -32,7 +32,7 @@ carousel:
 simulation:
   # optional
   # time: 10000
-  num_actions: 100
+  num_actions: 1000
   drawers_to_gen: 5
   materials_to_gen: 3
   gen_deposit: false

@@ -9,6 +9,7 @@ from sim.status_warehouse.Simulate_Events.Move.unload import Unload
 from sim.status_warehouse.Simulate_Events.Move.vertical import Vertical
 from sim.status_warehouse.Simulate_Events.buffer import Buffer
 from sim.warehouse import Warehouse
+from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
 
 
 class SendBackDrawer(Move):
@@ -46,7 +47,7 @@ class SendBackDrawer(Move):
         end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         yield self.simulation.get_store_history().put({
-            'Type of Action': "SendBackDrawer",
+            'Type of Action': ActionEnum.SEND_BACK_DRAWER.value,
             'Start'         : start_time,
             'Finish'        : end_time
         })

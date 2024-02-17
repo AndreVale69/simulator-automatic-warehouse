@@ -9,6 +9,7 @@ from sim.status_warehouse.Simulate_Events.Move.move import Move
 from sim.status_warehouse.Simulate_Events.Move.unload import Unload
 from sim.status_warehouse.Simulate_Events.Move.vertical import Vertical
 from sim.warehouse import Warehouse # , Drawer
+from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
 
 
 class ExtractDrawer(Move):
@@ -39,7 +40,7 @@ class ExtractDrawer(Move):
         end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         yield self.simulation.get_store_history().put({
-            'Type of Action': "ExtractDrawer",
+            'Type of Action': ActionEnum.EXTRACT_DRAWER.value,
             'Start'         : start_time,
             'Finish'        : end_time
         })

@@ -21,6 +21,8 @@ from pages import documentation, not_found_404
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from web_app.utils.layout import create_columns_layout
 from sim.utils.warehouse_statistics import WarehouseStatistics
+from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
+
 
 """
     #####################
@@ -33,6 +35,7 @@ warehouse = Warehouse()
 warehouse.run_simulation()
 warehouse_config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 warehouse_statistics = WarehouseStatistics(DataFrame(warehouse.get_simulation().get_store_history().items))
+
 
 """
     #########################

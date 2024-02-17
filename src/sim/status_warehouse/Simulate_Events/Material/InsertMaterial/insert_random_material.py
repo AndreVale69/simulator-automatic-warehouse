@@ -1,10 +1,10 @@
 from simpy import Environment
 import datetime
 
-# from src.drawer import Drawer
 from sim.simulation import Simulation
 from sim.status_warehouse.Simulate_Events.Material.InsertMaterial.insert_material import InsertMaterial
 from sim.warehouse import Warehouse
+from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
 
 
 class InsertRandomMaterial(InsertMaterial):
@@ -30,7 +30,7 @@ class InsertRandomMaterial(InsertMaterial):
         end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 
         yield self.simulation.get_store_history().put({
-            'Type of Action': "InsertRandomMaterial",
+            'Type of Action': ActionEnum.INSERT_RANDOM_MATERIAL.value,
             'Start'         : start_time,
             'Finish'        : end_time
         })
