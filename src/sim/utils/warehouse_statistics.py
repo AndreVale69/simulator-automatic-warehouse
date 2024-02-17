@@ -30,7 +30,7 @@ class WarehouseStatistics:
         return self._warehouse_actions["Finish"]
 
     @lru_cache
-    def orders_started_every(self, time: TimeType) -> Series:
+    def actions_started_every(self, time: TimeType) -> Series:
         """
         Calculate a Series with a number of rows with datetime and their relative count (number of orders started ONLY).
 
@@ -40,7 +40,7 @@ class WarehouseStatistics:
         return self._get_start().dt.to_period(time.value).value_counts(sort=False)
 
     @lru_cache
-    def orders_finished_every(self, time: TimeType) -> Series:
+    def actions_finished_every(self, time: TimeType) -> Series:
         """
         Calculate a Series with a number of rows with datetime and their relative count (number of orders finished ONLY).
 
@@ -50,7 +50,7 @@ class WarehouseStatistics:
         return self._get_finish().dt.to_period(time.value).value_counts(sort=False)
 
     @lru_cache
-    def orders_completed_every(self, time: TimeType) -> Series:
+    def actions_completed_every(self, time: TimeType) -> Series:
         """
         Calculate a Series with Start datetime, Finish datetime and their relative count.
         In this case, it's possible to find rows without a Start datetime.
@@ -64,6 +64,25 @@ class WarehouseStatistics:
             'Start': self._get_start().dt.to_period(time.value),
             'Finish': self._get_finish().dt.to_period(time.value)
         }).value_counts(sort=False)
+
+    @lru_cache
+    def action_completed_every(self, action: ActionEnum, time: TimeType) -> Series:
+        """
+        Request the action to be completed, specifying the action requested and the time period.
+        Calculate a Series with Start datetime, Finish datetime and their relative count.
+        In this case, it's possible to find rows without a Start datetime.
+        The reason is simple: if an order is started at (e.g.) 10:58 and finished at 11:05,
+                              it will not be counted in the 10-hour counter.
+
+        @param action: the type of action to consider.
+        @param time: time period requested.
+        @return: a table of "action" actions completed each "time", both given as parameters.
+        """
+        return DataFrame({
+            'type_of_action': self._warehouse_actions["Type of Action"],
+            'Start': self._get_start().dt.to_period(time.value),
+            'Finish': self._get_finish().dt.to_period(time.value)
+        }).value_counts(sort=False).get(action.value)
 
     @lru_cache
     def counts_action_completed(self, action: ActionEnum) -> int:
