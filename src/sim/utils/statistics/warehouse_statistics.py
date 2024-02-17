@@ -4,7 +4,7 @@ from enum import Enum
 from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
 
 
-class TimeType(Enum):
+class TimeEnum(Enum):
     NANOSECONDS = 'ns'
     MICROSECONDS = 'us'
     MILLISECONDS = 'ms'
@@ -30,27 +30,33 @@ class WarehouseStatistics:
         return self._warehouse_actions["Finish"]
 
     @lru_cache
-    def actions_started_every(self, time: TimeType) -> Series:
+    def _get_type_of_action(self):
+        return self._warehouse_actions["Type of Action"]
+
+    @lru_cache
+    def actions_started_every(self, time: TimeEnum) -> Series:
         """
-        Calculate a Series with a number of rows with datetime and their relative count (number of orders started ONLY).
+        Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
+        The counter refers to all actions in the simulation.
 
         @param time: time requested.
-        @return: a table of orders started each "time" given as a parameter.
+        @return: a table of actions started each "time" given as a parameter.
         """
         return self._get_start().dt.to_period(time.value).value_counts(sort=False)
 
     @lru_cache
-    def actions_finished_every(self, time: TimeType) -> Series:
+    def actions_finished_every(self, time: TimeEnum) -> Series:
         """
-        Calculate a Series with a number of rows with datetime and their relative count (number of orders finished ONLY).
+        Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
+        The counter refers to all actions in the simulation.
 
         @param time: time requested.
-        @return: a table of orders finished each "time" given as a parameter.
+        @return: a table of actions finished each "time" given as a parameter.
         """
         return self._get_finish().dt.to_period(time.value).value_counts(sort=False)
 
     @lru_cache
-    def actions_completed_every(self, time: TimeType) -> Series:
+    def actions_completed_every(self, time: TimeEnum) -> Series:
         """
         Calculate a Series with Start datetime, Finish datetime and their relative count.
         In this case, it's possible to find rows without a Start datetime.
@@ -58,7 +64,7 @@ class WarehouseStatistics:
                               it will not be counted in the 10-hour counter.
 
         @param time: time requested.
-        @return: a table of orders completed each "time" given as a parameter.
+        @return: a table of actions completed each "time" given as a parameter.
         """
         return DataFrame({
             'Start': self._get_start().dt.to_period(time.value),
@@ -66,7 +72,37 @@ class WarehouseStatistics:
         }).value_counts(sort=False)
 
     @lru_cache
-    def action_completed_every(self, action: ActionEnum, time: TimeType) -> Series:
+    def action_started_every(self, action: ActionEnum, time: TimeEnum) -> Series:
+        """
+        Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
+        The counter only refers to the action specified in the "action" parameter.
+
+        @param action: action requested.
+        @param time: time requested.
+        @return: a table of the requested action started each "time" given as a parameter.
+        """
+        return DataFrame({
+            'type_of_action': self._get_type_of_action(),
+            'Start': self._get_start().dt.to_period(time.value)
+        }).value_counts(sort=False).get(action.value)
+
+    @lru_cache
+    def action_finished_every(self, action: ActionEnum, time: TimeEnum) -> Series:
+        """
+        Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
+        The counter only refers to the action specified in the "action" parameter.
+
+        @param action: action requested.
+        @param time: time requested.
+        @return: a table of the requested action finished each "time" given as a parameter.
+        """
+        return DataFrame({
+            'type_of_action': self._get_type_of_action(),
+            'Finish': self._get_finish().dt.to_period(time.value)
+        }).value_counts(sort=False).get(action.value)
+
+    @lru_cache
+    def action_completed_every(self, action: ActionEnum, time: TimeEnum) -> Series:
         """
         Request the action to be completed, specifying the action requested and the time period.
         Calculate a Series with Start datetime, Finish datetime and their relative count.
@@ -79,13 +115,13 @@ class WarehouseStatistics:
         @return: a table of "action" actions completed each "time", both given as parameters.
         """
         return DataFrame({
-            'type_of_action': self._warehouse_actions["Type of Action"],
+            'type_of_action': self._get_type_of_action(),
             'Start': self._get_start().dt.to_period(time.value),
             'Finish': self._get_finish().dt.to_period(time.value)
         }).value_counts(sort=False).get(action.value)
 
     @lru_cache
-    def counts_action_completed(self, action: ActionEnum) -> int:
+    def count_action_completed(self, action: ActionEnum) -> int:
         """
         Calculate how many actions are completed for a given action.
 

@@ -20,7 +20,7 @@ from src.web_app.configuration import HOST, PORT, PROXY
 from pages import documentation, not_found_404
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from web_app.utils.layout import create_columns_layout
-from sim.utils.warehouse_statistics import WarehouseStatistics
+from sim.utils.statistics.warehouse_statistics import WarehouseStatistics
 from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
 
 
