@@ -19,8 +19,10 @@ from web_app.components.navbar import navbar
 from src.web_app.configuration import HOST, PORT, PROXY
 from pages import documentation, not_found_404
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
-from web_app.utils.layout import create_columns_layout
-from sim.utils.statistics.warehouse_statistics import WarehouseStatistics
+from web_app.layouts.custom_configuration import create_columns_layout
+from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
+from sim.utils.statistics.warehouse_statistics import ActionEnum
+from web_app.layouts.simulation_statistics import SimulationInput, create_simulation_statistics_layout
 
 
 """
@@ -282,16 +284,17 @@ def index_layout():
             ],
                 width=2),
             dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader(children=html.H4("Simulation statistics", className="card-title")),
-                    dbc.CardBody([
-                        html.Ul([
-                            # html.Li(f"Order Processing Rate: {order_processing_rate}")
-                            html.Li(f"Order Processing Rate: Work in progress!")
-                        ], className="card-text")
-                    ]),
-                    # dbc.CardFooter() TODO: download the statistics (?)
-                ])
+                # TODO: download the statistics (?)
+                create_simulation_statistics_layout(
+                    warehouse_statistics,
+                    SimulationInput(
+                        warehouse_config['simulation']['num_actions'],
+                        warehouse_config['simulation']['drawers_to_gen'],
+                        warehouse_config['simulation']['materials_to_gen'],
+                        warehouse_config['simulation']['gen_deposit'],
+                        warehouse_config['simulation']['gen_buffer']
+                    )
+                )
             ], width=10)
         ], justify="end"),
         dcc.Download(id="download-graph"),

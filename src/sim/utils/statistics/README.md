@@ -13,13 +13,13 @@ The following is a list of the methods. Each one is decorated with a description
 - [How to instantiate](#how-to-instantiate)
   - [WarehouseStatistics](#warehousestatistics)
 - [Count the total number of actions at a given time](#count-the-total-number-of-actions-at-a-given-time)
-  - [`actions_started_every(self, time: TimeEnum) -> Series`](#actions_started_everyself-time-timeenum---series)
-  - [`actions_finished_every(self, time: TimeEnum) -> Series`](#actions_finished_everyself-time-timeenum---series)
-  - [`actions_completed_every(self, time: TimeEnum) -> Series`](#actions_completed_everyself-time-timeenum---series)
+  - [`actions_started_every(self, time: TimeEnum) -> DataFrame`](#actions_started_everyself-time-timeenum---dataframe)
+  - [`actions_finished_every(self, time: TimeEnum) -> DataFrame`](#actions_finished_everyself-time-timeenum---dataframe)
+  - [`actions_completed_every(self, time: TimeEnum) -> DataFrame`](#actions_completed_everyself-time-timeenum---dataframe)
 - [Count the total number of a given action at a given time](#count-the-total-number-of-a-given-action-at-a-given-time)
-  - [`action_started_every(self, action: ActionEnum, time: TimeEnum) -> Series`](#action_started_everyself-action-actionenum-time-timeenum---series)
-  - [`action_finished_every(self, action: ActionEnum, time: TimeEnum) -> Series`](#action_finished_everyself-action-actionenum-time-timeenum---series)
-  - [`action_completed_every(self, action: ActionEnum, time: TimeEnum) -> Series`](#action_completed_everyself-action-actionenum-time-timeenum---series)
+  - [`action_started_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`](#action_started_everyself-action-actionenum-time-timeenum---dataframe)
+  - [`action_finished_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`](#action_finished_everyself-action-actionenum-time-timeenum---dataframe)
+  - [`action_completed_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`](#action_completed_everyself-action-actionenum-time-timeenum---dataframe)
 - [Count the total amount of a given action in the whole simulation](#count-the-total-amount-of-a-given-action-in-the-whole-simulation)
   - [`count_action_completed(self, action: ActionEnum) -> int`](#count_action_completedself-action-actionenum---int)
 - [Simulation time](#simulation-time)
@@ -51,50 +51,50 @@ warehouse_statistics = WarehouseStatistics(
 
 ### Count the total number of actions at a given time
 
-The following APIs return a Pandas object called Series 
-([link to the official documentation](https://pandas.pydata.org/pandas-docs/stable/reference/series.html)).
+The following APIs return a Pandas object called DataFrame 
+([link to the official documentation](https://pandas.pydata.org/pandas-docs/stable/reference/frame.html)).
 
-#### `actions_started_every(self, time: TimeEnum) -> Series`
+#### `actions_started_every(self, time: TimeEnum) -> DataFrame`
 
 Given a certain time, the method calculates how many actions have only been started. 
 The finish time is not considered. 
-As you can see in the example below, the returned Series contains two columns: 
+As you can see in the example below, the returned DataFrame contains two columns: 
 the total number of actions performed and the time at which they were started.
 
-| Start            | count |
+| Start            | Count |
 |:-----------------|:------|
 | 2024-02-17 12:00 | 201   |
 | 2024-02-17 13:00 | 404   |
 | 2024-02-17 14:00 | 395   |
 
 
-#### `actions_finished_every(self, time: TimeEnum) -> Series`
+#### `actions_finished_every(self, time: TimeEnum) -> DataFrame`
 
-The same logic as [`actions_started_every`](#actions_started_everyself-time-timeenum---series) but with the actions 
+The same logic as [`actions_started_every`](#actions_started_everyself-time-timeenum---dataframe) but with the actions 
 that are only finished.
 
-| Finish           | count |
+| Finish           | Count |
 |:-----------------|:------|
 | 2024-02-17 12:00 | 200   |
 | 2024-02-17 13:00 | 404   |
 | 2024-02-17 14:00 | 396   |
 
 
-#### `actions_completed_every(self, time: TimeEnum) -> Series`
+#### `actions_completed_every(self, time: TimeEnum) -> DataFrame`
 
-A merge of the previous two, but this series counts how many actions are started and finished in the same time, 
+A merge of the previous two, but this DataFrame counts how many actions are started and finished in the same time, 
 given as a parameter.
-As you can see in the example, some rows don't contain a start time. 
+As you can see in the example, some rows contain the same start time. 
 These rows show how many actions are started before the finish time.
 
 For example, if an action starts at (e.g.) 10:58 and ends at 11:05, it will not be counted in the 10-hour counter.
 
-| Start            | Finish           | count |
+| Start            | Finish           | Count |
 |:-----------------|:-----------------|:------|
 | 2024-02-17 12:00 | 2024-02-17 12:00 | 200   |
-|                  | 2024-02-17 13:00 | 1     |
+| 2024-02-17 12:00 | 2024-02-17 13:00 | 1     |
 | 2024-02-17 13:00 | 2024-02-17 13:00 | 403   |
-|                  | 2024-02-17 14:00 | 1     |
+| 2024-02-17 13:00 | 2024-02-17 14:00 | 1     |
 | 2024-02-17 14:00 | 2024-02-17 14:00 | 395   |
 
 
@@ -106,7 +106,7 @@ These methods have the same logic as the functions in
 [Count the total number of actions at a given time](#count-the-total-number-of-actions-at-a-given-time) 
 section, but the following refers to a single action given as a parameter.
 
-#### `action_started_every(self, action: ActionEnum, time: TimeEnum) -> Series`
+#### `action_started_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`
 
 An example of how to call: `warehouse_statistics.action_started_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.HOUR)`
 
@@ -117,7 +117,7 @@ An example of how to call: `warehouse_statistics.action_started_every(ActionEnum
 | 2024-02-17 14:00 | 95    |
 
 
-#### `action_finished_every(self, action: ActionEnum, time: TimeEnum) -> Series`
+#### `action_finished_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`
 
 An example of how to call: `warehouse_statistics.action_finished_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.HOUR)`
 
@@ -128,16 +128,18 @@ An example of how to call: `warehouse_statistics.action_finished_every(ActionEnu
 | 2024-02-17 14:00 | 95    |
 
 
-#### `action_completed_every(self, action: ActionEnum, time: TimeEnum) -> Series`
+#### `action_completed_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`
 
 An example of how to call: `warehouse_statistics.action_completed_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.HOUR)`
 
-| Start            | Finish           | count |
-|:-----------------|:-----------------|:------|
-| 2024-02-17 12:00 | 2024-02-17 12:00 | 52    |
-|                  | 2024-02-17 13:00 | 1     |
-| 2024-02-17 13:00 | 2024-02-17 13:00 | 93    |
-| 2024-02-17 14:00 | 2024-02-17 14:00 | 95    |
+|   | Type of Action | Start            | Finish           | Count |
+|:--|:---------------|:-----------------|:-----------------|:------|
+| 0 | ExtractDrawer  | 2024-02-18 14:00 | 2024-02-18 14:00 | 82    |
+| 1 | ExtractDrawer  | 2024-02-18 14:00 | 2024-02-18 15:00 | 1     |
+| 2 | ExtractDrawer  | 2024-02-18 15:00 | 2024-02-18 15:00 | 93    |
+| 3 | ExtractDrawer  | 2024-02-18 15:00 | 2024-02-18 16:00 | 1     |
+| 4 | ExtractDrawer  | 2024-02-18 16:00 | 2024-02-18 16:00 | 73    |
+
 
 
 ------------------------------------------------------------------------------------------------------------------------
