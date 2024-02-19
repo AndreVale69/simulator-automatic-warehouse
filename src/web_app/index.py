@@ -202,6 +202,11 @@ def index_layout():
                             dbc.Col([
                                 dbc.DropdownMenu(children=[
                                     dbc.DropdownMenuItem(
+                                        children=[html.I(className='bi bi-download'), " CSV"],
+                                        id = "dropdown-btn_csv",
+                                        n_clicks = 0
+                                    ),
+                                    dbc.DropdownMenuItem(
                                         children=[html.I(className='bi bi-download'), " SVG"],
                                         id="dropdown-btn_svg",
                                         n_clicks=0
@@ -402,13 +407,17 @@ def restore_btn_simulation(n):
 @app.callback(
     Output("download-graph", "data"),
     [Input("dropdown-btn_svg", "n_clicks"),
-     Input("dropdown-btn_pdf", "n_clicks")],
+     Input("dropdown-btn_pdf", "n_clicks"),
+     Input("dropdown-btn_csv", "n_clicks")],
     prevent_initial_call=True
 )
-def download_graph(b_svg, b_pdf):
+def download_graph(b_svg, b_pdf, b_csv):
     extension = ''
     # which button is triggered?
     match ctx.triggered_id:
+        case "dropdown-btn_csv":
+            timeline.get_dataframe().to_csv("./images/graph_actions.csv")
+            return dcc.send_file("./images/graph_actions.csv")
         case "dropdown-btn_svg":
             extension = 'svg'
         case "dropdown-btn_pdf":

@@ -61,6 +61,9 @@ class Timeline:
     def get_figure(self) -> go.Figure:
         return self._figure
 
+    def get_dataframe(self) -> DataFrame:
+        return self._df
+
     def get_minimum_time(self) -> Timestamp | datetime:
         return self._minimum
 
