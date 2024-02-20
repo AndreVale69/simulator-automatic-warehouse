@@ -61,12 +61,12 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                 html.Td(id="gen_buffer_sim_stats", children=str(simulation_input.gen_buffer))
             ]),
             html.Tr([
-                html.Td("Buffer drawer generated"),
+                html.Td("Total time of the simulation"),
                 html.Td(id="total_time_sim_stats", children=str(simulation_input.time))
             ])
         ])
     ], className="card-text")
-    input_card = dbc.Card([dbc.CardHeader(input_title), dbc.CardBody(input_body)])
+    input_card = dbc.Card([dbc.CardHeader(input_title), dbc.CardBody(input_body)], color="light", outline=True)
 
     process_time_title = html.H5("Process Time", className="card-text")
     total_simulation_time = warehouse_statistics.total_simulation_time()
@@ -96,7 +96,7 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
             ])
         ])
     ], className="card-text")
-    process_time_card = dbc.Card([dbc.CardHeader(process_time_title), dbc.CardBody(process_time_body)])
+    process_time_card = dbc.Card([dbc.CardHeader(process_time_title), dbc.CardBody(process_time_body)], color="light", outline=True)
 
     output_title = html.H5("Output", className="card-text")
     actions_started_every_hour: DataFrame = warehouse_statistics.actions_started_every(TimeEnum.HOUR)
@@ -150,7 +150,7 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
         ])
     ], start_collapsed=True, always_open=True)
 
-    output_card = dbc.Card([dbc.CardHeader(output_title), dbc.CardBody(output_body)])
+    output_card = dbc.Card([dbc.CardHeader(output_title), dbc.CardBody(output_body)], color="light", outline=True)
 
     return dbc.CardBody([
         dbc.Row([
