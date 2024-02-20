@@ -1,6 +1,9 @@
 import dash_bootstrap_components as dbc
+import plotly.graph_objs as go
 from typing import NamedTuple
-from dash import html
+from dash import html, dcc
+from pandas import DataFrame
+
 from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 
 
@@ -10,6 +13,7 @@ class SimulationInput(NamedTuple):
     materials_to_gen: int
     gen_deposit: bool
     gen_buffer: bool
+    time: int | str
 
 
 def create_simulation_statistics_layout(
@@ -55,6 +59,10 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
             html.Tr([
                 html.Td("Buffer drawer generated"),
                 html.Td(id="gen_buffer_sim_stats", children=str(simulation_input.gen_buffer))
+            ]),
+            html.Tr([
+                html.Td("Buffer drawer generated"),
+                html.Td(id="total_time_sim_stats", children=str(simulation_input.time))
             ])
         ])
     ], className="card-text")
@@ -71,34 +79,82 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
         html.Tbody([
             html.Tr([
                 html.Td("Start of the simulation"),
-                html.Td(id="start_time_sim", children=warehouse_statistics.start_time_simulation().strftime('%a %d %b %Y, %H:%M:%S'))
+                html.Td(id="start_time_sim",
+                        children=warehouse_statistics.start_time_simulation().strftime('%a %d %b %Y, %H:%M:%S'))
             ]),
             html.Tr([
                 html.Td("End of the simulation"),
-                html.Td(id="finish_time_sim", children=warehouse_statistics.finish_time_simulation().strftime('%a %d %b %Y, %H:%M:%S'))
+                html.Td(id="finish_time_sim",
+                        children=warehouse_statistics.finish_time_simulation().strftime('%a %d %b %Y, %H:%M:%S'))
             ]),
             html.Tr([
                 html.Td("Total simulation time"),
-                html.Td(id="total_time_sim", children=f"{total_simulation_time.days} days, {str(total_simulation_time.components.hours).zfill(2)}:{str(total_simulation_time.components.minutes).zfill(2)}:{str(total_simulation_time.components.seconds).zfill(2)}")
+                html.Td(id="total_time_sim", children=f"{total_simulation_time.days} days, "
+                                                      f"{str(total_simulation_time.components.hours).zfill(2)}:"
+                                                      f"{str(total_simulation_time.components.minutes).zfill(2)}:"
+                                                      f"{str(total_simulation_time.components.seconds).zfill(2)}")
             ])
         ])
     ], className="card-text")
     process_time_card = dbc.Card([dbc.CardHeader(process_time_title), dbc.CardBody(process_time_body)])
 
     output_title = html.H5("Output", className="card-text")
-    output_body = dbc.Row([
-        dbc.Col([dbc.Label("Number of actions started every hour"),
-                 dbc.Table.from_dataframe(warehouse_statistics.actions_started_every(TimeEnum.HOUR))]),
-        dbc.Col([dbc.Label("Number of actions finished every hour"),
-                 dbc.Table.from_dataframe(warehouse_statistics.actions_finished_every(TimeEnum.HOUR))]),
-        dbc.Col([dbc.Label("Number of actions completed every hour"),
-                 dbc.Table.from_dataframe(warehouse_statistics.actions_completed_every(TimeEnum.HOUR))])
-    ])
+    actions_started_every_hour: DataFrame = warehouse_statistics.actions_started_every(TimeEnum.HOUR)
+    actions_finished_every_hour: DataFrame = warehouse_statistics.actions_finished_every(TimeEnum.HOUR)
+    actions_completed_every_hour: DataFrame = warehouse_statistics.actions_completed_every(TimeEnum.HOUR)
+    output_body = dbc.Accordion([
+        dbc.AccordionItem(title="Number of actions started every hour", children=[
+            dbc.Row([
+                dbc.Col(
+                    dbc.Accordion([
+                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_started_every_hour), title="Data Table")
+                    ], start_collapsed=True)
+                ),
+                dbc.Col(
+                    dcc.Graph(figure=go.Figure(data=[go.Scatter(x=actions_started_every_hour['Start'],
+                                                                y=actions_started_every_hour['Count'])]))
+                )
+            ])
+        ]),
+
+        dbc.AccordionItem(title="Number of actions finished every hour", children=[
+            dbc.Row([
+                dbc.Col(
+                    dbc.Accordion([
+                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_finished_every_hour), title="Data Table")
+                    ], start_collapsed=True)
+                ),
+                dbc.Col(
+                    dcc.Graph(figure=go.Figure(data=[go.Scatter(x=actions_finished_every_hour['Finish'],
+                                                                y=actions_finished_every_hour['Count'])]))
+                )
+            ])
+        ]),
+
+        dbc.AccordionItem(title="Number of actions completed every hour", children=[
+            dbc.Row([
+                dbc.Col(
+                    dbc.Accordion([
+                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_completed_every_hour), title="Data Table")
+                    ], start_collapsed=True)
+                ),
+                dbc.Col(
+                    dcc.Graph(figure=go.Figure(data=[go.Scatter(
+                        y=[f"{actions_completed_every_hour['Start'][i]} - "
+                           f"{actions_completed_every_hour['Finish'][i]}"
+                           for i in range(actions_completed_every_hour['Count'].size)],
+                        x=actions_completed_every_hour['Count']
+                    )]))
+                )
+            ])
+        ])
+    ], start_collapsed=True, always_open=True)
+
     output_card = dbc.Card([dbc.CardHeader(output_title), dbc.CardBody(output_body)])
+
     return dbc.CardBody([
         dbc.Row([
-            dbc.Col([input_card]),
-            dbc.Col([process_time_card])
+            dbc.Col([input_card]), dbc.Col([process_time_card])
         ]),
         html.Br(),
         dbc.Row([

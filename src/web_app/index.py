@@ -297,7 +297,8 @@ def index_layout():
                         warehouse_config['simulation']['drawers_to_gen'],
                         warehouse_config['simulation']['materials_to_gen'],
                         warehouse_config['simulation']['gen_deposit'],
-                        warehouse_config['simulation']['gen_buffer']
+                        warehouse_config['simulation']['gen_buffer'],
+                        warehouse_config['simulation'].get('time', 'Not specified')
                     )
                 )
             ], width=10)
