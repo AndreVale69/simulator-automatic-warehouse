@@ -3,7 +3,6 @@ from pathlib import Path
 from yaml import safe_load
 from json import loads
 from jsonschema import Draft202012Validator
-from inspect import getouterframes, currentframe
 
 
 class WarehouseConfigurationSingleton:
@@ -21,15 +20,6 @@ class WarehouseConfigurationSingleton:
         return WarehouseConfigurationSingleton.instance
 
     def __init__(self):
-        # check if the caller is get_instance or not
-        found_correct_caller = False
-        for frame in getouterframes(currentframe(), 2):
-            if frame.function != self.get_instance.__name__:
-                continue
-            found_correct_caller = True
-        if not found_correct_caller:
-            raise Exception("This class is a singleton!")
-
         # get project directory
         current_dir = Path(__file__)
         project_name = 'simulator-automatic-warehouse'
