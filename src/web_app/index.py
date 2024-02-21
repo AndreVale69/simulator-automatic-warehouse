@@ -23,6 +23,7 @@ from web_app.layouts.custom_configuration import create_columns_layout
 from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 from sim.utils.statistics.warehouse_statistics import ActionEnum
 from web_app.layouts.simulation_statistics import SimulationInput, create_simulation_statistics_layout
+from web_app.utils.callbacks_utilities import FieldsNewSimulation, fields_new_simulation_are_valid
 
 
 """
@@ -379,16 +380,9 @@ def load_loading_button(n,
                         num_materials_sim,
                         checkbox_time_sim,
                         time_sim):
-    # check if actions number is invalid
-    actions_invalid = True if num_actions_sim is None else False
-    # check if drawers number is invalid
-    drawers_invalid = True if num_drawers_sim is None else False
-    # check if materials number is invalid
-    materials_invalid = True if num_materials_sim is None else False
-    # check if a time of the simulation has been triggered and if the time value is not None
-    time_sim_invalid = True if (checkbox_time_sim and time_sim is None) else False
-
-    if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
+    if fields_new_simulation_are_valid(
+            FieldsNewSimulation(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
+    ):
         return True, [dbc.Spinner(size="sm"), " Loading..."]
 
     raise PreventUpdate
@@ -445,6 +439,9 @@ def download_graph(b_svg, b_pdf, b_csv):
     Output("toast_new_simulation_completed", "children"),
     Output("toast_error_simulation", "is_open"),
     Output("toast_error_simulation", "children"),
+    Output('start_time_sim', 'children'),
+    Output('finish_time_sim', 'children'),
+    Output('total_time_sim', 'children'),
 
     Input('btn_right', 'n_clicks'),
     Input('btn_left', 'n_clicks'),
@@ -468,6 +465,9 @@ def download_graph(b_svg, b_pdf, b_csv):
     State('set_step_graph_max_value_hint', 'children'),
     State('set_step_graph', 'max'),
     State('actual_tab', 'max'),
+    State('start_time_sim', 'children'),
+    State('finish_time_sim', 'children'),
+    State('total_time_sim', 'children'),
     prevent_initial_call=True
 )
 @cache.memoize()
@@ -481,7 +481,8 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                                timeline_old,
                                set_step_graph_max_value_hint,
                                set_step_graph_max,
-                               actual_tab_max
+                               actual_tab_max,
+                               start_time_sim, finish_time_sim, total_time_sim,
                                ):
     is_invalid_actual_tab = True if val_actual_tab is None else False
     match ctx.triggered_id:
@@ -518,7 +519,8 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     False,
                     None,
                     False,
-                    None)
+                    None,
+                    start_time_sim, finish_time_sim, total_time_sim)
 
         case 'actual_tab':
             if not is_invalid_actual_tab:
@@ -533,7 +535,8 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     False,
                     None,
                     False,
-                    None)
+                    None,
+                    start_time_sim, finish_time_sim, total_time_sim)
 
         case 'set_step_graph':
             if val_set_step_graph is not None:
@@ -548,22 +551,18 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     False,
                     None,
                     False,
-                    None)
+                    None,
+                    start_time_sim, finish_time_sim, total_time_sim)
 
         case 'btn_new_simulation':
-            # check if actions number is invalid
-            actions_invalid = True if num_actions_sim is None else False
-            # check if drawers number is invalid
-            drawers_invalid = True if num_drawers_sim is None else False
-            # check if materials number is invalid
-            materials_invalid = True if num_materials_sim is None else False
-            # check if a checkbox (deposit/buffer drawer) has been triggered
-            checklist_generators = {} if checklist_generators is None else checklist_generators
-            # check if a time of the simulation has been triggered and if the time value is not None
-            time_sim_invalid = True if (checkbox_time_sim and (time_sim is None or time_sim == "00:00:00")) else False
-
             # run new simulation if there are no probs
-            if not actions_invalid and not drawers_invalid and not materials_invalid and not time_sim_invalid:
+            if fields_new_simulation_are_valid(
+                    FieldsNewSimulation(
+                        num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim
+                    )
+            ):
+                # check if a checkbox (deposit/buffer drawer) has been triggered
+                checklist_generators = {} if checklist_generators is None else checklist_generators
                 if time_sim is not None:
                     time_converted = datetime.strptime(time_sim, '%H:%M:%S')
                     time_sim = time_converted.second + (time_converted.minute * 60) + ((time_converted.hour * 60) * 60)
@@ -587,13 +586,25 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     timeline.set_step(
                         val_set_step_graph if val_set_step_graph <= timeline.get_tot_tabs() else timeline.get_tot_tabs())
                     timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()])
+                warehouse_statistics = WarehouseStatistics(
+                    DataFrame(warehouse.get_simulation().get_store_history().items)
+                )
+                total_simulation_time = warehouse_statistics.total_simulation_time()
                 return (timeline.get_figure(), 1, timeline.get_tot_tabs(), f'/{timeline.get_tot_tabs()}',
                         f'Max value: {timeline.get_tot_tabs() * timeline.get_step()} min.', timeline.get_step(),
                         timeline.get_tot_tabs() * timeline.get_step(),
-                        True, f"Simulation completed in {end_sim - start_sim} (hh:mm:ss)", False, None)
+                        True, f"Simulation completed in {end_sim - start_sim} (hh:mm:ss)", False, None,
+                        warehouse_statistics.start_time_simulation().strftime('%a %d %b %Y, %H:%M:%S'),
+                        warehouse_statistics.finish_time_simulation().strftime('%a %d %b %Y, %H:%M:%S'),
+                        f"{total_simulation_time.days} days, "
+                        f"{str(total_simulation_time.components.hours).zfill(2)}:"
+                        f"{str(total_simulation_time.components.minutes).zfill(2)}:"
+                        f"{str(total_simulation_time.components.seconds).zfill(2)}"
+                        )
 
             return (timeline_old, timeline.get_actual_tab(), actual_tab_max, f'/{timeline.get_tot_tabs()}',
-                    set_step_graph_max_value_hint, val_set_step_graph, set_step_graph_max, False, None, False, None)
+                    set_step_graph_max_value_hint, val_set_step_graph, set_step_graph_max, False, None, False, None,
+                    start_time_sim, finish_time_sim, total_time_sim)
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
@@ -605,7 +616,8 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             False,
             None,
             False,
-            None)
+            None,
+            start_time_sim, finish_time_sim, total_time_sim)
 
 
 @app.callback(
@@ -690,6 +702,46 @@ def invalid_time_sim(time_sim_val, time_sim_readonly):
 )
 def config_show_cols(col):
     return create_columns_layout(num_col=int(col.removeprefix('Column '))-1)
+
+
+@app.callback(
+    Output("num_action_sim_stats", "children"),
+    Output("drawers_to_gen_sim_stats", "children"),
+    Output("materials_to_gen_sim_stats", "children"),
+    Output("gen_deposit_sim_stats", "children"),
+    Output("gen_buffer_sim_stats", "children"),
+    Output("total_time_sim_stats", "children"),
+
+    Input("btn_new_simulation", "n_clicks"),
+    State('num_actions_sim', 'value'),
+    State('num_drawers_sim', 'value'),
+    State('num_materials_sim', 'value'),
+    State('checkbox_time_sim', 'value'),
+    State('time_sim', 'value'),
+    State('checklist_generators', 'value'),
+    prevent_initial_call=True
+)
+@cache.memoize()
+def stats_number_of_simulated_actions_requested(
+        btn_new_simulation,
+        num_actions_sim,
+        num_drawers_sim,
+        num_materials_sim,
+        checkbox_time_sim,
+        time_sim,
+        checklist_generators
+):
+    if fields_new_simulation_are_valid(
+            FieldsNewSimulation(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
+    ):
+        return (num_actions_sim, num_drawers_sim, num_materials_sim,
+                'True' if 'gen_deposit' in
+                          (checklist_generators := {} if checklist_generators is None else checklist_generators)
+                else 'False',
+                'True' if 'gen_buffer' in checklist_generators else 'False',
+                time_sim if time_sim is not None else 'Not specified')
+
+    raise PreventUpdate
 
 
 def _signal_handler(frame, sig):
