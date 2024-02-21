@@ -4,6 +4,7 @@ from typing import NamedTuple
 from dash import html, dcc
 from pandas import DataFrame
 
+from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
 from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 
 
@@ -105,6 +106,16 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
     output_body = dbc.Accordion([
         dbc.AccordionItem(title="Number of actions started every hour", children=[
             dbc.Row([
+                dbc.DropdownMenu([
+                    dbc.DropdownMenuItem("View statistics for all actions", header=True),
+                    dbc.DropdownMenuItem("None", id="output_stats-actions_started-none"),
+                    dbc.DropdownMenuItem("View statistics for a specific action", header=True),
+                ] + [
+                    dbc.DropdownMenuItem(action.value, id=f"output_stats-actions_started-{action.value}") for action in ActionEnum
+                ], color="primary", label="Show data of the action: None")
+            ]),
+            html.Br(),
+            dbc.Row([
                 dbc.Col(
                     dbc.Accordion([
                         dbc.AccordionItem(dbc.Table.from_dataframe(actions_started_every_hour), title="Data Table")
@@ -119,6 +130,16 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
 
         dbc.AccordionItem(title="Number of actions finished every hour", children=[
             dbc.Row([
+                dbc.DropdownMenu([
+                    dbc.DropdownMenuItem("View statistics for all actions", header=True),
+                    dbc.DropdownMenuItem("None", id="output_stats-actions_finished-none"),
+                    dbc.DropdownMenuItem("View statistics for a specific action", header=True),
+                ] + [
+                    dbc.DropdownMenuItem(action.value, id=f"output_stats-actions_finished-{action.value}") for action in ActionEnum
+                ], color="primary", label="Show data of the action: None")
+            ]),
+            html.Br(),
+            dbc.Row([
                 dbc.Col(
                     dbc.Accordion([
                         dbc.AccordionItem(dbc.Table.from_dataframe(actions_finished_every_hour), title="Data Table")
@@ -132,6 +153,17 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
         ]),
 
         dbc.AccordionItem(title="Number of actions completed every hour", children=[
+            dbc.Row([
+                dbc.DropdownMenu([
+                    dbc.DropdownMenuItem("View statistics for all actions", header=True),
+                    dbc.DropdownMenuItem("None", id="output_stats-actions_completed-none"),
+                    dbc.DropdownMenuItem("View statistics for a specific action", header=True),
+                ] + [
+                    dbc.DropdownMenuItem(action.value,
+                    id=f"output_stats-actions_completed-{action.value}") for action in ActionEnum
+                ], color="primary", label="Show data of the action: None")
+            ]),
+            html.Br(),
             dbc.Row([
                 dbc.Col(
                     dbc.Accordion([

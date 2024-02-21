@@ -246,7 +246,7 @@ def index_layout():
                             ], title="General information"),
                             dbc.AccordionItem([
                                 dbc.Select([
-                                    f"Column {i + 1}" for i, col in enumerate(warehouse_config['columns'])
+                                    f"Column {i + 1}" for i in range(len(warehouse_config['columns']))
                                 ], "Column 1", id="config-choose_col"),
                                 html.Br(),
                                 dbc.ListGroup(
