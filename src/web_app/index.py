@@ -5,6 +5,8 @@ import os.path
 import shutil
 import sys
 import dash_bootstrap_components as dbc
+import plotly.graph_objs as go
+from dash_auth import BasicAuth
 
 from signal import signal, SIGINT, SIGTERM
 from diskcache import Cache
@@ -23,7 +25,7 @@ from web_app.layouts.custom_configuration import create_columns_layout
 from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 from sim.utils.statistics.warehouse_statistics import ActionEnum
 from web_app.layouts.simulation_statistics import SimulationInput, create_simulation_statistics_layout
-from web_app.utils.callbacks_utilities import FieldsNewSimulation, fields_new_simulation_are_valid
+from web_app.utils.callbacks_utilities import FieldsNewSimulationArgs, fields_new_simulation_are_valid
 
 
 """
@@ -58,6 +60,11 @@ app = Dash(external_stylesheets=[BS, dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
            # and lets you build mobile optimised layouts
            meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
            background_callback_manager=DiskcacheManager(cache), name=__name__)
+# Very ridiculous security, but it's efficient against foolish users ;)
+USER_PWD = {
+    "admin": "admin"
+}
+BasicAuth(app, USER_PWD)
 
 # timeline manager
 timeline = Timeline(warehouse.get_simulation().get_store_history().items)
@@ -203,9 +210,14 @@ def index_layout():
                             dbc.Col([
                                 dbc.DropdownMenu(children=[
                                     dbc.DropdownMenuItem(
+                                        children=[html.I(className='bi bi-download'), " EXCEL"],
+                                        id="dropdown-btn_xlsx",
+                                        n_clicks=0
+                                    ),
+                                    dbc.DropdownMenuItem(
                                         children=[html.I(className='bi bi-download'), " CSV"],
                                         id = "dropdown-btn_csv",
-                                        n_clicks = 0
+                                        n_clicks=0
                                     ),
                                     dbc.DropdownMenuItem(
                                         children=[html.I(className='bi bi-download'), " SVG"],
@@ -381,7 +393,7 @@ def load_loading_button(n,
                         checkbox_time_sim,
                         time_sim):
     if fields_new_simulation_are_valid(
-            FieldsNewSimulation(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
+            FieldsNewSimulationArgs(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
     ):
         return True, [dbc.Spinner(size="sm"), " Loading..."]
 
@@ -401,22 +413,28 @@ def restore_btn_simulation(n):
 
 @app.callback(
     Output("download-graph", "data"),
-    [Input("dropdown-btn_svg", "n_clicks"),
-     Input("dropdown-btn_pdf", "n_clicks"),
-     Input("dropdown-btn_csv", "n_clicks")],
+    Input("dropdown-btn_svg", "n_clicks"),
+    Input("dropdown-btn_pdf", "n_clicks"),
+    Input("dropdown-btn_csv", "n_clicks"),
+    Input("dropdown-btn_xlsx", "n_clicks"),
     prevent_initial_call=True
 )
-def download_graph(b_svg, b_pdf, b_csv):
+def download_graph(b_svg, b_pdf, b_csv, b_xlsx):
     extension = ''
     # which button is triggered?
     match ctx.triggered_id:
         case "dropdown-btn_csv":
             timeline.get_dataframe().to_csv("./images/graph_actions.csv")
             return dcc.send_file("./images/graph_actions.csv")
+        case "dropdown-btn_xlsx":
+            timeline.get_dataframe().to_excel("./images/graph_actions.xlsx")
+            return dcc.send_file("./images/graph_actions.xlsx")
         case "dropdown-btn_svg":
             extension = 'svg'
         case "dropdown-btn_pdf":
             extension = 'pdf'
+        case _:
+            raise PreventUpdate
     # create the file
     open(f"./images/graph_actions.{extension}", "w")
     # take graph to download
@@ -443,6 +461,12 @@ def download_graph(b_svg, b_pdf, b_csv):
     Output('finish_time_sim', 'children'),
     Output('total_time_sim', 'children'),
 
+    # output stats
+    Output('output_stats-actions_started', 'label'),
+    Output('output_stats-actions_started-data_table', 'children'),
+    Output('output_stats-actions_started-figure', 'figure'),
+
+
     Input('btn_right', 'n_clicks'),
     Input('btn_left', 'n_clicks'),
     Input('btn_right_end', 'n_clicks'),
@@ -468,6 +492,9 @@ def download_graph(b_svg, b_pdf, b_csv):
     State('start_time_sim', 'children'),
     State('finish_time_sim', 'children'),
     State('total_time_sim', 'children'),
+    State('output_stats-actions_started', 'label'),
+    State('output_stats-actions_started-data_table', 'children'),
+    State('output_stats-actions_started-figure', 'figure'),
     prevent_initial_call=True
 )
 @cache.memoize()
@@ -483,6 +510,9 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                                set_step_graph_max,
                                actual_tab_max,
                                start_time_sim, finish_time_sim, total_time_sim,
+                               output_stats_actions_started,
+                               output_stats_actions_started_data_table,
+                               output_stats_actions_started_figure
                                ):
     is_invalid_actual_tab = True if val_actual_tab is None else False
     match ctx.triggered_id:
@@ -520,7 +550,9 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     None,
                     False,
                     None,
-                    start_time_sim, finish_time_sim, total_time_sim)
+                    start_time_sim, finish_time_sim, total_time_sim,
+                    output_stats_actions_started, output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure)
 
         case 'actual_tab':
             if not is_invalid_actual_tab:
@@ -536,7 +568,9 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     None,
                     False,
                     None,
-                    start_time_sim, finish_time_sim, total_time_sim)
+                    start_time_sim, finish_time_sim, total_time_sim,
+                    output_stats_actions_started, output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure)
 
         case 'set_step_graph':
             if val_set_step_graph is not None:
@@ -552,12 +586,14 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     None,
                     False,
                     None,
-                    start_time_sim, finish_time_sim, total_time_sim)
+                    start_time_sim, finish_time_sim, total_time_sim,
+                    output_stats_actions_started, output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure)
 
         case 'btn_new_simulation':
             # run new simulation if there are no probs
             if fields_new_simulation_are_valid(
-                    FieldsNewSimulation(
+                    FieldsNewSimulationArgs(
                         num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim
                     )
             ):
@@ -578,7 +614,8 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                 if len(history) == 0:
                     return (timeline_old, timeline.get_actual_tab(), actual_tab_max, f'/{timeline.get_tot_tabs()}',
                             set_step_graph_max_value_hint, val_set_step_graph, set_step_graph_max, False, None, True,
-                            "The time set is too low. Please try again by setting a higher value (or remove the time).")
+                            "The time set is too low. Please try again by setting a higher value (or remove the time).",
+                            start_time_sim, finish_time_sim, total_time_sim)
                 timeline.__init__(history)
                 # check the view range, because if you set 10 min (e.g.) and you run a new simulation,
                 # the range is updated in this way
@@ -586,10 +623,14 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     timeline.set_step(
                         val_set_step_graph if val_set_step_graph <= timeline.get_tot_tabs() else timeline.get_tot_tabs())
                     timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()])
-                warehouse_statistics = WarehouseStatistics(
-                    DataFrame(warehouse.get_simulation().get_store_history().items)
-                )
+                # statistics calculations
+                warehouse_statistics.__init__(DataFrame(history))
                 total_simulation_time = warehouse_statistics.total_simulation_time()
+                type_of_action_selected: ActionEnum | None = ActionEnum.from_str(output_stats_actions_started.split(" ")[-1])
+                actions_started_every_hour: DataFrame = (
+                    warehouse_statistics.actions_started_every(TimeEnum.HOUR) if type_of_action_selected is None
+                    else warehouse_statistics.action_started_every(type_of_action_selected, TimeEnum.HOUR)
+                )
                 return (timeline.get_figure(), 1, timeline.get_tot_tabs(), f'/{timeline.get_tot_tabs()}',
                         f'Max value: {timeline.get_tot_tabs() * timeline.get_step()} min.', timeline.get_step(),
                         timeline.get_tot_tabs() * timeline.get_step(),
@@ -599,12 +640,18 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                         f"{total_simulation_time.days} days, "
                         f"{str(total_simulation_time.components.hours).zfill(2)}:"
                         f"{str(total_simulation_time.components.minutes).zfill(2)}:"
-                        f"{str(total_simulation_time.components.seconds).zfill(2)}"
+                        f"{str(total_simulation_time.components.seconds).zfill(2)}",
+                        f"Show data of the action: {type_of_action_selected}",
+                        dbc.Table.from_dataframe(actions_started_every_hour),
+                        go.Figure(data=[go.Scatter(x=actions_started_every_hour['Start'],
+                                                   y=actions_started_every_hour['Count'])])
                         )
 
             return (timeline_old, timeline.get_actual_tab(), actual_tab_max, f'/{timeline.get_tot_tabs()}',
                     set_step_graph_max_value_hint, val_set_step_graph, set_step_graph_max, False, None, False, None,
-                    start_time_sim, finish_time_sim, total_time_sim)
+                    start_time_sim, finish_time_sim, total_time_sim,
+                    output_stats_actions_started, output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure)
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
@@ -617,7 +664,8 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             None,
             False,
             None,
-            start_time_sim, finish_time_sim, total_time_sim)
+            start_time_sim, finish_time_sim, total_time_sim,
+            output_stats_actions_started, output_stats_actions_started_data_table, output_stats_actions_started_figure)
 
 
 @app.callback(
@@ -732,7 +780,7 @@ def stats_number_of_simulated_actions_requested(
         checklist_generators
 ):
     if fields_new_simulation_are_valid(
-            FieldsNewSimulation(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
+            FieldsNewSimulationArgs(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
     ):
         return (num_actions_sim, num_drawers_sim, num_materials_sim,
                 'True' if 'gen_deposit' in
@@ -742,6 +790,35 @@ def stats_number_of_simulated_actions_requested(
                 time_sim if time_sim is not None else 'Not specified')
 
     raise PreventUpdate
+
+
+@app.callback(
+    Output("output_stats-actions_started", "label", allow_duplicate=True),
+    Output("output_stats-actions_started-data_table", "children", allow_duplicate=True),
+    Output("output_stats-actions_started-figure", "figure", allow_duplicate=True),
+    Input("output_stats-actions_started-none", "n_clicks"),
+    Input("output_stats-actions_started-ExtractDrawer", "n_clicks"),
+    Input("output_stats-actions_started-SendBackDrawer", "n_clicks"),
+    Input("output_stats-actions_started-InsertRandomMaterial", "n_clicks"),
+    Input("output_stats-actions_started-RemoveRandomMaterial", "n_clicks"),
+    prevent_initial_call=True
+)
+def output_stats_actions_started_menu_triggered(none,
+                                                extract_drawer,
+                                                send_back_drawer,
+                                                insert_random_material,
+                                                remove_random_material
+                                                ):
+    type_of_action: ActionEnum | None = ActionEnum.from_str(ctx.triggered_id.split("-")[-1])
+    data: DataFrame = (
+        warehouse_statistics.actions_started_every(TimeEnum.HOUR) if type_of_action is None
+        else warehouse_statistics.action_started_every(type_of_action, TimeEnum.HOUR)
+    )
+    return (f"Show data of the action: {type_of_action}",
+            dbc.Table.from_dataframe(data),
+            go.Figure(data=[go.Scatter(x=data['Start'],
+                                       y=data['Count'])])
+            )
 
 
 def _signal_handler(frame, sig):

@@ -103,6 +103,7 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
     actions_started_every_hour: DataFrame = warehouse_statistics.actions_started_every(TimeEnum.HOUR)
     actions_finished_every_hour: DataFrame = warehouse_statistics.actions_finished_every(TimeEnum.HOUR)
     actions_completed_every_hour: DataFrame = warehouse_statistics.actions_completed_every(TimeEnum.HOUR)
+
     output_body = dbc.Accordion([
         dbc.AccordionItem(title="Number of actions started every hour", children=[
             dbc.Row([
@@ -111,19 +112,21 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                     dbc.DropdownMenuItem("None", id="output_stats-actions_started-none"),
                     dbc.DropdownMenuItem("View statistics for a specific action", header=True),
                 ] + [
-                    dbc.DropdownMenuItem(action.value, id=f"output_stats-actions_started-{action.value}") for action in ActionEnum
-                ], color="primary", label="Show data of the action: None")
+                    dbc.DropdownMenuItem(action.value, id=f"output_stats-actions_started-{action}") for action in ActionEnum
+                ], color="primary", label="Show data of the action: None", id="output_stats-actions_started")
             ]),
             html.Br(),
             dbc.Row([
                 dbc.Col(
                     dbc.Accordion([
-                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_started_every_hour), title="Data Table")
+                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_started_every_hour), title="Data Table",
+                                          id="output_stats-actions_started-data_table")
                     ], start_collapsed=True)
                 ),
                 dbc.Col(
                     dcc.Graph(figure=go.Figure(data=[go.Scatter(x=actions_started_every_hour['Start'],
-                                                                y=actions_started_every_hour['Count'])]))
+                                                                y=actions_started_every_hour['Count'])]),
+                              id="output_stats-actions_started-figure")
                 )
             ])
         ]),
@@ -181,7 +184,6 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
             ])
         ])
     ], start_collapsed=True, always_open=True)
-
     output_card = dbc.Card([dbc.CardHeader(output_title), dbc.CardBody(output_body)], color="light", outline=True)
 
     return dbc.CardBody([

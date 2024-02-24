@@ -1,5 +1,4 @@
 from pandas import DataFrame, Series, Timedelta, Timestamp, Period
-from functools import lru_cache
 from enum import Enum
 from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
 
@@ -21,19 +20,19 @@ class WarehouseStatistics:
     def __init__(self, warehouse_actions: DataFrame):
         self._warehouse_actions = warehouse_actions
 
-    @lru_cache
+
     def _get_start(self) -> Series:
         return self._warehouse_actions["Start"]
 
-    @lru_cache
+
     def _get_finish(self) -> Series:
         return self._warehouse_actions["Finish"]
 
-    @lru_cache
+
     def _get_type_of_action(self):
         return self._warehouse_actions["Type of Action"]
 
-    @lru_cache
+
     def actions_started_every(self, time: TimeEnum) -> DataFrame:
         """
         Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
@@ -48,7 +47,7 @@ class WarehouseStatistics:
         counts = value_counts.to_list()
         return DataFrame([{'Start': str(start[index]), 'Count': counts[index]} for index in range(value_counts.size)])
 
-    @lru_cache
+
     def actions_finished_every(self, time: TimeEnum) -> DataFrame:
         """
         Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
@@ -66,7 +65,7 @@ class WarehouseStatistics:
             'Count': counts[index]
         } for index in range(value_counts.size)])
 
-    @lru_cache
+
     def actions_completed_every(self, time: TimeEnum) -> DataFrame:
         """
         Calculate a Series with Start datetime, Finish datetime and their relative count.
@@ -89,7 +88,7 @@ class WarehouseStatistics:
                 'Count': counts[index]
         } for index in range(value_counts.size)])
 
-    @lru_cache
+
     def action_started_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame:
         """
         Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
@@ -113,7 +112,7 @@ class WarehouseStatistics:
             'Count': counts[index]
         } for index in range(value_counts.size)])
 
-    @lru_cache
+
     def action_finished_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame:
         """
         Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
@@ -137,7 +136,7 @@ class WarehouseStatistics:
             'Count': counts[index]
         } for index in range(value_counts.size)])
 
-    @lru_cache
+
     def action_completed_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame:
         """
         Request the action to be completed, specifying the action requested and the time period.
@@ -165,7 +164,7 @@ class WarehouseStatistics:
             'Count': counts[index]
         } for index in range(value_counts.size)])
 
-    @lru_cache
+
     def count_action_completed(self, action: ActionEnum) -> int:
         """
         Calculate how many actions are completed for a given action.
@@ -175,7 +174,7 @@ class WarehouseStatistics:
         """
         return self._warehouse_actions.groupby("Type of Action").count().get("Finish").get(action.value)
 
-    @lru_cache
+
     def start_time_simulation(self) -> Timestamp:
         """
         Get the start of the simulation.
@@ -184,7 +183,7 @@ class WarehouseStatistics:
         """
         return self._get_start()[0]
 
-    @lru_cache
+
     def finish_time_simulation(self) -> Timestamp:
         """
         Get the finish of the simulation.
@@ -193,7 +192,7 @@ class WarehouseStatistics:
         """
         return self._get_finish()[self._get_finish().size - 1]
 
-    @lru_cache
+
     def total_simulation_time(self) -> Timedelta:
         """
         Get the total time of the simulation.

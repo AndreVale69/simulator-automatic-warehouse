@@ -10,3 +10,4 @@ celery~=5.3.5
 dash[diskcache]~=2.15.0
 PyYAML~=6.0.1
 jsonschema~=4.21.1
+openpyxl~=3.1.2

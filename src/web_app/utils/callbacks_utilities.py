@@ -2,7 +2,7 @@ from typing import NamedTuple
 from functools import lru_cache
 
 
-class FieldsNewSimulation(NamedTuple):
+class FieldsNewSimulationArgs(NamedTuple):
     num_actions_sim: int | None
     num_drawers_sim: int | None
     num_materials_sim: int | None
@@ -11,7 +11,7 @@ class FieldsNewSimulation(NamedTuple):
 
 
 @lru_cache
-def fields_new_simulation_are_valid(fields: FieldsNewSimulation) -> bool:
+def fields_new_simulation_are_valid(fields: FieldsNewSimulationArgs) -> bool:
     """
     1. Check if actions number is valid. <br>
     2. Check if drawers number is valid. <br>

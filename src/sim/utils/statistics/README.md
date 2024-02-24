@@ -4,8 +4,6 @@ This file contains a list of the API available within the `WarehouseStatistics` 
 The main purpose of this object is to provide a set of methods to allow the programmer to easily manipulate the data of the 
 simulation.
 
-`WarehouseStatistics` has a large use of `functools.lru_cache` because its internal variables don't change over time. In fact, only the input parameter can change, but the output will always be the same.
-
 ## API List
 
 The following is a list of the methods. Each one is decorated with a description and an example of the object returned.
