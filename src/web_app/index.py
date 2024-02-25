@@ -465,6 +465,12 @@ def download_graph(b_svg, b_pdf, b_csv, b_xlsx):
     Output('output_stats-actions_started', 'label'),
     Output('output_stats-actions_started-data_table', 'children'),
     Output('output_stats-actions_started-figure', 'figure'),
+    Output('output_stats-actions_finished', 'label'),
+    Output('output_stats-actions_finished-data_table', 'children'),
+    Output('output_stats-actions_finished-figure', 'figure'),
+    Output('output_stats-actions_completed', 'label'),
+    Output('output_stats-actions_completed-data_table', 'children'),
+    Output('output_stats-actions_completed-figure', 'figure'),
 
 
     Input('btn_right', 'n_clicks'),
@@ -495,6 +501,12 @@ def download_graph(b_svg, b_pdf, b_csv, b_xlsx):
     State('output_stats-actions_started', 'label'),
     State('output_stats-actions_started-data_table', 'children'),
     State('output_stats-actions_started-figure', 'figure'),
+    State('output_stats-actions_finished', 'label'),
+    State('output_stats-actions_finished-data_table', 'children'),
+    State('output_stats-actions_finished-figure', 'figure'),
+    State('output_stats-actions_completed', 'label'),
+    State('output_stats-actions_completed-data_table', 'children'),
+    State('output_stats-actions_completed-figure', 'figure'),
     prevent_initial_call=True
 )
 @cache.memoize()
@@ -512,7 +524,13 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                                start_time_sim, finish_time_sim, total_time_sim,
                                output_stats_actions_started,
                                output_stats_actions_started_data_table,
-                               output_stats_actions_started_figure
+                               output_stats_actions_started_figure,
+                               output_stats_actions_finished,
+                               output_stats_actions_finished_data_table,
+                               output_stats_actions_finished_figure,
+                               output_stats_actions_completed,
+                               output_stats_actions_completed_data_table,
+                               output_stats_actions_completed_figure
                                ):
     is_invalid_actual_tab = True if val_actual_tab is None else False
     match ctx.triggered_id:
@@ -551,8 +569,15 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     False,
                     None,
                     start_time_sim, finish_time_sim, total_time_sim,
-                    output_stats_actions_started, output_stats_actions_started_data_table,
-                    output_stats_actions_started_figure)
+                    output_stats_actions_started,
+                    output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure,
+                    output_stats_actions_finished,
+                    output_stats_actions_finished_data_table,
+                    output_stats_actions_finished_figure,
+                    output_stats_actions_completed,
+                    output_stats_actions_completed_data_table,
+                    output_stats_actions_completed_figure)
 
         case 'actual_tab':
             if not is_invalid_actual_tab:
@@ -569,8 +594,15 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     False,
                     None,
                     start_time_sim, finish_time_sim, total_time_sim,
-                    output_stats_actions_started, output_stats_actions_started_data_table,
-                    output_stats_actions_started_figure)
+                    output_stats_actions_started,
+                    output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure,
+                    output_stats_actions_finished,
+                    output_stats_actions_finished_data_table,
+                    output_stats_actions_finished_figure,
+                    output_stats_actions_completed,
+                    output_stats_actions_completed_data_table,
+                    output_stats_actions_completed_figure)
 
         case 'set_step_graph':
             if val_set_step_graph is not None:
@@ -587,8 +619,15 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     False,
                     None,
                     start_time_sim, finish_time_sim, total_time_sim,
-                    output_stats_actions_started, output_stats_actions_started_data_table,
-                    output_stats_actions_started_figure)
+                    output_stats_actions_started,
+                    output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure,
+                    output_stats_actions_finished,
+                    output_stats_actions_finished_data_table,
+                    output_stats_actions_finished_figure,
+                    output_stats_actions_completed,
+                    output_stats_actions_completed_data_table,
+                    output_stats_actions_completed_figure)
 
         case 'btn_new_simulation':
             # run new simulation if there are no probs
@@ -626,11 +665,27 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                 # statistics calculations
                 warehouse_statistics.__init__(DataFrame(history))
                 total_simulation_time = warehouse_statistics.total_simulation_time()
-                type_of_action_selected: ActionEnum | None = ActionEnum.from_str(output_stats_actions_started.split(" ")[-1])
+                # started
+                type_of_action_selected_started: ActionEnum | None = ActionEnum.from_str(output_stats_actions_started.split(" ")[-1])
                 actions_started_every_hour: DataFrame = (
-                    warehouse_statistics.actions_started_every(TimeEnum.HOUR) if type_of_action_selected is None
-                    else warehouse_statistics.action_started_every(type_of_action_selected, TimeEnum.HOUR)
+                    warehouse_statistics.actions_started_every(TimeEnum.HOUR) if type_of_action_selected_started is None
+                    else warehouse_statistics.action_started_every(type_of_action_selected_started, TimeEnum.HOUR)
                 )
+                # finished
+                type_of_action_selected_finished: ActionEnum | None = ActionEnum.from_str(
+                    output_stats_actions_finished.split(" ")[-1])
+                actions_finished_every_hour: DataFrame = (
+                    warehouse_statistics.actions_finished_every(TimeEnum.HOUR) if type_of_action_selected_finished is None
+                    else warehouse_statistics.action_finished_every(type_of_action_selected_finished, TimeEnum.HOUR)
+                )
+                # completed
+                type_of_action_selected_completed: ActionEnum | None = ActionEnum.from_str(
+                    output_stats_actions_completed.split(" ")[-1])
+                actions_completed_every_hour: DataFrame = (
+                    warehouse_statistics.actions_completed_every(TimeEnum.HOUR) if type_of_action_selected_completed is None
+                    else warehouse_statistics.action_completed_every(type_of_action_selected_completed, TimeEnum.HOUR)
+                )
+
                 return (timeline.get_figure(), 1, timeline.get_tot_tabs(), f'/{timeline.get_tot_tabs()}',
                         f'Max value: {timeline.get_tot_tabs() * timeline.get_step()} min.', timeline.get_step(),
                         timeline.get_tot_tabs() * timeline.get_step(),
@@ -641,17 +696,38 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                         f"{str(total_simulation_time.components.hours).zfill(2)}:"
                         f"{str(total_simulation_time.components.minutes).zfill(2)}:"
                         f"{str(total_simulation_time.components.seconds).zfill(2)}",
-                        f"Show data of the action: {type_of_action_selected}",
+                        # stats:
+                        # started
+                        f"Show data of the action: {type_of_action_selected_started}",
                         dbc.Table.from_dataframe(actions_started_every_hour),
                         go.Figure(data=[go.Scatter(x=actions_started_every_hour['Start'],
-                                                   y=actions_started_every_hour['Count'])])
+                                                   y=actions_started_every_hour['Count'])]),
+                        # finished
+                        f"Show data of the action: {type_of_action_selected_finished}",
+                        dbc.Table.from_dataframe(actions_finished_every_hour),
+                        go.Figure(data=[go.Scatter(x=actions_finished_every_hour['Finish'],
+                                                   y=actions_finished_every_hour['Count'])]),
+                        # completed
+                        f"Show data of the action: {type_of_action_selected_completed}",
+                        dbc.Table.from_dataframe(actions_completed_every_hour),
+                        go.Figure(data=[go.Scatter(y=[f"{actions_completed_every_hour['Start'][i]} - "
+                                                      f"{actions_completed_every_hour['Finish'][i]}"
+                                                      for i in range(actions_completed_every_hour['Count'].size)],
+                                                   x=actions_completed_every_hour['Count'])])
                         )
 
             return (timeline_old, timeline.get_actual_tab(), actual_tab_max, f'/{timeline.get_tot_tabs()}',
                     set_step_graph_max_value_hint, val_set_step_graph, set_step_graph_max, False, None, False, None,
                     start_time_sim, finish_time_sim, total_time_sim,
-                    output_stats_actions_started, output_stats_actions_started_data_table,
-                    output_stats_actions_started_figure)
+                    output_stats_actions_started,
+                    output_stats_actions_started_data_table,
+                    output_stats_actions_started_figure,
+                    output_stats_actions_finished,
+                    output_stats_actions_finished_data_table,
+                    output_stats_actions_finished_figure,
+                    output_stats_actions_completed,
+                    output_stats_actions_completed_data_table,
+                    output_stats_actions_completed_figure)
 
     return (timeline.get_figure().update_xaxes(range=[timeline.get_actual_left(), timeline.get_actual_right()]),
             timeline.get_actual_tab(),
@@ -665,7 +741,14 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             False,
             None,
             start_time_sim, finish_time_sim, total_time_sim,
-            output_stats_actions_started, output_stats_actions_started_data_table, output_stats_actions_started_figure)
+            output_stats_actions_started, output_stats_actions_started_data_table, output_stats_actions_started_figure,
+            output_stats_actions_finished,
+            output_stats_actions_finished_data_table,
+            output_stats_actions_finished_figure,
+            output_stats_actions_completed,
+            output_stats_actions_completed_data_table,
+            output_stats_actions_completed_figure
+            )
 
 
 @app.callback(
@@ -819,6 +902,70 @@ def output_stats_actions_started_menu_triggered(none,
             go.Figure(data=[go.Scatter(x=data['Start'],
                                        y=data['Count'])])
             )
+
+
+@app.callback(
+    Output("output_stats-actions_finished", "label", allow_duplicate=True),
+    Output("output_stats-actions_finished-data_table", "children", allow_duplicate=True),
+    Output("output_stats-actions_finished-figure", "figure", allow_duplicate=True),
+    Input("output_stats-actions_finished-none", "n_clicks"),
+    Input("output_stats-actions_finished-ExtractDrawer", "n_clicks"),
+    Input("output_stats-actions_finished-SendBackDrawer", "n_clicks"),
+    Input("output_stats-actions_finished-InsertRandomMaterial", "n_clicks"),
+    Input("output_stats-actions_finished-RemoveRandomMaterial", "n_clicks"),
+    prevent_initial_call=True
+)
+def output_stats_actions_finished_menu_triggered(none,
+                                                 extract_drawer,
+                                                 send_back_drawer,
+                                                 insert_random_material,
+                                                 remove_random_material
+                                                 ):
+    type_of_action: ActionEnum | None = ActionEnum.from_str(ctx.triggered_id.split("-")[-1])
+    data: DataFrame = (
+        warehouse_statistics.actions_finished_every(TimeEnum.HOUR) if type_of_action is None
+        else warehouse_statistics.action_finished_every(type_of_action, TimeEnum.HOUR)
+    )
+    return (f"Show data of the action: {type_of_action}",
+            dbc.Table.from_dataframe(data),
+            go.Figure(data=[go.Scatter(x=data['Finish'],
+                                       y=data['Count'])])
+            )
+
+
+@app.callback(
+    Output("output_stats-actions_completed", "label", allow_duplicate=True),
+    Output("output_stats-actions_completed-data_table", "children", allow_duplicate=True),
+    Output("output_stats-actions_completed-figure", "figure", allow_duplicate=True),
+    Input("output_stats-actions_completed-none", "n_clicks"),
+    Input("output_stats-actions_completed-ExtractDrawer", "n_clicks"),
+    Input("output_stats-actions_completed-SendBackDrawer", "n_clicks"),
+    Input("output_stats-actions_completed-InsertRandomMaterial", "n_clicks"),
+    Input("output_stats-actions_completed-RemoveRandomMaterial", "n_clicks"),
+    prevent_initial_call=True
+)
+def output_stats_actions_completed_menu_triggered(none,
+                                                 extract_drawer,
+                                                 send_back_drawer,
+                                                 insert_random_material,
+                                                 remove_random_material
+                                                 ):
+    type_of_action: ActionEnum | None = ActionEnum.from_str(ctx.triggered_id.split("-")[-1])
+    data: DataFrame = (
+        warehouse_statistics.actions_completed_every(TimeEnum.HOUR) if type_of_action is None
+        else warehouse_statistics.action_completed_every(type_of_action, TimeEnum.HOUR)
+    )
+    return (f"Show data of the action: {type_of_action}",
+            dbc.Table.from_dataframe(data),
+            go.Figure(
+                data=[go.Scatter(
+                    y=[f"{data['Start'][i]} - "
+                       f"{data['Finish'][i]}"
+                       for i in range(data['Count'].size)],
+                    x=data['Count']
+                )])
+            )
+
 
 
 def _signal_handler(frame, sig):

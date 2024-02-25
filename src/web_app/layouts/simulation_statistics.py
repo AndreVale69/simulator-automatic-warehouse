@@ -139,18 +139,20 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                     dbc.DropdownMenuItem("View statistics for a specific action", header=True),
                 ] + [
                     dbc.DropdownMenuItem(action.value, id=f"output_stats-actions_finished-{action.value}") for action in ActionEnum
-                ], color="primary", label="Show data of the action: None")
+                ], color="primary", label="Show data of the action: None", id="output_stats-actions_finished")
             ]),
             html.Br(),
             dbc.Row([
                 dbc.Col(
                     dbc.Accordion([
-                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_finished_every_hour), title="Data Table")
+                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_finished_every_hour), title="Data Table",
+                                          id="output_stats-actions_finished-data_table")
                     ], start_collapsed=True)
                 ),
                 dbc.Col(
                     dcc.Graph(figure=go.Figure(data=[go.Scatter(x=actions_finished_every_hour['Finish'],
-                                                                y=actions_finished_every_hour['Count'])]))
+                                                                y=actions_finished_every_hour['Count'])]),
+                              id="output_stats-actions_finished-figure")
                 )
             ])
         ]),
@@ -164,13 +166,14 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                 ] + [
                     dbc.DropdownMenuItem(action.value,
                     id=f"output_stats-actions_completed-{action.value}") for action in ActionEnum
-                ], color="primary", label="Show data of the action: None")
+                ], color="primary", label="Show data of the action: None", id="output_stats-actions_completed")
             ]),
             html.Br(),
             dbc.Row([
                 dbc.Col(
                     dbc.Accordion([
-                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_completed_every_hour), title="Data Table")
+                        dbc.AccordionItem(dbc.Table.from_dataframe(actions_completed_every_hour), title="Data Table",
+                                          id="output_stats-actions_completed-data_table")
                     ], start_collapsed=True)
                 ),
                 dbc.Col(
@@ -179,7 +182,7 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                            f"{actions_completed_every_hour['Finish'][i]}"
                            for i in range(actions_completed_every_hour['Count'].size)],
                         x=actions_completed_every_hour['Count']
-                    )]))
+                    )]), id="output_stats-actions_completed-figure")
                 )
             ])
         ])
