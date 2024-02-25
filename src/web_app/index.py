@@ -1021,7 +1021,7 @@ def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg
     State("output_stats-actions_finished", "label"),
     prevent_initial_call=True
 )
-def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
+def download_output_stats_actions_finished(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
     action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
     file_path = f"./images/graph_stats-actions_finished" if action is None else f"./images/graph_stats-action_{action}_finished"
     extension = ''
@@ -1064,7 +1064,7 @@ def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg
     State("output_stats-actions_completed", "label"),
     prevent_initial_call=True
 )
-def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
+def download_output_stats_actions_completed(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
     action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
     file_path = f"./images/graph_stats-actions_completed" if action is None else f"./images/graph_stats-action_{action}_completed"
     extension = ''
