@@ -1,9 +1,9 @@
 import copy
 
 from sim.drawer import Drawer
-from sim.status_warehouse.Container.drawerContainer import DrawerContainer
-from sim.status_warehouse.Entry.drawerEntry import DrawerEntry
-from sim.status_warehouse.Entry.emptyEntry import EmptyEntry
+from sim.status_warehouse.container.drawer_container import DrawerContainer
+from sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from sim.status_warehouse.entry.empty_entry import EmptyEntry
 
 
 class Carousel(DrawerContainer):

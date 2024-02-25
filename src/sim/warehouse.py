@@ -3,9 +3,9 @@ import random
 
 from simpy import Environment
 from sim.drawer import Drawer
-from sim.status_warehouse.Container.carousel import Carousel
-from sim.status_warehouse.Container.column import Column
-from sim.status_warehouse.Entry.drawerEntry import DrawerEntry
+from sim.status_warehouse.container.carousel import Carousel
+from sim.status_warehouse.container.column import Column
+from sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
@@ -92,7 +92,7 @@ def min_search_alg(self, space_req: int) -> list:
     :param space_req: space requested from drawer.
     :return: negative values if there isn't any space, otherwise [space_requested, index_position_where_insert].
     """
-    from sim.status_warehouse.Entry.emptyEntry import EmptyEntry
+    from sim.status_warehouse.entry.empty_entry import EmptyEntry
     min_space = self.get_height_warehouse()
     count = 0
     start_index = self.get_height_last_position()

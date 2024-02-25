@@ -1,4 +1,4 @@
-from sim.status_warehouse.Entry.entry import Entry
+from sim.status_warehouse.entry.entry import Entry
 
 
 class EmptyEntry(Entry):

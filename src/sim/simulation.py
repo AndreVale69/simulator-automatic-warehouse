@@ -24,12 +24,12 @@ class Simulation:
 
     def simulate_actions(self, events_generated: list):
         from sim.status_warehouse.enum_warehouse import EnumWarehouse
-        from sim.status_warehouse.Simulate_Events.buffer import Buffer
-        from sim.status_warehouse.Simulate_Events.send_back_drawer import SendBackDrawer
-        from sim.status_warehouse.Simulate_Events.extract_drawer import ExtractDrawer
-        from sim.status_warehouse.Simulate_Events.Material.InsertMaterial.insert_random_material \
+        from sim.status_warehouse.simulate_events.buffer import Buffer
+        from sim.status_warehouse.simulate_events.send_back_drawer import SendBackDrawer
+        from sim.status_warehouse.simulate_events.extract_drawer import ExtractDrawer
+        from sim.status_warehouse.simulate_events.material.insert_material.insert_random_material \
             import InsertRandomMaterial
-        from sim.status_warehouse.Simulate_Events.Material.RemoveMaterial.remove_random_material \
+        from sim.status_warehouse.simulate_events.material.remove_material.remove_random_material \
             import RemoveRandomMaterial
 
         self.store_history = simpy.Store(self.get_environment(), capacity=len(events_generated))

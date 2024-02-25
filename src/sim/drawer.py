@@ -31,7 +31,7 @@ class Drawer:
         return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
 
     def __deepcopy__(self, memo):
-        # from src.status_warehouse.Entry.drawerEntry import DrawerEntry
+        # from src.status_warehouse.entry.drawerEntry import DrawerEntry
 
         copy_obj = Drawer(self.get_items())
         # copy_obj.items = copy.deepcopy(self.get_items(), memo)

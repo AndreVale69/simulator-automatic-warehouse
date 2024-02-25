@@ -3,7 +3,7 @@ from simpy import Environment
 # from src.drawer import Drawer
 from sim.material import Material
 from sim.simulation import Simulation
-from sim.status_warehouse.Simulate_Events.Material.InsertMaterial.insert_material import InsertMaterial
+from sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
 from sim.warehouse import Warehouse
 
 

@@ -1,7 +1,7 @@
 import copy
 
 from sim.drawer import Drawer
-from sim.status_warehouse.Entry.entry import Entry
+from sim.status_warehouse.entry.entry import Entry
 
 
 class DrawerEntry(Entry):

@@ -2,14 +2,14 @@ from simpy import Environment
 import datetime
 
 from sim.simulation import Simulation
-from sim.status_warehouse.Simulate_Events.buffer import Buffer
-from sim.status_warehouse.Simulate_Events.Move.go_to_deposit import GoToDeposit
-from sim.status_warehouse.Simulate_Events.Move.go_to_buffer import GoToBuffer
-from sim.status_warehouse.Simulate_Events.Move.move import Move
-from sim.status_warehouse.Simulate_Events.Move.unload import Unload
-from sim.status_warehouse.Simulate_Events.Move.vertical import Vertical
+from sim.status_warehouse.simulate_events.buffer import Buffer
+from sim.status_warehouse.simulate_events.move.go_to_deposit import GoToDeposit
+from sim.status_warehouse.simulate_events.move.go_to_buffer import GoToBuffer
+from sim.status_warehouse.simulate_events.move.move import Move
+from sim.status_warehouse.simulate_events.move.unload import Unload
+from sim.status_warehouse.simulate_events.move.vertical import Vertical
 from sim.warehouse import Warehouse # , Drawer
-from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
+from sim.status_warehouse.simulate_events.action_enum import ActionEnum
 
 
 class ExtractDrawer(Move):

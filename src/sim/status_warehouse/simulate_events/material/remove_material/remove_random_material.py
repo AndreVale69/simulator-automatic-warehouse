@@ -3,9 +3,9 @@ import random, datetime
 from simpy import Environment
 
 from sim.simulation import Simulation
-from sim.status_warehouse.Simulate_Events.Material.RemoveMaterial.remove_material import RemoveMaterial
+from sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
 from sim.warehouse import Warehouse
-from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
+from sim.status_warehouse.simulate_events.action_enum import ActionEnum
 
 
 class RemoveRandomMaterial(RemoveMaterial):

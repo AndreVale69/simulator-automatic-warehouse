@@ -3,7 +3,7 @@ from abc import abstractmethod
 from simpy import Environment
 
 from sim.simulation import Simulation
-from sim.status_warehouse.Simulate_Events.action import Action
+from sim.status_warehouse.simulate_events.action import Action
 from sim.warehouse import Warehouse  # , Drawer
 
 
@@ -24,7 +24,7 @@ class Move(Action):
 
     @abstractmethod
     def simulate_action(self):
-        from sim.status_warehouse.Simulate_Events.Move.go_to_deposit import GoToDeposit
+        from sim.status_warehouse.simulate_events.move.go_to_deposit import GoToDeposit
 
         # come back to the deposit iff there is a drawer
         if self.get_warehouse().get_carousel().is_deposit_full():

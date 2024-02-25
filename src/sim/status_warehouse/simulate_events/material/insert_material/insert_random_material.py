@@ -2,9 +2,9 @@ from simpy import Environment
 import datetime
 
 from sim.simulation import Simulation
-from sim.status_warehouse.Simulate_Events.Material.InsertMaterial.insert_material import InsertMaterial
+from sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
 from sim.warehouse import Warehouse
-from sim.status_warehouse.Simulate_Events.action_enum import ActionEnum
+from sim.status_warehouse.simulate_events.action_enum import ActionEnum
 
 
 class InsertRandomMaterial(InsertMaterial):
