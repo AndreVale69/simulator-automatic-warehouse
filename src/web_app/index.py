@@ -317,6 +317,7 @@ def index_layout():
             ], width=10)
         ], justify="end"),
         dcc.Download(id="download-graph"),
+        dcc.Download(id="download-stats"),
         dbc.Toast(
             "",
             id="toast_new_simulation_completed",
@@ -436,7 +437,8 @@ def download_graph(b_svg, b_pdf, b_csv, b_xlsx):
         case _:
             raise PreventUpdate
     # create the file
-    open(f"./images/graph_actions.{extension}", "w")
+    with open(f"./images/graph_actions.{extension}", "w"):
+        pass
     # take graph to download
     timeline.get_figure().write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
     return dcc.send_file(
@@ -966,6 +968,134 @@ def output_stats_actions_completed_menu_triggered(none,
                 )])
             )
 
+
+@app.callback(
+    Output("download-stats", "data"),
+    Input("download_data-xlsx-output_stats-actions_started", "n_clicks"),
+    Input("download_data-csv-output_stats-actions_started", "n_clicks"),
+    Input("download_scatter-svg-output_stats-actions_started", "n_clicks"),
+    Input("download_scatter-pdf-output_stats-actions_started", "n_clicks"),
+    State("output_stats-actions_started", "label"),
+    prevent_initial_call=True
+)
+def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
+    action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
+    file_path = f"./images/graph_stats-actions_started" if action is None else f"./images/graph_stats-action_{action}_started"
+    extension = ''
+    data: DataFrame = (warehouse_statistics.actions_started_every(TimeEnum.HOUR) if action is None
+            else warehouse_statistics.action_started_every(action, TimeEnum.HOUR))
+    # which button is triggered?
+    match ctx.triggered_id:
+        case "download_data-xlsx-output_stats-actions_started":
+            data.to_excel(f"{file_path}.xlsx")
+            return dcc.send_file(f"{file_path}.xlsx")
+        case "download_data-csv-output_stats-actions_started":
+            data.to_csv(f"{file_path}.csv")
+            return dcc.send_file(f"{file_path}.csv")
+        case "download_scatter-svg-output_stats-actions_started":
+            extension = 'svg'
+        case "download_scatter-pdf-output_stats-actions_started":
+            extension = 'pdf'
+        case _:
+            raise PreventUpdate
+    # create the file
+    with open(f"{file_path}.{extension}", "w"):
+        pass
+    # take graph to download
+    go.Figure(
+        data=[go.Scatter(x=data['Start'],
+                         y=data['Count'])]).write_image(
+        f"{file_path}.{extension}", engine='kaleido', width=1920, height=1080
+    )
+    return dcc.send_file(
+        f"{file_path}.{extension}"
+    )
+
+
+@app.callback(
+    Output("download-stats", "data", allow_duplicate=True),
+    Input("download_data-xlsx-output_stats-actions_finished", "n_clicks"),
+    Input("download_data-csv-output_stats-actions_finished", "n_clicks"),
+    Input("download_scatter-svg-output_stats-actions_finished", "n_clicks"),
+    Input("download_scatter-pdf-output_stats-actions_finished", "n_clicks"),
+    State("output_stats-actions_finished", "label"),
+    prevent_initial_call=True
+)
+def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
+    action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
+    file_path = f"./images/graph_stats-actions_finished" if action is None else f"./images/graph_stats-action_{action}_finished"
+    extension = ''
+    data: DataFrame = (warehouse_statistics.actions_finished_every(TimeEnum.HOUR) if action is None
+            else warehouse_statistics.action_finished_every(action, TimeEnum.HOUR))
+    # which button is triggered?
+    match ctx.triggered_id:
+        case "download_data-xlsx-output_stats-actions_finished":
+            data.to_excel(f"{file_path}.xlsx")
+            return dcc.send_file(f"{file_path}.xlsx")
+        case "download_data-csv-output_stats-actions_finished":
+            data.to_csv(f"{file_path}.csv")
+            return dcc.send_file(f"{file_path}.csv")
+        case "download_scatter-svg-output_stats-actions_finished":
+            extension = 'svg'
+        case "download_scatter-pdf-output_stats-actions_finished":
+            extension = 'pdf'
+        case _:
+            raise PreventUpdate
+    # create the file
+    with open(f"{file_path}.{extension}", "w"):
+        pass
+    # take graph to download
+    go.Figure(
+        data=[go.Scatter(x=data['Finish'],
+                         y=data['Count'])]).write_image(
+        f"{file_path}.{extension}", engine='kaleido', width=1920, height=1080
+    )
+    return dcc.send_file(
+        f"{file_path}.{extension}"
+    )
+
+
+@app.callback(
+    Output("download-stats", "data", allow_duplicate=True),
+    Input("download_data-xlsx-output_stats-actions_completed", "n_clicks"),
+    Input("download_data-csv-output_stats-actions_completed", "n_clicks"),
+    Input("download_scatter-svg-output_stats-actions_completed", "n_clicks"),
+    Input("download_scatter-pdf-output_stats-actions_completed", "n_clicks"),
+    State("output_stats-actions_completed", "label"),
+    prevent_initial_call=True
+)
+def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
+    action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
+    file_path = f"./images/graph_stats-actions_completed" if action is None else f"./images/graph_stats-action_{action}_completed"
+    extension = ''
+    data: DataFrame = (warehouse_statistics.actions_completed_every(TimeEnum.HOUR) if action is None
+            else warehouse_statistics.action_completed_every(action, TimeEnum.HOUR))
+    # which button is triggered?
+    match ctx.triggered_id:
+        case "download_data-xlsx-output_stats-actions_completed":
+            data.to_excel(f"{file_path}.xlsx")
+            return dcc.send_file(f"{file_path}.xlsx")
+        case "download_data-csv-output_stats-actions_completed":
+            data.to_csv(f"{file_path}.csv")
+            return dcc.send_file(f"{file_path}.csv")
+        case "download_scatter-svg-output_stats-actions_completed":
+            extension = 'svg'
+        case "download_scatter-pdf-output_stats-actions_completed":
+            extension = 'pdf'
+        case _:
+            raise PreventUpdate
+    # create the file
+    with open(f"{file_path}.{extension}", "w"):
+        pass
+    # take graph to download
+    go.Figure(
+        data=[go.Scatter(y=[f"{data['Start'][i]} - {data['Finish'][i]}" for i in range(data['Count'].size)],
+                         x=data['Count'])]).write_image(
+        f"{file_path}.{extension}", engine='kaleido', width=1920, height=1080
+    )
+    return dcc.send_file(
+        f"{file_path}.{extension}"
+    )
 
 
 def _signal_handler(frame, sig):

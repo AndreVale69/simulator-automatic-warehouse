@@ -128,6 +128,21 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                                                                 y=actions_started_every_hour['Count'])]),
                               id="output_stats-actions_started-figure")
                 )
+            ]),
+            html.Br(),
+            dbc.Row([
+                dbc.DropdownMenu(children=[
+                    dbc.DropdownMenuItem("Download data as:", header=True),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " EXCEL"],
+                                         id="download_data-xlsx-output_stats-actions_started", n_clicks=0),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " CSV"],
+                                         id="download_data-csv-output_stats-actions_started", n_clicks=0),
+                    dbc.DropdownMenuItem("Download scatter as:", header=True),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " SVG"],
+                                         id="download_scatter-svg-output_stats-actions_started", n_clicks=0),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " PDF"],
+                                         id="download_scatter-pdf-output_stats-actions_started", n_clicks=0)
+                ], label="Download")
             ])
         ]),
 
@@ -154,6 +169,21 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                                                                 y=actions_finished_every_hour['Count'])]),
                               id="output_stats-actions_finished-figure")
                 )
+            ]),
+            html.Br(),
+            dbc.Row([
+                dbc.DropdownMenu(children=[
+                    dbc.DropdownMenuItem("Download data as:", header=True),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " EXCEL"],
+                                         id="download_data-xlsx-output_stats-actions_finished", n_clicks=0),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " CSV"],
+                                         id="download_data-csv-output_stats-actions_finished", n_clicks=0),
+                    dbc.DropdownMenuItem("Download scatter as:", header=True),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " SVG"],
+                                         id="download_scatter-svg-output_stats-actions_finished", n_clicks=0),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " PDF"],
+                                         id="download_scatter-pdf-output_stats-actions_finished", n_clicks=0)
+                ], label="Download")
             ])
         ]),
 
@@ -184,6 +214,21 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                         x=actions_completed_every_hour['Count']
                     )]), id="output_stats-actions_completed-figure")
                 )
+            ]),
+            html.Br(),
+            dbc.Row([
+                dbc.DropdownMenu(children=[
+                    dbc.DropdownMenuItem("Download data as:", header=True),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " EXCEL"],
+                                         id="download_data-xlsx-output_stats-actions_completed", n_clicks=0),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " CSV"],
+                                         id="download_data-csv-output_stats-actions_completed", n_clicks=0),
+                    dbc.DropdownMenuItem("Download scatter as:", header=True),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " SVG"],
+                                         id="download_scatter-svg-output_stats-actions_completed", n_clicks=0),
+                    dbc.DropdownMenuItem(children=[html.I(className='bi bi-download'), " PDF"],
+                                         id="download_scatter-pdf-output_stats-actions_completed", n_clicks=0)
+                ], label="Download")
             ])
         ])
     ], start_collapsed=True, always_open=True)
