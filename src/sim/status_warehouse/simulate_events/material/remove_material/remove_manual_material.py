@@ -1,3 +1,5 @@
+import logging
+
 from simpy import Environment
 
 # from src.drawer import Drawer
@@ -5,6 +7,8 @@ from sim.material import Material
 from sim.simulation import Simulation
 from sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
 from sim.warehouse import Warehouse
+
+logger = logging.getLogger(__name__)
 
 
 class RemoveManualMaterial(RemoveMaterial):
@@ -28,4 +32,4 @@ class RemoveManualMaterial(RemoveMaterial):
                 # estimate a time of the action
                 yield self.env.timeout(self.get_duration())
             else:
-                print(f"\nTime {self.env.now:5.2f} - No materials to remove\n")
+                logger.debug(f"\nTime {self.env.now:5.2f} - No materials to remove\n")

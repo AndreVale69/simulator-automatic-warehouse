@@ -1,5 +1,7 @@
-from simpy import Environment
 import datetime
+import logging
+
+from simpy import Environment
 
 from sim.simulation import Simulation
 from sim.status_warehouse.simulate_events.buffer import Buffer
@@ -10,6 +12,8 @@ from sim.status_warehouse.simulate_events.move.unload import Unload
 from sim.status_warehouse.simulate_events.move.vertical import Vertical
 from sim.warehouse import Warehouse # , Drawer
 from sim.status_warehouse.simulate_events.action_enum import ActionEnum
+
+logger = logging.getLogger(__name__)
 
 
 class ExtractDrawer(Move):
@@ -61,6 +65,6 @@ class ExtractDrawer(Move):
         else:
             yield self.env.process(GoToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
                                                self.get_drawer(), self.get_destination()).simulate_action())
-        print(f"Time {self.env.now:5.2f} - Start to load in the carousel")
+        logger.debug(f"Time {self.env.now:5.2f} - Start to load in the carousel")
         yield self.env.process(self.get_warehouse().load_in_carousel(self.get_drawer(), self.get_destination(),
                                                                      load_in_buffer=load_in_buffer))

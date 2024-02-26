@@ -1,12 +1,31 @@
 import copy
 import random
+import logging
+
+from src.sim.configuration import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
+
+if NO_CONSOLE_LOG:
+    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s')
+elif DEBUG_LOG:
+    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s',
+                        level=logging.DEBUG)
+elif FILENAME_DEBUG_LOG:
+    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s',
+                        level=logging.DEBUG, filename=f'{FILENAME_DEBUG_LOG}', filemode='w')
+else:
+    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s',
+                        level=logging.INFO)
+
 
 from simpy import Environment
+
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from sim.drawer import Drawer
 from sim.status_warehouse.container.carousel import Carousel
 from sim.status_warehouse.container.column import Column
 from sim.status_warehouse.entry.drawer_entry import DrawerEntry
-from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -78,10 +97,9 @@ def check_minimum_space(list_cols: list, space_req: int, height_entry_col: int) 
 
     # if warehouse is full
     if result[0] == -1:
-        print("The warehouse is full! Please, check the check_minimum_space function")
-        exit(-1)
-    else:
-        return [result[1], result[2]]
+        raise ValueError("The warehouse is full! Please, check the check_minimum_space function")
+
+    return [result[1], result[2]]
 
 
 def min_search_alg(self, space_req: int) -> list:
@@ -181,7 +199,7 @@ class Warehouse:
         self.env = None
         self.simulation = None
         self.supp_drawer = None
-        self.pos_y_floor = self.get_carousel().get_deposit_entry().get_pos_y()
+        self.pos_y_floor = self.carousel.get_deposit_entry().get_pos_y()
         self.events_to_simulate = []
 
         # time of simulation
@@ -190,9 +208,9 @@ class Warehouse:
         self.sim_num_actions = config["simulation"]["num_actions"]
         # generate a configuration based on JSON
         if config["simulation"]["gen_deposit"]:
-            self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()]))
+            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
         if config["simulation"]["gen_buffer"]:
-            self.get_carousel().add_drawer(drawer=Drawer([gen_rand_material()]))
+            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
         self.gen_rand(num_drawers=config["simulation"]["drawers_to_gen"],
                       num_materials=config["simulation"]["materials_to_gen"])
 
@@ -313,11 +331,11 @@ class Warehouse:
             if not self.get_carousel().is_buffer_full():
                 # update the y destination
                 drawer_to_insert.set_best_y(y_buf)
-                print(f"Time {self.env.now:5.2f} - Deposit is full! Start vertical move to buffer")
+                logger.debug(f"Time {self.env.now:5.2f} - Deposit is full! Start vertical move to buffer")
                 yield self.env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
                 # set new y position of the floor
                 self.set_pos_y_floor(y_buf)
-                print(f"Time {self.env.now:5.2f} - Start to load in the buffer")
+                logger.debug(f"Time {self.env.now:5.2f} - Start to load in the buffer")
             else:
                 raise NotImplementedError("Deposit and buffer are full! Collision!")
 
@@ -451,14 +469,14 @@ class Warehouse:
                                                                         rand_num_drawers, rand_col)
         # if there aren't anything else to add
         if num_drawers == 0 and num_materials == 0:
-            print("The creation of random warehouse is completed.")
+            logger.info("The creation of random warehouse is completed.")
         else:
             # if there aren't more drawers but some materials...
             if num_drawers == 0:
-                print(f"num_materials left: {num_materials}")
+                logger.warning(f"num_materials left: {num_materials}")
             else:
                 # if the warehouse is completely full
-                print(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
+                logger.warning(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
 
     def run_simulation(self):
         from sim.simulation import Simulation
@@ -476,6 +494,7 @@ class Warehouse:
         if type(self.get_carousel().get_buffer_entry()) is DrawerEntry:
             balance_wh += 1
 
+        logger.info("Creating the sequence of actions for the simulation.")
         for num_action in range(self.get_sim_num_actions()):
             good_choice = False
             rand_event = ""
@@ -494,6 +513,7 @@ class Warehouse:
                         good_choice = True
                         balance_wh += 1
             self.get_events_to_simulate().append(rand_event)
+        logger.info("Sequence of actions created.")
 
         # create the simulation
         self.get_environment().process(self.get_simulation().simulate_actions(self.get_events_to_simulate()))

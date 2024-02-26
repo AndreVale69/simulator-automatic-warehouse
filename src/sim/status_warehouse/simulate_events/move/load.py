@@ -1,8 +1,12 @@
+import logging
+
 from simpy import Environment
 
 from sim.simulation import Simulation
 from sim.status_warehouse.simulate_events.move.move import Move
 from sim.warehouse import Warehouse, Drawer
+
+logger = logging.getLogger(__name__)
 
 
 class Load(Move):
@@ -11,5 +15,5 @@ class Load(Move):
         super().__init__(env, warehouse, simulation, destination, drawer)
 
     def simulate_action(self):
-        print(f"Time {self.env.now:5.2f} - Start loading inside the warehouse")
+        logger.debug(f"Time {self.env.now:5.2f} - Start loading inside the warehouse")
         yield self.env.process(self.get_warehouse().load(self.get_drawer(), self.get_destination()))

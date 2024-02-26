@@ -1,8 +1,11 @@
 import copy
+import logging
 
 import simpy
 from simpy import Environment
 from sim.warehouse import Warehouse
+
+logger = logging.getLogger(__name__)
 
 
 # -----: send_back prende dalla baia il drawer e lo manda all'interno del magazzino usando Move
@@ -38,35 +41,37 @@ class Simulation:
         yield self.env.process(Buffer(self.env, self.get_warehouse(), self).simulate_action())
 
         # exec all events
+        logger.info("Simulation started.")
         for index, event in enumerate(events_generated):
             match event:
                 case "send_back":
-                    print(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{index} ~")
                     action = SendBackDrawer(self.get_environment(), self.get_warehouse(), self,
                                             EnumWarehouse.COLUMN)
                     yield self.env.process(action.simulate_action())
-                    print(f"Time {self.env.now:5.2f} - FINISH SEND_BACK\n")
+                    logger.debug(f"Time {self.env.now:5.2f} - FINISH SEND_BACK\n")
 
                 case "extract_drawer":
-                    print(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{index} ~")
                     action = ExtractDrawer(self.get_environment(), self.get_warehouse(), self,
                                            EnumWarehouse.CAROUSEL)
                     yield self.env.process(action.simulate_action())
-                    print(f"Time {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
+                    logger.debug(f"Time {self.env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
 
                 case "ins_mat":
-                    print(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{index} ~")
                     action = InsertRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
                     yield self.env.process(action.simulate_action())
-                    print(f"Time {self.env.now:5.2f} - FINISH INS_MAT\n")
+                    logger.debug(f"Time {self.env.now:5.2f} - FINISH INS_MAT\n")
 
                 case "rmv_mat":
-                    print(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{index} ~")
                     action = RemoveRandomMaterial(self.get_environment(), self.get_warehouse(), self, duration=2)
                     yield self.env.process(action.simulate_action())
-                    print(f"Time {self.env.now:5.2f} - FINISH RMV_MAT\n")
+                    logger.debug(f"Time {self.env.now:5.2f} - FINISH RMV_MAT\n")
 
-        print(f"Time {self.env.now:5.2f} - Finish simulation")
+        logger.debug(f"Time {self.env.now:5.2f} - Finish simulation")
+        logger.info("Simulation finished.")
 
     def get_environment(self) -> simpy.Environment:
         return self.env

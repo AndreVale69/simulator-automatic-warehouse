@@ -1,3 +1,5 @@
+import logging
+
 from simpy import Environment
 
 from sim.drawer import Drawer
@@ -5,6 +7,8 @@ from sim.drawer import Drawer
 from sim.simulation import Simulation
 from sim.status_warehouse.simulate_events.move.move import Move
 from sim.warehouse import Warehouse
+
+logger = logging.getLogger(__name__)
 
 
 class GoToDeposit(Move):
@@ -14,5 +18,5 @@ class GoToDeposit(Move):
 
     # override
     def simulate_action(self):
-        print(f"Time {self.env.now:5.2f} - Start come back to deposit position")
+        logger.debug(f"Time {self.env.now:5.2f} - Start come back to deposit position")
         yield self.env.process(self.get_warehouse().go_to_deposit())

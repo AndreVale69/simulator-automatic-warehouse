@@ -1,4 +1,4 @@
-import random, datetime
+import random, datetime, logging
 
 from simpy import Environment
 
@@ -6,6 +6,8 @@ from sim.simulation import Simulation
 from sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
 from sim.warehouse import Warehouse
 from sim.status_warehouse.simulate_events.action_enum import ActionEnum
+
+logger = logging.getLogger(__name__)
 
 
 class RemoveRandomMaterial(RemoveMaterial):
@@ -28,7 +30,7 @@ class RemoveRandomMaterial(RemoveMaterial):
                 # estimate a time of the action
                 yield self.env.timeout(self.get_duration())
             else:
-                print(f"\nTime {self.env.now:5.2f} - No materials to remove\n")
+                logger.debug(f"\nTime {self.env.now:5.2f} - No materials to remove\n")
 
         end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 

@@ -1,9 +1,13 @@
+import logging
+
 from simpy import Environment
 
 # from src.drawer import Drawer
 from sim.simulation import Simulation
 from sim.status_warehouse.simulate_events.action import Action
 from sim.warehouse import Warehouse
+
+logger = logging.getLogger(__name__)
 
 
 class Buffer(Action):
@@ -21,6 +25,6 @@ class Buffer(Action):
                 # check if the deposit and the buffer are empty and full iff the resources are taken
                 if self.get_warehouse().get_carousel().is_buffer_full() and \
                         not self.get_warehouse().get_carousel().is_deposit_full():
-                    print(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
+                    logger.debug(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
                     yield self.env.process(self.get_warehouse().loading_buffer_and_remove())
-                    print(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
+                    logger.debug(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
