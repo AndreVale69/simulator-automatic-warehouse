@@ -11,3 +11,4 @@ dash[diskcache]~=2.15.0
 PyYAML~=6.0.1
 jsonschema~=4.21.1
 openpyxl~=3.1.2
+dash-auth~=2.2.0
