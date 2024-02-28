@@ -19,7 +19,7 @@ from src.sim.warehouse import Warehouse
 from web_app.components.timeline import Timeline
 from web_app.components.navbar import navbar
 from src.web_app.configuration import HOST, PORT, PROXY
-from pages import documentation, not_found_404
+from pages import not_found_404
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from web_app.layouts.custom_configuration import create_columns_layout
 from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
@@ -348,7 +348,6 @@ app.layout = app_layout
 app.validation_layout = html.Div([
     app_layout,
     index_layout(),
-    documentation.layout,
     not_found_404.layout
 ])
 
@@ -369,8 +368,6 @@ def display_page(pathname):
             return index_layout()
         case '/index':
             return index_layout()
-        case '/documentation':
-            return documentation.layout
         case _:
             return not_found_404.layout
 

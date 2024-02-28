@@ -7,7 +7,6 @@ VERTIMAG_LINK = "https://www.ferrettogroup.com/index.cfm/en/solutions/vertical-s
 navbar = dbc.NavbarSimple(
             [
                 dbc.NavItem(dbc.NavLink("Homepage", active=True, href="/")),
-                dbc.NavItem(dbc.NavLink("Documentation", href="/documentation")),
                 dbc.NavItem(dbc.NavLink("GitHub Project", href=GITHUB_PROJECT, target="_blank")),
                 dbc.DropdownMenu(
                     children=[
