@@ -253,7 +253,7 @@ def index_layout():
                                     ]),
                                     dbc.ListGroupItem([
                                         dbc.Label(html.B("Speed per second:")),
-                                        dbc.Input(type="text", value=f"{warehouse_config['speed_per_sec']} cm", disabled=True)
+                                        dbc.Input(type="text", value=f"{warehouse_config['speed_per_sec']} metres/second", disabled=True)
                                     ])
                                 ])
                             ], title="General information"),
