@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.12.2
 LABEL authors="AndreVale69"
 
 RUN mkdir /simulator-automatic-warehouse

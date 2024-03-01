@@ -17,6 +17,13 @@ class TimeEnum(Enum):
 
 
 class WarehouseStatistics:
+    """
+    The purpose of use is:
+    <pre><code>
+    warehouse = Warehouse()
+    WarehouseStatistics(DataFrame(warehouse.get_simulation().get_store_history().items))
+    </code></pre>
+    """
     def __init__(self, warehouse_actions: DataFrame):
         self._warehouse_actions = warehouse_actions
 

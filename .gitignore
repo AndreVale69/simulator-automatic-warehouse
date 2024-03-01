@@ -2,3 +2,4 @@
 __pycache__
 tmp/*
 src/web_app/cache
+/benchmark/
