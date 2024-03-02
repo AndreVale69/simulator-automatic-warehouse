@@ -1,7 +1,4 @@
-import copy
-import random
 import logging
-
 from src.sim.configuration import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
 
 if NO_CONSOLE_LOG:
@@ -17,15 +14,18 @@ else:
                         level=logging.INFO)
 
 
+import copy
+import random
 from simpy import Environment
-
 from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from sim.drawer import Drawer
 from sim.status_warehouse.container.carousel import Carousel
 from sim.status_warehouse.container.column import Column
 from sim.status_warehouse.entry.drawer_entry import DrawerEntry
 
+
 logger = logging.getLogger(__name__)
+__VERSION__ = '0.0.1'
 
 
 
