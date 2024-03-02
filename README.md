@@ -69,9 +69,9 @@ Finally, it's possible to manage the console log using the environment variables
 
 To run the website, in addition to the environment variables specified in the [Simulator](#simulator) section,
 you need to specify:
- - HOST: Host IP used to serve the application.
- - PORT: Port used to serve the application.
- - (optional) PROXY: If this application will be served to a different URL via a proxy configured outside of Python, 
+ - `HOST`: Host IP used to serve the application.
+ - `PORT`: Port used to serve the application.
+ - (optional) `PROXY`: If this application will be served to a different URL via a proxy configured outside of Python, 
                      you can list it here as a string of the form `{input}::{output}`, for example: 
                      `http://0.0.0.0:8050::https://my.domain.com` 
                      so that the startup message will display an accurate URL.
