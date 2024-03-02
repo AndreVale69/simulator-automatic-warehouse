@@ -3,15 +3,10 @@ import logging
 
 import simpy
 from simpy import Environment
-from sim.warehouse import Warehouse
+from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)
 
-
-# -----: send_back prende dalla baia il drawer e lo manda all'interno del magazzino usando Move
-# -----: extract_drawer prende un cassetto dentro il magazzino e lo mette nel carousel
-# -----: GoToDeposit viene forzata dopo ogni operazione per ritornare al punto di partenza
-# -----: InsertMaterial classe abs che ha come figli InsertRandomMaterial e InsertMaterial
 
 
 class Simulation:
@@ -26,13 +21,13 @@ class Simulation:
         self.store_history = None
 
     def simulate_actions(self, events_generated: list):
-        from sim.status_warehouse.enum_warehouse import EnumWarehouse
-        from sim.status_warehouse.simulate_events.buffer import Buffer
-        from sim.status_warehouse.simulate_events.send_back_drawer import SendBackDrawer
-        from sim.status_warehouse.simulate_events.extract_drawer import ExtractDrawer
-        from sim.status_warehouse.simulate_events.material.insert_material.insert_random_material \
+        from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
+        from src.sim.status_warehouse.simulate_events.buffer import Buffer
+        from src.sim.status_warehouse.simulate_events.send_back_drawer import SendBackDrawer
+        from src.sim.status_warehouse.simulate_events.extract_drawer import ExtractDrawer
+        from src.sim.status_warehouse.simulate_events.material.insert_material.insert_random_material \
             import InsertRandomMaterial
-        from sim.status_warehouse.simulate_events.material.remove_material.remove_random_material \
+        from src.sim.status_warehouse.simulate_events.material.remove_material.remove_random_material \
             import RemoveRandomMaterial
 
         self.store_history = simpy.Store(self.get_environment(), capacity=len(events_generated))

@@ -16,16 +16,16 @@ from dash.exceptions import PreventUpdate
 from pandas import DataFrame
 
 from src.sim.warehouse import Warehouse
-from web_app.components.timeline import Timeline
-from web_app.components.navbar import navbar
+from src.web_app.components.timeline import Timeline
+from src.web_app.components.navbar import navbar
 from src.web_app.configuration import HOST, PORT, PROXY
-from pages import not_found_404
-from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
-from web_app.layouts.custom_configuration import create_columns_layout
-from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
-from sim.utils.statistics.warehouse_statistics import ActionEnum
-from web_app.layouts.simulation_statistics import SimulationInput, create_simulation_statistics_layout
-from web_app.utils.callbacks_utilities import FieldsNewSimulationArgs, fields_new_simulation_are_valid
+from src.web_app.pages import not_found_404
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.web_app.layouts.custom_configuration import create_columns_layout
+from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
+from src.sim.utils.statistics.warehouse_statistics import ActionEnum
+from src.web_app.layouts.simulation_statistics import SimulationInput, create_simulation_statistics_layout
+from src.web_app.utils.callbacks_utilities import FieldsNewSimulationArgs, fields_new_simulation_are_valid
 
 
 """
@@ -50,8 +50,8 @@ warehouse_statistics = WarehouseStatistics(DataFrame(warehouse.get_simulation().
 cache = Cache("./cache")
 # create the path if it doesn't exist.
 # this path will be used by the application to create downloadable graphics
-if not os.path.isdir('./images'):
-    os.mkdir('./images')
+if not os.path.isdir('src/web_app/images'):
+    os.mkdir('src/web_app/images')
 
 # Import bootstrap components
 BS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -422,11 +422,11 @@ def download_graph(b_svg, b_pdf, b_csv, b_xlsx):
     # which button is triggered?
     match ctx.triggered_id:
         case "dropdown-btn_csv":
-            timeline.get_dataframe().to_csv("./images/graph_actions.csv")
-            return dcc.send_file("./images/graph_actions.csv")
+            timeline.get_dataframe().to_csv("src/web_app/images/graph_actions.csv")
+            return dcc.send_file("src/web_app/images/graph_actions.csv")
         case "dropdown-btn_xlsx":
-            timeline.get_dataframe().to_excel("./images/graph_actions.xlsx")
-            return dcc.send_file("./images/graph_actions.xlsx")
+            timeline.get_dataframe().to_excel("src/web_app/images/graph_actions.xlsx")
+            return dcc.send_file("src/web_app/images/graph_actions.xlsx")
         case "dropdown-btn_svg":
             extension = 'svg'
         case "dropdown-btn_pdf":
@@ -434,12 +434,12 @@ def download_graph(b_svg, b_pdf, b_csv, b_xlsx):
         case _:
             raise PreventUpdate
     # create the file
-    with open(f"./images/graph_actions.{extension}", "w"):
+    with open(f"src/web_app/images/graph_actions.{extension}", "w"):
         pass
     # take graph to download
-    timeline.get_figure().write_image(f"./images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
+    timeline.get_figure().write_image(f"src/web_app/images/graph_actions.{extension}", engine='kaleido', width=1920, height=1080)
     return dcc.send_file(
-        f"./images/graph_actions.{extension}"
+        f"src/web_app/images/graph_actions.{extension}"
     )
 
 
@@ -977,7 +977,7 @@ def output_stats_actions_completed_menu_triggered(none,
 )
 def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
     action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
-    file_path = f"./images/graph_stats-actions_started" if action is None else f"./images/graph_stats-action_{action}_started"
+    file_path = f"src/web_app/images/graph_stats-actions_started" if action is None else f"src/web_app/images/graph_stats-action_{action}_started"
     extension = ''
     data: DataFrame = (warehouse_statistics.actions_started_every(TimeEnum.HOUR) if action is None
             else warehouse_statistics.action_started_every(action, TimeEnum.HOUR))
@@ -1020,7 +1020,7 @@ def download_output_stats_actions_started(b_data_xlsx, b_data_csv, b_scatter_svg
 )
 def download_output_stats_actions_finished(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
     action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
-    file_path = f"./images/graph_stats-actions_finished" if action is None else f"./images/graph_stats-action_{action}_finished"
+    file_path = f"src/web_app/images/graph_stats-actions_finished" if action is None else f"src/web_app/images/graph_stats-action_{action}_finished"
     extension = ''
     data: DataFrame = (warehouse_statistics.actions_finished_every(TimeEnum.HOUR) if action is None
             else warehouse_statistics.action_finished_every(action, TimeEnum.HOUR))
@@ -1063,7 +1063,7 @@ def download_output_stats_actions_finished(b_data_xlsx, b_data_csv, b_scatter_sv
 )
 def download_output_stats_actions_completed(b_data_xlsx, b_data_csv, b_scatter_svg, b_scatter_pdf, action_selected):
     action: ActionEnum | None = ActionEnum.from_str(action_selected.split(" ")[-1])
-    file_path = f"./images/graph_stats-actions_completed" if action is None else f"./images/graph_stats-action_{action}_completed"
+    file_path = f"src/web_app/images/graph_stats-actions_completed" if action is None else f"src/web_app/images/graph_stats-action_{action}_completed"
     extension = ''
     data: DataFrame = (warehouse_statistics.actions_completed_every(TimeEnum.HOUR) if action is None
             else warehouse_statistics.action_completed_every(action, TimeEnum.HOUR))
@@ -1104,7 +1104,7 @@ def _signal_handler(frame, sig):
     sys.exit(0)
 
 
-if __name__ == '__main__':
+def run_webpage():
     signal(SIGINT, _signal_handler)
     signal(SIGTERM, _signal_handler)
     app.run(host=HOST, port=PORT, proxy=PROXY, debug=False)

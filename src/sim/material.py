@@ -1,6 +1,6 @@
 import random
 import uuid
-from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class Material:

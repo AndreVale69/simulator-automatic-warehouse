@@ -2,11 +2,11 @@ import logging
 
 from simpy import Environment
 
-from sim.drawer import Drawer
+from src.sim.drawer import Drawer
 # from src.drawer import Drawer
-from sim.simulation import Simulation
-from sim.status_warehouse.simulate_events.move.move import Move
-from sim.warehouse import Warehouse
+from src.sim.simulation import Simulation
+from src.sim.status_warehouse.simulate_events.move.move import Move
+from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)
 

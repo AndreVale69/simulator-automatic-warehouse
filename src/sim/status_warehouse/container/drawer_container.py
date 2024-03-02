@@ -1,9 +1,9 @@
 from abc import abstractmethod
 
-from sim.drawer import Drawer
-from sim.status_warehouse.entry.drawer_entry import DrawerEntry
-from sim.status_warehouse.entry.empty_entry import EmptyEntry
-from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.sim.drawer import Drawer
+from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class DrawerContainer:

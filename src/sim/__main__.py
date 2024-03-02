@@ -1,7 +1,7 @@
-from sim.warehouse import Warehouse
+from src.sim.warehouse import Warehouse
 
 
-if __name__ == "__main__":
+def run_simulator():
     # debug purpose
     # import random
     # random.seed(None)
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     (warehouse := Warehouse()).run_simulation()
 
     # save the configuration at the end
-    # from sim.utils.save_warehouse_state import save_config
+    # from src.sim.utils.save_warehouse_state import save_config
     # save_config(warehouse.get_simulation().get_warehouse())
 
 

@@ -4,8 +4,8 @@ from typing import NamedTuple
 from dash import html, dcc
 from pandas import DataFrame
 
-from sim.status_warehouse.simulate_events.action_enum import ActionEnum
-from sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
+from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
+from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 
 
 class SimulationInput(NamedTuple):

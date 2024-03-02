@@ -2,8 +2,7 @@ from abc import abstractmethod
 
 from simpy import Environment
 
-# from src.simulation import Floor
-from sim.warehouse import Warehouse
+from src.sim.warehouse import Warehouse
 
 
 class Action:

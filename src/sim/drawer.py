@@ -1,8 +1,8 @@
 import copy
 import random
 
-from sim.material import Material
-from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.sim.material import Material
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class Drawer:

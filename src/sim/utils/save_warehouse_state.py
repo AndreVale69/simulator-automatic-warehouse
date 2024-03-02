@@ -1,6 +1,6 @@
 import os.path
-from sim.status_warehouse.entry.drawer_entry import DrawerEntry
-from sim.warehouse import Warehouse
+from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.warehouse import Warehouse
 
 
 def save_config(warehouse: Warehouse):
@@ -10,10 +10,11 @@ def save_config(warehouse: Warehouse):
     @param warehouse: warehouse to save.
     """
     # if the directory doesn't exist, create it
-    if not os.path.isdir("../../tmp"):
-        os.mkdir("../../tmp")
+    directory = './tmp'
+    if not os.path.isdir(directory):
+        os.mkdir(directory)
     # create file
-    with open("../../tmp/config_warehouse.txt", 'w') as file:
+    with open(f"{directory}/config_warehouse.txt", 'w') as file:
         # header
         file.write(f"Warehouse situation\n")
         file.write("\n")

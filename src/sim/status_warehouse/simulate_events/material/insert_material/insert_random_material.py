@@ -1,10 +1,10 @@
 from simpy import Environment
 import datetime
 
-from sim.simulation import Simulation
-from sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
-from sim.warehouse import Warehouse
-from sim.status_warehouse.simulate_events.action_enum import ActionEnum
+from src.sim.simulation import Simulation
+from src.sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
+from src.sim.warehouse import Warehouse
+from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
 
 
 class InsertRandomMaterial(InsertMaterial):
@@ -13,7 +13,7 @@ class InsertRandomMaterial(InsertMaterial):
 
     # override
     def simulate_action(self):
-        from sim.material import gen_rand_material
+        from src.sim.material import gen_rand_material
 
         start_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
 

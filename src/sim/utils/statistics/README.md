@@ -35,7 +35,7 @@ To instantiate the class, all that is required are the items obtained from a Pan
 This object must be instantiated using the history of the warehouse simulation:
 ```python
 from pandas import DataFrame
-from sim.utils.statistics.warehouse_statistics import WarehouseStatistics
+from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics
 from src.sim.warehouse import Warehouse
 
 warehouse = Warehouse()

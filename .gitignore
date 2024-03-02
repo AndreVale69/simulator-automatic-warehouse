@@ -3,3 +3,4 @@ __pycache__
 tmp/*
 src/web_app/cache
 /benchmark/
+src/web_app/images

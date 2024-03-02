@@ -1,10 +1,10 @@
 from simpy import Environment
 
 # from src.drawer import Drawer
-from sim.material import Material
-from sim.simulation import Simulation
-from sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
-from sim.warehouse import Warehouse
+from src.sim.material import Material
+from src.sim.simulation import Simulation
+from src.sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
+from src.sim.warehouse import Warehouse
 
 
 class InsertManualMaterial(InsertMaterial):

@@ -17,11 +17,11 @@ else:
 import copy
 import random
 from simpy import Environment
-from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
-from sim.drawer import Drawer
-from sim.status_warehouse.container.carousel import Carousel
-from sim.status_warehouse.container.column import Column
-from sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.sim.drawer import Drawer
+from src.sim.status_warehouse.container.carousel import Carousel
+from src.sim.status_warehouse.container.column import Column
+from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 
 
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def gen_materials_and_drawer(num_drawers: int, num_materials: int,
     :param col: column selected where to put the drawers
     :return: [number of drawers left, number of materials left]
     """
-    from sim.material import gen_rand_materials
+    from src.sim.material import gen_rand_materials
 
     # generate "rand_num_drawers" drawers
     for rand_num in range(rand_num_drawers):
@@ -110,7 +110,7 @@ def min_search_alg(self, space_req: int) -> list:
     :param space_req: space requested from drawer.
     :return: negative values if there isn't any space, otherwise [space_requested, index_position_where_insert].
     """
-    from sim.status_warehouse.entry.empty_entry import EmptyEntry
+    from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
     min_space = self.get_height_warehouse()
     count = 0
     start_index = self.get_height_last_position()
@@ -178,7 +178,7 @@ def min_search_alg(self, space_req: int) -> list:
 
 class Warehouse:
     def __init__(self):
-        from sim.material import gen_rand_material
+        from src.sim.material import gen_rand_material
 
         # open YAML configuration file
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
@@ -419,7 +419,7 @@ class Warehouse:
         #             break
 
     def load(self, drawer: Drawer, destination: str):
-        from sim.status_warehouse.enum_warehouse import EnumWarehouse
+        from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
         # take destination coordinates
         dest_x_drawer = drawer.get_best_offset_x()
         dest_y_drawer = drawer.get_best_y()
@@ -479,7 +479,7 @@ class Warehouse:
                 logger.warning(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
 
     def run_simulation(self):
-        from sim.simulation import Simulation
+        from src.sim.simulation import Simulation
 
         self.env = Environment()
         self.simulation = Simulation(self.env, self)

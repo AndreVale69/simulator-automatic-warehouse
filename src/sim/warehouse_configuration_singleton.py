@@ -1,4 +1,4 @@
-from sim.configuration import WAREHOUSE_CONFIGURATION
+from src.sim.configuration import WAREHOUSE_CONFIGURATION
 from pathlib import Path
 from yaml import safe_load
 from json import loads

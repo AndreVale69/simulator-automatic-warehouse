@@ -1,9 +1,9 @@
 import copy
 
-from sim.drawer import Drawer
-from sim.status_warehouse.container.drawer_container import DrawerContainer
-from sim.status_warehouse.entry.drawer_entry import DrawerEntry
-from sim.status_warehouse.entry.empty_entry import EmptyEntry
+from src.sim.drawer import Drawer
+from src.sim.status_warehouse.container.drawer_container import DrawerContainer
+from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 
 
 class Column(DrawerContainer):

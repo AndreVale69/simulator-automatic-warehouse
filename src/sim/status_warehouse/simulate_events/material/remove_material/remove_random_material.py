@@ -2,10 +2,10 @@ import random, datetime, logging
 
 from simpy import Environment
 
-from sim.simulation import Simulation
-from sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
-from sim.warehouse import Warehouse
-from sim.status_warehouse.simulate_events.action_enum import ActionEnum
+from src.sim.simulation import Simulation
+from src.sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
+from src.sim.warehouse import Warehouse
+from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
 
 logger = logging.getLogger(__name__)
 
