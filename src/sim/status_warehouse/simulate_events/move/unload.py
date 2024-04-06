@@ -2,6 +2,7 @@ import logging
 
 from simpy import Environment
 
+from sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.simulation import Simulation
 from src.sim.status_warehouse.simulate_events.move.move import Move
 from src.sim.warehouse import Warehouse, Drawer
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class Unload(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
-                 destination: str):
+                 destination: EnumWarehouse):
         super().__init__(env, warehouse, simulation, destination, drawer)
 
     def simulate_action(self):

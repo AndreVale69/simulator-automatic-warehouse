@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class Vertical(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
-                 destination: str):
+                 destination: EnumWarehouse):
         super().__init__(env, warehouse, simulation, destination, drawer)
 
     def simulate_action(self):

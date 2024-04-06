@@ -2,6 +2,7 @@ import logging
 
 from simpy import Environment
 
+from sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.drawer import Drawer
 # from src.drawer import Drawer
 from src.sim.simulation import Simulation
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class GoToDeposit(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, drawer: Drawer,
-                 destination: str):
+                 destination: EnumWarehouse):
         super().__init__(env, warehouse, simulation, destination, drawer)
 
     # override

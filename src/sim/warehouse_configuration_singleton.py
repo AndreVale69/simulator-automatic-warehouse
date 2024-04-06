@@ -8,12 +8,19 @@ from jsonschema import Draft202012Validator
 class WarehouseConfigurationSingleton:
     """
     Singleton class to provide access to a single configuration.
-    Use it as follows: <code>WarehouseConfigurationSingleton.get_instance().get_configuration()</code>
+
+    Use it as follows: `WarehouseConfigurationSingleton.get_instance().get_configuration()`
     """
     instance = None
 
     @staticmethod
     def get_instance():
+        """
+        Use this method to get an instance and get the configuration file.
+
+        :rtype: WarehouseConfigurationSingleton
+        :return: the instance of WarehouseConfigurationSingleton
+        """
         if WarehouseConfigurationSingleton.instance is None:
             WarehouseConfigurationSingleton.instance = WarehouseConfigurationSingleton()
 
@@ -41,7 +48,9 @@ class WarehouseConfigurationSingleton:
 
     def get_configuration(self) -> dict:
         """
-        Get the raw configuration from the environment path specified by the user.<br><br>
-        @return: raw configuration extracted via YAML.
+        Get the raw configuration from the environment path specified by the user.
+
+        :rtype: dict
+        :return: raw configuration extracted via YAML.
         """
         return self.configuration

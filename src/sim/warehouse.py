@@ -17,6 +17,7 @@ else:
 import copy
 import random
 from simpy import Environment
+from sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.carousel import Carousel
@@ -32,7 +33,13 @@ __VERSION__ = '0.0.1'
 def gen_materials_and_drawer(num_drawers: int, num_materials: int,
                              rand_num_drawers: int, col: Column) -> list:
     """
-    Generate drawers and materials
+    Generate drawers and materials.
+
+    :type num_drawers: int
+    :type num_materials: int
+    :type rand_num_drawers: int
+    :type col: Column
+    :rtype: list
     :param num_drawers: number of drawers to create in the warehouse
     :param num_materials: number of materials to create in the drawers
     :param rand_num_drawers: number of drawers to generate
@@ -77,10 +84,15 @@ def check_minimum_space(list_cols: list, space_req: int, height_entry_col: int) 
     """
     Algorithm to decide where insert a drawer.
 
+    :type list_cols: list
+    :type space_req: int
+    :type height_entry_col: int
+    :rtype: list
     :param list_cols: list of columns.
     :param space_req: space requested from drawer.
     :param height_entry_col: the height of warehouse
     :return: if there is a space [index_position_where_insert, column_where_insert].
+    :raise ValueError: if there is no more space in the warehouse.
     """
     # result struct:
     # [ min_space requested,
@@ -102,11 +114,14 @@ def check_minimum_space(list_cols: list, space_req: int, height_entry_col: int) 
     return [result[1], result[2]]
 
 
-def min_search_alg(self, space_req: int) -> list:
+def min_search_alg(self: Column, space_req: int) -> list:
     """
     Algorithm to calculate a minimum space inside a column.
 
-    :param self: object to calculate minimum space.
+    :type self: Column
+    :type space_req: int
+    :rtype: list
+    :param self: Column object used to calculate minimum space.
     :param space_req: space requested from drawer.
     :return: negative values if there isn't any space, otherwise [space_requested, index_position_where_insert].
     """
@@ -177,6 +192,11 @@ def min_search_alg(self, space_req: int) -> list:
 
 
 class Warehouse:
+    """
+    Representation of the real warehouse.
+    It contains all the information about the warehouse and the methods for running a simulation.
+    """
+
     def __init__(self):
         from src.sim.material import gen_rand_material
 
@@ -232,33 +252,96 @@ class Warehouse:
         return copy_oby
 
     def get_height(self) -> int:
+        """
+        Get the height of the warehouse.
+
+        :rtype: int
+        :return: the height of the warehouse.
+        """
         return self.height
 
     def get_cols_container(self) -> list[Column]:
+        """
+        Get all the columns of the warehouse.
+
+        :rtype: list[Column]
+        :return: the columns of the warehouse.
+        """
         return self.columns_container
 
     def get_carousel(self) -> Carousel:
+        """
+        Get the carousel of the warehouse.
+
+        :rtype: Carousel
+        :return: the carousel of the warehouse.
+        """
         return self.carousel
 
     def get_environment(self) -> Environment:
+        """
+        Get the environment object used for the simulation.
+
+        :rtype: Environment
+        :return: SimPy environment object used for the simulation.
+        """
         return self.env
 
     def get_simulation(self):
+        """
+        Get the simulation object used to control the simulation.
+
+        :rtype: Simulation
+        :return: the simulation object used to control the simulation.
+        """
         return self.simulation
 
     def get_def_space(self) -> int:
+        """
+        Get the height (distance) between two drawers (config value).
+
+        :rtype: int
+        :return: the height (distance) between two drawers (config value).
+        """
         return self.def_space
 
     def get_speed_per_sec(self) -> int:
+        """
+        Get the speed of the platform.
+        It's used by the simulator to calculate the time it takes to move between columns and up and down.
+
+        :rtype: int
+        :return: the speed of the platform.
+        """
         return self.speed_per_sec
 
     def get_max_height_material(self) -> int:
+        """
+        Get the maximum height of a material.
+        It's the value calculated by dividing the buffer height by the return value of get_def_space().
+
+        :rtype: int
+        :return: the maximum height of a material.
+        """
         return self.max_height_material
 
     def get_pos_y_floor(self) -> int:
+        """
+        Get the y-position of the floor.
+        It is used by the simulator to calculate the time it takes to move between columns and up and down.
+
+        :rtype: int
+        :return: the y-position of the floor.
+        """
         return self.pos_y_floor
 
     def get_num_drawers(self) -> int:
+        """
+        Get the number of drawers in the warehouse.
+
+        :rtype: int
+        :return: the number of drawers in the warehouse.
+        """
         ris = 0
         for col in self.get_cols_container():
             ris += col.get_num_drawers()
@@ -266,23 +349,57 @@ class Warehouse:
         return ris
 
     def get_sim_time(self) -> int | None:
+        """
+        The maximum time of the simulation (config value).
+
+        :rtype: int or None
+        :return: time of the simulation or None if it isn't specified.
+        """
         return self.sim_time
 
     def get_sim_num_actions(self) -> int:
+        """
+        Get the number of actions taken by the simulation.
+
+        :rtype: int
+        :return: the number of actions taken by the simulation.
+        """
         return self.sim_num_actions
 
     def get_events_to_simulate(self) -> list[str]:
+        """
+        Get the list of events to simulate.
+
+        :rtype: list[str]
+        :return: a list of events to simulate.
+        """
         return self.events_to_simulate
 
     def set_pos_y_floor(self, pos: int):
+        """
+        Set the y-position of the floor.
+
+        :param pos: new position of the floor.
+        """
+        assert pos >= 0, "y-position of the floor must be positive!"
         self.pos_y_floor = pos
 
     def add_column(self, col: Column):
+        """
+        Add a column to the container of the columns the warehouse.
+
+        :type col: Column
+        :param col: the column to add.
+        """
+        assert type(col) is Column, "You cannot add a type other than Column!"
         self.get_cols_container().append(col)
 
-    def minimum_offset(self, container) -> int:
+    def minimum_offset(self, container: list[Column]) -> int:
         """
-        Calculate the minimum offset between the columns
+        Calculate the minimum offset between the columns.
+
+        :type container: list[Column]
+        :rtype: int
         :param container: list of columns or carousels
         :return: the index of the list
         """
@@ -295,13 +412,21 @@ class Warehouse:
         return index
 
     def is_full(self) -> bool:
-        """Verify if there is a space inside the warehouse"""
+        """
+        Verify if there is a space inside the warehouse.
+
+        :rtype: bool
+        :return: True if there is a space inside the warehouse, otherwise False
+        """
         for col in self.get_cols_container():
             if col.get_num_entries_free() > 0:
                 return False
         return True
 
     def go_to_deposit(self):
+        """
+        Simulation method used to go to deposit.
+        """
         # take current position (y)
         curr_pos = self.get_pos_y_floor()
         # take destination position (y)
@@ -311,6 +436,9 @@ class Warehouse:
         self.set_pos_y_floor(dep_pos)
 
     def go_to_buffer(self):
+        """
+        Simulation method used to go to buffer.
+        """
         # take current position (y)
         curr_pos = self.get_pos_y_floor()
         # take destination position (y)
@@ -319,7 +447,18 @@ class Warehouse:
         # set new y position of the floor
         self.set_pos_y_floor(buf_pos)
 
-    def load_in_carousel(self, drawer_to_insert: Drawer, destination, load_in_buffer: bool):
+    # TODO: to optimize destination parameter
+    def load_in_carousel(self, drawer_to_insert: Drawer, destination: EnumWarehouse, load_in_buffer: bool):
+        """
+        Simulation method used to load the carousel into the warehouse.
+
+        :type drawer_to_insert: Drawer
+        :type destination: EnumWarehouse
+        :type load_in_buffer: bool
+        :param drawer_to_insert: drawer that will be inserted into the warehouse
+        :param destination: destination of the drawer
+        :param load_in_buffer: True to load the carousel into the buffer, otherwise into the deposit (bay)
+        """
         y_dep = self.get_carousel().get_deposit_entry().get_pos_y()
         y_buf = self.get_carousel().get_buffer_entry().get_pos_y()
         # update the y position
@@ -343,6 +482,9 @@ class Warehouse:
         yield self.env.process(self.load(drawer_to_insert, destination))
 
     def loading_buffer_and_remove(self):
+        """
+        Vertical movement of carousel loading from buffer to deposit.
+        """
         buffer: DrawerEntry = self.get_carousel().get_buffer_entry()
 
         # calculate loading buffer time
@@ -361,6 +503,16 @@ class Warehouse:
         self.get_carousel().add_drawer(drawer_to_show)
 
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
+        """
+        A simple vertical movement of the floor or the drawer inside the carousel (buffer to deposit).
+
+        :type start_pos: int
+        :type end_pos: int
+        :rtype: float
+        :param start_pos: starting position
+        :param end_pos: ending position
+        :return: distance travelled divided by speed per second
+        """
         # calculate the distance of index between two points
         index_distance = abs(end_pos - start_pos)
         # calculate effective distance with real measures
@@ -370,6 +522,12 @@ class Warehouse:
         return vertical_move
 
     def allocate_best_pos(self, drawer: Drawer):
+        """
+        Simulation method used to allocate the best position of the drawer in the warehouse.
+
+        :type drawer: Drawer
+        :param drawer: drawer to allocate
+        """
         # start position
         start_pos = self.get_pos_y_floor()
         # calculate destination position
@@ -377,7 +535,7 @@ class Warehouse:
                                       drawer.get_max_num_space(),
                                       self.get_height() // self.get_def_space())
         pos_to_insert = minimum[0]
-        # save temporarily the coordinates
+        # temporarily save the coordinates
         drawer.set_best_y(minimum[0])
         drawer.set_best_offset_x(minimum[1].get_offset_x())
         # start the move
@@ -387,6 +545,12 @@ class Warehouse:
         self.set_pos_y_floor(pos_to_insert)
 
     def reach_drawer_height(self, drawer: Drawer):
+        """
+        Simulation method used to reach the height of the drawer in the warehouse.
+
+        :type drawer: Drawer
+        :param drawer: drawer to reach
+        """
         # save coordinates inside drawer
         y = drawer.get_first_drawerEntry().get_pos_y()
         x = drawer.get_first_drawerEntry().get_offset_x()
@@ -400,6 +564,14 @@ class Warehouse:
         self.set_pos_y_floor(y)
 
     def unload(self, drawer: Drawer, rmv_from_cols: bool):
+        """
+        Simulation method used to unload a drawer from the carousel or from the columns.
+
+        :type drawer: Drawer
+        :type rmv_from_cols: bool
+        :param drawer: drawer to unload
+        :param rmv_from_cols: True to unload the drawer from the columns, otherwise unload from the carousel
+        """
         # take x offset
         offset_x_drawer = drawer.get_first_drawerEntry().get_offset_x()
         # start the move
@@ -418,7 +590,15 @@ class Warehouse:
         #         if col.remove_drawer(drawer):
         #             break
 
-    def load(self, drawer: Drawer, destination: str):
+    def load(self, drawer: Drawer, destination: EnumWarehouse):
+        """
+        Simulation method used to load the drawer into the warehouse.
+
+        :type drawer: Drawer
+        :type destination: EnumWarehouse
+        :param drawer: drawer to load
+        :param destination: destination of the drawer
+        """
         from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
         # take destination coordinates
         dest_x_drawer = drawer.get_best_offset_x()
@@ -436,9 +616,12 @@ class Warehouse:
                     col.add_drawer(drawer, dest_y_drawer)
                     break
 
-    def horiz_move(self, offset_x: int):
+    def horiz_move(self, offset_x: int) -> float:
         """
-        Search in the column/carousel where is the drawer
+        Search in the column/carousel where is the drawer.
+
+        :type offset_x: int
+        :rtype: float
         :param offset_x: offset of the drawer to search
         :return: the time estimated
         """
@@ -452,7 +635,14 @@ class Warehouse:
                     return (col.get_width() / 100) / self.get_speed_per_sec()
 
     def gen_rand(self, num_drawers: int, num_materials: int):
-        """Generate a random warehouse"""
+        """
+        Generate a random warehouse
+
+        :type num_drawers: int
+        :type num_materials: int
+        :param num_drawers: numbers of drawers
+        :param num_materials: numbers of materials
+        """
         warehouse_is_full = False
 
         # until there are drawers to insert and the warehouse isn't full
@@ -479,6 +669,10 @@ class Warehouse:
                 logger.warning(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
 
     def run_simulation(self):
+        """
+        Run a new simulation using the same parameters.
+        Note: the simulation will create a new sequence of actions.
+        """
         from src.sim.simulation import Simulation
 
         self.env = Environment()
@@ -524,14 +718,20 @@ class Warehouse:
     def new_simulation(self, num_actions: int, num_gen_drawers: int, num_gen_materials: int,
                        gen_deposit: bool, gen_buffer: bool, time: int=None):
         """
-        Create a new simulation
-        :param time: # TODO: doc
-        :param num_actions:
-        :param num_gen_drawers:
-        :param num_gen_materials:
-        :param gen_deposit:
-        :param gen_buffer:
-        :return:
+        Run a new simulation using custom parameters.
+
+        :type num_actions: int
+        :type num_gen_drawers: int
+        :type num_gen_materials: int
+        :type gen_deposit: bool
+        :type gen_buffer: bool
+        :type time: int or None
+        :param num_actions: number of actions to simulate
+        :param num_gen_drawers: number of drawers to generate in the warehouse
+        :param num_gen_materials: number of materials to generate in the warehouse
+        :param gen_deposit: True to generate a drawer in the deposit, False otherwise
+        :param gen_buffer: True to generate a drawer in the buffer, False otherwise
+        :param time: the maximum time of the simulation, otherwise None to remove the limit
         """
         from src.sim.material import gen_rand_material
 
@@ -559,12 +759,16 @@ class Warehouse:
         self.events_to_simulate.clear()
 
         # run a new simulation
-        # TODO: not yet ready
         self.run_simulation()
 
 
     def choice_random_drawer(self) -> Drawer:
-        """Choose a random drawer from the warehouse"""
+        """
+        Choose a random drawer from the warehouse.
+
+        :rtype: Drawer
+        :return: the random drawer chosen from the warehouse
+        """
         container_drawer_entry = []
         for col in self.get_cols_container():
             # if there aren't any drawer
