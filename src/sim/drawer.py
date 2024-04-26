@@ -174,13 +174,8 @@ class Drawer:
         materials = self.get_items()
 
         # if there are no materials, use the default space
-        if len(materials) == 0:
-            self.max_height = def_space
-            self.num_space = self.max_height // def_space
-            return
-
         # otherwise, calculate the maximum height and how many entries are occupied
-        self.max_height = max([material.get_height() for material in materials])
+        self.max_height = max([material.get_height() for material in materials], default=def_space)
         self.num_space = self.max_height // def_space
         if (self.max_height % def_space) != 0:
             # odd, approx the next
