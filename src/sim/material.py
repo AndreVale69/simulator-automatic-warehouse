@@ -6,19 +6,24 @@ from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSing
 class Material:
     def __init__(self, barcode: hex, name: str, height: int, length: int, width: int):
         """
-        Class that represents a material that can be found inside a drawer.<br><br>
+        Class that represents a material that can be found inside a drawer.
 
-        @param barcode: unique ID of a material
-        @param name: name of a material
-        @param height: height of a material
-        @param length: length of a material
-        @param width: width of a material
+        :type barcode: hex
+        :type name: str
+        :type height: int
+        :type length: int
+        :type width: int
+        :param barcode: unique ID of a material.
+        :param name: name of a material.
+        :param height: height of a material.
+        :param length: length of a material.
+        :param width: width of a material.
         """
         # maximum height of a material to fit into a drawer
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
         max_height_material = config["carousel"]["buffer_height"]
 
-        # check height of a material
+        # check the height of a material
         if height > max_height_material:
             raise ValueError("The height of element " +
                              name +
@@ -55,22 +60,62 @@ class Material:
         return copy_obj
 
     def get_barcode(self) -> int:
+        """
+        Get the barcode of the material.
+
+        :rtype: int
+        :return: the barcode of the material.
+        """
         return self.barcode
 
     def get_name(self) -> str:
+        """
+        Get the name of the material.
+
+        :rtype: str
+        :return: the name of the material.
+        """
         return self.name
 
     def get_height(self) -> int:
+        """
+        Get the height of the material.
+
+        :rtype: int
+        :return: the height of the material.
+        """
         return self.height
 
     def get_length(self) -> int:
+        """
+        Get the length of the material.
+
+        :rtype: int
+        :return: the length of the material.
+        """
         return self.length
 
     def get_width(self) -> int:
+        """
+        Get the width of the material.
+
+        :rtype: int
+        :return: the width of the material.
+        """
         return self.width
 
 
 def gen_rand_materials(how_many: int, max_height: int = 50) -> list[Material]:
+    """
+    Static method to generate random materials.
+
+    :type how_many: int
+    :type max_height: int
+    :rtype: list[Material]
+    :param how_many: how many materials to generate.
+    :param max_height: the maximum height (upper limit) of the materials.
+    :return: the generated materials list.
+    """
     materials: list[Material] = []
     for i in range(how_many):
         materials.append(gen_rand_material(max_height))
@@ -78,6 +123,15 @@ def gen_rand_materials(how_many: int, max_height: int = 50) -> list[Material]:
 
 
 def gen_rand_material(max_height: int = 50) -> Material:
+    """
+    Static method to generate a random material.
+
+    :type max_height: int
+    :rtype: Material
+    :param max_height: the maximum height (upper limit) of the material.
+    :return: the material generated.
+    """
+    # TODO: add min_height? Is it useful?
     name_materials = ['Shirt',
                       'Pasta',
                       'Tomato',
