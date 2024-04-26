@@ -6,6 +6,14 @@ from src.sim.status_warehouse.entry.entry import Entry
 
 class DrawerEntry(Entry):
     def __init__(self, offset_x: int, pos_y: int):
+        """
+        It is an entry of the warehouse where the drawer is located.
+
+        :type offset_x: int
+        :type pos_y: int
+        :param offset_x: offset x of the drawer entry.
+        :param pos_y: y of the drawer entry.
+        """
         super().__init__(offset_x, pos_y)
         self.drawer = None
 
@@ -16,8 +24,20 @@ class DrawerEntry(Entry):
         return copy_obj
 
     def get_drawer(self) -> Drawer:
+        """
+        Get the pointer to the drawer to which the DrawerEntry belongs.
+
+        :rtype: Drawer
+        :return: the Drawer pointer.
+        """
         return self.drawer
 
     def add_drawer(self, drawer: Drawer):
+        """
+        Add the drawer pointer to the local reference.
+
+        :type drawer: Drawer
+        :param drawer: drawer pointer.
+        """
         # copy "pointer"
         self.drawer = drawer

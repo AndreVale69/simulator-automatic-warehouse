@@ -3,6 +3,14 @@ from abc import abstractmethod
 
 class Entry:
     def __init__(self, offset_x: int, pos_y: int):
+        """
+        Superclass for all entries.
+
+        :type offset_x: int
+        :type pos_y: int
+        :param offset_x: offset x of the entry.
+        :param pos_y: position y of the entry.
+        """
         self.offset_x = offset_x
         self.pos_y = pos_y
 
@@ -16,7 +24,19 @@ class Entry:
         pass
 
     def get_offset_x(self):
+        """
+        Get the offset x value of the entry.
+
+        :rtype: int
+        :return: the offset x value of the entry.
+        """
         return self.offset_x
 
     def get_pos_y(self):
+        """
+        Get the position y value of the entry.
+
+        :rtype: int
+        :return: the position y value of the entry.
+        """
         return self.pos_y
