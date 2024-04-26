@@ -8,6 +8,16 @@ from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 
 class Column(DrawerContainer):
     def __init__(self, info: dict, warehouse):
+        """
+        The column is a simple column of the warehouse.
+        It can't be where there is the bay and the buffer.
+        It is thought to store the drawers.
+
+        :type info: dict
+        :type warehouse: Warehouse
+        :param info: info about the column (config).
+        :param warehouse: the warehouse where the column is located.
+        """
         super().__init__(info["height"], info["x_offset"], info["width"], warehouse)
 
         self.width = info["width"]
@@ -29,10 +39,24 @@ class Column(DrawerContainer):
         return copy_obj
 
     def get_height_last_position(self) -> int:
+        """
+        Get the height of the last position.
+
+        :rtype: int
+        :return: the height of the last position.
+        """
         return self.height_last_position
 
     # override
     def add_drawer(self, drawer: Drawer, index: int = None):
+        """
+        Add a drawer to the column.
+
+        :type drawer: Drawer
+        :type index: int
+        :param drawer: drawer to be added.
+        :param index: index of the column where to add the drawer.
+        """
         how_many = drawer.get_max_num_space() + index
 
         drawer_entry = self.create_drawerEntry(drawer, index)
@@ -44,8 +68,17 @@ class Column(DrawerContainer):
             self.create_drawerEntry(drawer, index)
 
     def create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
+        """
+        Create a drawer entry and add it to the column.
+
+        :type drawer: Drawer
+        :type index: int
+        :rtype: DrawerEntry
+        :param drawer: the drawer to be added.
+        :param index: where to add the drawer.
+        :return: the DrawerEntry created.
+        """
         # initialize positions
-        # TOOD: Forse è qua il problema, perché il firstEntry è settato in cima e non alla base.
         drawer_entry = DrawerEntry(self.get_offset_x(), index)
         # connect Drawer to Entry
         drawer_entry.add_drawer(drawer)
@@ -56,6 +89,12 @@ class Column(DrawerContainer):
 
     # override
     def remove_drawer(self, drawer: Drawer) -> bool:
-        """Remove a drawer"""
-        return super().remove_drawer(drawer)
+        """
+        Remove a drawer from the column.
 
+        :type drawer: Drawer
+        :rtype: bool
+        :param drawer: the drawer to be removed.
+        :return: True if the drawer was removed, False otherwise.
+        """
+        return super().remove_drawer(drawer)
