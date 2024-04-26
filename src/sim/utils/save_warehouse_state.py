@@ -7,8 +7,10 @@ from src.sim.warehouse import Warehouse
 def save_config(warehouse: Warehouse):
     """
     This function should only be used for debugging purposes.
-    It saves the state to a file: <code>/tmp/config_warehouse.txt</code><br><br>
-    @param warehouse: warehouse to save.
+    It saves the state to a file: `/tmp/config_warehouse.txt`
+
+    :type warehouse: Warehouse
+    :param warehouse: warehouse to save.
     """
     # if the directory doesn't exist, create it
     directory = './tmp'
