@@ -18,6 +18,16 @@ logger = logging.getLogger(__name__)
 
 class ExtractDrawer(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination):
+        """
+        The extract of a drawer (ExtractDrawer action) is the movement from a column to the deposit (bay).
+
+        :type env: Environment
+        :type warehouse: Warehouse
+        :type simulation: Simulation
+        :param env: the simulation environment (SimPy Environment).
+        :param warehouse: the warehouse where the action is performed.
+        :param simulation: the simulation where the action is performed.
+        """
         super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):
@@ -50,6 +60,13 @@ class ExtractDrawer(Move):
         })
 
     def actions(self, load_in_buffer: bool):
+        """
+        Perform the real action.
+        If the deposit is full, load_in_buffer should be True.
+
+        :type load_in_buffer: bool
+        :param load_in_buffer: True to send the drawer inside the buffer, False to send the drawer in the bay.
+        """
         # choice a random drawer
         self.set_drawer(self.get_warehouse().choice_random_drawer())
         # move the floor
