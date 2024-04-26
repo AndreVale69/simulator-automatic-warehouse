@@ -21,10 +21,10 @@ class TimeEnum(Enum):
 class WarehouseStatistics:
     """
     The purpose of use is:
-    <pre><code>
+    ```
     warehouse = Warehouse()
     WarehouseStatistics(DataFrame(warehouse.get_simulation().get_store_history().items))
-    </code></pre>
+    ```
     """
     def __init__(self, warehouse_actions: DataFrame):
         self._warehouse_actions = warehouse_actions
@@ -47,8 +47,10 @@ class WarehouseStatistics:
         Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
         The counter refers to all actions in the simulation.
 
-        @param time: Time requested.
-        @return: A table of actions started each "time" given as a parameter.
+        :type time: TimeEnum
+        :rtype: DataFrame
+        :param time: Time requested.
+        :return: A table of actions started each "time" given as a parameter.
                  The DataFrame contains two columns: Start and Count.
         """
         value_counts: Series = self._get_start().dt.to_period(time.value).value_counts(sort=False)
@@ -62,8 +64,10 @@ class WarehouseStatistics:
         Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
         The counter refers to all actions in the simulation.
 
-        @param time: Time requested.
-        @return: A table of actions finished each "time" given as a parameter.
+        :type time: TimeEnum
+        :rtype: DataFrame
+        :param time: Time requested.
+        :return: A table of actions finished each "time" given as a parameter.
                  The DataFrame contains two columns: Finish and Count.
         """
         value_counts: Series = self._get_finish().dt.to_period(time.value).value_counts(sort=False)
@@ -81,8 +85,10 @@ class WarehouseStatistics:
         If an order is started at (e.g.) 10:58 and finished at 11:05, it will not be counted in the 10-hour counter.
         So it's possible to find some lines with a Start time different from the Finish time.
 
-        @param time: Time requested.
-        @return: A table of actions completed each "time" given as a parameter.
+        :type time: TimeEnum
+        :rtype: DataFrame
+        :param time: Time requested.
+        :return: A table of actions completed each "time" given as a parameter.
                  The DataFrame contains three columns: Start, Finish, and Count.
         """
         value_counts: Series = DataFrame({
@@ -103,9 +109,12 @@ class WarehouseStatistics:
         Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
         The counter only refers to the action specified in the "action" parameter.
 
-        @param action: action requested.
-        @param time: time requested.
-        @return: a table of the requested action started each "time" given as a parameter.
+        :type action: ActionEnum
+        :type time: TimeEnum
+        :rtype: DataFrame
+        :param action: action requested.
+        :param time: time requested.
+        :return: a table of the requested action started each "time" given as a parameter.
                  The DataFrame contains three columns: Type of Action, Start, and Count.
         """
         action_val: str = action.value
@@ -127,9 +136,12 @@ class WarehouseStatistics:
         Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
         The counter only refers to the action specified in the "action" parameter.
 
-        @param action: action requested.
-        @param time: time requested.
-        @return: a table of the requested action finished each "time" given as a parameter.
+        :type action: ActionEnum
+        :type time: TimeEnum
+        :rtype: DataFrame
+        :param action: action requested.
+        :param time: time requested.
+        :return: a table of the requested action finished each "time" given as a parameter.
                  The DataFrame contains three columns: Type of Action, Finish, and Count.
         """
         action_val: str = action.value
@@ -153,9 +165,12 @@ class WarehouseStatistics:
         If an order is started at (e.g.) 10:58 and finished at 11:05, it will not be counted in the 10-hour counter.
         So it's possible to find some lines with a Start time different from the Finish time.
 
-        @param action: the type of action to consider.
-        @param time: time period requested.
-        @return: a table of "action" actions completed each "time", both given as parameters.
+        :type action: ActionEnum
+        :type time: TimeEnum
+        :rtype: DataFrame
+        :param action: the type of action to consider.
+        :param time: time period requested.
+        :return: a table of "action" actions completed each "time", both given as parameters.
                  The DataFrame contains three columns: Type of Action, Start, Finish, and Count
         """
         action_val: str = action.value
@@ -178,8 +193,10 @@ class WarehouseStatistics:
         """
         Calculate how many actions are completed for a given action.
 
-        @param action: count calculation actions
-        @return: how many actions are completed in the whole simulation.
+        :type action: ActionEnum
+        :rtype: int
+        :param action: count calculation actions
+        :return: how many actions are completed in the whole simulation.
         """
         return self._warehouse_actions.groupby("Type of Action").count().get("Finish").get(action.value)
 
@@ -188,7 +205,8 @@ class WarehouseStatistics:
         """
         Get the start of the simulation.
 
-        @return: the start of the simulation as pandas Timestamp.
+        :rtype: Timestamp
+        :return: the start of the simulation as pandas Timestamp.
         """
         return self._get_start()[0]
 
@@ -197,7 +215,8 @@ class WarehouseStatistics:
         """
         Get the finish of the simulation.
 
-        @return: the finish of the simulation as pandas Timestamp.
+        :rtype: Timestamp
+        :return: the finish of the simulation as pandas Timestamp.
         """
         return self._get_finish()[self._get_finish().size - 1]
 
@@ -206,6 +225,7 @@ class WarehouseStatistics:
         """
         Get the total time of the simulation.
 
-        @return: the total time of the simulation as pandas Timedelta.
+        :rtype: Timestamp
+        :return: the total time of the simulation as pandas Timedelta.
         """
         return self.finish_time_simulation() - self.start_time_simulation()
