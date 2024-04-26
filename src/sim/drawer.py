@@ -209,20 +209,38 @@ def gen_rand_drawers(how_many: int, materials_to_insert: list[Material]) -> list
     :return: the generated drawers list.
     """
     drawers: list[Drawer] = []
-    for i in range(how_many):
-        # select a random material
-        rand_index = random.randint(0, len(materials_to_insert) - 1)
+    materials_to_insert = copy.deepcopy(materials_to_insert)
+    # for i in range(how_many):
+    for _ in range(how_many):
+        # select a random material if there are materials, otherwise None
+        random_material: Material | None = random.choice(materials_to_insert) if len(materials_to_insert) > 0 else None
         # create a random drawer with a random material
-        drawers.append(Drawer([materials_to_insert[i]]))
+        drawers.append(gen_rand_drawer(random_material))
         # remove the material just added
-        materials_to_insert.remove(materials_to_insert[rand_index])
+        try:
+            materials_to_insert.remove(random_material)
+        except ValueError:
+            # no random material chosen, random_material is None
+            continue
     # if there are some materials yet
     while len(materials_to_insert) != 0:
         # select a random material
-        rand_index_mat = random.randint(0, len(materials_to_insert) - 1)
-        rand_index_draw = random.randint(0, len(drawers) - 1)
+        random_material: Material = random.choice(materials_to_insert)
+        # select a random drawer
+        random_drawer: Drawer = random.choice(drawers)
         # add random material inside a random drawer
-        drawers[rand_index_draw].add_material(materials_to_insert[rand_index_mat])
+        random_drawer.add_material(random_material)
         # remove the material just added
-        materials_to_insert.remove(materials_to_insert[rand_index_mat])
+        materials_to_insert.remove(random_material)
     return drawers
+
+def gen_rand_drawer(material_to_insert: Material = None) -> Drawer:
+    """
+    Static method to generate a random drawer.
+
+    :type material_to_insert: Material
+    :rtype: Drawer
+    :param material_to_insert: a material to insert.
+    :return: the generated drawer.
+    """
+    return Drawer([material_to_insert] if material_to_insert is not None else None)
