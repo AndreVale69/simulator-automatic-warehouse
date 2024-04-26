@@ -4,6 +4,7 @@
 
 ### New Features and Improvements
 - Random drawer generation added to the drawer class. It's now possible to generate only one drawer.
+- Improved `get_minimum_offset` method to calculate the minimum offset between columns in the warehouse.
 
 ### Bug Fixes and Enhancements
 - Fixed random drawers generation in drawer class. 
