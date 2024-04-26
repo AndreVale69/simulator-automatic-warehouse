@@ -169,32 +169,21 @@ class Drawer:
         Private method to calculate the height of a drawer after an insert o remove a material.
         """
         def_space = self.__get_def_space()
+        materials = self.get_items()
 
-        try:
-            # set tmp max to first element
-            tmp_max_height = self.get_items()[0].get_height()
-
-            # search max
-            for i in range(1, len(self.items)):
-                height = self.get_items()[i].get_height()
-
-                if height > tmp_max_height:
-                    tmp_max_height = height
-
-            # save max height
-            # maximum height of a drawer based on the elements present
-            self.max_height = tmp_max_height
-
-            # Check if is even or odd
-            if (self.max_height % def_space) == 0:
-                # even
-                self.num_space = self.max_height // def_space
-            else:
-                # odd, approx the next
-                self.num_space = (self.max_height // def_space) + 1
-        except IndexError:
+        # if there are no materials, use the default space
+        if len(materials) == 0:
             self.max_height = def_space
             self.num_space = self.max_height // def_space
+            return
+
+        # otherwise, calculate the maximum height and how many entries are occupied
+        self.max_height = max([material.get_height() for material in materials])
+        self.num_space = self.max_height // def_space
+        if (self.max_height % def_space) != 0:
+            # odd, approx the next
+            self.num_space += 1
+
 
 
 def gen_rand_drawers(how_many: int, materials_to_insert: list[Material]) -> list[Drawer]:

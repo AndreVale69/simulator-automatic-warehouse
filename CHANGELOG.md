@@ -10,9 +10,11 @@
 
   There were some problems (raise `ValueError`) when the `materials_to_insert` parameter was larger than the `how_many` 
   parameter. 
+- Improved readability `calculate_max_height` method of the drawer class.
 
 ### Other
 - Refactoring comments, change comment style.
+- Added tests.
 
 ------------------------------------------------------------------------------------------------------------------------
 
