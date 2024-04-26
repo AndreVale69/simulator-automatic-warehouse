@@ -14,10 +14,31 @@ logger = logging.getLogger(__name__)
 class RemoveManualMaterial(RemoveMaterial):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation,
                  duration: int, materials: list[Material]):
+        """
+        The remove manual material action is the movement
+        performed by the person who has removed a material from the deposit (bay) to their hand.
+
+        :type env: Environment
+        :type warehouse: Warehouse
+        :type simulation: Simulation
+        :type duration: int
+        :type materials: list[Material]
+        :param env: the simulation environment (SimPy Environment).
+        :param warehouse: the warehouse where the action is performed.
+        :param simulation: the simulation where the action is performed.
+        :param duration: the duration of the action in seconds.
+        :param materials: the materials to be removed.
+        """
         super().__init__(env, warehouse, simulation, duration)
         self.materials = materials.copy()
 
     def get_materials(self) -> list[Material]:
+        """
+        Get the list of materials to be removed.
+
+        :rtype: list[Material]
+        :return: the list of materials to be removed.
+        """
         return self.materials
 
     # override

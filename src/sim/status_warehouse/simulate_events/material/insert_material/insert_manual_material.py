@@ -10,10 +10,31 @@ from src.sim.warehouse import Warehouse
 class InsertManualMaterial(InsertMaterial):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation,
                  duration: int, materials: list[Material]):
+        """
+        The insert manual material action is the movement
+        performed by the person who has put a material from his hand to the deposit (bay).
+
+        :type env: Environment
+        :type warehouse: Warehouse
+        :type simulation: Simulation
+        :type duration: int
+        :type materials: list[Material]
+        :param env: the simulation environment (SimPy Environment).
+        :param warehouse: the warehouse where the action is performed.
+        :param simulation: the simulation where the action is performed.
+        :param duration: the duration of the action in seconds.
+        :param materials: the materials to be inserted.
+        """
         super().__init__(env, warehouse, simulation, duration)
         self.materials = materials.copy()
 
     def get_materials(self) -> list[Material]:
+        """
+        Get the list of materials to be inserted.
+
+        :rtype: list[Material]
+        :return: the materials to be inserted.
+        """
         return self.materials
 
     # override
