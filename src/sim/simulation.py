@@ -12,6 +12,14 @@ logger = logging.getLogger(__name__)
 
 class Simulation:
     def __init__(self, env: Environment, warehouse: Warehouse):
+        """
+        The main simulation class.
+
+        :type env: Environment
+        :type warehouse: Warehouse
+        :param env: the environment of SimPy.
+        :param warehouse: the Warehouse used to perform the simulation.
+        """
         self.env = env
         # start the move process everytime an instance is created.
         self.warehouse = copy.deepcopy(warehouse)
@@ -22,6 +30,12 @@ class Simulation:
         self.store_history = None
 
     def simulate_actions(self, events_generated: list):
+        """
+        Simulate actions using the list of events generated.
+
+        :type events_generated: list
+        :param events_generated: events to be simulated.
+        """
         from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
         from src.sim.status_warehouse.simulate_events.buffer import Buffer
         from src.sim.status_warehouse.simulate_events.send_back_drawer import SendBackDrawer
@@ -70,18 +84,51 @@ class Simulation:
         logger.info("Simulation finished.")
 
     def get_environment(self) -> simpy.Environment:
+        """
+        Get the environment of SimPy.
+
+        :rtype: simpy.Environment
+        :return: the environment of SimPy.
+        """
         return self.env
 
     def get_warehouse(self) -> Warehouse:
+        """
+        Get the Warehouse used to perform the simulation.
+
+        :rtype: Warehouse
+        :return: the Warehouse used to perform the simulation.
+        """
         return self.warehouse
 
     def get_res_buffer(self) -> simpy.Resource:
+        """
+        Get the resource of the buffer.
+        It can be thought of as a resource lock (see SimPy resource).
+
+        :rtype: simpy.Resource
+        :return: the resource of the buffer.
+        """
         return self.res_buffer
 
     def get_res_deposit(self) -> simpy.Resource:
+        """
+        Get the resource of the deposit (bay).
+        It can be thought of as a resource lock (see SimPy resource).
+
+        :rtype: simpy.Resource
+        :return: the resource of the deposit (bay).
+        """
         return self.res_deposit
 
     def get_store_history(self) -> simpy.Store:
+        """
+        Get the SimPy store (see SimPy store) of the simulation.
+        It is used to store the simulation history.
+
+        :rtype: simpy.Store
+        :return: the store of the simulation history.
+        """
         return self.store_history
 
     #def get_store_history_items(self) -> list[dict]:
