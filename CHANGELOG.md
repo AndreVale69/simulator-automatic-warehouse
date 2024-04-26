@@ -8,7 +8,7 @@
 ### Bug Fixes and Enhancements
 - Fixed random drawers generation in drawer class. 
 
-  There were some problems (raise `ValueError`) when the `how_many` parameter was larger than the `materials_to_insert` 
+  There were some problems (raise `ValueError`) when the `materials_to_insert` parameter was larger than the `how_many` 
   parameter. 
 
 ### Other
