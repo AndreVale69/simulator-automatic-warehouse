@@ -2,6 +2,9 @@ from enum import Enum
 
 
 class ActionEnum(Enum):
+    """
+    Enumerate of the possible actions.
+    """
     EXTRACT_DRAWER = "ExtractDrawer"
     SEND_BACK_DRAWER = "SendBackDrawer"
     INSERT_RANDOM_MATERIAL = "InsertRandomMaterial"
