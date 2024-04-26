@@ -1,6 +1,7 @@
+from typing import NamedTuple
+
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
-from typing import NamedTuple
 from dash import html, dcc
 from pandas import DataFrame
 

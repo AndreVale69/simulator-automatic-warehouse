@@ -3,6 +3,7 @@ import logging
 
 import simpy
 from simpy import Environment
+
 from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)

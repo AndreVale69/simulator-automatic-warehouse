@@ -1,10 +1,10 @@
+from datetime import datetime
+from datetime import timedelta, time
+from math import ceil
+
 import plotly.express as px
 import plotly.graph_objs as go
-
 from pandas import Timestamp, DataFrame
-from datetime import timedelta, time
-from datetime import datetime
-from math import ceil
 
 
 def _create_timedelta(times: time) -> timedelta:

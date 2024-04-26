@@ -4,29 +4,28 @@
 import os.path
 import shutil
 import sys
+from datetime import datetime
+from signal import signal, SIGINT, SIGTERM
+
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
-from dash_auth import BasicAuth
-
-from signal import signal, SIGINT, SIGTERM
-from diskcache import Cache
 from dash import Dash, dcc, html, Input, Output, ctx, State, DiskcacheManager
-from datetime import datetime
 from dash.exceptions import PreventUpdate
+from dash_auth import BasicAuth
+from diskcache import Cache
 from pandas import DataFrame
 
-from src.sim.warehouse import Warehouse
-from src.web_app.components.timeline import Timeline
-from src.web_app.components.navbar import navbar
-from src.web_app.configuration import HOST, PORT, PROXY
-from src.web_app.pages import not_found_404
-from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
-from src.web_app.layouts.custom_configuration import create_columns_layout
-from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 from src.sim.utils.statistics.warehouse_statistics import ActionEnum
+from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
+from src.sim.warehouse import Warehouse
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.web_app.components.navbar import navbar
+from src.web_app.components.timeline import Timeline
+from src.web_app.configuration import HOST, PORT, PROXY
+from src.web_app.layouts.custom_configuration import create_columns_layout
 from src.web_app.layouts.simulation_statistics import SimulationInput, create_simulation_statistics_layout
+from src.web_app.pages import not_found_404
 from src.web_app.utils.callbacks_utilities import FieldsNewSimulationArgs, fields_new_simulation_are_valid
-
 
 """
     #####################

@@ -1,10 +1,11 @@
-from simpy import Environment
 import datetime
 
+from simpy import Environment
+
 from src.sim.simulation import Simulation
+from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
 from src.sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
 from src.sim.warehouse import Warehouse
-from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
 
 
 class InsertRandomMaterial(InsertMaterial):

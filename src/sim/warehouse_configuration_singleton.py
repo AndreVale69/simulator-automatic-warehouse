@@ -1,8 +1,10 @@
-from src.sim.configuration import WAREHOUSE_CONFIGURATION
-from pathlib import Path
-from yaml import safe_load
 from json import loads
+from pathlib import Path
+
 from jsonschema import Draft202012Validator
+from yaml import safe_load
+
+from src.sim.configuration import WAREHOUSE_CONFIGURATION
 
 
 class WarehouseConfigurationSingleton:

@@ -1,5 +1,5 @@
-from typing import NamedTuple
 from functools import lru_cache
+from typing import NamedTuple
 
 
 class FieldsNewSimulationArgs(NamedTuple):

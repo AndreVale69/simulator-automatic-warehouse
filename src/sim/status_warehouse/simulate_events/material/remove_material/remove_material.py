@@ -1,5 +1,4 @@
 import logging
-
 from abc import abstractmethod
 
 from simpy import Environment

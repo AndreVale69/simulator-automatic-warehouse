@@ -1,5 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import html
+
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 WAREHOUSE_CONFIG = WarehouseConfigurationSingleton.get_instance().get_configuration()

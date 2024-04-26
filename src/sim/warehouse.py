@@ -1,4 +1,5 @@
 import logging
+
 from src.sim.configuration import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
 
 if NO_CONSOLE_LOG:

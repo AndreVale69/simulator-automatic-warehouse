@@ -1,5 +1,6 @@
 import random
 import uuid
+
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
