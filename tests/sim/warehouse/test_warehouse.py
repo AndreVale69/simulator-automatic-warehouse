@@ -1,6 +1,8 @@
 import copy
 import unittest
 
+from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.status_warehouse.container.column import Column
 from src.sim.warehouse import Warehouse, MinimumOffsetReturns
 
@@ -22,7 +24,6 @@ class TestWarehouse(unittest.TestCase):
 
     def test_set_pos_y_floor(self):
         # arrange
-        ex_pos_y_floor = self.warehouse.get_pos_y_floor()
 
         # act
         self.warehouse.set_pos_y_floor(15)
@@ -30,8 +31,6 @@ class TestWarehouse(unittest.TestCase):
         # assert
         self.assertEqual(self.warehouse.get_pos_y_floor(), 15)
         self.assertRaises(Exception, self.warehouse.set_pos_y_floor, -15)
-        # restore
-        self.warehouse.set_pos_y_floor(ex_pos_y_floor)
 
     def test_add_column(self):
         # arrange
@@ -43,8 +42,6 @@ class TestWarehouse(unittest.TestCase):
         # assert
         self.assertEqual(self.warehouse.get_column(-1), col)
         self.assertRaises(Exception, self.warehouse.add_column, None)
-        # restore
-        self.warehouse.pop_column()
 
     def test_get_minimum_offset(self):
         # arrange
@@ -63,3 +60,41 @@ class TestWarehouse(unittest.TestCase):
         self.assertIn(col, self.warehouse.get_cols_container())
         self.assertEqual(minimum_offset.index, len(self.warehouse.get_cols_container())-1)
         self.assertEqual(minimum_offset.offset, 1)
+
+    def test_is_full(self):
+        # arrange
+        for col in self.warehouse.get_cols_container():
+            for index, entry in enumerate(col.get_container()):
+                if isinstance(entry, EmptyEntry):
+                    col.get_container()[index] = DrawerEntry(entry.get_offset_x(), entry.get_pos_y())
+
+        # act
+
+        # assert
+        self.assertTrue(self.warehouse.is_full())
+
+    def test_choice_random_drawer(self):
+        # arrange
+        drawers = []
+
+        # act
+        for col in self.warehouse.get_cols_container():
+            drawers.extend(col.get_drawers())
+
+        # assert
+        self.assertIn(self.warehouse.choice_random_drawer(), drawers)
+
+    def test_choice_random_drawer_with_empty_column(self):
+        # arrange
+        col = self.warehouse.get_column(0)
+        drawers = []
+
+        # act
+        for index, entry in enumerate(col.get_container()):
+            if isinstance(entry, DrawerEntry):
+                col.get_container()[index] = EmptyEntry(entry.get_offset_x(), entry.get_pos_y())
+        for col in self.warehouse.get_cols_container():
+            drawers.extend(col.get_drawers())
+
+        # arrange
+        self.assertIn(self.warehouse.choice_random_drawer(), drawers)

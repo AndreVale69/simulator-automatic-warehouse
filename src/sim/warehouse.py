@@ -695,7 +695,7 @@ class Warehouse:
 
     def gen_rand(self, num_drawers: int, num_materials: int):
         """
-        Generate a random warehouse
+        Generate a random warehouse.
 
         :type num_drawers: int
         :type num_materials: int
@@ -705,6 +705,7 @@ class Warehouse:
         warehouse_is_full = False
 
         # until there are drawers to insert and the warehouse isn't full
+        # TODO: rmv warehouse_is_full and use directly the method
         while num_drawers > 0 and not warehouse_is_full:
             # check available space in warehouse
             if self.is_full():
@@ -830,11 +831,6 @@ class Warehouse:
         """
         container_drawer_entry = []
         for col in self.get_cols_container():
-            # if there aren't any drawer
-            if col.get_num_entries_occupied() == 0:
-                continue
-            else:
-                # otherwise, build the list
-                container_drawer_entry.extend(col.get_drawers())
+            container_drawer_entry.extend(col.get_drawers())
         assert len(container_drawer_entry) > 0, "The warehouse is empty!"
         return random.choice(container_drawer_entry)
