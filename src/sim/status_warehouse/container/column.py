@@ -29,7 +29,7 @@ class Column(DrawerContainer):
 
     def __deepcopy__(self, memo):
         info: dict = {
-            "height": self.get_height_col(),
+            "height": self.get_height_col() * self.get_def_space(),
             "x_offset": self.get_offset_x(),
             "width": self.get_width(),
             "height_last_position": self.get_height_last_position() * self.get_def_space()
@@ -37,6 +37,13 @@ class Column(DrawerContainer):
         copy_obj = Column(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, Column) and
+            self.get_height_last_position() == other.get_height_last_position() and
+            DrawerContainer.__eq__(self, other)
+        )
 
     def get_height_last_position(self) -> int:
         """

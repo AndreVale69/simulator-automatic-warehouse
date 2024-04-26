@@ -43,4 +43,4 @@ class TestMaterial(unittest.TestCase):
         # assert
         self.assertIsInstance(deepcopy_material, Material)
         self.assertEqual(material, deepcopy_material)
-        
+        self.assertNotEqual(id(material), id(deepcopy_material))

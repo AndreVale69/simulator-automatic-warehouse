@@ -34,6 +34,23 @@ class DrawerContainer:
     def __deepcopy__(self, memo):
         pass
 
+    def __eq__(self, other):
+        return (
+            isinstance(other, DrawerContainer) and
+            self.get_height_warehouse() == other.get_height_warehouse() and
+            self.get_def_space() == other.get_def_space() and
+            self.get_container() == other.get_container() and
+            self.get_offset_x() == other.get_offset_x() and
+            self.get_height_col() == other.get_height_col() and
+            self.get_width() == other.get_width() and
+            self.get_num_drawers() == other.get_num_drawers() and
+            self.get_num_entries_occupied() == other.get_num_entries_occupied() and
+            self.get_num_entries_free() == other.get_num_entries_free() and
+            self.get_drawers() == other.get_drawers() and
+            self.get_entries_occupied() == other.get_entries_occupied() and
+            self.get_num_materials() == other.get_num_materials()
+        )
+
     def get_warehouse(self):
         """
         Get the warehouse where the container is stored.
@@ -184,6 +201,7 @@ class DrawerContainer:
         """
         count = 0
         drawers = self.get_drawers()
+        # TODO: improve
         for drawer in drawers:
             count += len(drawer.items)
         return count

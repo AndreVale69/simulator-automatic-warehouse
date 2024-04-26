@@ -18,7 +18,7 @@ else:
 import copy
 import random
 from simpy import Environment
-from sim.status_warehouse.enum_warehouse import EnumWarehouse
+from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.carousel import Carousel
@@ -251,6 +251,24 @@ class Warehouse:
         copy_oby.sim_time = self.get_sim_time()
         copy_oby.sim_num_actions = self.get_sim_num_actions()
         return copy_oby
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, Warehouse) and
+            self.get_height() == other.get_height() and
+            self.get_cols_container() == other.get_cols_container() and
+            self.get_carousel() == other.get_carousel() and
+            self.get_environment() == other.get_environment() and
+            self.get_simulation() == other.get_simulation() and
+            self.get_def_space() == other.get_def_space() and
+            self.get_speed_per_sec() == other.get_speed_per_sec() and
+            self.get_max_height_material() == other.get_max_height_material() and
+            self.get_pos_y_floor() == other.get_pos_y_floor() and
+            self.get_num_drawers() == other.get_num_drawers() and
+            self.get_sim_time() == other.get_sim_time() and
+            self.get_sim_num_actions() == other.get_sim_num_actions() and
+            self.get_events_to_simulate() == other.get_events_to_simulate()
+        )
 
     def get_height(self) -> int:
         """

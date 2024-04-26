@@ -136,3 +136,4 @@ class TestDrawer(unittest.TestCase):
         # assert
         self.assertIsInstance(deepcopy_drawer, Drawer)
         self.assertEqual(drawer, deepcopy_drawer)
+        self.assertNotEqual(id(drawer), id(deepcopy_drawer))

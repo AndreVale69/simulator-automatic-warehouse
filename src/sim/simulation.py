@@ -29,6 +29,15 @@ class Simulation:
         self.res_deposit = simpy.Resource(env, capacity=1)
         self.store_history = None
 
+    def __eq__(self, other):
+        return (
+            isinstance(other, Simulation) and
+            self.get_environment() == other.get_environment() and
+            self.get_res_buffer() == other.get_res_buffer() and
+            self.get_res_deposit() == other.get_res_deposit() and
+            self.get_store_history() == other.get_store_history()
+        )
+
     def simulate_actions(self, events_generated: list):
         """
         Simulate actions using the list of events generated.

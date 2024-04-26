@@ -1,6 +1,6 @@
 import copy
 
-from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.drawer_container import DrawerContainer
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
@@ -18,11 +18,11 @@ class Carousel(DrawerContainer):
         :param warehouse: the warehouse where the carousel is located.
         """
         height_carousel = info["deposit_height"] + info["buffer_height"]
+        super().__init__(height_carousel, info["x_offset"], info["width"], warehouse)
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
         self.hole = config["carousel"]["hole_height"] // self.get_def_space()
         self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
         self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
-        super().__init__(height_carousel, info["x_offset"], info["width"], warehouse)
 
         # get first y to start
         first_y = self.get_height_col() + self.get_hole()
@@ -43,6 +43,18 @@ class Carousel(DrawerContainer):
         copy_obj = Carousel(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, Carousel) and
+            self.get_buffer() == other.get_buffer() and
+            self.get_deposit() == other.get_deposit() and
+            self.get_hole() == other.get_hole() and
+            self.get_deposit_entry() == other.get_deposit_entry() and
+            self.get_buffer_entry() == other.get_buffer_entry() and
+            self.get_num_drawers() == other.get_num_drawers() and
+            DrawerContainer.__eq__(self, other)
+        )
 
     def get_buffer(self) -> int:
         """

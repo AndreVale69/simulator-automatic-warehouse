@@ -16,3 +16,9 @@ class EmptyEntry(Entry):
     def __deepcopy__(self, memo):
         copy_obj = EmptyEntry(self.get_offset_x(), self.get_pos_y())
         return copy_obj
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, EmptyEntry) and
+            Entry.__eq__(self, other)
+        )

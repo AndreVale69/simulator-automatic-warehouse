@@ -15,15 +15,17 @@ class Entry:
         self.pos_y = pos_y
 
     def __eq__(self, other):
-        return isinstance(other, Entry) and \
-            self.get_offset_x() == other.get_offset_x() and \
+        return (
+            isinstance(other, Entry) and
+            self.get_offset_x() == other.get_offset_x() and
             self.get_pos_y() == other.get_pos_y()
+        )
 
     @abstractmethod
     def __deepcopy__(self, memo):
         pass
 
-    def get_offset_x(self):
+    def get_offset_x(self) -> int:
         """
         Get the offset x value of the entry.
 
@@ -32,7 +34,7 @@ class Entry:
         """
         return self.offset_x
 
-    def get_pos_y(self):
+    def get_pos_y(self) -> int:
         """
         Get the position y value of the entry.
 

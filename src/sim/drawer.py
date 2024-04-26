@@ -23,11 +23,13 @@ class Drawer:
         self.best_y = None
 
     def __eq__(self, other):
-        return isinstance(other, Drawer) and \
-            self.get_items() == other.get_items() and \
-            self.get_max_height() == other.get_max_height() and \
-            self.get_max_num_space() == other.get_max_num_space() and \
+        return (
+            isinstance(other, Drawer) and
+            self.get_items() == other.get_items() and
+            self.get_max_height() == other.get_max_height() and
+            self.get_max_num_space() == other.get_max_num_space() and
             self.get_first_drawerEntry() == other.get_first_drawerEntry()
+        )
 
     def __hash__(self):
         return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
