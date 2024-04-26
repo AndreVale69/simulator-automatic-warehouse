@@ -1,5 +1,6 @@
 import copy
 
+from sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.drawer_container import DrawerContainer
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
@@ -17,6 +18,10 @@ class Carousel(DrawerContainer):
         :param warehouse: the warehouse where the carousel is located.
         """
         height_carousel = info["deposit_height"] + info["buffer_height"]
+        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
+        self.hole = config["carousel"]["hole_height"] // self.get_def_space()
+        self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
+        self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
         super().__init__(height_carousel, info["x_offset"], info["width"], warehouse)
 
         # get first y to start
@@ -38,6 +43,35 @@ class Carousel(DrawerContainer):
         copy_obj = Carousel(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj
+
+    def get_buffer(self) -> int:
+        """
+        Get the height of the buffer of the carousel.
+
+        :rtype: int
+        :return: the height of the buffer of the carousel.
+        """
+        return self.buffer
+
+    def get_deposit(self) -> int:
+        """
+        Get the height of the deposit of the carousel.
+
+        :rtype: int
+        :return: the height of the deposit of the carousel.
+        """
+        return self.deposit
+
+    def get_hole(self) -> int:
+        """
+        Get the height of the hole.
+        The hole is the height from the bay to the start of the column,
+        it is the space where a person can place a material inside the warehouse.
+
+        :rtype: int
+        :return: the height of the hole.
+        """
+        return self.hole
 
     def get_deposit_entry(self) -> DrawerEntry | EmptyEntry:
         """
