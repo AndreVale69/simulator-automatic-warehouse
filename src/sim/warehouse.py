@@ -1,4 +1,5 @@
 import logging
+from typing import NamedTuple
 
 from src.sim.configuration import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
 
@@ -29,6 +30,12 @@ from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 logger = logging.getLogger(__name__)
 __VERSION__ = '0.0.1'
 
+
+
+class MinimumOffsetReturns(NamedTuple):
+    """ Values returned by the get_minimum_offset method. """
+    index: int
+    offset: int
 
 
 def gen_materials_and_drawer(num_drawers: int, num_materials: int,
@@ -288,6 +295,17 @@ class Warehouse:
         """
         return self.columns_container
 
+    def get_column(self, index: int) -> Column:
+        """
+        Get the (index) column of the warehouse.
+
+        :type index: int
+        :rtype: Column
+        :param index: the index of the column.
+        :return: the columns of the warehouse.
+        """
+        return self.columns_container[index]
+
     def get_carousel(self) -> Carousel:
         """
         Get the carousel of the warehouse.
@@ -394,6 +412,21 @@ class Warehouse:
         """
         return self.events_to_simulate
 
+    def get_minimum_offset(self) -> MinimumOffsetReturns:
+        """
+        Calculate the minimum offset between the columns of the warehouse.
+
+        :rtype: MinimumOffsetReturns
+        :return: the index of the list and the offset.
+        """
+        min_offset = self.get_column(0).get_offset_x()
+        index = 0
+        for i, column in enumerate(self.get_cols_container()):
+            if (col_offset_x := column.get_offset_x()) < min_offset:
+                min_offset = col_offset_x
+                index = i
+        return MinimumOffsetReturns(index=index, offset=min_offset)
+
     def set_pos_y_floor(self, pos: int):
         """
         Set the y-position of the floor.
@@ -413,22 +446,29 @@ class Warehouse:
         assert type(col) is Column, "You cannot add a type other than Column!"
         self.get_cols_container().append(col)
 
-    def minimum_offset(self, container: list[Column]) -> int:
+    def pop_column(self, index: int = -1) -> Column:
         """
-        Calculate the minimum offset between the columns.
+        Pop a column from the container of the columns the warehouse.
+        If no index is given, the last column of the container is removed by default.
 
-        :type container: list[Column]
-        :rtype: int
-        :param container: list of columns or carousels
-        :return: the index of the list
+        :type index: int
+        :rtype: Column
+        :param index: the index of the column to pop.
+        :raises IndexError: if the index is out of range or the column is empty.
+        :return: the column of the warehouse removed.
         """
-        min_offset = container[0].get_offset_x()
-        index = 0
-        for i, column in enumerate(self.get_cols_container()):
-            if column.get_offset_x() < min_offset:
-                min_offset = column.get_offset_x()
-                index = i
-        return index
+        return self.get_cols_container().pop(index)
+
+    def remove_column(self, value: Column):
+        """
+        Remove a column from the container of the warehouse.
+        If two or more values are the same, remove the first one found.
+
+        :type value: Column
+        :param value: the Column to remove.
+        :raises ValueError: if the Column is not in a container.
+        """
+        self.get_cols_container().remove(value)
 
     def is_full(self) -> bool:
         """
