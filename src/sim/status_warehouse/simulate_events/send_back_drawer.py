@@ -14,6 +14,17 @@ from src.sim.warehouse import Warehouse
 
 class SendBackDrawer(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination):
+        """
+        The send-back of a drawer (SendBackDrawer action)
+        is the movement of a drawer from the bay to one of the columns.
+
+        :type env: Environment
+        :type warehouse: Warehouse
+        :type simulation: Simulation
+        :param env: the simulation environment (SimPy Environment).
+        :param warehouse: the warehouse where the action is performed.
+        :param simulation: the simulation where the action is performed.
+        """
         super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):

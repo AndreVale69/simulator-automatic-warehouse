@@ -2,13 +2,14 @@ from abc import abstractmethod
 
 from simpy import Environment
 
+from sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.simulation import Simulation
 from src.sim.status_warehouse.simulate_events.action import Action
 from src.sim.warehouse import Warehouse  # , Drawer
 
 
 class Move(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination, drawer=None):
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination: EnumWarehouse, drawer=None):
         super().__init__(env, warehouse, simulation)
         self.drawer = drawer
         self.destination = destination
