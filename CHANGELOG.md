@@ -11,14 +11,10 @@
 - Added a `min_height` parameter when randomly generating a material in the `Material` class.
 
 ### Bug Fixes and Enhancements
-- Fixed random drawers generation in `Drawer` class. 
-
-  There were some problems (raise `ValueError`) when the `materials_to_insert` parameter was larger than the `how_many` 
-  parameter.
-- Fixed `get_num_entries_free` in Column class.
-
-  There were some problems because the last position of the warehouse was considered multiple times 
-  (instead of only once).
+- Fixed random drawers generation in `Drawer` class. There were some problems (raise `ValueError`) when the
+  `materials_to_insert` parameter was larger than the `how_many` parameter.
+- Fixed `get_num_entries_free` in Column class. There were some problems because the last position of the warehouse was 
+  considered multiple times (instead of only once).
 - Improved readability `calculate_max_height` method of the drawer class.
 - Improved readability `__eq__` method for material class.
 - Improved readability and naming of the methods used to decide where to insert a drawer.
