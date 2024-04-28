@@ -51,6 +51,36 @@ class DrawerContainer:
             self.get_num_materials() == other.get_num_materials()
         )
 
+    @abstractmethod
+    def get_num_entries_free(self) -> int:
+        """
+        Get how many seats are available.
+
+        :rtype: int
+        :return: how many seats are available.
+        """
+        pass
+
+    @abstractmethod
+    def is_full(self) -> bool:
+        """
+        Check if the container is full.
+
+        :rtype: bool
+        :return: True if the container is full, False otherwise.
+        """
+        pass
+
+    @abstractmethod
+    def is_empty(self) -> bool:
+        """
+        Check if the container is empty.
+
+        :rtype: bool
+        :return: True if the container is empty, False otherwise.
+        """
+        pass
+
     def get_warehouse(self):
         """
         Get the warehouse where the container is stored.
@@ -145,19 +175,6 @@ class DrawerContainer:
             if type(entry) is DrawerEntry:
                 num_entry_occupied += 1
         return num_entry_occupied
-
-    def get_num_entries_free(self) -> int:
-        """
-        Get how many seats are available.
-
-        :rtype: int
-        :return: how many seats are available.
-        """
-        count = 0
-        for entry in self.get_container():
-            if type(entry) is EmptyEntry:
-                count += 1
-        return count
 
     def get_drawers(self) -> list[Drawer]:
         """

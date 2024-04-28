@@ -1,9 +1,9 @@
-import unittest
 import copy
+import unittest
 import uuid
 
-from src.sim.material import gen_rand_material, Material, gen_rand_materials
 from src.sim.drawer import gen_rand_drawers, Drawer
+from src.sim.material import gen_rand_material, Material, gen_rand_materials
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
@@ -88,6 +88,7 @@ class TestDrawer(unittest.TestCase):
     def test_random_drawers(self):
         # arrange
         max_height = 100
+        min_height = 25
         drawers_to_generate = 5
         drawers_to_generate_less = 4
         materials_to_generate = 5
@@ -96,8 +97,8 @@ class TestDrawer(unittest.TestCase):
 
 
         # act
-        materials_generated = gen_rand_materials(materials_to_generate, max_height)
-        materials_generated_less = gen_rand_materials(materials_to_generate_less, max_height)
+        materials_generated = gen_rand_materials(materials_to_generate, min_height, max_height)
+        materials_generated_less = gen_rand_materials(materials_to_generate_less, min_height, max_height)
         drawers_generated = gen_rand_drawers(drawers_to_generate, materials_generated)
         drawers_generated_less = gen_rand_drawers(drawers_to_generate_less, materials_generated)
         drawers_generated_grater = gen_rand_drawers(drawers_to_generate, materials_generated_less)
@@ -128,7 +129,7 @@ class TestDrawer(unittest.TestCase):
 
     def test_deepcopy(self):
         # arrange
-        drawer: Drawer = gen_rand_drawers(1, [gen_rand_material(100)])[0]
+        drawer: Drawer = gen_rand_drawers(1, [gen_rand_material(max_height=100)])[0]
 
         # act
         deepcopy_drawer = copy.deepcopy(drawer)

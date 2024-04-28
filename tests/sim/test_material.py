@@ -1,5 +1,5 @@
-import unittest
 import copy
+import unittest
 
 from src.sim.material import gen_rand_material, Material, gen_rand_materials
 
@@ -18,8 +18,8 @@ class TestMaterial(unittest.TestCase):
         materials_to_generate = 5
 
         # act
-        material_generated = gen_rand_material(max_height)
-        materials = gen_rand_materials(materials_to_generate, max_height)
+        material_generated = gen_rand_material(min_height=minimum_height, max_height=max_height)
+        materials = gen_rand_materials(materials_to_generate, minimum_height, max_height)
 
         # assert
         # single material

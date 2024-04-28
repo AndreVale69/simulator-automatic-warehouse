@@ -1,10 +1,10 @@
 import copy
 
-from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.drawer_container import DrawerContainer
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class Carousel(DrawerContainer):
@@ -116,6 +116,19 @@ class Carousel(DrawerContainer):
         if type(self.get_buffer_entry()) is DrawerEntry:
             count += 1
         return count
+
+    def get_num_entries_free(self) -> int:
+        count = 0
+        for entry in self.get_container():
+            if type(entry) is EmptyEntry:
+                count += 1
+        return count
+
+    def is_full(self) -> bool:
+        return self.is_buffer_full() and self.is_deposit_full()
+
+    def is_empty(self) -> bool:
+        return not self.is_buffer_full() and not self.is_deposit_full()
 
     def is_buffer_full(self) -> bool:
         """

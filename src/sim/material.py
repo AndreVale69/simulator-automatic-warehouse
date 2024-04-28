@@ -105,33 +105,39 @@ class Material:
         return self.width
 
 
-def gen_rand_materials(how_many: int, max_height: int = 50) -> list[Material]:
+def gen_rand_materials(how_many: int, min_height: int = 25, max_height: int = 50) -> list[Material]:
     """
     Static method to generate random materials.
 
     :type how_many: int
+    :type min_height: int
     :type max_height: int
     :rtype: list[Material]
     :param how_many: how many materials to generate.
+    :param min_height: the minimum height (lower limit) of the material.
     :param max_height: the maximum height (upper limit) of the materials.
     :return: the generated materials list.
     """
     materials: list[Material] = []
     for i in range(how_many):
-        materials.append(gen_rand_material(max_height))
+        materials.append(gen_rand_material(min_height, max_height))
     return materials
 
 
-def gen_rand_material(max_height: int = 50) -> Material:
+def gen_rand_material(min_height: int = 25, max_height: int = 50) -> Material:
     """
     Static method to generate a random material.
 
+    :type min_height: int
     :type max_height: int
     :rtype: Material
+    :param min_height: the minimum height (lower limit) of the material.
     :param max_height: the maximum height (upper limit) of the material.
     :return: the material generated.
     """
-    # TODO: add min_height? Is it useful?
+    assert min_height <= max_height, "min_height must be less than max_height"
+    assert min_height > 0, "min_height must be greater than 0"
+    assert max_height > 0, "max_height must be greater than 0"
     name_materials = ['Shirt',
                       'Pasta',
                       'Tomato',
@@ -143,7 +149,7 @@ def gen_rand_material(max_height: int = 50) -> Material:
     barcode = uuid.uuid4().hex
     name = random.choice(name_materials)
     # height max is buffer height = 150
-    height = random.randint(25, max_height)
+    height = random.randint(min_height, max_height)
     length = random.randint(25, 150)
     width = random.randint(25, 150)
 

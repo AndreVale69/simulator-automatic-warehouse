@@ -1,69 +1,73 @@
 import copy
 import unittest
 
+from src.sim.status_warehouse.container.column import Column
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
-from src.sim.status_warehouse.container.column import Column
 from src.sim.warehouse import Warehouse, MinimumOffsetReturns
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class TestWarehouse(unittest.TestCase):
-    def setUp(self):
-        self.warehouse = Warehouse()
 
     def test_deepcopy(self):
         # arrange
+        warehouse = Warehouse()
 
         # act
-        deepcopy_warehouse = copy.deepcopy(self.warehouse)
+        deepcopy_warehouse = copy.deepcopy(warehouse)
 
         # assert
         self.assertIsInstance(deepcopy_warehouse, Warehouse)
-        self.assertEqual(self.warehouse, deepcopy_warehouse)
-        self.assertNotEqual(id(self.warehouse), id(deepcopy_warehouse))
+        self.assertEqual(warehouse, deepcopy_warehouse)
+        self.assertNotEqual(id(warehouse), id(deepcopy_warehouse))
 
     def test_set_pos_y_floor(self):
         # arrange
+        warehouse = Warehouse()
 
         # act
-        self.warehouse.set_pos_y_floor(15)
+        warehouse.set_pos_y_floor(15)
 
         # assert
-        self.assertEqual(self.warehouse.get_pos_y_floor(), 15)
-        self.assertRaises(Exception, self.warehouse.set_pos_y_floor, -15)
+        self.assertEqual(warehouse.get_pos_y_floor(), 15)
+        self.assertRaises(Exception, warehouse.set_pos_y_floor, -15)
 
     def test_add_column(self):
         # arrange
-        col = self.warehouse.get_column(0)
+        warehouse = Warehouse()
+        col = warehouse.get_column(0)
 
         # act
-        self.warehouse.add_column(col)
+        warehouse.add_column(col)
 
         # assert
-        self.assertEqual(self.warehouse.get_column(-1), col)
-        self.assertRaises(Exception, self.warehouse.add_column, None)
+        self.assertEqual(warehouse.get_column(-1), col)
+        self.assertRaises(Exception, warehouse.add_column, None)
 
     def test_get_minimum_offset(self):
         # arrange
+        warehouse = Warehouse()
         col = Column({
             'width': 200,
             'height': 1000,
             'x_offset': 1,
             'height_last_position': 75
-        }, self.warehouse)
-        self.warehouse.add_column(col)
+        }, warehouse)
+        warehouse.add_column(col)
 
         # act
-        minimum_offset: MinimumOffsetReturns = self.warehouse.get_minimum_offset()
+        minimum_offset: MinimumOffsetReturns = warehouse.get_minimum_offset()
 
         # assert
-        self.assertIn(col, self.warehouse.get_cols_container())
-        self.assertEqual(minimum_offset.index, len(self.warehouse.get_cols_container())-1)
+        self.assertIn(col, warehouse.get_cols_container())
+        self.assertEqual(minimum_offset.index, len(warehouse.get_cols_container())-1)
         self.assertEqual(minimum_offset.offset, 1)
 
     def test_is_full(self):
         # arrange
-        for col in self.warehouse.get_cols_container():
+        warehouse = Warehouse()
+        for col in warehouse.get_cols_container():
             for index, entry in enumerate(col.get_container()):
                 if isinstance(entry, EmptyEntry):
                     col.get_container()[index] = DrawerEntry(entry.get_offset_x(), entry.get_pos_y())
@@ -71,30 +75,53 @@ class TestWarehouse(unittest.TestCase):
         # act
 
         # assert
-        self.assertTrue(self.warehouse.is_full())
+        self.assertTrue(warehouse.is_full())
 
     def test_choice_random_drawer(self):
         # arrange
         drawers = []
+        warehouse = Warehouse()
 
         # act
-        for col in self.warehouse.get_cols_container():
+        for col in warehouse.get_cols_container():
             drawers.extend(col.get_drawers())
 
         # assert
-        self.assertIn(self.warehouse.choice_random_drawer(), drawers)
+        self.assertIn(warehouse.choice_random_drawer(), drawers)
 
     def test_choice_random_drawer_with_empty_column(self):
         # arrange
-        col = self.warehouse.get_column(0)
+        warehouse = Warehouse()
+        warehouse.add_column(Column({
+            "height": 325,
+            "x_offset": 125,
+            "width": 250,
+            "height_last_position": 75
+        }, warehouse))
         drawers = []
 
         # act
-        for index, entry in enumerate(col.get_container()):
-            if isinstance(entry, DrawerEntry):
-                col.get_container()[index] = EmptyEntry(entry.get_offset_x(), entry.get_pos_y())
-        for col in self.warehouse.get_cols_container():
+        for col in warehouse.get_cols_container():
             drawers.extend(col.get_drawers())
 
+        # assert
+        self.assertIn(warehouse.choice_random_drawer(), drawers)
+
+    def test_gen_rand(self):
         # arrange
-        self.assertIn(self.warehouse.choice_random_drawer(), drawers)
+        warehouse = Warehouse()
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
+        drawers_to_gen = config["simulation"]["drawers_to_gen"]
+        materials_to_gen = config["simulation"]["materials_to_gen"]
+        drawers_find = 0
+        materials_find = 0
+
+        # act
+        for col in warehouse.get_cols_container():
+            drawers_find += col.get_num_drawers()
+            for drawer in col.get_drawers():
+                materials_find += drawer.get_num_materials()
+
+        # assert
+        self.assertEqual(drawers_to_gen, drawers_find)
+        self.assertEqual(materials_to_gen, materials_find)
