@@ -21,6 +21,13 @@ class Entry:
             self.get_pos_y() == other.get_pos_y()
         )
 
+    def __hash__(self):
+        return (
+            13 ^
+            hash(self.get_offset_x()) ^
+            hash(self.get_pos_y())
+        )
+
     @abstractmethod
     def __deepcopy__(self, memo):
         pass

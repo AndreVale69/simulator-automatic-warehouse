@@ -30,6 +30,9 @@ class DrawerEntry(Entry):
             Entry.__eq__(self, other)
         )
 
+    def __hash__(self):
+        return 13 ^ Entry.__hash__(self)
+
     def get_drawer(self) -> Drawer:
         """
         Get the pointer to the drawer to which the DrawerEntry belongs.

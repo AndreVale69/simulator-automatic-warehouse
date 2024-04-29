@@ -118,6 +118,24 @@ class Warehouse:
             self.get_events_to_simulate() == other.get_events_to_simulate()
         )
 
+    def __hash__(self):
+        return (
+            13 ^
+            hash(self.get_height()) ^
+            hash(tuple(self.get_cols_container())) ^
+            hash(self.get_carousel()) ^
+            # hash(self.get_environment()) ^
+            # hash(self.get_simulation()) ^
+            hash(self.get_def_space()) ^
+            hash(self.get_speed_per_sec()) ^
+            hash(self.get_max_height_material()) ^
+            hash(self.get_pos_y_floor()) ^
+            hash(self.get_num_drawers()) ^
+            hash(self.get_sim_time()) ^
+            hash(self.get_sim_num_actions()) ^
+            hash(tuple(self.get_events_to_simulate()))
+        )
+
     def get_height(self) -> int:
         """
         Get the height of the warehouse.

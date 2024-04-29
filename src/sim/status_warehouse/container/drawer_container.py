@@ -51,6 +51,23 @@ class DrawerContainer:
             self.get_num_materials() == other.get_num_materials()
         )
 
+    def __hash__(self):
+        return (
+            13 ^
+            hash(self.get_height_warehouse()) ^
+            hash(self.get_def_space()) ^
+            hash(tuple(self.get_container())) ^
+            hash(self.get_offset_x()) ^
+            hash(self.get_height_col()) ^
+            hash(self.get_width()) ^
+            hash(self.get_num_drawers()) ^
+            hash(self.get_num_entries_occupied()) ^
+            hash(self.get_num_entries_free()) ^
+            hash(tuple(self.get_drawers())) ^
+            hash(tuple(self.get_entries_occupied())) ^
+            hash(self.get_num_materials())
+        )
+
     @abstractmethod
     def get_num_entries_free(self) -> int:
         """

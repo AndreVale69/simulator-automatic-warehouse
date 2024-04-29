@@ -15,12 +15,14 @@
   `materials_to_insert` parameter was larger than the `how_many` parameter.
 - Fixed `get_num_entries_free` in Column class. There were some problems because the last position of the warehouse was 
   considered multiple times (instead of only once).
+- Fixed `__hash__` in Drawer class. It throws an exception because Python can't hash a list.
 - Improved readability `calculate_max_height` method of the drawer class.
 - Improved readability `__eq__` method for material class.
 - Improved readability and naming of the methods used to decide where to insert a drawer.
 - Improved readability and speed of the `_high_position_algorithm`.
 - Improved readability of the `gen_rand` method in the `Warehouse` class.
 - Added new `__eq__` methods.
+- Added new `__hash__` methods.
 
 ### Other
 - Refactoring comments, change comment style.

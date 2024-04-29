@@ -56,6 +56,18 @@ class Carousel(DrawerContainer):
             DrawerContainer.__eq__(self, other)
         )
 
+    def __hash__(self):
+        return (
+            13 ^
+            hash(self.get_buffer()) ^
+            hash(self.get_deposit()) ^
+            hash(self.get_hole()) ^
+            hash(self.get_deposit_entry()) ^
+            hash(self.get_buffer_entry()) ^
+            hash(self.get_num_drawers()) ^
+            DrawerContainer.__hash__(self)
+        )
+
     def get_buffer(self) -> int:
         """
         Get the height of the buffer of the carousel.

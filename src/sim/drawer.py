@@ -10,7 +10,7 @@ class Drawer:
     Representation of the drawer (or tray) inside the warehouse.
     It contains all the information about the drawer and the methods for add/remove a material, and so on.
     """
-    def __init__(self, items: list = None):
+    def __init__(self, items: list[Material] = None):
         # items inside the drawer
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
@@ -32,7 +32,13 @@ class Drawer:
         )
 
     def __hash__(self):
-        return 13 ^ hash(self.get_items()) ^ hash(self.get_max_height()) ^ hash(self.get_max_num_space())
+        return (
+            13 ^
+            hash(tuple(self.get_items())) ^
+            hash(self.get_max_height()) ^
+            hash(self.get_max_num_space()) ^
+            hash(self.get_first_drawerEntry())
+        )
 
     def __deepcopy__(self, memo):
         copy_obj = Drawer(self.get_items())

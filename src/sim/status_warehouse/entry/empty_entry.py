@@ -22,3 +22,6 @@ class EmptyEntry(Entry):
             isinstance(other, EmptyEntry) and
             Entry.__eq__(self, other)
         )
+
+    def __hash__(self):
+        return 13 ^ Entry.__hash__(self)

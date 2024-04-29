@@ -54,6 +54,13 @@ class Column(DrawerContainer):
             DrawerContainer.__eq__(self, other)
         )
 
+    def __hash__(self):
+        return (
+            13 ^
+            hash(self.get_height_last_position()) ^
+            DrawerContainer.__hash__(self)
+        )
+
     def get_height_last_position(self) -> int:
         """
         Get the height of the last position.
