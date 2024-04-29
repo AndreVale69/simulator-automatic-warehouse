@@ -362,7 +362,6 @@ class Warehouse:
         # set new y position of the floor
         self.set_pos_y_floor(buf_pos)
 
-    # TODO: to optimize destination parameter
     def load_in_carousel(self, drawer_to_insert: Drawer, destination: EnumWarehouse, load_in_buffer: bool):
         """
         Simulation method used to load the carousel into the warehouse.
