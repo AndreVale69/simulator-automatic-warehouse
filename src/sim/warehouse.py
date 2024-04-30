@@ -244,6 +244,7 @@ class Warehouse:
         ris += self.get_carousel().get_num_drawers()
         return ris
 
+    # TODO: move to Simulation class
     def get_sim_time(self) -> int | None:
         """
         The maximum time of the simulation (config value).
@@ -253,6 +254,7 @@ class Warehouse:
         """
         return self.sim_time
 
+    # TODO: move to Simulation class
     def get_sim_num_actions(self) -> int:
         """
         Get the number of actions taken by the simulation.
@@ -262,6 +264,7 @@ class Warehouse:
         """
         return self.sim_num_actions
 
+    # TODO: move to Simulation class
     def get_events_to_simulate(self) -> list[str]:
         """
         Get the list of events to simulate.
@@ -447,7 +450,7 @@ class Warehouse:
         # calculate destination position
         decide_position_res = decide_position(
             columns=self.get_cols_container(),
-            space_req=drawer.get_max_num_space(),
+            space_req=drawer.get_num_space_occupied(),
             algorithm=Algorithm.HIGH_POSITION
         )
         pos_to_insert = decide_position_res.index

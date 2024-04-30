@@ -23,6 +23,7 @@
 - Improved readability of the `gen_rand` method in the `Warehouse` class.
 - Added new `__eq__` methods.
 - Added new `__hash__` methods.
+- Changed name of `get_max_num_space` method (Drawer class) to `get_num_space_occupied`.
 
 ### Other
 - Refactoring comments, change comment style.

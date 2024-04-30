@@ -105,7 +105,7 @@ class Column(DrawerContainer):
         :param drawer: drawer to be added.
         :param index: index of the column where to add the drawer.
         """
-        how_many = drawer.get_max_num_space() + index
+        how_many = drawer.get_num_space_occupied() + index
 
         drawer_entry = self.create_drawerEntry(drawer, index)
         # connect Entry to Drawer
@@ -179,7 +179,7 @@ class Column(DrawerContainer):
             try:
                 decide_position_res = decide_position(
                     columns=[self],
-                    space_req=drawer_to_insert.get_max_num_space(),
+                    space_req=drawer_to_insert.get_num_space_occupied(),
                     algorithm=Algorithm.HIGH_POSITION
                 )
             except ValueError:

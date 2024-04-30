@@ -4,12 +4,6 @@ from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSing
 
 
 class TestWarehouseConfigurationSingleton(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
     def test_singleton(self):
         # arrange
         warehouse_configuration_singleton = WarehouseConfigurationSingleton.get_instance()

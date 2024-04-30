@@ -24,20 +24,20 @@ class Drawer:
 
     def __eq__(self, other):
         return (
-            isinstance(other, Drawer) and
-            self.get_items() == other.get_items() and
-            self.get_max_height() == other.get_max_height() and
-            self.get_max_num_space() == other.get_max_num_space() and
-            self.get_first_drawerEntry() == other.get_first_drawerEntry()
+                isinstance(other, Drawer) and
+                self.get_items() == other.get_items() and
+                self.get_max_height() == other.get_max_height() and
+                self.get_num_space_occupied() == other.get_num_space_occupied() and
+                self.get_first_drawerEntry() == other.get_first_drawerEntry()
         )
 
     def __hash__(self):
         return (
-            13 ^
-            hash(tuple(self.get_items())) ^
-            hash(self.get_max_height()) ^
-            hash(self.get_max_num_space()) ^
-            hash(self.get_first_drawerEntry())
+                13 ^
+                hash(tuple(self.get_items())) ^
+                hash(self.get_max_height()) ^
+                hash(self.get_num_space_occupied()) ^
+                hash(self.get_first_drawerEntry())
         )
 
     def __deepcopy__(self, memo):
@@ -45,7 +45,7 @@ class Drawer:
         # copy_obj.items = copy.deepcopy(self.get_items(), memo)
         copy_obj.def_space = self.__get_def_space()
         copy_obj.max_height = self.get_max_height()
-        copy_obj.num_space = self.get_max_num_space()
+        copy_obj.num_space = self.get_num_space_occupied()
         copy_obj.best_offset_x = self.get_best_offset_x()
         copy_obj.best_y = self.get_best_y()
         return copy_obj
@@ -68,7 +68,7 @@ class Drawer:
         """
         return self.max_height
 
-    def get_max_num_space(self) -> int:
+    def get_num_space_occupied(self) -> int:
         """
         Get the number of occupied spaces in the warehouse.
 
@@ -235,4 +235,4 @@ def gen_rand_drawer(material_to_insert: Material = None) -> Drawer:
     :param material_to_insert: a material to insert.
     :return: the generated drawer.
     """
-    return Drawer([material_to_insert] if material_to_insert is not None else None)
+    return Drawer([material_to_insert] if material_to_insert is not None else material_to_insert)

@@ -175,7 +175,7 @@ class DrawerContainer:
             entry = col[index]
             if isinstance(entry, DrawerEntry):
                 # how many entries occupies the drawer
-                index += entry.get_drawer().get_max_num_space()
+                index += entry.get_drawer().get_num_space_occupied()
                 count += 1
             else:
                 index += 1
@@ -210,7 +210,7 @@ class DrawerContainer:
             if isinstance(entry, DrawerEntry):
                 # how many entries occupies the drawer
                 drawer = entry.get_drawer()
-                index += drawer.get_max_num_space()
+                index += drawer.get_num_space_occupied()
                 drawers.append(drawer)
             else:
                 index += 1
@@ -257,7 +257,7 @@ class DrawerContainer:
 
     def remove_drawer(self, drawer: Drawer) -> bool:
         """ Remove a drawer """
-        entries_to_rmv: int = drawer.get_max_num_space()
+        entries_to_rmv: int = drawer.get_num_space_occupied()
         for index, entry in enumerate(self.get_container()):
             # if is a DrawerEntry element
             # if the drawers are the same (see __eq__ method)
