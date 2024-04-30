@@ -31,6 +31,39 @@ class TestWarehouse(unittest.TestCase):
         self.assertEqual(warehouse.get_column(-1), col)
         self.assertRaises(Exception, warehouse.add_column, None)
 
+    def test_pop_column(self):
+        # arrange
+        warehouse = Warehouse()
+        num_cols_pre = warehouse.get_num_columns()
+        num_cols_expected = num_cols_pre - 1
+
+        # act
+        column_pop = warehouse.pop_column(0)
+        num_cols_actual = warehouse.get_num_columns()
+
+        # assert
+        self.assertNotIn(column_pop, warehouse.get_cols_container())
+        self.assertEqual(num_cols_actual, num_cols_expected)
+        self.assertNotEqual(num_cols_actual, num_cols_pre)
+        self.assertRaises(IndexError, warehouse.pop_column, num_cols_pre)
+
+    def test_remove_column(self):
+        # arrange
+        warehouse = Warehouse()
+        num_cols_pre = warehouse.get_num_columns()
+        num_cols_expected = num_cols_pre - 1
+        col_to_remove = warehouse.get_column(0)
+
+        # act
+        warehouse.remove_column(col_to_remove)
+        num_cols_actual = warehouse.get_num_columns()
+
+        # assert
+        self.assertNotIn(col_to_remove, warehouse.get_cols_container())
+        self.assertEqual(num_cols_actual, num_cols_expected)
+        self.assertNotEqual(num_cols_actual, num_cols_pre)
+        self.assertRaises(IndexError, warehouse.pop_column, num_cols_pre)
+
     def test_is_full(self):
         # arrange
         warehouse = Warehouse()
@@ -43,6 +76,25 @@ class TestWarehouse(unittest.TestCase):
 
         # assert
         self.assertTrue(warehouse.is_full())
+
+    def test_gen_rand(self):
+        # arrange
+        warehouse = Warehouse()
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
+        drawers_to_gen = config["simulation"]["drawers_to_gen"]
+        materials_to_gen = config["simulation"]["materials_to_gen"]
+        drawers_find = 0
+        materials_find = 0
+
+        # act
+        for col in warehouse.get_cols_container():
+            drawers_find += col.get_num_drawers()
+            for drawer in col.get_drawers():
+                materials_find += drawer.get_num_materials()
+
+        # assert
+        self.assertEqual(drawers_to_gen, drawers_find)
+        self.assertEqual(materials_to_gen, materials_find)
 
     def test_choice_random_drawer(self):
         # arrange
@@ -74,21 +126,12 @@ class TestWarehouse(unittest.TestCase):
         # assert
         self.assertIn(warehouse.choice_random_drawer(), drawers)
 
-    def test_gen_rand(self):
+    def test_reset(self):
         # arrange
         warehouse = Warehouse()
-        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        drawers_to_gen = config["simulation"]["drawers_to_gen"]
-        materials_to_gen = config["simulation"]["materials_to_gen"]
-        drawers_find = 0
-        materials_find = 0
 
         # act
-        for col in warehouse.get_cols_container():
-            drawers_find += col.get_num_drawers()
-            for drawer in col.get_drawers():
-                materials_find += drawer.get_num_materials()
+        warehouse.cleanup()
 
         # assert
-        self.assertEqual(drawers_to_gen, drawers_find)
-        self.assertEqual(materials_to_gen, materials_find)
+        self.assertEqual(warehouse.get_num_drawers(), 0)

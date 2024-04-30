@@ -76,12 +76,12 @@ class Warehouse:
         # number of actions
         self.sim_num_actions = config["simulation"]["num_actions"]
         # generate a configuration based on YAML
-        if config["simulation"]["gen_deposit"]:
-            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
-        if config["simulation"]["gen_buffer"]:
-            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
-        self.gen_rand(num_drawers=config["simulation"]["drawers_to_gen"],
-                      num_materials=config["simulation"]["materials_to_gen"])
+        self.gen_rand(
+            gen_deposit=config["simulation"]["gen_deposit"],
+            gen_buffer=config["simulation"]["gen_buffer"],
+            num_drawers=config["simulation"]["drawers_to_gen"],
+            num_materials=config["simulation"]["materials_to_gen"]
+        )
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
@@ -244,6 +244,15 @@ class Warehouse:
         ris += self.get_carousel().get_num_drawers()
         return ris
 
+    def get_num_columns(self) -> int:
+        """
+        Get the number of columns in the warehouse.
+
+        :rtype: int
+        :return: the number of columns in the warehouse.
+        """
+        return len(self.columns_container)
+
     # TODO: move to Simulation class
     def get_sim_time(self) -> int | None:
         """
@@ -341,6 +350,7 @@ class Warehouse:
         """
         return False not in [col.is_full() for col in self.get_cols_container()]
 
+    # TODO: simulation method, brainstorming...
     def go_to_deposit(self):
         """
         Simulation method used to go to deposit.
@@ -353,6 +363,7 @@ class Warehouse:
         # set new y position of the floor
         self.set_pos_y_floor(dep_pos)
 
+    # TODO: simulation method, brainstorming...
     def go_to_buffer(self):
         """
         Simulation method used to go to buffer.
@@ -365,6 +376,7 @@ class Warehouse:
         # set new y position of the floor
         self.set_pos_y_floor(buf_pos)
 
+    # TODO: simulation method, brainstorming...
     def load_in_carousel(self, drawer_to_insert: Drawer, destination: EnumWarehouse, load_in_buffer: bool):
         """
         Simulation method used to load the carousel into the warehouse.
@@ -398,6 +410,7 @@ class Warehouse:
         # and load inside the carousel
         yield self.env.process(self.load(drawer_to_insert, destination))
 
+    # TODO: simulation method, brainstorming...
     def loading_buffer_and_remove(self):
         """
         Vertical movement of carousel loading from buffer to deposit.
@@ -419,6 +432,7 @@ class Warehouse:
         # and insert drawer in correct position (outside)
         self.get_carousel().add_drawer(drawer_to_show)
 
+    # TODO: simulation method, brainstorming...
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
         """
         A simple vertical movement of the floor or the drawer inside the carousel (buffer to deposit).
@@ -438,6 +452,7 @@ class Warehouse:
         vertical_move = (eff_distance / 100) / self.get_speed_per_sec()
         return vertical_move
 
+    # TODO: simulation method, brainstorming...
     def allocate_best_pos(self, drawer: Drawer):
         """
         Simulation method used to allocate the best position of the drawer in the warehouse.
@@ -463,6 +478,7 @@ class Warehouse:
         # set new y position of the floor
         self.set_pos_y_floor(pos_to_insert)
 
+    # TODO: simulation method, brainstorming...
     def reach_drawer_height(self, drawer: Drawer):
         """
         Simulation method used to reach the height of the drawer in the warehouse.
@@ -482,6 +498,7 @@ class Warehouse:
         # set new y position of the floor
         self.set_pos_y_floor(y)
 
+    # TODO: simulation method, brainstorming...
     def unload(self, drawer: Drawer, rmv_from_cols: bool):
         """
         Simulation method used to unload a drawer from the carousel or from the columns.
@@ -509,6 +526,7 @@ class Warehouse:
         #         if col.remove_drawer(drawer):
         #             break
 
+    # TODO: simulation method, brainstorming...
     def load(self, drawer: Drawer, destination: EnumWarehouse):
         """
         Simulation method used to load the drawer into the warehouse.
@@ -535,6 +553,7 @@ class Warehouse:
                     col.add_drawer(drawer, dest_y_drawer)
                     break
 
+    # TODO: simulation method, brainstorming...
     def horiz_move(self, offset_x: int) -> float:
         """
         Search in the column/carousel where is the drawer.
@@ -553,15 +572,35 @@ class Warehouse:
                 if col.get_offset_x() == offset_x:
                     return (col.get_width() / 100) / self.get_speed_per_sec()
 
-    def gen_rand(self, num_drawers: int, num_materials: int):
+    def gen_rand(self, gen_deposit: bool, gen_buffer: bool, num_drawers: int, num_materials: int):
         """
         Generate a random warehouse.
+        Be careful!
+        Every entry in the warehouse will be reset!
 
+        :type gen_deposit: bool
+        :type gen_buffer: bool
         :type num_drawers: int
         :type num_materials: int
+        :param gen_deposit: True generate a drawer in the deposit, otherwise generate an EmptyEntry
+        :param gen_buffer: True generate a drawer in the buffer, otherwise generate an EmptyEntry
         :param num_drawers: numbers of drawers
         :param num_materials: numbers of materials
         """
+        from src.sim.material import gen_rand_material
+
+        # cleanup the warehouse
+        self.cleanup()
+
+        # generate a drawer in the deposit and/or buffer
+        if gen_deposit:
+            # create a new one
+            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
+        if gen_buffer:
+            # create a new one
+            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
+
+        # populate the columns
         columns: list[Column] = self.get_cols_container()
         # until there are drawers to insert and the warehouse isn't full
         while num_drawers > 0 and not self.is_full():
@@ -648,34 +687,18 @@ class Warehouse:
         :param gen_buffer: True to generate a drawer in the buffer, False otherwise
         :param time: the maximum time of the simulation, otherwise None to remove the limit
         """
-        from src.sim.material import gen_rand_material
-
-        # clean warehouse datas:
-        # - clean all columns entry
-        for column in self.columns_container:
-            column.reset_container()
-        # - clean all carousel entry
-        self.carousel.reset_container()
-
         # setting new simulation settings:
         self.sim_time = time
         self.sim_num_actions = num_actions
-        if gen_deposit:
-            # create a new one
-            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
-        if gen_buffer:
-            # create a new one
-            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
 
-        # generate drawers and materials
-        self.gen_rand(num_drawers=num_gen_drawers, num_materials=num_gen_materials)
+        # random gen
+        self.gen_rand(gen_deposit, gen_buffer, num_gen_drawers, num_gen_materials)
 
         # reset events to simulate list
         self.events_to_simulate.clear()
 
         # run a new simulation
         self.run_simulation()
-
 
     def choice_random_drawer(self) -> Drawer:
         """
@@ -689,3 +712,9 @@ class Warehouse:
             container_drawer_entry.extend(col.get_drawers())
         assert len(container_drawer_entry) > 0, "The warehouse is empty!"
         return random.choice(container_drawer_entry)
+
+    def cleanup(self):
+        """ Cleanup the warehouse. Each Entry will be EmptyEntry. """
+        for column in self.columns_container:
+            column.reset_container()
+        self.carousel.reset_container()

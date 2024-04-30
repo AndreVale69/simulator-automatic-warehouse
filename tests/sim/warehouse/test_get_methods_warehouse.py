@@ -130,6 +130,17 @@ class TestGetMethodsWarehouse(unittest.TestCase):
         # assert
         self.assertEqual(warehouse.get_num_drawers(), drawers_expected)
 
+    def test_get_num_columns(self):
+        # arrange
+        warehouse = self.warehouse
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
+
+        # act
+        columns_expected: int = len(config['columns'])
+
+        # assert
+        self.assertEqual(warehouse.get_num_columns(), columns_expected)
+
     def test_get_minimum_offset(self):
         # arrange
         warehouse = Warehouse()

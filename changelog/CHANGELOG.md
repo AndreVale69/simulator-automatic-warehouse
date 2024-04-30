@@ -5,10 +5,14 @@
 ### New Features and Improvements
 - Random drawer generation added to the drawer class. It's now possible to generate only one drawer.
 - Improved `get_minimum_offset` method to calculate the minimum offset between columns in the warehouse.
+- Improved `gen_rand` method in the Warehouse class. Now it cleanup the warehouse and then generate a deposit 
+  (bool parameter), a buffer (bool parameter), and populates the columns.
 - Created a new module called `Algorithm` where it's possible to insert a new algorithm.
 - New methods added to the `Column` and `Carousel` classes: `is_full` and `is_empty`.
 - Moved the `gen_materials_and_drawers` static method from `Warehouse` to the `Column` class (for logical reasons).
 - Added a `min_height` parameter when randomly generating a material in the `Material` class.
+- Added a `cleanup` method to cleanup the warehouse.
+- Added a `get_num_columns` method to get the number of columns in the warehouse.
 
 ### Bug Fixes and Enhancements
 - Fixed random drawers generation in `Drawer` class. There were some problems (raise `ValueError`) when the
