@@ -32,3 +32,27 @@ class TestColumn(unittest.TestCase):
         # assert
         self.assertFalse(last_position_is_occupied_col1)
         self.assertTrue(last_position_is_occupied_col2)
+
+    def test_is_full(self):
+        # arrange
+        column = self.column
+        container = column.get_container()
+        for i in range(len(container)):
+            container[i] = DrawerEntry(container[i].get_offset_x(), i)
+
+        # act
+        is_full = column.is_full()
+
+        # assert
+        self.assertTrue(is_full)
+
+    def test_is_empty(self):
+        # arrange
+        column = self.column
+        column.reset_container()
+
+        # act
+        is_empty = column.is_empty()
+
+        # assert
+        self.assertTrue(is_empty)

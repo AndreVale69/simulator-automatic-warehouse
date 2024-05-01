@@ -103,7 +103,7 @@ class Column(DrawerContainer):
         return self.get_num_entries_free() == 0
 
     def is_empty(self) -> bool:
-        return (self.get_height_warehouse() - self.get_height_last_position() + 1) == self.get_num_entries_free()
+        return (self.get_height_container() - self.height_last_position + 1) == self.get_num_entries_free()
 
     def add_drawer(self, drawer: Drawer, index: int = 0):
         """
