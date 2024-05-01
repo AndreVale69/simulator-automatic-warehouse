@@ -33,12 +33,12 @@ class Column(DrawerContainer):
         self.height_last_position = info["height_last_position"] // self.get_def_space()
 
         # create container
-        for i in range(self.get_height_col()):
+        for i in range(self.get_height_container()):
             self.create_new_space(EmptyEntry(info["x_offset"], i))
 
     def __deepcopy__(self, memo):
         info: dict = {
-            "height": self.get_height_col() * self.get_def_space(),
+            "height": self.get_height_container() * self.get_def_space(),
             "x_offset": self.get_offset_x(),
             "width": self.get_width(),
             "height_last_position": self.get_height_last_position() * self.get_def_space()
@@ -72,22 +72,33 @@ class Column(DrawerContainer):
 
     def get_num_entries_free(self) -> int:
         count = 0
-        empty_entries_last_position = 0
+        entries_to_remove = 0
+        container = self.get_container()
         height_last_position = self.get_height_last_position()
+
         # count the number of empty entries
-        for entry in self.get_container():
-            if type(entry) is EmptyEntry:
+        for entry in container:
+            if isinstance(entry, EmptyEntry):
                 count += 1
-        # count the number of empty entries in the last position
-        for index in range(height_last_position):
-            if type(self.get_container()[index]) is EmptyEntry:
-                empty_entries_last_position += 1
-        # remove the clones of the empty entry
-        count -= empty_entries_last_position
-        # add the empty entry again if it is removed
-        if empty_entries_last_position == height_last_position:
-            count += 1
-        return count
+
+        # if the last position is not occupied, remove the clones
+        if not self.last_position_is_occupied():
+            return count - height_last_position + 1
+
+        # otherwise, if it's occupied, remove the garbage entries
+        for index in range(0, height_last_position):
+            if isinstance(container[index], EmptyEntry):
+                entries_to_remove += 1
+        return count - entries_to_remove
+
+    def last_position_is_occupied(self) -> bool:
+        """
+        Check if the last position is occupied.
+
+        :rtype: bool
+        :return: True if the last position is occupied, False otherwise.
+        """
+        return isinstance(self.container[self.height_last_position - 1], DrawerEntry)
 
     def is_full(self) -> bool:
         return self.get_num_entries_free() == 0

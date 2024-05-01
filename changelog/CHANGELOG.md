@@ -14,6 +14,7 @@
 - Added a `cleanup` method to cleanup the warehouse.
 - Added a `get_num_columns` method to get the number of columns in the warehouse.
 - Added `get_deposit_drawer` and `get_buffer_drawer` methods to the `Carousel` class (useful methods).
+- Added `last_position_is_occupied` method to the `Column` class.
 
 ### Bug Fixes and Enhancements
 - Fixed random drawers generation in `Drawer` class. There were some problems (raise `ValueError`) when the
@@ -33,6 +34,7 @@
 - Added new `__eq__` methods.
 - Added new `__hash__` methods.
 - Changed name of `get_max_num_space` method (`Drawer` class) to `get_num_space_occupied`.
+- Changed name of `get_height_col` method (`DrawerContainer` class) to `get_height_container`.
 
 ### Other
 - Refactoring comments, change comment style.

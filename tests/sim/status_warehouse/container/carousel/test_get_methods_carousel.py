@@ -7,7 +7,7 @@ from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.warehouse import Warehouse
 
 
-class TestGetMethodsWarehouse(unittest.TestCase):
+class TestGetMethodsCarousel(unittest.TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = {

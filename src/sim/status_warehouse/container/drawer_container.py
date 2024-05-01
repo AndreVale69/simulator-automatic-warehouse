@@ -7,15 +7,15 @@ from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSing
 
 
 class DrawerContainer:
-    def __init__(self, height_col: int, offset_x: int, width: int, warehouse):
+    def __init__(self, height: int, offset_x: int, width: int, warehouse):
         """
         A superclass representing the drawer container of a column or carousel.
 
-        :type height_col: int
+        :type height: int
         :type offset_x: int
         :type width: int
         :type warehouse: Warehouse
-        :param height_col: height of the container.
+        :param height: height of the container.
         :param offset_x: x offset of the container.
         :param width: width of the container.
         :param warehouse: warehouse where the container is stored.
@@ -27,7 +27,7 @@ class DrawerContainer:
         self.height_warehouse = config["height_warehouse"]
         self.def_space = config["default_height_space"]
         self.width = width
-        self.height_column = height_col // self.get_def_space()
+        self.height_container = height // self.get_def_space()
         self.offset_x = offset_x
 
     @abstractmethod
@@ -36,36 +36,36 @@ class DrawerContainer:
 
     def __eq__(self, other):
         return (
-            isinstance(other, DrawerContainer) and
-            self.get_height_warehouse() == other.get_height_warehouse() and
-            self.get_def_space() == other.get_def_space() and
-            self.get_container() == other.get_container() and
-            self.get_offset_x() == other.get_offset_x() and
-            self.get_height_col() == other.get_height_col() and
-            self.get_width() == other.get_width() and
-            self.get_num_drawers() == other.get_num_drawers() and
-            self.get_num_entries_occupied() == other.get_num_entries_occupied() and
-            self.get_num_entries_free() == other.get_num_entries_free() and
-            self.get_drawers() == other.get_drawers() and
-            self.get_entries_occupied() == other.get_entries_occupied() and
-            self.get_num_materials() == other.get_num_materials()
+                isinstance(other, DrawerContainer) and
+                self.get_height_warehouse() == other.get_height_warehouse() and
+                self.get_def_space() == other.get_def_space() and
+                self.get_container() == other.get_container() and
+                self.get_offset_x() == other.get_offset_x() and
+                self.get_height_container() == other.get_height_container() and
+                self.get_width() == other.get_width() and
+                self.get_num_drawers() == other.get_num_drawers() and
+                self.get_num_entries_occupied() == other.get_num_entries_occupied() and
+                self.get_num_entries_free() == other.get_num_entries_free() and
+                self.get_drawers() == other.get_drawers() and
+                self.get_entries_occupied() == other.get_entries_occupied() and
+                self.get_num_materials() == other.get_num_materials()
         )
 
     def __hash__(self):
         return (
-            13 ^
-            hash(self.get_height_warehouse()) ^
-            hash(self.get_def_space()) ^
-            hash(tuple(self.get_container())) ^
-            hash(self.get_offset_x()) ^
-            hash(self.get_height_col()) ^
-            hash(self.get_width()) ^
-            hash(self.get_num_drawers()) ^
-            hash(self.get_num_entries_occupied()) ^
-            hash(self.get_num_entries_free()) ^
-            hash(tuple(self.get_drawers())) ^
-            hash(tuple(self.get_entries_occupied())) ^
-            hash(self.get_num_materials())
+                13 ^
+                hash(self.get_height_warehouse()) ^
+                hash(self.get_def_space()) ^
+                hash(tuple(self.get_container())) ^
+                hash(self.get_offset_x()) ^
+                hash(self.get_height_container()) ^
+                hash(self.get_width()) ^
+                hash(self.get_num_drawers()) ^
+                hash(self.get_num_entries_occupied()) ^
+                hash(self.get_num_entries_free()) ^
+                hash(tuple(self.get_drawers())) ^
+                hash(tuple(self.get_entries_occupied())) ^
+                hash(self.get_num_materials())
         )
 
     @abstractmethod
@@ -143,14 +143,14 @@ class DrawerContainer:
         """
         return self.offset_x
 
-    def get_height_col(self) -> int:
+    def get_height_container(self) -> int:
         """
         Get the height of the container.
 
         :rtype: int
         :return: the height of the container.
         """
-        return self.height_column
+        return self.height_container
 
     def get_width(self) -> int:
         """
