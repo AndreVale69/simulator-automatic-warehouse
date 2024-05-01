@@ -104,7 +104,17 @@ class Carousel(DrawerContainer):
         :rtype: DrawerEntry | EmptyEntry
         :return: the deposit (bay) entry or an empty entry.
         """
-        return self.get_container()[0]
+        return self.container[0]
+
+    def get_deposit_drawer(self) -> Drawer:
+        """
+        Get the deposit (bay) drawer.
+
+        :rtype: Drawer
+        :return: the Drawer object of the deposit (bay).
+        :raises AttributeError: when the deposit (bay) is empty and there is no drawer.
+        """
+        return self.container[0].get_drawer()
 
     def get_buffer_entry(self) -> DrawerEntry | EmptyEntry:
         """
@@ -113,7 +123,17 @@ class Carousel(DrawerContainer):
         :rtype: DrawerEntry | EmptyEntry
         :return: the buffer entry or an empty entry.
         """
-        return self.get_container()[1]
+        return self.container[1]
+
+    def get_buffer_drawer(self) -> Drawer:
+        """
+        Get the buffer entry or an empty entry.
+
+        :rtype: Drawer
+        :return: the buffer entry or an empty entry.
+        :raises AttributeError: when the buffer is empty and there is no drawer.
+        """
+        return self.container[1].get_drawer()
 
     def get_num_drawers(self) -> int:
         """
@@ -145,7 +165,7 @@ class Carousel(DrawerContainer):
         :return: True if is full, False otherwise.
         """
         # check if the first position of buffer have a Drawer
-        return True if type(self.get_buffer_entry()) is DrawerEntry else False
+        return isinstance(self.get_buffer_entry(), DrawerEntry)
 
     def is_deposit_full(self) -> bool:
         """
@@ -155,38 +175,27 @@ class Carousel(DrawerContainer):
         :return: True if is full, False otherwise.
         """
         # check if the first position of deposit have a Drawer
-        return True if type(self.get_deposit_entry()) is DrawerEntry else False
+        return isinstance(self.get_deposit_entry(), DrawerEntry)
 
-    # override
-    def add_drawer(self, drawer: Drawer, index: int = None) -> bool:
+    def add_drawer(self, drawer: Drawer):
         """
-        Add a drawer in buffer area or show as an output.
+        Add a drawer in the buffer area or show as an output (deposit).
 
         :type drawer: Drawer
-        :type index: int
-        :rtype: bool
-        :param index: position of the drawer to insert.
         :param drawer: to show or to save.
-        :return: True there is space and the operation is success, False there isn't space, and the operation is failed.
+        :raises RuntimeError: if the drawer already exists.
         """
-        deposit = self.get_deposit()
-        store = self.get_height_col()
-        hole = self.get_hole()
-        first_y = store + hole + deposit
+        first_y = self.get_height_col() + self.hole + self.deposit
+        is_deposit_full = self.is_deposit_full()
 
-        # check if it's empty the deposit
-        if isinstance(self.get_container()[0], EmptyEntry):
-            self.create_drawerEntry(drawer, first_y, is_buffer=False)
-            return True
-        else:
-            # otherwise, check if it's empty the buffer
-            if isinstance(self.get_container()[1], EmptyEntry):
-                self.create_drawerEntry(drawer, first_y, is_buffer=True)
-                return True
-            else:
-                raise RuntimeError("Collision!")
+        # if the carousel is full, exception
+        if self.is_buffer_full() and is_deposit_full:
+            raise RuntimeError("Collision!")
 
-    def create_drawerEntry(self, drawer: Drawer, first_y: int, is_buffer: bool):
+        # add the drawerEntry in the buffer iff the deposit is full
+        self._create_drawerEntry(drawer, first_y, is_buffer=is_deposit_full)
+
+    def _create_drawerEntry(self, drawer: Drawer, first_y: int, is_buffer: bool):
         """
         Create a drawer entry.
 
@@ -198,8 +207,9 @@ class Carousel(DrawerContainer):
         :param is_buffer: True if to insert in the buffer position, False if to insert in the bay position.
         """
         # initialize positions
-        drawer_entry = DrawerEntry(self.get_offset_x(), first_y + self.get_buffer()) if is_buffer \
-                  else DrawerEntry(self.get_offset_x(), first_y)
+        if is_buffer:
+            first_y += self.get_buffer()
+        drawer_entry = DrawerEntry(self.get_offset_x(), first_y)
         # connect Drawer to entry
         drawer_entry.add_drawer(drawer)
         # add to container
@@ -217,13 +227,16 @@ class Carousel(DrawerContainer):
         :param drawer: the drawer to remove.
         :return: True if the drawer was removed, False otherwise.
         """
-        # return super().remove_drawer(drawer)
         first_entry: DrawerEntry = drawer.get_first_drawerEntry()
-        entry_y_to_rmv: int = first_entry.get_pos_y()
-        entry_x_to_rmv: int = first_entry.get_offset_x()
+        entry_y_to_rmv = first_entry.get_pos_y()
+        entry_x_to_rmv = first_entry.get_offset_x()
+        deposit_entry: DrawerEntry | EmptyEntry = self.container[0]
+        buffer_entry: DrawerEntry | EmptyEntry = self.container[1]
 
-        for index, entry in enumerate(self.get_container()):
-            if entry.get_pos_y() == entry_y_to_rmv:
-                self.get_container()[index] = EmptyEntry(entry_x_to_rmv, entry_y_to_rmv)
-                return True
+        if isinstance(deposit_entry, DrawerEntry) and deposit_entry.get_drawer() == drawer:
+            self.container[0] = EmptyEntry(entry_x_to_rmv, entry_y_to_rmv)
+            return True
+        elif isinstance(buffer_entry, DrawerEntry) and buffer_entry.get_drawer() == drawer:
+            self.container[1] = EmptyEntry(entry_x_to_rmv, entry_y_to_rmv)
+            return True
         return False
