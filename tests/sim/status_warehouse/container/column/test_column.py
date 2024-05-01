@@ -82,3 +82,16 @@ class TestColumn(unittest.TestCase):
         # assert
         self.assertTrue(isinstance(column.get_container()[index], DrawerEntry))
         self.assertTrue(column.remove_drawer(drawer))
+
+    def test_gen_materials_and_drawers(self):
+        # arrange
+        column = self.column
+        materials_to_add = 3
+        drawers_to_add = 3
+
+        # act
+        res = column.gen_materials_and_drawers(num_drawers=drawers_to_add, num_materials=materials_to_add)
+
+        # assert
+        self.assertEqual(res.drawers_inserted, drawers_to_add)
+        self.assertEqual(res.materials_inserted, materials_to_add)
