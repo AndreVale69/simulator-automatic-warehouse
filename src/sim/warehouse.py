@@ -543,7 +543,7 @@ class Warehouse:
         # update warehouse
         # if destination is carousel, add
         if destination == EnumWarehouse.CAROUSEL:
-            self.get_carousel().add_drawer(drawer, dest_y_drawer)
+            self.get_carousel().add_drawer(drawer)
         else:
             # otherwise, check the offset of column
             for col in self.get_cols_container():

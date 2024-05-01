@@ -3,9 +3,9 @@
 ## v0.0.2
 
 ### New Features and Improvements
-- Random drawer generation added to the drawer class. It's now possible to generate only one drawer.
+- Random drawer generation added to the `Drawer` class. It's now possible to generate only one drawer.
 - Improved `get_minimum_offset` method to calculate the minimum offset between columns in the warehouse.
-- Improved `gen_rand` method in the Warehouse class. Now it cleanup the warehouse and then generate a deposit 
+- Improved `gen_rand` method in the `Warehouse` class. Now it cleanup the warehouse and then generate a deposit 
   (bool parameter), a buffer (bool parameter), and populates the columns.
 - Created a new module called `Algorithm` where it's possible to insert a new algorithm.
 - New methods added to the `Column` and `Carousel` classes: `is_full` and `is_empty`.
@@ -13,21 +13,26 @@
 - Added a `min_height` parameter when randomly generating a material in the `Material` class.
 - Added a `cleanup` method to cleanup the warehouse.
 - Added a `get_num_columns` method to get the number of columns in the warehouse.
+- Added `get_deposit_drawer` and `get_buffer_drawer` methods to the `Carousel` class (useful methods).
 
 ### Bug Fixes and Enhancements
 - Fixed random drawers generation in `Drawer` class. There were some problems (raise `ValueError`) when the
   `materials_to_insert` parameter was larger than the `how_many` parameter.
-- Fixed `get_num_entries_free` in Column class. There were some problems because the last position of the warehouse was 
-  considered multiple times (instead of only once).
-- Fixed `__hash__` in Drawer class. It throws an exception because Python can't hash a list.
-- Improved readability `calculate_max_height` method of the drawer class.
-- Improved readability `__eq__` method for material class.
+- Fixed `get_num_entries_free` in `Column` class. 
+  There were some problems because the last position of the warehouse was considered multiple times 
+  (instead of only once).
+- Fixed `__hash__` in `Drawer` class. It throws an exception because Python can't hash a list.
+- Fixed `remove_drawer` in the `Carousel` class. 
+  It returns true if a drawer isn't in the carousel. 
+  This fix improves performance because it only checks two items (not the whole container...).
+- Improved readability `calculate_max_height` method of the `Drawer` class.
+- Improved readability `__eq__` method for `Material` class.
 - Improved readability and naming of the methods used to decide where to insert a drawer.
 - Improved readability and speed of the `_high_position_algorithm`.
 - Improved readability of the `gen_rand` method in the `Warehouse` class.
 - Added new `__eq__` methods.
 - Added new `__hash__` methods.
-- Changed name of `get_max_num_space` method (Drawer class) to `get_num_space_occupied`.
+- Changed name of `get_max_num_space` method (`Drawer` class) to `get_num_space_occupied`.
 
 ### Other
 - Refactoring comments, change comment style.

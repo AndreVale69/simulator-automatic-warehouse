@@ -95,8 +95,7 @@ class Column(DrawerContainer):
     def is_empty(self) -> bool:
         return (self.get_height_warehouse() - self.get_height_last_position() + 1) == self.get_num_entries_free()
 
-    # override
-    def add_drawer(self, drawer: Drawer, index: int = None):
+    def add_drawer(self, drawer: Drawer, index: int = 0):
         """
         Add a drawer to the column.
 
@@ -107,15 +106,15 @@ class Column(DrawerContainer):
         """
         how_many = drawer.get_num_space_occupied() + index
 
-        drawer_entry = self.create_drawerEntry(drawer, index)
+        drawer_entry = self._create_drawerEntry(drawer, index)
         # connect Entry to Drawer
         drawer.set_first_drawerEntry(drawer_entry)
         index += 1
 
         for index in range(index, how_many):
-            self.create_drawerEntry(drawer, index)
+            self._create_drawerEntry(drawer, index)
 
-    def create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
+    def _create_drawerEntry(self, drawer: Drawer, index: int) -> DrawerEntry:
         """
         Create a drawer entry and add it to the column.
 

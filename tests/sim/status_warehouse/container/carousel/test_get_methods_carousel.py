@@ -1,5 +1,6 @@
 import unittest
 
+from src.sim.drawer import Drawer
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.status_warehouse.container.carousel import Carousel
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
@@ -61,6 +62,20 @@ class TestGetMethodsWarehouse(unittest.TestCase):
         # assert
         self.assertEqual(deposit_entry_get, deposit_entry_expected)
 
+    def test_get_deposit_drawer(self):
+        # arrange
+        deposit_drawer = Drawer()
+        carousel = self.carousel
+        carousel.reset_container()
+        carousel.add_drawer(deposit_drawer)
+
+        # act
+        deposit_drawer_get = carousel.get_deposit_drawer()
+        deposit_drawer_expected = deposit_drawer
+
+        # assert
+        self.assertEqual(deposit_drawer_get, deposit_drawer_expected)
+
     def test_get_buffer_entry(self):
         # arrange
         carousel = self.carousel
@@ -71,6 +86,22 @@ class TestGetMethodsWarehouse(unittest.TestCase):
 
         # assert
         self.assertEqual(buffer_entry_get, buffer_entry_expected)
+
+    def test_get_buffer_drawer(self):
+        # arrange
+        deposit_drawer = Drawer()
+        buffer_drawer = Drawer()
+        carousel = self.carousel
+        carousel.reset_container()
+        carousel.add_drawer(deposit_drawer)
+        carousel.add_drawer(buffer_drawer)
+
+        # act
+        buffer_drawer_get = carousel.get_buffer_drawer()
+        buffer_drawer_expected = buffer_drawer
+
+        # assert
+        self.assertEqual(buffer_drawer_get, buffer_drawer_expected)
 
     def test_get_num_drawers(self):
         # arrange
@@ -94,4 +125,3 @@ class TestGetMethodsWarehouse(unittest.TestCase):
 
         # assert
         self.assertEqual(num_entries_free_get, num_entries_free_expected)
-        

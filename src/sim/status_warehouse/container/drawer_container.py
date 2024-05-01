@@ -274,7 +274,3 @@ class DrawerContainer:
             # if it's a drawer, remove it (overwriting)
             if isinstance(entry, DrawerEntry):
                 self.container[index] = EmptyEntry(offset_x=offset_x, pos_y=entry.get_pos_y())
-
-    @abstractmethod
-    def add_drawer(self, drawer: Drawer, index: int = None):
-        pass
