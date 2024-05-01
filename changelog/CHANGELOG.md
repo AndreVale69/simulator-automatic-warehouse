@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v0.0.2
+## v1.0.0
 
 ### New Features and Improvements
 - Random drawer generation added to the `Drawer` class. It's now possible to generate only one drawer.

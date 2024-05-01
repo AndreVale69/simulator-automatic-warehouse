@@ -30,7 +30,7 @@ from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 
 
 logger = logging.getLogger(__name__)
-__VERSION__ = '0.0.2'
+__VERSION__ = '1.0.0'
 
 
 
