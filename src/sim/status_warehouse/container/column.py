@@ -71,8 +71,7 @@ class Column(DrawerContainer):
         return self.height_last_position
 
     def get_num_entries_free(self) -> int:
-        count = 0
-        entries_to_remove = 0
+        count = entries_to_remove = 0
         container = self.get_container()
         height_last_position = self.get_height_last_position()
 
