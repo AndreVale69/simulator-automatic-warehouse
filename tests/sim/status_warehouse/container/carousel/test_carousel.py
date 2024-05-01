@@ -68,7 +68,7 @@ class TestCarousel(unittest.TestCase):
         carousel = warehouse.get_carousel()
 
         # act
-        warehouse.cleanup()
+        carousel.reset_container()
         self.assertTrue(carousel.is_empty())
         carousel.add_drawer(drawer)
 
@@ -84,7 +84,7 @@ class TestCarousel(unittest.TestCase):
         carousel = warehouse.get_carousel()
 
         # act
-        warehouse.cleanup()
+        carousel.reset_container()
         self.assertTrue(carousel.is_empty())
         carousel.add_drawer(drawer_1)
         carousel.add_drawer(drawer_2)

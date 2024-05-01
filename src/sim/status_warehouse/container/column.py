@@ -154,7 +154,16 @@ class Column(DrawerContainer):
         :param drawer: the drawer to be removed.
         :return: True if the drawer was removed, False otherwise.
         """
-        return super().remove_drawer(drawer)
+        entries_to_rmv: int = drawer.get_num_space_occupied()
+        container = self.get_container()
+        for index, entry in enumerate(container):
+            # if is a DrawerEntry element
+            # if the drawers are the same (see __eq__ method)
+            if isinstance(entry, DrawerEntry) and entry.get_drawer() == drawer:
+                container[index] = EmptyEntry(entry.get_offset_x(), entry.get_pos_y())
+                entries_to_rmv -= 1
+                if entries_to_rmv == 0:
+                    return True
 
     def gen_materials_and_drawers(self, num_drawers: int, num_materials: int) -> GenMaterialsAndDrawersReturns:
         """

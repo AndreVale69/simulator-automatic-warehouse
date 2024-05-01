@@ -255,18 +255,6 @@ class DrawerContainer:
         """
         self.container.append(element)
 
-    def remove_drawer(self, drawer: Drawer) -> bool:
-        """ Remove a drawer """
-        entries_to_rmv: int = drawer.get_num_space_occupied()
-        for index, entry in enumerate(self.get_container()):
-            # if is a DrawerEntry element
-            # if the drawers are the same (see __eq__ method)
-            if isinstance(entry, DrawerEntry) and entry.get_drawer() == drawer:
-                self.get_container()[index] = EmptyEntry(entry.get_offset_x(), entry.get_pos_y())
-                entries_to_rmv -= 1
-                if entries_to_rmv == 0:
-                    return True
-
     def reset_container(self):
         """ Clean up the container using EmptyEntry instances. """
         offset_x = self.offset_x

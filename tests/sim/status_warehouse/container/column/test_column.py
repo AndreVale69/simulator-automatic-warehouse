@@ -1,6 +1,7 @@
 import copy
 import unittest
 
+from src.sim.drawer import Drawer
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.warehouse import Warehouse
 from src.sim.status_warehouse.container.column import Column
@@ -56,3 +57,28 @@ class TestColumn(unittest.TestCase):
 
         # assert
         self.assertTrue(is_empty)
+
+    def test_add_drawer(self):
+        # arrange
+        drawer = Drawer()
+        column = self.column
+        index = column.get_height_container()-1
+
+        # act
+        column.add_drawer(drawer, index)
+
+        # assert
+        self.assertTrue(isinstance(column.get_container()[index], DrawerEntry))
+
+    def test_remove_drawer(self):
+        # arrange
+        drawer = Drawer()
+        column = self.column
+        index = column.get_height_container() - 1
+
+        # act
+        column.add_drawer(drawer, index)
+
+        # assert
+        self.assertTrue(isinstance(column.get_container()[index], DrawerEntry))
+        self.assertTrue(column.remove_drawer(drawer))

@@ -10,6 +10,7 @@
 - Created a new module called `Algorithm` where it's possible to insert a new algorithm.
 - New methods added to the `Column` and `Carousel` classes: `is_full` and `is_empty`.
 - Moved the `gen_materials_and_drawers` static method from `Warehouse` to the `Column` class (for logical reasons).
+- Moved the `remove_drawer` method from `DrawerContainer` to the `Column` class.
 - Added a `min_height` parameter when randomly generating a material in the `Material` class.
 - Added a `cleanup` method to cleanup the warehouse.
 - Added a `get_num_columns` method to get the number of columns in the warehouse.
