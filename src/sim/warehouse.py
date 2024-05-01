@@ -47,8 +47,6 @@ class Warehouse:
     """
 
     def __init__(self):
-        from src.sim.material import gen_rand_material
-
         # open YAML configuration file
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
 

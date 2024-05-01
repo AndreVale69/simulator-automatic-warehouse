@@ -126,7 +126,7 @@ class TestWarehouse(unittest.TestCase):
         # assert
         self.assertIn(warehouse.choice_random_drawer(), drawers)
 
-    def test_reset(self):
+    def test_cleanup(self):
         # arrange
         warehouse = Warehouse()
 
