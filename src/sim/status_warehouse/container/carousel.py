@@ -122,17 +122,12 @@ class Carousel(DrawerContainer):
         :rtype: int
         :return: the number of drawers there are.
         """
-        count = 0
-        if type(self.get_deposit_entry()) is DrawerEntry:
-            count += 1
-        if type(self.get_buffer_entry()) is DrawerEntry:
-            count += 1
-        return count
+        return isinstance(self.get_deposit_entry(), DrawerEntry) + isinstance(self.get_buffer_entry(), DrawerEntry)
 
     def get_num_entries_free(self) -> int:
         count = 0
         for entry in self.get_container():
-            if type(entry) is EmptyEntry:
+            if isinstance(entry, EmptyEntry):
                 count += 1
         return count
 
