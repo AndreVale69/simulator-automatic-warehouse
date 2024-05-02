@@ -190,7 +190,7 @@ class DrawerContainer:
         """
         num_entry_occupied = 0
         for entry in self.get_container():
-            if type(entry) is DrawerEntry:
+            if isinstance(entry, DrawerEntry):
                 num_entry_occupied += 1
         return num_entry_occupied
 
@@ -257,8 +257,8 @@ class DrawerContainer:
 
     def reset_container(self):
         """ Clean up the container using EmptyEntry instances. """
-        offset_x = self.offset_x
-        for index, entry in enumerate(self.container):
+        offset_x, ptr_container = self.offset_x, self.container
+        for index, entry in enumerate(ptr_container):
             # if it's a drawer, remove it (overwriting)
             if isinstance(entry, DrawerEntry):
-                self.container[index] = EmptyEntry(offset_x=offset_x, pos_y=entry.get_pos_y())
+                ptr_container[index] = EmptyEntry(offset_x, entry.get_pos_y())

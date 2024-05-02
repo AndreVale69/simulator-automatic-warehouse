@@ -7,7 +7,8 @@ from src.sim.warehouse import Warehouse
 class TestBuiltinDrawerContainer(unittest.TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.drawer_container = DrawerContainer(1000, 125, 200, self.warehouse)
+        self.warehouse.get_column(0).gen_materials_and_drawers(6, 10)
+        self.drawer_container = self.warehouse.get_column(0)
 
     def test_eq(self):
         # arrange
