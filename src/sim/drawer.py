@@ -24,11 +24,11 @@ class Drawer:
 
     def __eq__(self, other):
         return (
-                isinstance(other, Drawer) and
-                self.get_items() == other.get_items() and
-                self.get_max_height() == other.get_max_height() and
-                self.get_num_space_occupied() == other.get_num_space_occupied() and
-                self.get_first_drawerEntry() == other.get_first_drawerEntry()
+            isinstance(other, Drawer) and
+            self.get_items() == other.get_items() and
+            self.get_max_height() == other.get_max_height() and
+            self.get_num_space_occupied() == other.get_num_space_occupied() and
+            self.get_first_drawerEntry() == other.get_first_drawerEntry()
         )
 
     def __hash__(self):
