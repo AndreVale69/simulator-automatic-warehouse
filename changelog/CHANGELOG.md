@@ -28,6 +28,7 @@
   It returns true if a drawer isn't in the carousel. 
   This fix improves performance because it only checks two items (not the whole container...).
 - Fixed `is_empty` in `Column` class. It used a wrong height.
+- Fixed `__hash__` in Entry class. It always returns the same value.
 - Improved readability `calculate_max_height` method of the `Drawer` class.
 - Improved readability `__eq__` method for `Material` class.
 - Improved readability and naming of the methods used to decide where to insert a drawer.

@@ -22,11 +22,7 @@ class Entry:
         )
 
     def __hash__(self):
-        return (
-            13 ^
-            hash(self.get_offset_x()) ^
-            hash(self.get_pos_y())
-        )
+        return hash((self.offset_x, self.pos_y))
 
     @abstractmethod
     def __deepcopy__(self, memo):
