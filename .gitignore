@@ -1,4 +1,6 @@
 .idea
+.coverage
+.pytest_cache
 __pycache__
 tmp/*
 src/web_app/cache
