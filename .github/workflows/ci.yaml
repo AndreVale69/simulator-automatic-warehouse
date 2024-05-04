@@ -8,27 +8,27 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12]
     steps:
-    - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
-          fetch-depth: 0
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install pytest pytest-cov
-        pip install -r requirements.txt
-    - name: Run tests and collect coverage
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
         run: |
-          export WAREHOUSE_CONFIGURATION_FILE_PATH="configuration/sample_config.yaml" PYTHONPATH=.
-          pytest --cov ./src/sim
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        file: ./lcov.info
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: true
+          pip install --upgrade pip
+          pip install pytest pytest-cov
+          pip install -r requirements.txt
+      - name: Run tests and collect coverage
+          run: |
+            export WAREHOUSE_CONFIGURATION_FILE_PATH="configuration/sample_config.yaml" PYTHONPATH=.
+            pytest --cov ./src/sim
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
