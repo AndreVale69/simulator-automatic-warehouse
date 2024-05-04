@@ -17,7 +17,6 @@ jobs:
       - name: Run ATS
         uses: codecov/codecov-ats@v0
         env:
-          CODECOV_STATIC_TOKEN: ${{ secrets.CODECOV_STATIC_TOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Run tests and collect coverage
         run: export WAREHOUSE_CONFIGURATION_FILE_PATH="configuration/sample_config.yaml" && pytest --cov app ${{ env.CODECOV_ATS_TESTS }}
