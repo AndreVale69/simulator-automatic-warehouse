@@ -27,6 +27,7 @@ def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm)
     :raises ValueError: if the algorithm cannot find a position for the space requested.
     """
     assert len(columns) > 0, "At least one column is required."
+    assert space_req > 0, "The space requested from the drawer must be greater than zero."
 
     # select the algorithm to be used
     match algorithm:
@@ -36,8 +37,9 @@ def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm)
             raise NotImplementedError("Algorithm not implemented")
 
     # calculate the index of the first column
-    min_index = callable_algorithm(columns[0], space_req)
-    col_min_index = columns[0]
+    first_column = columns[0]
+    min_index = callable_algorithm(first_column, space_req)
+    col_min_index = first_column
     # finally, calculate and find the min of the other columns
     for i in range(1, len(columns)):
         col = columns[i]
@@ -83,6 +85,8 @@ def _high_position_algorithm(column: Column, space_req: int) -> int:
         count_empty_entries += 1
         # and check if the space can be filled
         if count_empty_entries >= space_req:
+            # TODO: return the index; don't calculate the first element in the list (as we can with the last position).
+            #       This means that we need to refactor the add_drawer method.
             return (index - count_empty_entries) + 1
 
     # if no position found
