@@ -1,29 +1,34 @@
 name: Workflow for Codecov
 on: [push, pull_request]
+
 jobs:
-  run:
-    runs-on: [ubuntu-latest, windows-latest]
+  build:
+    runs-on: [ubuntu-latest, windows-latest, macos-latest]
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12]
     steps:
-      - name: Checkout
+    - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ["3.9", "3.10", "3.11", "3.12.2"]
-      - name: Install dependencies
-        run: |
-          pip install pytest-cov
-          pip install -r requirements.txt
-      - name: Run tests and collect coverage
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install pytest pytest-cov
+        pip install -r requirements.txt
+    - name: Run tests and collect coverage
         run: |
           export WAREHOUSE_CONFIGURATION_FILE_PATH="configuration/sample_config.yaml" PYTHONPATH=.
           pytest --cov ./src/sim
-      - name: Upload coverage reports to Codecov
-        run: |
-          # Replace `linux` below with the appropriate OS
-          # Options are `alpine`, `linux`, `macos`, `windows`
-          curl -Os https://cli.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov --verbose upload-process --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} -n 'service'-${{ github.run_id }} -F service -f coverage-service.xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
