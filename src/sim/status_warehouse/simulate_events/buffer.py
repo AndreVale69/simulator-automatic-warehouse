@@ -2,7 +2,6 @@ import logging
 
 from simpy import Environment
 
-# from src.drawer import Drawer
 from src.sim.simulation import Simulation
 from src.sim.status_warehouse.simulate_events.action import Action
 from src.sim.warehouse import Warehouse
