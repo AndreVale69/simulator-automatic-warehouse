@@ -2,16 +2,16 @@ name: Workflow for Codecov
 on: [push, pull_request]
 jobs:
   run:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up Python 3.12.2
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12.2'
+          python-version: ["3.9", "3.10", "3.11", "3.12.2"]
       - name: Install dependencies
         run: |
           pip install pytest-cov
