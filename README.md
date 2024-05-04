@@ -1,5 +1,9 @@
 # Simulator Automatic Warehouse
 
+[![codecov](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse/branch/andre-branch/graph/badge.svg)](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse)
+
+🚧 _Codecov and tests work in progress..._ 🚧
+
 This repository was created for a thesis project for the University of Verona (Università di Verona).
 
 The project is a simulator of an automatic warehouse. The inspiration came from the [Vertimag][1] of 
@@ -19,8 +23,6 @@ The simulator is mainly made using [SimPy v4.0.2][5] and simulates 4 actions (yo
 The webpage is made using [Dash v2.15.0][6] (with the support of [Dash Bootstrap Components v1.5.0][7]) and 
 [Plotly v5.17.0][8] to allow the end-user, in this case the thesis advisor, 
 to interact with the simulator in a user-friendly way.
-
-In the future, you need to add unittest.
 
 ------------------------------------------------------------------------------------------------------------------------
 
