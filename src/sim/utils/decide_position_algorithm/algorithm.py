@@ -14,7 +14,6 @@ def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm)
     """
     Run the algorithm to decide where to insert a drawer.
     It returns a NamedTuple where we can find the index and the best column.
-    The index that you can use, for example, as a parameter in the add_column method.
 
     :type columns: list[Column]
     :type space_req: int
