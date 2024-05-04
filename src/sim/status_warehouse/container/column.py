@@ -114,12 +114,13 @@ class Column(DrawerContainer):
         :param drawer: drawer to be added.
         :param index: index of the column where to add the drawer.
         """
-        how_many = drawer.get_num_space_occupied() + index
+        how_many = drawer.get_num_space_occupied() + index - 1
 
-        drawer_entry = self._create_drawerEntry(drawer, index)
-        # connect Entry to Drawer
-        drawer.set_first_drawerEntry(drawer_entry)
-        index += 1
+        # Set as first drawerEntry the lower limit.
+        # For example, drawer with 3 entries;
+        # in the container the first drawerEntry will be position 2,
+        # and entries 0 and 1 are simple drawerEntries.
+        drawer.set_first_drawerEntry(self._create_drawerEntry(drawer, how_many))
 
         for index in range(index, how_many):
             self._create_drawerEntry(drawer, index)

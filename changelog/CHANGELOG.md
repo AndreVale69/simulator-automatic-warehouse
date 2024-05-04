@@ -16,6 +16,9 @@
 - Added a `get_num_columns` method to get the number of columns in the warehouse.
 - Added `get_deposit_drawer` and `get_buffer_drawer` methods to the `Carousel` class (useful methods).
 - Added `last_position_is_occupied` method to the `Column` class.
+- Changed the first drawerEntry reference. Now the first drawerEntry will be the lower limit.
+  For example, a drawer with three entries; in the container the first drawerEntry will be position 2, 
+  and entries 0 and 1 are simple drawerEntries.
 
 ### Bug Fixes and Enhancements
 - Fixed random drawers generation in `Drawer` class. There were some problems (raise `ValueError`) when the

@@ -85,8 +85,6 @@ def _high_position_algorithm(column: Column, space_req: int) -> int:
         count_empty_entries += 1
         # and check if the space can be filled
         if count_empty_entries >= space_req:
-            # TODO: return the index; don't calculate the first element in the list (as we can with the last position).
-            #       This means that we need to refactor the add_drawer method.
             return (index - count_empty_entries) + 1
 
     # if no position found
