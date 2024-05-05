@@ -91,6 +91,7 @@ class TestCarousel(unittest.TestCase):
 
         # assert
         self.assertTrue(carousel.is_full())
+        self.assertRaises(RuntimeError, carousel.add_drawer, drawer_1)
 
     def test_remove_drawer(self):
         # arrange
