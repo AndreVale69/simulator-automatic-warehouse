@@ -1,9 +1,9 @@
 import unittest
 
 from src.sim.drawer import Drawer
-from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.status_warehouse.container.carousel import Carousel
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
 
 

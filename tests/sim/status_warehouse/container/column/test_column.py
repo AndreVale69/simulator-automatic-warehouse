@@ -2,9 +2,9 @@ import copy
 import unittest
 
 from src.sim.drawer import Drawer
+from src.sim.status_warehouse.container.column import Column
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.warehouse import Warehouse
-from src.sim.status_warehouse.container.column import Column
 
 
 class TestColumn(unittest.TestCase):

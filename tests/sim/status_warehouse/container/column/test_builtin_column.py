@@ -1,8 +1,8 @@
 import copy
 import unittest
 
-from src.sim.warehouse import Warehouse
 from src.sim.status_warehouse.container.column import Column
+from src.sim.warehouse import Warehouse
 
 
 class TestBuiltinColumn(unittest.TestCase):

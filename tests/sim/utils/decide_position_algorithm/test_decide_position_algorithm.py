@@ -1,11 +1,11 @@
 import unittest
 import uuid
 
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
-from src.sim.utils.decide_position_algorithm.enum_algorithm import Algorithm
-from src.sim.utils.decide_position_algorithm.algorithm import decide_position
-from src.sim.material import Material
 from src.sim.drawer import Drawer
+from src.sim.material import Material
+from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.utils.decide_position_algorithm.algorithm import decide_position
+from src.sim.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from src.sim.warehouse import Warehouse
 
 

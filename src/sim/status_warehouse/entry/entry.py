@@ -1,6 +1,3 @@
-from abc import abstractmethod
-
-
 class Entry:
     def __init__(self, offset_x: int, pos_y: int):
         """
@@ -23,10 +20,6 @@ class Entry:
 
     def __hash__(self):
         return hash((self.offset_x, self.pos_y))
-
-    @abstractmethod
-    def __deepcopy__(self, memo):
-        pass
 
     def get_offset_x(self) -> int:
         """
