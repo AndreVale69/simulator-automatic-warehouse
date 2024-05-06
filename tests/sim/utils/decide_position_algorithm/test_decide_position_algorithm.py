@@ -73,8 +73,8 @@ class TestHighPositionAlgorithm(BaseDecidePositionAlgorithm):
             height=1 * def_space_warehouse,
             length=100, width=100
         )])
-        alg_res = decide_position([column, full_column], drawer.get_num_space_occupied(), Algorithm.HIGH_POSITION)
-        alg_res_last_pos = decide_position([column, full_column], drawer_last_position.get_num_space_occupied(),
+        alg_res = decide_position([full_column, column], drawer.get_num_space_occupied(), Algorithm.HIGH_POSITION)
+        alg_res_last_pos = decide_position([full_column, column], drawer_last_position.get_num_space_occupied(),
                                            Algorithm.HIGH_POSITION)
 
         # assert
