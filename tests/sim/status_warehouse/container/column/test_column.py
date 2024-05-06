@@ -1,6 +1,7 @@
 import copy
 import unittest
 
+from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.column import Column
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
@@ -95,3 +96,20 @@ class TestColumn(unittest.TestCase):
         # assert
         self.assertEqual(res.drawers_inserted, drawers_to_add)
         self.assertEqual(res.materials_inserted, materials_to_add)
+
+    def test_gen_materials_and_drawers_limit(self):
+        # arrange
+        column = self.column
+        container_col = self.column.get_container()
+        for i in range(len(container_col)):
+            container_col[i] = DrawerEntry(container_col[i].get_offset_x(), i)
+        container_col[-1] = EmptyEntry(container_col[-1].get_offset_x(), container_col[-1].get_pos_y())
+        materials_to_add = 100
+        drawers_to_add = 1
+
+        # act
+        res = column.gen_materials_and_drawers(num_drawers=drawers_to_add, num_materials=materials_to_add)
+
+        # assert
+        self.assertLessEqual(res.drawers_inserted, drawers_to_add)
+        self.assertLessEqual(res.materials_inserted, materials_to_add)
