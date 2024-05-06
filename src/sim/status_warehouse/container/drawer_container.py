@@ -30,10 +30,6 @@ class DrawerContainer:
         self.height_container = height // self.get_def_space()
         self.offset_x = offset_x
 
-    @abstractmethod
-    def __deepcopy__(self, memo):
-        pass
-
     def __eq__(self, other):
         return (
                 isinstance(other, DrawerContainer) and
