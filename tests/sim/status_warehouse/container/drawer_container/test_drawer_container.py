@@ -1,6 +1,7 @@
 import copy
 import unittest
 
+from src.sim.status_warehouse.container.drawer_container import DrawerContainer
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
@@ -49,3 +50,23 @@ class TestDrawerContainer(unittest.TestCase):
 
         # assert
         self.assertEqual(search_drawer_entries, 0)
+
+    def test_is_full_abstractmethod(self):
+        # arrange
+        drawer_container = DrawerContainer(1000, 425, 200, self.warehouse)
+
+        # act
+        res = drawer_container.is_full()
+
+        # assert
+        self.assertIsNone(res)
+
+    def test_is_empty_abstractmethod(self):
+        # arrange
+        drawer_container = DrawerContainer(1000, 425, 200, self.warehouse)
+
+        # act
+        res = drawer_container.is_empty()
+
+        # assert
+        self.assertIsNone(res)
