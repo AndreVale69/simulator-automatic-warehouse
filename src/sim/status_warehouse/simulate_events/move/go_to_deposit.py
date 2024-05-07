@@ -2,7 +2,7 @@ import logging
 
 from simpy import Environment
 
-from sim.status_warehouse.enum_warehouse import EnumWarehouse
+from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.drawer import Drawer
 # from src.drawer import Drawer
 from src.sim.simulation import Simulation

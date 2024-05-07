@@ -1,5 +1,5 @@
 from enum import Enum
-
+from numpy import int64
 from pandas import DataFrame, Series, Timedelta, Timestamp, Period
 
 from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
@@ -189,12 +189,12 @@ class WarehouseStatistics:
         } for index in range(value_counts.size)])
 
 
-    def count_action_completed(self, action: ActionEnum) -> int:
+    def count_action_completed(self, action: ActionEnum) -> int64:
         """
         Calculate how many actions are completed for a given action.
 
         :type action: ActionEnum
-        :rtype: int
+        :rtype: numpy.int64
         :param action: count calculation actions
         :return: how many actions are completed in the whole simulation.
         """
