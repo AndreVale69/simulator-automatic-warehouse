@@ -1,5 +1,5 @@
 import copy
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.container.drawer_container import DrawerContainer
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
@@ -7,7 +7,7 @@ from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
 
 
-class TestDrawerContainer(unittest.TestCase):
+class TestDrawerContainer(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.drawer_container = self.warehouse.get_column(0)

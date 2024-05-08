@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.carousel import Carousel
@@ -7,7 +7,7 @@ from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
 
 
-class TestGetMethodsCarousel(unittest.TestCase):
+class TestGetMethodsCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = {

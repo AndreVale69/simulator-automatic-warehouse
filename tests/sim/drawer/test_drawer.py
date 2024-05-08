@@ -1,5 +1,5 @@
-import unittest
 import uuid
+from unittest import TestCase
 
 from src.sim.drawer import gen_rand_drawers, Drawer
 from src.sim.material import Material, gen_rand_materials
@@ -7,7 +7,7 @@ from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
-class TestDrawer(unittest.TestCase):
+class TestDrawer(TestCase):
     def setUp(self):
         self.config = WarehouseConfigurationSingleton.get_instance()
         self.drawer = Drawer(gen_rand_materials(2))

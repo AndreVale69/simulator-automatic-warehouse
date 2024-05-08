@@ -1,9 +1,9 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.material import gen_rand_material
 
 
-class TestGetMethodsMaterial(unittest.TestCase):
+class TestGetMethodsMaterial(TestCase):
     def setUp(self):
         self.material = gen_rand_material()
 

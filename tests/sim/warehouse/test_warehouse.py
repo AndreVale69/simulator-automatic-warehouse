@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.container.column import Column
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
@@ -7,7 +7,7 @@ from src.sim.warehouse import Warehouse
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
-class TestWarehouse(unittest.TestCase):
+class TestWarehouse(TestCase):
     def test_set_pos_y_floor(self):
         # arrange
         warehouse = Warehouse()

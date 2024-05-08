@@ -1,9 +1,9 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.entry.entry import Entry
 
 
-class TestDrawerEntry(unittest.TestCase):
+class TestDrawerEntry(TestCase):
     def setUp(self):
         self.offset_x = 200
         self.pos_y = 100

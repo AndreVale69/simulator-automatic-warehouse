@@ -1,11 +1,11 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.container.column import Column
 from src.sim.warehouse import Warehouse, MinimumOffsetReturns
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
-class TestGetMethodsWarehouse(unittest.TestCase):
+class TestGetMethodsWarehouse(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
 

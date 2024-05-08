@@ -1,10 +1,10 @@
 import copy
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 
 
-class TestEmptyEntry(unittest.TestCase):
+class TestEmptyEntry(TestCase):
     def setUp(self):
         self.offset_x = 200
         self.pos_y = 100

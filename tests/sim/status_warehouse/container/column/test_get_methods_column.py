@@ -1,10 +1,10 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.container.column import Column
 from src.sim.warehouse import Warehouse
 
 
-class TestGetMethodsColumn(unittest.TestCase):
+class TestGetMethodsColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.column_config = {

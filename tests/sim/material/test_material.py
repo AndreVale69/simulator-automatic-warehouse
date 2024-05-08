@@ -1,11 +1,11 @@
-import unittest
 import uuid
+from unittest import TestCase
 
-from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.material import gen_rand_material, Material, gen_rand_materials
+from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
-class TestMaterial(unittest.TestCase):
+class TestMaterial(TestCase):
     def test_material_too_high(self):
         # arrange
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()

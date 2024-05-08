@@ -1,10 +1,10 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.drawer import Drawer
 from src.sim.material import gen_rand_materials
 
 
-class TestGetMethodsDrawer(unittest.TestCase):
+class TestGetMethodsDrawer(TestCase):
     def setUp(self):
         self.drawer = Drawer(gen_rand_materials(2))
 

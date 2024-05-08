@@ -1,11 +1,11 @@
 import copy
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.container.column import Column
 from src.sim.warehouse import Warehouse
 
 
-class TestBuiltinColumn(unittest.TestCase):
+class TestBuiltinColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.column_config = {

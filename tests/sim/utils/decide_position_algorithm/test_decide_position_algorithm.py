@@ -1,5 +1,5 @@
-import unittest
 import uuid
+from unittest import TestCase
 
 from src.sim.drawer import Drawer
 from src.sim.material import Material
@@ -9,7 +9,7 @@ from src.sim.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from src.sim.warehouse import Warehouse
 
 
-class BaseDecidePositionAlgorithm(unittest.TestCase):
+class BaseDecidePositionAlgorithm(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.warehouse.cleanup()

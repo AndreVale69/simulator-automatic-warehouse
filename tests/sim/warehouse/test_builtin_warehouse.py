@@ -1,10 +1,10 @@
 import copy
-import unittest
+from unittest import TestCase
 
 from src.sim.warehouse import Warehouse
 
 
-class TestBuiltinWarehouse(unittest.TestCase):
+class TestBuiltinWarehouse(TestCase):
     def test_deepcopy(self):
         # arrange
         warehouse = Warehouse()

@@ -1,10 +1,10 @@
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.container.drawer_container import DrawerContainer
 from src.sim.warehouse import Warehouse
 
 
-class TestBuiltinDrawerContainer(unittest.TestCase):
+class TestBuiltinDrawerContainer(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.warehouse.get_column(0).gen_materials_and_drawers(6, 10)

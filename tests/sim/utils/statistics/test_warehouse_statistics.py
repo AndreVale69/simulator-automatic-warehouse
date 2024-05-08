@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 
 from numpy import int64
 from pandas import DataFrame, Timestamp, Timedelta
@@ -8,7 +8,7 @@ from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, T
 from src.sim.warehouse import Warehouse
 
 
-class TestWarehouseStatistics(unittest.TestCase):
+class TestWarehouseStatistics(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.warehouse.run_simulation()

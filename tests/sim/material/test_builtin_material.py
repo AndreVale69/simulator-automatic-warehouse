@@ -1,11 +1,11 @@
 import copy
-import unittest
 import uuid
+from unittest import TestCase
 
 from src.sim.material import gen_rand_material, Material
 
 
-class TestBuiltinMaterial(unittest.TestCase):
+class TestBuiltinMaterial(TestCase):
     def test_eq(self):
         # arrange
         hex_material = uuid.uuid4().hex

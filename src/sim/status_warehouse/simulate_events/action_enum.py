@@ -15,7 +15,15 @@ class ActionEnum(Enum):
         return self.value if type(self) == ActionEnum else super().__str__()
 
     @staticmethod
-    def from_str(action_str: str):
+    def from_str(action_str: str) -> Enum | None:
+        """
+        Static method from string.
+
+        :type action_str: str
+        :rtype ActionEnum | None
+        :param action_str: action as string
+        :return: the ActionEnum or None
+        """
         match action_str:
             case "ExtractDrawer":
                 return ActionEnum.EXTRACT_DRAWER

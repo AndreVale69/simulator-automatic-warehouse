@@ -1,11 +1,11 @@
 import copy
-import unittest
+from unittest import TestCase
 
 from src.sim.status_warehouse.container.carousel import Carousel
 from src.sim.warehouse import Warehouse
 
 
-class TestBuiltinCarousel(unittest.TestCase):
+class TestBuiltinCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = {
