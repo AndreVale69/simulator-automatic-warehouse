@@ -31,4 +31,4 @@ class Load(Move):
 
     def simulate_action(self):
         logger.debug(f"Time {self.env.now:5.2f} - Start loading inside the warehouse")
-        yield self.env.process(self.get_warehouse().load(self.get_drawer(), self.get_destination()))
+        yield self.env.process(self.simulation.load(self.get_drawer(), self.get_destination()))

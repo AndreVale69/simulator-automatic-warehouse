@@ -30,8 +30,8 @@ class Unload(Move):
         super().__init__(env, warehouse, simulation, destination, drawer)
 
     def simulate_action(self):
-        from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
         logger.debug(f"Time {self.env.now:5.2f} - Start unloading a drawer")
-        yield self.env.process(self.get_warehouse().unload(
+        yield self.env.process(self.simulation.unload(
             self.get_drawer(),
-            rmv_from_cols=True if self.get_destination() == EnumWarehouse.CAROUSEL else False))
+            rmv_from_cols=True if self.get_destination() == EnumWarehouse.CAROUSEL else False)
+        )

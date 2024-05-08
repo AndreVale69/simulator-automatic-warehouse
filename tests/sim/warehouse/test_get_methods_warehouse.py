@@ -53,28 +53,6 @@ class TestGetMethodsWarehouse(TestCase):
         # assert
         self.assertEqual(carousel_get, carousel_expected)
 
-    def test_get_environment(self):
-        # arrange
-        warehouse = self.warehouse
-
-        # act
-        environment_get = warehouse.get_environment()
-        environment_expected = warehouse.env
-
-        # assert
-        self.assertEqual(environment_get, environment_expected)
-
-    def test_get_simulation(self):
-        # arrange
-        warehouse = self.warehouse
-
-        # act
-        simulation_get = warehouse.get_simulation()
-        simulation_expected = warehouse.simulation
-
-        # assert
-        self.assertEqual(simulation_get, simulation_expected)
-
     def test_get_def_space(self):
         # arrange
         warehouse = self.warehouse

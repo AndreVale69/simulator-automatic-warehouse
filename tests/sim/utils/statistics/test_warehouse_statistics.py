@@ -3,6 +3,7 @@ from unittest import TestCase
 from numpy import int64
 from pandas import DataFrame, Timestamp, Timedelta
 
+from src.sim.simulation import Simulation
 from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
 from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 from src.sim.warehouse import Warehouse
@@ -11,8 +12,9 @@ from src.sim.warehouse import Warehouse
 class TestWarehouseStatistics(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.warehouse.run_simulation()
-        self.warehouse_statistics = WarehouseStatistics(DataFrame(self.warehouse.get_simulation().get_store_history().items))
+        self.simulation = Simulation(self.warehouse)
+        self.simulation.run_simulation()
+        self.warehouse_statistics = WarehouseStatistics(DataFrame(self.simulation.get_store_history().items))
 
     def test_actions_started_every(self):
         # arrange

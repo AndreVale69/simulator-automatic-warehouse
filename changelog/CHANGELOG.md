@@ -7,6 +7,20 @@
 - Improved `get_minimum_offset` method to calculate the minimum offset between columns in the warehouse.
 - Improved `gen_rand` method in the `Warehouse` class. Now it cleanup the warehouse and then generate a deposit 
   (bool parameter), a buffer (bool parameter), and populates the columns.
+- Improved simulation execution. Moved **all** simulation methods from `Warehouse` class to `Simulation` class. 
+  The list of moved methods is:
+  - `run_simulation`
+  - `new_simulation`
+  - `go_to_deposit`
+  - `go_to_buffer`
+  - `load_in_carousel`
+  - `loading_buffer_and_remove`
+  - `vertical_move`
+  - `allocate_best_pos`
+  - `reach_drawer_height`
+  - `unload`
+  - `load`
+  - `horiz_move`
 - Created a new module called `Algorithm` where it's possible to insert a new algorithm.
 - New methods added to the `Column` and `Carousel` classes: `is_full` and `is_empty`.
 - Moved the `gen_materials_and_drawers` static method from `Warehouse` to the `Column` class (for logical reasons).

@@ -83,5 +83,5 @@ class ExtractDrawer(Move):
             yield self.env.process(GoToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
                                                self.get_drawer(), self.get_destination()).simulate_action())
         logger.debug(f"Time {self.env.now:5.2f} - Start to load in the carousel")
-        yield self.env.process(self.get_warehouse().load_in_carousel(self.get_drawer(), self.get_destination(),
-                                                                     load_in_buffer=load_in_buffer))
+        yield self.env.process(self.simulation.load_in_carousel(self.get_drawer(), self.get_destination(),
+                                                                load_in_buffer=load_in_buffer))

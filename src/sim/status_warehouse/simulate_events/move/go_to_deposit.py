@@ -4,7 +4,6 @@ from simpy import Environment
 
 from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.drawer import Drawer
-# from src.drawer import Drawer
 from src.sim.simulation import Simulation
 from src.sim.status_warehouse.simulate_events.move.move import Move
 from src.sim.warehouse import Warehouse
@@ -34,4 +33,4 @@ class GoToDeposit(Move):
     # override
     def simulate_action(self):
         logger.debug(f"Time {self.env.now:5.2f} - Start come back to deposit position")
-        yield self.env.process(self.get_warehouse().go_to_deposit())
+        yield self.env.process(self.simulation.go_to_deposit())

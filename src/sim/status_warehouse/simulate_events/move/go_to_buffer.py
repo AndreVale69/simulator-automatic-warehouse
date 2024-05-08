@@ -33,4 +33,4 @@ class GoToBuffer(Move):
     # override
     def simulate_action(self):
         logger.debug(f"Time {self.env.now:5.2f} - Start go to buffer position")
-        yield self.env.process(self.get_warehouse().go_to_buffer())
+        yield self.env.process(self.simulation.go_to_buffer())
