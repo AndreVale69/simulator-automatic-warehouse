@@ -125,7 +125,7 @@ class TestGetMethodsWarehouse(TestCase):
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         # act
-        drawers_expected: int = config['simulation']['drawers_to_gen']
+        drawers_expected: int = config['simulation']['drawers_to_gen'] + config["simulation"]["gen_deposit"] + config["simulation"]["gen_buffer"]
 
         # assert
         self.assertEqual(warehouse.get_num_drawers(), drawers_expected)

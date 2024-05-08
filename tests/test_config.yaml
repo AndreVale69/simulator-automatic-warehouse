@@ -30,5 +30,5 @@ simulation:
   num_actions: 100
   drawers_to_gen: 5
   materials_to_gen: 3
-  gen_deposit: false
-  gen_buffer: false
+  gen_deposit: true
+  gen_buffer: true

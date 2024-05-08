@@ -81,7 +81,7 @@ class TestWarehouse(TestCase):
         # arrange
         warehouse = Warehouse()
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        drawers_to_gen = config["simulation"]["drawers_to_gen"]
+        drawers_to_gen = config["simulation"]["drawers_to_gen"] + config["simulation"]["gen_deposit"] + config["simulation"]["gen_buffer"]
         materials_to_gen = config["simulation"]["materials_to_gen"]
         drawers_find = 0
         materials_find = 0
@@ -91,6 +91,8 @@ class TestWarehouse(TestCase):
             drawers_find += col.get_num_drawers()
             for drawer in col.get_drawers():
                 materials_find += drawer.get_num_materials()
+        drawers_find += warehouse.get_carousel().is_buffer_full()
+        drawers_find += warehouse.get_carousel().is_deposit_full()
 
         # assert
         self.assertEqual(drawers_to_gen, drawers_find)
