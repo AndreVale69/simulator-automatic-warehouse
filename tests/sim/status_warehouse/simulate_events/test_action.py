@@ -40,3 +40,13 @@ class TestAction(TestCase):
 
         # assert
         self.assertIsNone(actual_simulation)
+
+    def test_simulate_action_abstractmethod(self):
+        # arrange
+        action = self.action
+
+        # act
+        res = action.simulate_action()
+
+        # assert
+        self.assertIsNone(res)
