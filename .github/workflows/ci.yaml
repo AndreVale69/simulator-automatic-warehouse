@@ -21,14 +21,17 @@ jobs:
         run: |
           pip install pytest-cov
           pip install -r requirements.txt
-      - name: Export WAREHOUSE_CONFIGURATION_FILE_PATH and PYTHONPATH env variables
+      - name: Export windows WAREHOUSE_CONFIGURATION_FILE_PATH env variable
         if: ${{ matrix.os == 'windows-latest' }}
-        run: $env:WAREHOUSE_CONFIGURATION_FILE_PATH='tests\\test_config.yaml' & $env:PYTHONPATH=Get-Location
+        run: $env:WAREHOUSE_CONFIGURATION_FILE_PATH='tests\\test_config.yaml'
+      - name: Export windows PYTHONPATH env variable
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: $env:PYTHONPATH=Get-Location
       - name: Run tests and collect coverage on windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: pytest --cov ./src/sim
       - name: Run tests and collect coverage on linux or macos
-        if: ${{ matrix.os != 'windows-latest' }}
+        if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' }}
         run: WAREHOUSE_CONFIGURATION_FILE_PATH="tests/test_config.yaml" PYTHONPATH=. pytest --cov ./src/sim
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.os == 'ubuntu-latest' }}
