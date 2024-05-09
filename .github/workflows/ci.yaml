@@ -24,7 +24,9 @@ jobs:
       - name: Run tests and collect coverage on windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          $env:WAREHOUSE_CONFIGURATION_FILE_PATH='tests/test_config.yaml' && pytest
+          $env:WAREHOUSE_CONFIGURATION_FILE_PATH='tests\test_config.yaml' 
+          $env:PYTHONPATH=Get-Location
+          pytest --cov ./src/sim
       - name: Run tests and collect coverage on linux or macos
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
