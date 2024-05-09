@@ -15,6 +15,7 @@ from dash_auth import BasicAuth
 from diskcache import Cache
 from pandas import DataFrame
 
+from src.sim.simulation.simulation_type.warehouse_simulation.warehouse_simulation import WarehouseSimulation
 from src.sim.utils.statistics.warehouse_statistics import ActionEnum
 from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 from src.sim.warehouse import Warehouse
@@ -35,9 +36,10 @@ from src.web_app.utils.callbacks_utilities import FieldsNewSimulationArgs, field
 
 # Initialize the Warehouse for simulation
 warehouse = Warehouse()
-warehouse.run_simulation()
+simulation = WarehouseSimulation(warehouse)
+simulation.run_simulation()
 warehouse_config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-warehouse_statistics = WarehouseStatistics(DataFrame(warehouse.get_simulation().get_store_history().items))
+warehouse_statistics = WarehouseStatistics(simulation.get_store_history_dataframe())
 
 
 """
@@ -66,7 +68,7 @@ USER_PWD = {
 BasicAuth(app, USER_PWD)
 
 # timeline manager
-timeline = Timeline(warehouse.get_simulation().get_store_history().items)
+timeline = Timeline(simulation.get_store_history().items)
 
 """ 
     ########################
@@ -640,14 +642,14 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                     time_converted = datetime.strptime(time_sim, '%H:%M:%S')
                     time_sim = time_converted.second + (time_converted.minute * 60) + ((time_converted.hour * 60) * 60)
                 start_sim = datetime.now()
-                warehouse.new_simulation(num_actions=num_actions_sim,
-                                         num_gen_drawers=num_drawers_sim,
-                                         num_gen_materials=num_materials_sim,
-                                         gen_deposit=True if 'gen_deposit' in checklist_generators else False,
-                                         gen_buffer=True if 'gen_buffer' in checklist_generators else False,
-                                         time=time_sim)
+                simulation.new_simulation(num_actions=num_actions_sim,
+                                          num_gen_drawers=num_drawers_sim,
+                                          num_gen_materials=num_materials_sim,
+                                          gen_deposit=True if 'gen_deposit' in checklist_generators else False,
+                                          gen_buffer=True if 'gen_buffer' in checklist_generators else False,
+                                          time=time_sim)
                 end_sim = datetime.now()
-                history = warehouse.get_simulation().get_store_history().items
+                history = simulation.get_store_history().items
                 if len(history) == 0:
                     return (timeline_old, timeline.get_actual_tab(), actual_tab_max, f'/{timeline.get_tot_tabs()}',
                             set_step_graph_max_value_hint, val_set_step_graph, set_step_graph_max, False, None, True,

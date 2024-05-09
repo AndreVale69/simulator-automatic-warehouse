@@ -240,16 +240,15 @@ class WarehouseSimulation(Simulation):
         # calculate time to move (y)
         if load_in_buffer:
             # if the deposit is full but the buffer isn't full
-            if not carousel.is_buffer_full():
-                # update the y destination
-                drawer_to_insert.set_best_y(y_buf)
-                logger.debug(f"Time {self.env.now:5.2f} - Deposit is full! Start vertical move to buffer")
-                yield self.env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
-                # set new y position of the floor
-                warehouse.set_pos_y_floor(y_buf)
-                logger.debug(f"Time {self.env.now:5.2f} - Start to load in the buffer")
-            else:
+            if carousel.is_buffer_full():
                 raise NotImplementedError("Deposit and buffer are full! Collision!")
+            # update the y destination
+            drawer_to_insert.set_best_y(y_buf)
+            logger.debug(f"Time {self.env.now:5.2f} - Deposit is full! Start vertical move to buffer")
+            yield self.env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
+            # set new y position of the floor
+            warehouse.set_pos_y_floor(y_buf)
+            logger.debug(f"Time {self.env.now:5.2f} - Start to load in the buffer")
 
         # and load inside the carousel
         yield self.env.process(self.load(drawer_to_insert, destination))

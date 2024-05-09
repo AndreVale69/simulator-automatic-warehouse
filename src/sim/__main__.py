@@ -1,3 +1,4 @@
+from src.sim.simulation.simulation_type.warehouse_simulation.warehouse_simulation import WarehouseSimulation
 from src.sim.warehouse import Warehouse
 
 
@@ -7,7 +8,9 @@ def run_simulator():
     # random.seed(None)
 
     # gen warehouse and run simulation
-    (warehouse := Warehouse()).run_simulation()
+    warehouse = Warehouse()
+    simulation = WarehouseSimulation(warehouse)
+    simulation.run_simulation()
 
     # save the configuration at the end
     # from src.sim.utils.save_warehouse_state import save_config

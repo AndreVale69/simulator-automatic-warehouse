@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from dash import html, dcc
 from pandas import DataFrame
-from src.sim.status_warehouse.actions.action_enum import ActionEnum
+from src.sim.simulation.actions.action_enum import ActionEnum
 
 from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 
