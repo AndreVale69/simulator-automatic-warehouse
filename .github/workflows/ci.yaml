@@ -26,7 +26,7 @@ jobs:
         run: $env:WAREHOUSE_CONFIGURATION_FILE_PATH='tests\\test_config.yaml'
       - name: Export windows PYTHONPATH env variable
         if: ${{ matrix.os == 'windows-latest' }}
-        run: $env:PYTHONPATH='D:\a\simulator-automatic-warehouse\simulator-automatic-warehouse'
+        run: $env:PYTHONPATH=Get-Location
       - name: Run tests and collect coverage on windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: pytest
