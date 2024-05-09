@@ -19,7 +19,7 @@ jobs:
           pip install -r requirements.txt
       - name: Run tests and collect coverage
         run: |
-          export WAREHOUSE_CONFIGURATION_FILE_PATH="configuration/sample_config.yaml" PYTHONPATH=.
+          export WAREHOUSE_CONFIGURATION_FILE_PATH="tests/test_config.yaml" PYTHONPATH=.
           pytest --cov ./src/sim
       - name: Upload coverage reports to Codecov
         run: |
