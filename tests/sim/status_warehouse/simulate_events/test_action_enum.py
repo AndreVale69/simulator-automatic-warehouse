@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
+from src.sim.simulation.actions.action_enum import ActionEnum
+
 
 class TestActionEnum(TestCase):
     def test_str(self):

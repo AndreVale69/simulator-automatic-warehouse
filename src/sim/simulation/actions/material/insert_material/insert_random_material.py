@@ -2,9 +2,9 @@ import datetime
 
 from simpy import Environment
 
-from src.sim.simulation import Simulation
-from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
-from src.sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
+from src.sim.simulation.actions.action_enum import ActionEnum
+from src.sim.simulation.actions.material.insert_material.insert_material import InsertMaterial
+from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
 

@@ -98,6 +98,17 @@ class TestWarehouse(TestCase):
         self.assertEqual(drawers_to_gen, drawers_find)
         self.assertEqual(materials_to_gen, materials_find)
 
+    def test_gen_rand_full(self):
+        # arrange
+        warehouse = Warehouse()
+        warehouse.gen_rand(True, True, 1000, 1000)
+
+        # act
+        res = warehouse.is_full()
+
+        # assert
+        self.assertTrue(res)
+
     def test_choice_random_drawer(self):
         # arrange
         drawers = []

@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from simpy import Environment
 
+from src.sim.simulation.actions.material.insert_material.insert_material import InsertMaterial
 from src.sim.warehouse import Warehouse
-from src.sim.status_warehouse.simulate_events.material.insert_material.insert_material import InsertMaterial
 
 
 class TestInsertMaterial(TestCase):

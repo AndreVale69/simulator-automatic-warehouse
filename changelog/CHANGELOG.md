@@ -21,6 +21,8 @@
   - `unload`
   - `load`
   - `horiz_move`
+- Improved the logic of the `Simulation` class. 
+  Created `Simulation` class as superclass and `WarehouseSimulation` as child to have any custom simulation method.
 - Created a new module called `Algorithm` where it's possible to insert a new algorithm.
 - New methods added to the `Column` and `Carousel` classes: `is_full` and `is_empty`.
 - Moved the `gen_materials_and_drawers` static method from `Warehouse` to the `Column` class (for logical reasons).

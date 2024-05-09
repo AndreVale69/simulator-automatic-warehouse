@@ -2,8 +2,8 @@ import logging
 
 from simpy import Environment
 
-from src.sim.simulation import Simulation
-from src.sim.status_warehouse.simulate_events.action import Action
+from src.sim.simulation.actions.action import Action
+from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)

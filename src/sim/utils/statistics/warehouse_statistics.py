@@ -1,8 +1,9 @@
 from enum import Enum
+
 from numpy import int64
 from pandas import DataFrame, Series, Timedelta, Timestamp, Period
 
-from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
+from src.sim.simulation.actions.action_enum import ActionEnum
 
 
 class TimeEnum(Enum):

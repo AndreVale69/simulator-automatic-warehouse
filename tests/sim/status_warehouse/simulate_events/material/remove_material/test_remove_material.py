@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from simpy import Environment
 
+from src.sim.simulation.actions.material.remove_material.remove_material import RemoveMaterial
 from src.sim.warehouse import Warehouse
-from src.sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
 
 
 class TestRemoveMaterial(TestCase):

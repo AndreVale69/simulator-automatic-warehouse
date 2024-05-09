@@ -3,17 +3,17 @@ from abc import abstractmethod
 
 from simpy import Environment
 
-from src.sim.simulation import Simulation
-from src.sim.status_warehouse.simulate_events.action import Action
+from src.sim.simulation.actions.action import Action
+from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)
 
 
-class InsertMaterial(Action):
+class RemoveMaterial(Action):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         """
-        A superclass of insert material action.
+        A superclass of remove material action.
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -38,7 +38,6 @@ class InsertMaterial(Action):
 
     @abstractmethod
     def simulate_action(self):
-        logger.debug(f"Time {self.env.now:5.2f} - Start putting materials inside a drawer")
+        logger.debug(f"Time {self.env.now:5.2f} - Start removing material from a drawer")
         # return the drawer that is outside
         return self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
-

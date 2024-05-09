@@ -4,9 +4,9 @@ import random
 
 from simpy import Environment
 
-from src.sim.simulation import Simulation
-from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
-from src.sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
+from src.sim.simulation.actions.action_enum import ActionEnum
+from src.sim.simulation.actions.material.remove_material.remove_material import RemoveMaterial
+from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)

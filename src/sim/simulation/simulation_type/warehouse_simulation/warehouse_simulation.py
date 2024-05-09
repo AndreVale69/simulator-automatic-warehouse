@@ -1,66 +1,51 @@
-import copy
 import logging
-import simpy
+from copy import deepcopy
 from random import choice
 
-from pandas import DataFrame
+import simpy
 
+from src.sim.drawer import Drawer
+from src.sim.simulation.actions.action_enum import ActionEnum
+from src.sim.simulation.actions.buffer import Buffer
+from src.sim.simulation.actions.extract_drawer import ExtractDrawer
+from src.sim.simulation.actions.material.insert_material.insert_random_material import InsertRandomMaterial
+from src.sim.simulation.actions.material.remove_material.remove_random_material import RemoveRandomMaterial
+from src.sim.simulation.actions.send_back_drawer import SendBackDrawer
+from src.sim.simulation.simulation import Simulation
+from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.utils.decide_position_algorithm.algorithm import decide_position
 from src.sim.utils.decide_position_algorithm.enum_algorithm import Algorithm
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
-from src.sim.drawer import Drawer
-from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.warehouse import Warehouse
-from src.sim.status_warehouse.simulate_events.action_enum import ActionEnum
-from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 
 logger = logging.getLogger(__name__)
 
 
 
-class Simulation:
+class WarehouseSimulation(Simulation):
     def __init__(self, warehouse: Warehouse):
         """
-        The main simulation class.
+        The warehouse simulation class.
 
         :type warehouse: Warehouse
         :param warehouse: the Warehouse used to perform the simulation.
         """
-        # TODO: initial time as parameter? Brainstorming...
-        self.env = simpy.Environment()
-        # start the move process everytime an instance is created.
-        self.warehouse = copy.deepcopy(warehouse)
+        super().__init__()
+        # start the move process everytime an instance is created
+        self.warehouse = deepcopy(warehouse)
 
         # allocation of carousel resources
         self.res_buffer = simpy.Resource(self.env, capacity=1)
         self.res_deposit = simpy.Resource(self.env, capacity=1)
-        self.store_history = None
-
-        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        self.sim_time: int | None = config["simulation"].get("time")
-        self.sim_num_actions: int = config["simulation"]["num_actions"]
-        self.events_to_simulate: list[str] = []
 
     def __eq__(self, other):
         return (
-            isinstance(other, Simulation) and
-            self.get_environment() == other.get_environment() and
+            isinstance(other, WarehouseSimulation) and
+            self.get_warehouse() == other.get_warehouse() and
             self.get_res_buffer() == other.get_res_buffer() and
             self.get_res_deposit() == other.get_res_deposit() and
-            self.get_store_history() == other.get_store_history() and
-            self.get_sim_time() == other.get_sim_time() and
-            self.get_sim_num_actions() == other.get_sim_num_actions() and
-            self.get_events_to_simulate() == other.get_events_to_simulate()
+            Simulation.__eq__(self, other)
         )
-
-    def get_environment(self) -> simpy.Environment:
-        """
-        Get the environment of SimPy.
-
-        :rtype: simpy.Environment
-        :return: the environment of SimPy.
-        """
-        return self.env
 
     def get_warehouse(self) -> Warehouse:
         """
@@ -91,52 +76,6 @@ class Simulation:
         """
         return self.res_deposit
 
-    def get_store_history(self) -> simpy.Store:
-        """
-        Get the SimPy store (see SimPy store) of the simulation.
-        It is used to store the simulation history.
-
-        :rtype: simpy.Store
-        :return: the store of the simulation history.
-        """
-        return self.store_history
-
-    def get_store_history_dataframe(self) -> DataFrame:
-        """
-        Get the SimPy store of the simulation as DataFrame object.
-
-        :rtype pandas.DataFrame
-        :return: the store of the simulation history as pandas DataFrame
-        """
-        return DataFrame(self.store_history.items)
-
-    def get_sim_time(self) -> int | None:
-        """
-        The maximum time of the simulation (config value).
-
-        :rtype: int or None
-        :return: time of the simulation or None if it isn't specified.
-        """
-        return self.sim_time
-
-    def get_sim_num_actions(self) -> int:
-        """
-        Get the number of actions taken by the simulation (config value).
-
-        :rtype: int
-        :return: the number of actions taken by the simulation.
-        """
-        return self.sim_num_actions
-
-    def get_events_to_simulate(self) -> list[str]:
-        """
-        Get the list of events to simulate.
-
-        :rtype: list[str]
-        :return: a list of events to simulate.
-        """
-        return self.events_to_simulate
-
     def _simulate_actions(self, events_generated: list):
         """
         Simulate actions using the list of events generated.
@@ -144,46 +83,41 @@ class Simulation:
         :type events_generated: list
         :param events_generated: events to be simulated.
         """
-        from src.sim.status_warehouse.simulate_events.buffer import Buffer
-        from src.sim.status_warehouse.simulate_events.send_back_drawer import SendBackDrawer
-        from src.sim.status_warehouse.simulate_events.extract_drawer import ExtractDrawer
-        from src.sim.status_warehouse.simulate_events.material.insert_material.insert_random_material import InsertRandomMaterial
-        from src.sim.status_warehouse.simulate_events.material.remove_material.remove_random_material import RemoveRandomMaterial
-
         self.store_history = simpy.Store(self.env, capacity=len(events_generated))
         env = self.get_environment()
         warehouse = self.get_warehouse()
         simulation = self
         column_destination = EnumWarehouse.COLUMN
         carousel_destination = EnumWarehouse.CAROUSEL
+        index = -1
 
         # run "control of buffer" process
         yield env.process(Buffer(env, warehouse, simulation).simulate_action())
 
         # exec all events
         logger.info("Simulation started.")
-        for index, event in enumerate(events_generated):
+        for event in events_generated:
             match event:
                 case ActionEnum.SEND_BACK_DRAWER:
-                    logger.debug(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
                     action = SendBackDrawer(env, warehouse, simulation, column_destination)
                     yield env.process(action.simulate_action())
                     logger.debug(f"Time {env.now:5.2f} - FINISH SEND_BACK\n")
 
                 case ActionEnum.EXTRACT_DRAWER:
-                    logger.debug(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
                     action = ExtractDrawer(env, warehouse, simulation, carousel_destination)
                     yield env.process(action.simulate_action())
                     logger.debug(f"Time {env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
 
                 case ActionEnum.INSERT_RANDOM_MATERIAL:
-                    logger.debug(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
                     action = InsertRandomMaterial(env, warehouse, simulation, 2)
                     yield env.process(action.simulate_action())
                     logger.debug(f"Time {env.now:5.2f} - FINISH INS_MAT\n")
 
                 case ActionEnum.REMOVE_RANDOM_MATERIAL:
-                    logger.debug(f"~ Operation #{index} ~")
+                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
                     action = RemoveRandomMaterial(env, warehouse, simulation, 2)
                     yield env.process(action.simulate_action())
                     logger.debug(f"Time {env.now:5.2f} - FINISH RMV_MAT\n")
@@ -192,10 +126,6 @@ class Simulation:
         logger.info("Simulation finished.")
 
     def run_simulation(self):
-        """
-        Run a new simulation using the same parameters.
-        Note: the simulation will create a new sequence of actions.
-        """
         balance_wh = 0
         carousel = self.warehouse.get_carousel()
         # create list of event alias

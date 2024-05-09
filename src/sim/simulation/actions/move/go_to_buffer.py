@@ -2,10 +2,10 @@ import logging
 
 from simpy import Environment
 
-from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.drawer import Drawer
-from src.sim.simulation import Simulation
-from src.sim.status_warehouse.simulate_events.move.move import Move
+from src.sim.simulation.actions.move.move import Move
+from src.sim.simulation.simulation import Simulation
+from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)

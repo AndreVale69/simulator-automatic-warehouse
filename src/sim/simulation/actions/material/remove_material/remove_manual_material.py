@@ -1,11 +1,11 @@
 import logging
 
 from simpy import Environment
+from src.sim.status_warehouse.actions.material.remove_material.remove_material import RemoveMaterial
 
 # from src.drawer import Drawer
 from src.sim.material import Material
 from src.sim.simulation import Simulation
-from src.sim.status_warehouse.simulate_events.material.remove_material.remove_material import RemoveMaterial
 from src.sim.warehouse import Warehouse
 
 logger = logging.getLogger(__name__)

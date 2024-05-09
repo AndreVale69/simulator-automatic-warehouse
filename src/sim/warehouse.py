@@ -313,12 +313,8 @@ class Warehouse:
         if num_drawers == 0 and num_materials == 0:
             logger.info("The creation of random warehouse is completed.")
         else:
-            # if there aren't more drawers but some materials...
-            if num_drawers == 0:
-                logger.warning(f"num_materials left: {num_materials}")
-            else:
-                # if the warehouse is completely full
-                logger.warning(f"The warehouse is full, num_drawers left: {num_drawers}, num_materials left: {num_materials}")
+            logger.warning(f"The creation of random warehouse is not completed at 100%: "
+                           f"drawers left: {num_drawers}, materials left: {num_materials}")
 
     def choice_random_drawer(self) -> Drawer:
         """
