@@ -14,7 +14,7 @@ class TestWarehouseStatistics(TestCase):
         self.warehouse = Warehouse()
         self.simulation = WarehouseSimulation(self.warehouse)
         self.simulation.run_simulation()
-        self.warehouse_statistics = WarehouseStatistics(DataFrame(self.simulation.get_store_history().items))
+        self.warehouse_statistics = WarehouseStatistics(self.simulation.get_store_history_dataframe())
 
     def test_actions_started_every(self):
         # arrange
