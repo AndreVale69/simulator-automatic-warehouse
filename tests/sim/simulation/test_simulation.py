@@ -7,6 +7,15 @@ class TestSimulation(TestCase):
     def setUp(self):
         self.simulation = Simulation()
 
+    def test_eq(self):
+        # arrange
+        simulation = self.simulation
+
+        # act
+
+        # assert
+        self.assertTrue(simulation.__eq__(simulation))
+
     def test_get_environment(self):
         # arrange
         simulation = self.simulation
