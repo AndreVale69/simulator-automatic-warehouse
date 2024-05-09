@@ -21,7 +21,12 @@ jobs:
         run: |
           pip install pytest-cov
           pip install -r requirements.txt
-      - name: Run tests and collect coverage
+      - name: Run tests and collect coverage on windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          $env:WAREHOUSE_CONFIGURATION_FILE_PATH='tests/test_config.yaml' && pytest --cov ./src/sim
+      - name: Run tests and collect coverage on linux or macos
+        if: ${{ matrix.os != 'windows-latest' }}
         run: |
           WAREHOUSE_CONFIGURATION_FILE_PATH="tests/test_config.yaml" PYTHONPATH=. pytest --cov ./src/sim
       - name: Upload coverage reports to Codecov
