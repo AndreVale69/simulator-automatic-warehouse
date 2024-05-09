@@ -1,7 +1,6 @@
 simpy==4.1.1
 plotly==5.22.0
 pandas==2.2.2
-#diskcache==5.6.3
 celery==5.4.0
 dash[diskcache]==2.17.0
 numpy==1.26.4
