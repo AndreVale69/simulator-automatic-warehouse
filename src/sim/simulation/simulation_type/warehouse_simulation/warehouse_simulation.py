@@ -76,88 +76,65 @@ class WarehouseSimulation(Simulation):
         """
         return self.res_deposit
 
-    def _simulate_actions(self, events_generated: list):
-        """
-        Simulate actions using the list of events generated.
-
-        :type events_generated: list
-        :param events_generated: events to be simulated.
-        """
-        self.store_history = simpy.Store(self.env, capacity=len(events_generated))
+    def _simulate_actions(self):
+        """ Simulate actions. """
+        carousel = self.warehouse.get_carousel()
+        balance_wh = 0
+        # if the deposit or the buffer are full, then update the counter
+        balance_wh += carousel.is_deposit_full()
+        balance_wh += carousel.is_buffer_full()
+        # get variables to reduce memory accesses
         env = self.get_environment()
         warehouse = self.get_warehouse()
-        simulation = self
-        column_destination = EnumWarehouse.COLUMN
-        carousel_destination = EnumWarehouse.CAROUSEL
+        send_back_drawer = SendBackDrawer(env, warehouse, self, EnumWarehouse.COLUMN)
+        extract_drawer = ExtractDrawer(env, warehouse, self, EnumWarehouse.CAROUSEL)
+        insert_random_material = InsertRandomMaterial(env, warehouse, self, 2)
+        remove_random_material = RemoveRandomMaterial(env, warehouse, self, 2)
+        extract_drawer_val = ActionEnum.EXTRACT_DRAWER.value
+        send_back_drawer_val = ActionEnum.SEND_BACK_DRAWER.value
+        insert_random_material_val = ActionEnum.INSERT_RANDOM_MATERIAL.value
+        remove_random_material_val = ActionEnum.REMOVE_RANDOM_MATERIAL.value
+        # prepare domains
+        case_1 = [send_back_drawer_val, extract_drawer_val,
+                  insert_random_material_val, remove_random_material_val]
+        case_2 = [send_back_drawer_val, insert_random_material_val, remove_random_material_val]
+        # value used from logger.debug
         index = -1
-
         # run "control of buffer" process
-        yield env.process(Buffer(env, warehouse, simulation).simulate_action())
-
-        # exec all events
+        yield env.process(Buffer(env, warehouse, self).simulate_action())
         logger.info("Simulation started.")
-        for event in events_generated:
-            match event:
-                case ActionEnum.SEND_BACK_DRAWER:
-                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
-                    action = SendBackDrawer(env, warehouse, simulation, column_destination)
-                    yield env.process(action.simulate_action())
-                    logger.debug(f"Time {env.now:5.2f} - FINISH SEND_BACK\n")
-
-                case ActionEnum.EXTRACT_DRAWER:
-                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
-                    action = ExtractDrawer(env, warehouse, simulation, carousel_destination)
-                    yield env.process(action.simulate_action())
-                    logger.debug(f"Time {env.now:5.2f} - FINISH EXTRACT_DRAWER\n")
-
-                case ActionEnum.INSERT_RANDOM_MATERIAL:
-                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
-                    action = InsertRandomMaterial(env, warehouse, simulation, 2)
-                    yield env.process(action.simulate_action())
-                    logger.debug(f"Time {env.now:5.2f} - FINISH INS_MAT\n")
-
-                case ActionEnum.REMOVE_RANDOM_MATERIAL:
-                    logger.debug(f"~ Operation #{(index := index + 1)} ~")
-                    action = RemoveRandomMaterial(env, warehouse, simulation, 2)
-                    yield env.process(action.simulate_action())
-                    logger.debug(f"Time {env.now:5.2f} - FINISH RMV_MAT\n")
+        for num_action in range(self.sim_num_actions):
+            logger.debug(f"~ Operation #{(index := index + 1)} ~")
+            # before the random selection, choose the domain to take into account the balance
+            rand_event = extract_drawer_val
+            if balance_wh == 1:
+                rand_event = choice(case_1)
+            elif balance_wh == 2:
+                rand_event = choice(case_2)
+            # process the event
+            match rand_event:
+                case ActionEnum.EXTRACT_DRAWER.value:
+                    balance_wh += 1
+                    yield env.process(extract_drawer.simulate_action())
+                case ActionEnum.SEND_BACK_DRAWER.value:
+                    balance_wh -= 1
+                    yield env.process(send_back_drawer.simulate_action())
+                case ActionEnum.INSERT_RANDOM_MATERIAL.value:
+                    yield env.process(insert_random_material.simulate_action())
+                case ActionEnum.REMOVE_RANDOM_MATERIAL.value:
+                    yield env.process(remove_random_material.simulate_action())
+            logger.debug(f"Time {env.now:5.2f} - FINISH {rand_event}\n")
 
         logger.debug(f"Time {env.now:5.2f} - Finish simulation")
         logger.info("Simulation finished.")
 
     def run_simulation(self):
-        balance_wh = 0
-        carousel = self.warehouse.get_carousel()
-        # create list of event alias
-        alias_events = [ActionEnum.SEND_BACK_DRAWER, ActionEnum.EXTRACT_DRAWER,
-                        ActionEnum.INSERT_RANDOM_MATERIAL, ActionEnum.REMOVE_RANDOM_MATERIAL]
-
-        # if the deposit or the buffer are full, then update the counter
-        balance_wh += carousel.is_deposit_full()
-        balance_wh += carousel.is_buffer_full()
-
-        logger.info("Creating the sequence of actions for the simulation.")
-        for num_action in range(self.sim_num_actions):
-            good_choice = False
-            rand_event = ""
-            while good_choice is False:
-                # select an event
-                rand_event = choice(alias_events)
-                # check if the choice is correct
-                if 1 <= balance_wh <= 2 and (rand_event == ActionEnum.SEND_BACK_DRAWER or
-                                             rand_event == ActionEnum.INSERT_RANDOM_MATERIAL or
-                                             rand_event == ActionEnum.REMOVE_RANDOM_MATERIAL):
-                    good_choice = True
-                    if rand_event == ActionEnum.SEND_BACK_DRAWER:
-                        balance_wh -= 1
-                elif 0 <= balance_wh < 2 and rand_event == ActionEnum.EXTRACT_DRAWER:
-                    good_choice = True
-                    balance_wh += 1
-            self.events_to_simulate.append(rand_event)
-        logger.info("Sequence of actions created.")
+        """ Run a simulation. """
+        # create the store
+        self.store_history = simpy.Store(self.env, capacity=self.sim_num_actions)
 
         # create the simulation
-        self.env.process(self._simulate_actions(self.events_to_simulate))
+        self.env.process(self._simulate_actions())
 
         # run simulation
         self.env.run(until=self.sim_time)
