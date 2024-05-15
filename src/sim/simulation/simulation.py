@@ -1,12 +1,11 @@
-import logging
+from logging import getLogger
 from abc import abstractmethod
-
-import simpy
+from simpy import Environment, Store
 from pandas import DataFrame
 
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 
@@ -16,7 +15,7 @@ class Simulation:
         The main simulation class.
         """
         # TODO: initial time as parameter? Brainstorming...
-        self.env = simpy.Environment()
+        self.env = Environment()
         self.store_history = None
 
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()["simulation"]
@@ -34,7 +33,7 @@ class Simulation:
             self.get_events_to_simulate() == other.get_events_to_simulate()
         )
 
-    def get_environment(self) -> simpy.Environment:
+    def get_environment(self) -> Environment:
         """
         Get the environment of SimPy.
 
@@ -43,13 +42,13 @@ class Simulation:
         """
         return self.env
 
-    def get_store_history(self) -> simpy.Store:
+    def get_store_history(self) -> Store | None:
         """
         Get the SimPy store (see SimPy store) of the simulation.
         It is used to store the simulation history.
 
-        :rtype: simpy.Store
-        :return: the store of the simulation history.
+        :rtype: simpy.Store | None
+        :return: the store of the simulation history or None if the simulation is not performed.
         """
         return self.store_history
 

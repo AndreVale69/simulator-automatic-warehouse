@@ -1,5 +1,4 @@
-import simpy
-
+from simpy import Resource, Store
 from logging import getLogger
 from copy import deepcopy
 from random import choice
@@ -35,8 +34,8 @@ class WarehouseSimulation(Simulation):
         self.warehouse = deepcopy(warehouse)
 
         # allocation of carousel resources
-        self.res_buffer = simpy.Resource(self.env, capacity=1)
-        self.res_deposit = simpy.Resource(self.env, capacity=1)
+        self.res_buffer = Resource(self.env, 1)
+        self.res_deposit = Resource(self.env, 1)
 
     def __eq__(self, other):
         return (
@@ -56,7 +55,7 @@ class WarehouseSimulation(Simulation):
         """
         return self.warehouse
 
-    def get_res_buffer(self) -> simpy.Resource:
+    def get_res_buffer(self) -> Resource:
         """
         Get the resource of the buffer.
         It can be thought of as a resource lock (see SimPy resource).
@@ -66,7 +65,7 @@ class WarehouseSimulation(Simulation):
         """
         return self.res_buffer
 
-    def get_res_deposit(self) -> simpy.Resource:
+    def get_res_deposit(self) -> Resource:
         """
         Get the resource of the deposit (bay).
         It can be thought of as a resource lock (see SimPy resource).
@@ -127,7 +126,7 @@ class WarehouseSimulation(Simulation):
     def run_simulation(self):
         """ Run a simulation. """
         # create the store
-        self.store_history = simpy.Store(self.env, capacity=self.sim_num_actions)
+        self.store_history = Store(self.env, self.sim_num_actions)
 
         # create the simulation
         self.env.process(self._simulate_actions())

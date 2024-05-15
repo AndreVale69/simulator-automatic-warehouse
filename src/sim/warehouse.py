@@ -1,30 +1,28 @@
-import logging
+from logging import basicConfig, DEBUG, INFO, getLogger
 from typing import NamedTuple
 
 from src.sim.configuration import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
 
 if NO_CONSOLE_LOG:
-    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s')
+    basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s')
 elif DEBUG_LOG:
-    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s',
-                        level=logging.DEBUG)
+    basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s', level=DEBUG)
 elif FILENAME_DEBUG_LOG:
-    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s',
-                        level=logging.DEBUG, filename=f'{FILENAME_DEBUG_LOG}', filemode='w')
+    basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s', level=DEBUG,
+                filename=f'{FILENAME_DEBUG_LOG}', filemode='w')
 else:
-    logging.basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s',
-                        level=logging.INFO)
+    basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s', level=INFO)
 
 
-import copy
-import random
+from copy import deepcopy
+from random import randint, choice
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.carousel import Carousel
 from src.sim.status_warehouse.container.column import Column
 from src.sim.material import gen_rand_material
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 __VERSION__ = '1.0.0'
 
 
@@ -71,10 +69,10 @@ class Warehouse:
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
         copy_oby.height = self.get_height()
-        copy_oby.columns_container = copy.deepcopy(self.get_cols_container(), memo)
+        copy_oby.columns_container = deepcopy(self.get_cols_container(), memo)
         for col in copy_oby.columns_container:
             col.set_warehouse(copy_oby)
-        copy_oby.carousel = copy.deepcopy(self.get_carousel(), memo)
+        copy_oby.carousel = deepcopy(self.get_carousel(), memo)
         copy_oby.carousel.set_warehouse(copy_oby)
         copy_oby.def_space = self.get_def_space()
         copy_oby.speed_per_sec = self.get_speed_per_sec()
@@ -303,9 +301,9 @@ class Warehouse:
         # until there are drawers to insert and the warehouse isn't full
         while num_drawers > 0 and not self.is_full():
             # choice a random column
-            rand_col: Column = random.choice(columns)
+            rand_col: Column = choice(columns)
             # generate random number to decide how many drawers insert inside the column
-            rand_num_drawers = random.randint(1, num_drawers)
+            rand_num_drawers = randint(1, num_drawers)
             res = rand_col.gen_materials_and_drawers(rand_num_drawers, num_materials)
             num_drawers -= res.drawers_inserted
             num_materials -= res.materials_inserted
@@ -327,7 +325,7 @@ class Warehouse:
         for col in self.get_cols_container():
             container_drawer_entry.extend(col.get_drawers())
         assert len(container_drawer_entry) > 0, "The warehouse is empty!"
-        return random.choice(container_drawer_entry)
+        return choice(container_drawer_entry)
 
     def cleanup(self):
         """ Cleanup the warehouse. Each Entry will be EmptyEntry. """
