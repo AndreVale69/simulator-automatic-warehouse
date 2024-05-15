@@ -1,12 +1,11 @@
-import logging
-
+from logging import getLogger
 from simpy import Environment
 
 from src.sim.simulation.actions.action import Action
 from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 class Buffer(Action):
@@ -25,15 +24,17 @@ class Buffer(Action):
 
     # override
     def simulate_action(self):
+        simulation = self.simulation
+        carousel = self.warehouse.get_carousel()
+        env = self.env
         # try to take buffer resource
-        with self.simulation.get_res_buffer().request() as req_buf:
+        with simulation.get_res_buffer().request() as req_buf:
             yield req_buf
             # try to take deposit resource
-            with self.simulation.get_res_deposit().request() as req_dep:
+            with simulation.get_res_deposit().request() as req_dep:
                 yield req_dep
                 # check if the deposit and the buffer are empty and full iff the resources are taken
-                if self.get_warehouse().get_carousel().is_buffer_full() and \
-                        not self.get_warehouse().get_carousel().is_deposit_full():
-                    logger.debug(f"Time {self.env.now:5.2f} - Start loading buffer drawer inside the deposit")
-                    yield self.env.process(self.simulation.loading_buffer_and_remove())
-                    logger.debug(f"Time {self.env.now:5.2f} - Finish loading buffer drawer inside the deposit")
+                if carousel.is_buffer_full() and not carousel.is_deposit_full():
+                    logger.debug(f"Time {env.now:5.2f} - Start loading buffer drawer inside the deposit")
+                    yield env.process(simulation.loading_buffer_and_remove())
+                    logger.debug(f"Time {env.now:5.2f} - Finish loading buffer drawer inside the deposit")

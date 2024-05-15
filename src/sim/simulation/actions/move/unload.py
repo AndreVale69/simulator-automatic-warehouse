@@ -1,5 +1,4 @@
-import logging
-
+from logging import getLogger
 from simpy import Environment
 
 from src.sim.simulation.actions.move.move import Move
@@ -7,7 +6,7 @@ from src.sim.simulation.simulation import Simulation
 from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.warehouse import Warehouse, Drawer
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 class Unload(Move):
@@ -32,6 +31,6 @@ class Unload(Move):
     def simulate_action(self):
         logger.debug(f"Time {self.env.now:5.2f} - Start unloading a drawer")
         yield self.env.process(self.simulation.unload(
-            self.get_drawer(),
-            rmv_from_cols=True if self.get_destination() == EnumWarehouse.CAROUSEL else False)
+            self.drawer,
+            True if self.destination == EnumWarehouse.CAROUSEL else False)
         )

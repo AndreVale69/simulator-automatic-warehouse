@@ -1,9 +1,9 @@
 from simpy import Environment
-from src.sim.status_warehouse.actions.material.insert_material.insert_material import InsertMaterial
+from src.sim.simulation.actions.material.insert_material.insert_material import InsertMaterial
 
 # from src.drawer import Drawer
 from src.sim.material import Material
-from src.sim.simulation import Simulation
+from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
 
@@ -39,11 +39,11 @@ class InsertManualMaterial(InsertMaterial):
 
     # override
     def simulate_action(self):
-        with self.get_simulation().get_res_deposit().request() as req:
+        with self.simulation.get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
-            for material in self.get_materials():
+            for material in self.materials:
                 # add the material
                 drawer_output.add_material(material)
             # estimate a time of the action
-            yield self.env.timeout(self.get_duration())
+            yield self.env.timeout(self.duration)

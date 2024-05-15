@@ -1,5 +1,4 @@
-import logging
-
+from logging import getLogger
 from simpy import Environment
 
 from src.sim.simulation.actions.move.move import Move
@@ -7,7 +6,7 @@ from src.sim.simulation.simulation import Simulation
 from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.warehouse import Warehouse, Drawer
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 class Load(Move):
@@ -31,4 +30,4 @@ class Load(Move):
 
     def simulate_action(self):
         logger.debug(f"Time {self.env.now:5.2f} - Start loading inside the warehouse")
-        yield self.env.process(self.simulation.load(self.get_drawer(), self.get_destination()))
+        yield self.env.process(self.simulation.load(self.drawer, self.destination))

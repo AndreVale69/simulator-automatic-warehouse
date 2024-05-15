@@ -61,6 +61,6 @@ class Move(Action):
         from src.sim.simulation.actions.move.go_to_deposit import GoToDeposit
 
         # come back to the deposit iff there is a drawer
-        if self.get_warehouse().get_carousel().is_deposit_full():
-            yield self.env.process(GoToDeposit(self.get_env(), self.get_warehouse(), self.get_simulation(),
-                                               self.get_drawer(), self.get_destination()).simulate_action())
+        if self.warehouse.get_carousel().is_deposit_full():
+            yield self.env.process(GoToDeposit(self.env, self.warehouse, self.simulation,
+                                               self.drawer, self.destination).simulate_action())

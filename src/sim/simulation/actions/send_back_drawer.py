@@ -1,5 +1,4 @@
-import datetime
-
+from datetime import datetime, timedelta
 from simpy import Environment
 
 from src.sim.simulation.actions.action_enum import ActionEnum
@@ -28,34 +27,34 @@ class SendBackDrawer(Move):
         super().__init__(env, warehouse, simulation, destination)
 
     def simulate_action(self):
-        start_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
+        start_time = datetime.now() + timedelta(seconds=self.env.now)
 
-        with self.get_simulation().get_res_deposit().request() as req:
+        with self.simulation.get_res_deposit().request() as req:
             # try to take the drawer inside the deposit
             yield req
             # set the drawer
-            self.set_drawer(self.get_warehouse().get_carousel().get_deposit_entry().get_drawer())
+            self.set_drawer(self.warehouse.get_carousel().get_deposit_entry().get_drawer())
             # unloading drawer
             yield self.env.process(
-                Unload(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),
-                       self.get_destination()).simulate_action())
+                Unload(self.env, self.warehouse, self.simulation, self.drawer,
+                       self.destination).simulate_action())
 
         # exec Buffer process
-        wait_buff = self.env.process(Buffer(self.get_env(), self.get_warehouse(), self.get_simulation()).simulate_action())
+        wait_buff = self.env.process(Buffer(self.env, self.warehouse, self.simulation).simulate_action())
 
         # move the floor
-        yield self.env.process(Vertical(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),
-                                        self.get_destination()).simulate_action())
+        yield self.env.process(Vertical(self.env, self.warehouse, self.simulation, self.drawer,
+                                        self.destination).simulate_action())
         # loading drawer
-        yield self.env.process(Load(self.get_env(), self.get_warehouse(), self.get_simulation(), self.get_drawer(),
-                                    self.get_destination()).simulate_action())
+        yield self.env.process(Load(self.env, self.warehouse, self.simulation, self.drawer,
+                                    self.destination).simulate_action())
 
         # check GoToDeposit move
         yield self.env.process(super().simulate_action())
         # wait the buffer process
         yield wait_buff
 
-        end_time = datetime.datetime.now() + datetime.timedelta(seconds=self.get_env().now)
+        end_time = datetime.now() + timedelta(seconds=self.env.now)
 
         yield self.simulation.get_store_history().put({
             'Type of Action': ActionEnum.SEND_BACK_DRAWER.value,

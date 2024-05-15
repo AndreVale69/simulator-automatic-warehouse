@@ -1,8 +1,8 @@
-import logging
+import simpy
+
+from logging import getLogger
 from copy import deepcopy
 from random import choice
-
-import simpy
 
 from src.sim.drawer import Drawer
 from src.sim.simulation.actions.action_enum import ActionEnum
@@ -18,7 +18,7 @@ from src.sim.utils.decide_position_algorithm.algorithm import decide_position
 from src.sim.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from src.sim.warehouse import Warehouse
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 
@@ -79,13 +79,11 @@ class WarehouseSimulation(Simulation):
     def _simulate_actions(self):
         """ Simulate actions. """
         carousel = self.warehouse.get_carousel()
-        balance_wh = 0
         # if the deposit or the buffer are full, then update the counter
-        balance_wh += carousel.is_deposit_full()
-        balance_wh += carousel.is_buffer_full()
+        balance_wh = carousel.is_deposit_full() + carousel.is_buffer_full()
         # get variables to reduce memory accesses
-        env = self.get_environment()
-        warehouse = self.get_warehouse()
+        env = self.env
+        warehouse = self.warehouse
         send_back_drawer = SendBackDrawer(env, warehouse, self, EnumWarehouse.COLUMN)
         extract_drawer = ExtractDrawer(env, warehouse, self, EnumWarehouse.CAROUSEL)
         insert_random_material = InsertRandomMaterial(env, warehouse, self, 2)
@@ -98,13 +96,11 @@ class WarehouseSimulation(Simulation):
         case_1 = [send_back_drawer_val, extract_drawer_val,
                   insert_random_material_val, remove_random_material_val]
         case_2 = [send_back_drawer_val, insert_random_material_val, remove_random_material_val]
-        # value used from logger.debug
-        index = -1
         # run "control of buffer" process
         yield env.process(Buffer(env, warehouse, self).simulate_action())
         logger.info("Simulation started.")
         for num_action in range(self.sim_num_actions):
-            logger.debug(f"~ Operation #{(index := index + 1)} ~")
+            logger.debug(f"~ Operation #{num_action} ~")
             # before the random selection, choose the domain to take into account the balance
             rand_event = extract_drawer_val
             if balance_wh == 1:

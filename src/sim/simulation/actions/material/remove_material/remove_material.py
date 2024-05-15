@@ -1,4 +1,4 @@
-import logging
+from logging import getLogger
 from abc import abstractmethod
 
 from simpy import Environment
@@ -7,7 +7,7 @@ from src.sim.simulation.actions.action import Action
 from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 class RemoveMaterial(Action):
@@ -40,4 +40,4 @@ class RemoveMaterial(Action):
     def simulate_action(self):
         logger.debug(f"Time {self.env.now:5.2f} - Start removing material from a drawer")
         # return the drawer that is outside
-        return self.get_warehouse().get_carousel().get_deposit_entry().get_drawer()
+        return self.warehouse.get_carousel().get_deposit_entry().get_drawer()

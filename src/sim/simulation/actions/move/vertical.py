@@ -32,6 +32,6 @@ class Vertical(Move):
     def simulate_action(self):
         logger.debug(f"Time {self.env.now:5.2f} - Start vertical move")
         if self.get_destination() == EnumWarehouse.CAROUSEL:
-            yield self.env.process(self.simulation.reach_drawer_height(self.get_drawer()))
+            yield self.env.process(self.simulation.reach_drawer_height(self.drawer))
         else:
-            yield self.env.process(self.simulation.allocate_best_pos(self.get_drawer()))
+            yield self.env.process(self.simulation.allocate_best_pos(self.drawer))

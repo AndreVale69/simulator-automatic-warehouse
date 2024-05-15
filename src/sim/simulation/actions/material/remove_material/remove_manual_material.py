@@ -1,14 +1,13 @@
-import logging
-
+from logging import getLogger
 from simpy import Environment
-from src.sim.status_warehouse.actions.material.remove_material.remove_material import RemoveMaterial
+from src.sim.simulation.actions.material.remove_material.remove_material import RemoveMaterial
 
 # from src.drawer import Drawer
 from src.sim.material import Material
-from src.sim.simulation import Simulation
+from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 class RemoveManualMaterial(RemoveMaterial):
@@ -43,14 +42,14 @@ class RemoveManualMaterial(RemoveMaterial):
 
     # override
     def simulate_action(self):
-        with self.get_simulation().get_res_deposit().request() as req:
+        with self.simulation.get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
             if len(drawer_output.get_items()) != 0:
-                for material in self.get_materials():
+                for material in self.materials:
                     # remove the material
                     drawer_output.remove_material(material)
                 # estimate a time of the action
-                yield self.env.timeout(self.get_duration())
+                yield self.env.timeout(self.duration)
             else:
                 logger.debug(f"\nTime {self.env.now:5.2f} - No materials to remove\n")
