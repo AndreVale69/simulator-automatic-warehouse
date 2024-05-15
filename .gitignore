@@ -6,3 +6,4 @@ tmp/*
 src/web_app/cache
 /benchmark/
 src/web_app/images
+windows-tests.ps1
