@@ -2,7 +2,7 @@ from logging import getLogger
 from datetime import datetime, timedelta
 from simpy import Environment
 
-from sim.simulation.actions.action_enum import ActionEnum
+from src.sim.simulation.actions.action_enum import ActionEnum
 from src.sim.simulation.actions.material.remove_material.remove_material import RemoveMaterial
 
 # from src.drawer import Drawer

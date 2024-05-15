@@ -42,13 +42,13 @@ class Simulation:
         """
         return self.env
 
-    def get_store_history(self) -> Store | None:
+    def get_store_history(self) -> Store:
         """
         Get the SimPy store (see SimPy store) of the simulation.
         It is used to store the simulation history.
 
-        :rtype: simpy.Store | None
-        :return: the store of the simulation history or None if the simulation is not performed.
+        :rtype: simpy.Store
+        :return: the store of the simulation history.
         """
         return self.store_history
 

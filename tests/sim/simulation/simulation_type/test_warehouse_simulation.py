@@ -23,7 +23,7 @@ class TestWarehouseSimulation(TestCase):
         warehouse_simulation = self.warehouse_simulation
 
         # act
-        self.assertIsNone(warehouse_simulation.get_store_history())
+        self.assertListEqual(warehouse_simulation.get_store_history().items, [])
         warehouse_simulation.run_simulation()
         res = warehouse_simulation.get_store_history_dataframe().size
 
@@ -43,7 +43,7 @@ class TestWarehouseSimulation(TestCase):
         time = simulation["time"]
 
         # act
-        self.assertIsNone(warehouse_simulation.get_store_history())
+        self.assertListEqual(warehouse_simulation.get_store_history().items, [])
         warehouse_simulation.new_simulation(
             num_actions,
             num_gen_drawers,
