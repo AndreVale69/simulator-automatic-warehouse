@@ -8,7 +8,9 @@ class ActionEnum(Enum):
     EXTRACT_DRAWER = "ExtractDrawer"
     SEND_BACK_DRAWER = "SendBackDrawer"
     INSERT_RANDOM_MATERIAL = "InsertRandomMaterial"
+    INSERT_MANUAL_MATERIAL = "InsertManualMaterial"
     REMOVE_RANDOM_MATERIAL = "RemoveRandomMaterial"
+    REMOVE_MANUAL_MATERIAL = "RemoveManualMaterial"
 
     def __str__(self):
         # override string method to avoid .value whenever you want to print
@@ -25,13 +27,17 @@ class ActionEnum(Enum):
         :return: the ActionEnum or None
         """
         match action_str:
-            case "ExtractDrawer":
+            case ActionEnum.EXTRACT_DRAWER.value:
                 return ActionEnum.EXTRACT_DRAWER
-            case "SendBackDrawer":
+            case ActionEnum.SEND_BACK_DRAWER.value:
                 return ActionEnum.SEND_BACK_DRAWER
-            case "InsertRandomMaterial":
+            case ActionEnum.INSERT_RANDOM_MATERIAL.value:
                 return ActionEnum.INSERT_RANDOM_MATERIAL
-            case "RemoveRandomMaterial":
+            case ActionEnum.INSERT_MANUAL_MATERIAL.value:
+                return ActionEnum.INSERT_MANUAL_MATERIAL
+            case ActionEnum.REMOVE_RANDOM_MATERIAL.value:
                 return ActionEnum.REMOVE_RANDOM_MATERIAL
+            case ActionEnum.REMOVE_MANUAL_MATERIAL.value:
+                return ActionEnum.REMOVE_MANUAL_MATERIAL
             case _:
                 return None

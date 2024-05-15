@@ -1,5 +1,8 @@
 from logging import getLogger
+from datetime import datetime, timedelta
 from simpy import Environment
+
+from sim.simulation.actions.action_enum import ActionEnum
 from src.sim.simulation.actions.material.remove_material.remove_material import RemoveMaterial
 
 # from src.drawer import Drawer
@@ -42,6 +45,8 @@ class RemoveManualMaterial(RemoveMaterial):
 
     # override
     def simulate_action(self):
+        start_time = datetime.now() + timedelta(seconds=self.get_env().now)
+
         with self.simulation.get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
@@ -53,3 +58,11 @@ class RemoveManualMaterial(RemoveMaterial):
                 yield self.env.timeout(self.duration)
             else:
                 logger.debug(f"\nTime {self.env.now:5.2f} - No materials to remove\n")
+
+        end_time = datetime.now() + timedelta(seconds=self.get_env().now)
+
+        yield self.simulation.get_store_history().put({
+            'Type of Action': ActionEnum.REMOVE_MANUAL_MATERIAL.value,
+            'Start': start_time,
+            'Finish': end_time
+        })

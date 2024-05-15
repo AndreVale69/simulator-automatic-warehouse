@@ -1,4 +1,7 @@
+from datetime import datetime, timedelta
 from simpy import Environment
+
+from src.sim.simulation.actions.action_enum import ActionEnum
 from src.sim.simulation.actions.material.insert_material.insert_material import InsertMaterial
 
 # from src.drawer import Drawer
@@ -39,6 +42,8 @@ class InsertManualMaterial(InsertMaterial):
 
     # override
     def simulate_action(self):
+        start_time = datetime.now() + timedelta(seconds=self.env.now)
+
         with self.simulation.get_res_deposit().request() as req:
             yield req
             drawer_output = super().simulate_action()
@@ -47,3 +52,11 @@ class InsertManualMaterial(InsertMaterial):
                 drawer_output.add_material(material)
             # estimate a time of the action
             yield self.env.timeout(self.duration)
+
+        end_time = datetime.now() + timedelta(seconds=self.env.now)
+
+        yield self.simulation.get_store_history().put({
+            'Type of Action': ActionEnum.INSERT_MANUAL_MATERIAL.value,
+            'Start': start_time,
+            'Finish': end_time
+        })
