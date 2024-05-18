@@ -1,6 +1,7 @@
-from platform import system
 from json import loads
 from pathlib import Path
+from platform import system
+
 from jsonschema import Draft202012Validator
 from yaml import safe_load
 
@@ -31,8 +32,7 @@ class WarehouseConfigurationSingleton:
     def __init__(self):
         # get project directory
         current_dir = Path(__file__)
-        project_name = 'simulator-automatic-warehouse'
-        project_dir = next(p for p in current_dir.parents if p.parts[-1] == project_name)
+        project_dir = next(p for p in current_dir.parents if p.parts[-1] == 'src').parent
         user_configuration_path = f"{project_dir}\\{WAREHOUSE_CONFIGURATION}" if system() == 'Windows' else f"{project_dir}/{WAREHOUSE_CONFIGURATION}"
         json_schema_path = f"{project_dir}\\resources\\configuration\\json_schema.json" if system() == 'Windows' else f"{project_dir}/resources/configuration/json_schema.json"
 
