@@ -36,8 +36,6 @@ class WarehouseSimulation(Simulation):
         # allocation of carousel resources
         self.res_buffer = Resource(self.env, 1)
         self.res_deposit = Resource(self.env, 1)
-        # create the store
-        self.store_history = Store(self.env, self.sim_num_actions)
 
     def __eq__(self, other):
         return (

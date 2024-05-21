@@ -32,11 +32,8 @@ class InsertRandomMaterial(InsertMaterial):
 
         with self.simulation.get_res_deposit().request() as req:
             yield req
-            drawer_output = super().simulate_action()
-            # generate random material
-            mat_to_put = gen_rand_material()
-            # add the material
-            drawer_output.add_material(mat_to_put)
+            # add random material
+            super().simulate_action().add_material(gen_rand_material())
             # estimate a time of the action
             yield self.env.timeout(self.duration)
 

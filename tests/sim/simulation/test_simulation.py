@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+from pandas import DataFrame
+
 from src.sim.simulation.simulation import Simulation
 
 
@@ -45,7 +47,7 @@ class TestSimulation(TestCase):
         # act
 
         # assert
-        self.assertRaises(AttributeError, simulation.get_store_history_dataframe)
+        self.assertIsInstance(simulation.get_store_history_dataframe(), DataFrame)
 
     def test_get_sim_time(self):
         # arrange

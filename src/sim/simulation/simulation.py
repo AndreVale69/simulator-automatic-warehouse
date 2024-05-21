@@ -16,12 +16,13 @@ class Simulation:
         """
         # TODO: initial time as parameter? Brainstorming...
         self.env = Environment()
-        self.store_history = None
 
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()["simulation"]
         self.sim_time: int | None = config.get("time")
         self.sim_num_actions: int = config["num_actions"]
         self.events_to_simulate: list[str] = []
+        # create the store
+        self.store_history = Store(self.env, self.sim_num_actions)
 
     def __eq__(self, other):
         return (

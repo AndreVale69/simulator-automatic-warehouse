@@ -36,11 +36,9 @@ class RemoveRandomMaterial(RemoveMaterial):
             yield req
             drawer_output = super().simulate_action()
             # check if there is a material to remove
-            if len(drawer_output.get_items()) != 0:
-                # choice random material
-                mat_to_rmv = choice(drawer_output.get_items())
-                # remove the material
-                drawer_output.remove_material(mat_to_rmv)
+            if drawer_output.get_num_materials() != 0:
+                # remove a random material
+                drawer_output.remove_material(choice(drawer_output.get_items()))
                 # estimate a time of the action
                 yield self.env.timeout(self.duration)
             else:
