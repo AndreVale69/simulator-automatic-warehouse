@@ -2,9 +2,6 @@ from json import loads
 from pathlib import Path
 from platform import system
 
-from jsonschema import Draft202012Validator
-from yaml import safe_load
-
 from src.sim.configuration import WAREHOUSE_CONFIGURATION
 
 
@@ -33,6 +30,7 @@ class WarehouseConfigurationSingleton:
         # get project directory
         current_dir = Path(__file__)
         project_dir = next(p for p in current_dir.parents if p.parts[-1] == 'src').parent
+        # https://docs.python.org/3.12/library/platform.html#platform.system
         user_configuration_path = f"{project_dir}\\{WAREHOUSE_CONFIGURATION}" if system() == 'Windows' else f"{project_dir}/{WAREHOUSE_CONFIGURATION}"
         json_schema_path = f"{project_dir}\\resources\\configuration\\json_schema.json" if system() == 'Windows' else f"{project_dir}/resources/configuration/json_schema.json"
 
@@ -41,9 +39,11 @@ class WarehouseConfigurationSingleton:
             schema: dict = loads(json_schema.read())
 
         # check that the json schema is valid
+        from jsonschema import Draft202012Validator
         Draft202012Validator.check_schema(schema)
 
         # take user configuration
+        from yaml import safe_load
         with open(user_configuration_path, 'r') as file:
             self.configuration: dict = safe_load(file)
 

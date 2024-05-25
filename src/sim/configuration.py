@@ -10,7 +10,7 @@ The following variables are required:
     * FILENAME_DEBUG_LOG: if set, save the debug log to file (e.g. sim.log).
 """
 
-WAREHOUSE_CONFIGURATION = os.environ['WAREHOUSE_CONFIGURATION_FILE_PATH']
+WAREHOUSE_CONFIGURATION = os.environ.get('WAREHOUSE_CONFIGURATION_FILE_PATH', 'configuration/json_schema.json')
 
 NO_CONSOLE_LOG = os.environ.get('NO_CONSOLE_LOG', None)
 DEBUG_LOG = os.environ.get('DEBUG_LOG', None)
