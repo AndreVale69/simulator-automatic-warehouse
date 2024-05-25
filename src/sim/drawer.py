@@ -14,6 +14,7 @@ class Drawer:
         # items inside the drawer
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
+        # TODO: create a custom data structure to store the items (such as a set)
         self.items = copy.deepcopy(items if items is not None else [])
         self.def_space = config["default_height_space"]
         self.__calculate_max_height()
@@ -33,11 +34,10 @@ class Drawer:
 
     def __hash__(self):
         return (
-                13 ^
-                hash(tuple(self.get_items())) ^
-                hash(self.get_max_height()) ^
-                hash(self.get_num_space_occupied()) ^
-                hash(self.get_first_drawerEntry())
+                1093 ^
+                hash(tuple(self.items)) ^
+                hash(self.max_height) ^
+                hash(self.num_space)
         )
 
     def __deepcopy__(self, memo):

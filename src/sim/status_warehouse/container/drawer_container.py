@@ -49,7 +49,7 @@ class DrawerContainer:
 
     def __hash__(self):
         return (
-                13 ^
+                1093 ^
                 hash(self.get_height_warehouse()) ^
                 hash(self.get_def_space()) ^
                 hash(tuple(self.get_container())) ^

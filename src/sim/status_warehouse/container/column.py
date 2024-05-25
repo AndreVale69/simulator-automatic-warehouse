@@ -50,15 +50,14 @@ class Column(DrawerContainer):
     def __eq__(self, other):
         return (
             isinstance(other, Column) and
-            self.get_height_last_position() == other.get_height_last_position() and
-            DrawerContainer.__eq__(self, other)
+            DrawerContainer.__eq__(self, other) and
+            self.get_height_last_position() == other.get_height_last_position()
         )
 
     def __hash__(self):
         return (
-            13 ^
-            hash(self.get_height_last_position()) ^
-            DrawerContainer.__hash__(self)
+            DrawerContainer.__hash__(self) ^
+            hash(self.get_height_last_position())
         )
 
     def get_height_last_position(self) -> int:

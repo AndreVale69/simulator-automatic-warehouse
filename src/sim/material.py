@@ -38,7 +38,6 @@ class Material:
         self.width = width
 
     def __eq__(self, other):
-        """Overrides the default implementation"""
         return (
             isinstance(other, Material) and
             self.get_barcode() == other.get_barcode() and
@@ -49,8 +48,7 @@ class Material:
         )
 
     def __hash__(self):
-        """Overrides the default implementation"""
-        return hash((self.get_barcode(), self.get_name(), self.get_height(), self.get_length(), self.get_width()))
+        return hash((self.barcode, self.name, self.height, self.length, self.width))
 
     def __deepcopy__(self, memo):
         return Material(self.get_barcode(),

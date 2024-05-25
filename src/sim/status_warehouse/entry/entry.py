@@ -19,7 +19,7 @@ class Entry:
         )
 
     def __hash__(self):
-        return hash((self.offset_x, self.pos_y))
+        return 1093 ^ hash((self.offset_x, self.pos_y))
 
     def get_offset_x(self) -> int:
         """
