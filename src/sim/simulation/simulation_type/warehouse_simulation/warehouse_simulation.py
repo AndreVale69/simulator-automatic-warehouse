@@ -340,7 +340,7 @@ class WarehouseSimulation(Simulation):
         #         if col.remove_drawer(drawer):
         #             break
 
-    def load(self, drawer: Drawer, destination: EnumWarehouse):
+    def load(self, drawer: Drawer, destination: EnumWarehouse) -> None:
         """
         Simulation method used to load the drawer into the warehouse.
 
@@ -348,6 +348,7 @@ class WarehouseSimulation(Simulation):
         :type destination: EnumWarehouse
         :param drawer: drawer to load
         :param destination: destination of the drawer
+        :raises ValueError: if the offset of the drawer is not equal to any column in the warehouse
         """
         warehouse = self.get_warehouse()
         # take destination coordinates
@@ -358,15 +359,14 @@ class WarehouseSimulation(Simulation):
         # update warehouse
         # if destination is carousel, add
         if destination == EnumWarehouse.CAROUSEL:
-            warehouse.get_carousel().add_drawer(drawer)
-        else:
-            # otherwise, check the offset of column
-            for col in warehouse.get_cols_container():
-                if col.get_offset_x() == dest_x_drawer:
-                    col.add_drawer(drawer, dest_y_drawer)
-                    break
+            return warehouse.get_carousel().add_drawer(drawer)
+        # otherwise, check the offset of column
+        for col in warehouse.get_cols_container():
+            if col.get_offset_x() == dest_x_drawer:
+                return col.add_drawer(drawer, dest_y_drawer)
+        raise ValueError(f"Offset x not found: {dest_x_drawer}")
 
-    def horiz_move(self, offset_x: int) -> float | None:
+    def horiz_move(self, offset_x: int) -> float:
         """
         Search in the column/carousel where is the drawer.
 
@@ -374,6 +374,7 @@ class WarehouseSimulation(Simulation):
         :rtype: float | None
         :param offset_x: offset of the drawer to search
         :return: the time estimated or None if not found
+        :raises ValueError: if the offset is not valid
         """
         warehouse = self.get_warehouse()
         # check the carousel
@@ -383,3 +384,4 @@ class WarehouseSimulation(Simulation):
         for col in warehouse.get_cols_container():
             if col.get_offset_x() == offset_x:
                 return (col.get_width() / 100) / warehouse.get_speed_per_sec()
+        raise ValueError(f"Offset x not found: {offset_x}")

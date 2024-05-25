@@ -32,6 +32,8 @@
 - Added a `get_num_columns` method to get the number of columns in the warehouse.
 - Added `get_deposit_drawer` and `get_buffer_drawer` methods to the `Carousel` class (useful methods).
 - Added `last_position_is_occupied` method to the `Column` class.
+- Added a new exception in `horiz_move` if the offset is not found.
+- Added a new exception in `load` if the offset is not found.
 - Changed the first drawerEntry reference. Now the first drawerEntry will be the lower limit.
   For example, a drawer with three entries; in the container the first drawerEntry will be position 2, 
   and entries 0 and 1 are simple drawerEntries.
