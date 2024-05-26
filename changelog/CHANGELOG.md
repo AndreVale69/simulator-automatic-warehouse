@@ -36,6 +36,7 @@
 - Added a new exception in `horiz_move` if the offset is not found.
 - Added a new exception in `load` if the offset is not found.
 - Added default config path if none is specified (`configuration/sample_config.yaml`).
+- Added total simulation time.
 - Changed the first drawerEntry reference. Now the first drawerEntry will be the lower limit.
   For example, a drawer with three entries; in the container the first drawerEntry will be position 2, 
   and entries 0 and 1 are simple drawerEntries.

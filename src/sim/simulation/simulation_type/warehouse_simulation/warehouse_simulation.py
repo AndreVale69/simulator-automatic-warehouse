@@ -1,4 +1,5 @@
 from copy import deepcopy
+from datetime import datetime
 from logging import getLogger
 from random import choice
 
@@ -101,6 +102,7 @@ class WarehouseSimulation(Simulation):
         case_2 = [send_back_drawer_val, insert_random_material_val, remove_random_material_val]
         # run "control of buffer" process
         yield env.process(Buffer(env, warehouse, self).simulate_action())
+        start = datetime.now()
         logger.info("Simulation started.")
         for num_action in range(self.sim_num_actions):
             logger.debug(f"~ Operation #{num_action} ~")
@@ -125,7 +127,8 @@ class WarehouseSimulation(Simulation):
             logger.debug(f"Time {env.now:5.2f} - FINISH {rand_event}\n")
 
         logger.debug(f"Time {env.now:5.2f} - Finish simulation")
-        logger.info("Simulation finished.")
+        end = datetime.now()
+        logger.info(f"Simulation finished. Total time: {end-start}")
 
     def run_simulation(self):
         """ Run a simulation. """
