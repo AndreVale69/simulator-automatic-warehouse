@@ -1,22 +1,22 @@
-from logging import getLogger
 from datetime import datetime, timedelta
+from logging import getLogger
+
 from simpy import Environment
 
 from src.sim.simulation.actions.action_enum import ActionEnum
-from src.sim.simulation.actions.buffer import Buffer
 from src.sim.simulation.actions.move.go_to_buffer import GoToBuffer
 from src.sim.simulation.actions.move.go_to_deposit import GoToDeposit
 from src.sim.simulation.actions.move.move import Move
 from src.sim.simulation.actions.move.unload import Unload
 from src.sim.simulation.actions.move.vertical import Vertical
 from src.sim.simulation.simulation import Simulation
-from src.sim.warehouse import Warehouse  # , Drawer
+from src.sim.warehouse import Warehouse
 
 logger = getLogger(__name__)
 
 
 class ExtractDrawer(Move):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, destination):
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         """
         The extract of a drawer (ExtractDrawer action) is the movement from a column to the deposit (bay).
 
@@ -27,58 +27,68 @@ class ExtractDrawer(Move):
         :param warehouse: the warehouse where the action is performed.
         :param simulation: the simulation where the action is performed.
         """
-        super().__init__(env, warehouse, simulation, destination)
+        super().__init__(env, warehouse, simulation)
+        self._go_to_deposit: GoToDeposit = GoToDeposit(env, warehouse, simulation)
+        self._go_to_buffer: GoToBuffer = GoToBuffer(env, warehouse, simulation)
+        self._unload: Unload = Unload(env, warehouse, simulation)
+        self._vertical: Vertical = Vertical(env, warehouse, simulation)
 
-    def simulate_action(self):
-        start_time = datetime.now() + timedelta(seconds=self.env.now)
+    def simulate_action(self, drawer=None, destination=None):
+        assert drawer is None, logger.warning("The default action is to select a random drawer from the warehouse, "
+                                              "so the drawer parameter is not taken into account.")
+        assert destination is not None, logger.error("The destination cannot be None!")
+        simulation, warehouse, env = self.simulation, self.warehouse, self.env
+        carousel = warehouse.get_carousel()
+
+        start_time = datetime.now() + timedelta(seconds=env.now)
 
         # try to release the drawer in the deposit
-        if not self.warehouse.get_carousel().is_deposit_full():
-            with self.simulation.get_res_deposit().request() as req:
+        if not carousel.is_deposit_full():
+            with simulation.get_res_deposit().request() as req:
                 yield req
-                yield self.env.process(self.actions(load_in_buffer=False))
+                yield env.process(self._actions(destination, False))
         else:
             # if the deposit is under process by another one, release it inside the buffer
-            with self.simulation.get_res_buffer().request() as req:
+            with simulation.get_res_buffer().request() as req:
                 yield req
-                yield self.env.process(self.actions(load_in_buffer=True))
+                yield env.process(self._actions(destination, True))
             # exec Buffer process
-            wait_buff = self.env.process(Buffer(self.env, self.warehouse, self.simulation).simulate_action())
+            wait_buff = env.process(self.get_buffer().simulate_action())
             # check GoToDeposit move
-            yield self.env.process(super().simulate_action())
+            if carousel.is_deposit_full():
+                yield env.process(self._go_to_deposit.simulate_action())
             # wait the buffer process
             yield wait_buff
 
-        end_time = datetime.now() + timedelta(seconds=self.env.now)
+        end_time = datetime.now() + timedelta(seconds=env.now)
 
-        yield self.simulation.get_store_history().put({
+        yield simulation.get_store_history().put({
             'Type of Action': ActionEnum.EXTRACT_DRAWER.value,
             'Start'         : start_time,
             'Finish'        : end_time
         })
 
-    def actions(self, load_in_buffer: bool):
+    def _actions(self, destination, load_in_buffer: bool):
         """
         Perform the real action.
         If the deposit is full, load_in_buffer should be True.
 
+        :type destination: EnumWarehouse
         :type load_in_buffer: bool
+        :param destination: the destination.
         :param load_in_buffer: True to send the drawer inside the buffer, False to send the drawer in the bay.
         """
+        simulation, warehouse, env = self.simulation, self.warehouse, self.env
+
         # choice a random drawer
-        self.set_drawer(self.warehouse.choice_random_drawer())
+        drawer = warehouse.choice_random_drawer()
         # move the floor
-        yield self.env.process(Vertical(self.env, self.warehouse, self.simulation, self.drawer,
-                                        self.destination).simulate_action())
+        yield env.process(self._vertical.simulate_action(drawer, destination))
         # unloading drawer
-        yield self.env.process(Unload(self.env, self.warehouse, self.simulation, self.drawer,
-                                      self.destination).simulate_action())
+        yield env.process(self._unload.simulate_action(drawer, destination))
         # come back to the deposit
-        if load_in_buffer:
-            yield self.env.process(GoToBuffer(self.env, self.warehouse, self.simulation,
-                                              self.drawer, self.destination).simulate_action())
-        else:
-            yield self.env.process(GoToDeposit(self.env, self.warehouse, self.simulation,
-                                               self.drawer, self.destination).simulate_action())
-        logger.debug(f"Time {self.env.now:5.2f} - Start to load in the carousel")
-        yield self.env.process(self.simulation.load_in_carousel(self.drawer, self.destination, load_in_buffer))
+        yield env.process(
+            self._go_to_buffer.simulate_action() if load_in_buffer else self._go_to_deposit.simulate_action()
+        )
+        logger.debug(f"Time {env.now:5.2f} - Start to load in the carousel")
+        yield env.process(simulation.load_in_carousel(drawer, destination, load_in_buffer))

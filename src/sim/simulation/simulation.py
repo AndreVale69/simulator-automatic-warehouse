@@ -1,7 +1,8 @@
-from logging import getLogger
 from abc import abstractmethod
-from simpy import Environment, Store
+from logging import getLogger
+
 from pandas import DataFrame
+from simpy import Environment, Store
 
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 

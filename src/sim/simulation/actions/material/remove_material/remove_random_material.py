@@ -1,6 +1,7 @@
-from random import choice
-from logging import getLogger
 from datetime import datetime, timedelta
+from logging import getLogger
+from random import choice
+
 from simpy import Environment
 
 from src.sim.simulation.actions.action_enum import ActionEnum
@@ -29,24 +30,31 @@ class RemoveRandomMaterial(RemoveMaterial):
         super().__init__(env, warehouse, simulation, duration)
 
     # override
-    def simulate_action(self):
-        start_time = datetime.now() + timedelta(seconds=self.get_env().now)
+    def simulate_action(self, drawer=None, destination=None):
+        assert drawer is None, logger.warning("A random material is removed from the bay drawer, "
+                                              "so the drawer parameter is not taken into account.")
+        assert destination is None, logger.warning("The default destination parameter is bay, "
+                                                   "so the destination parameter is not taken into account.")
 
-        with self.simulation.get_res_deposit().request() as req:
+        env, simulation = self.env, self.simulation
+        start_time = datetime.now() + timedelta(seconds=env.now)
+
+        with simulation.get_res_deposit().request() as req:
             yield req
-            drawer_output = super().simulate_action()
+            logger.debug(f"Time {env.now:5.2f} - Start removing material from a drawer")
+            drawer_output = self.warehouse.get_carousel().get_deposit_drawer()
             # check if there is a material to remove
             if drawer_output.get_num_materials() != 0:
                 # remove a random material
                 drawer_output.remove_material(choice(drawer_output.get_items()))
                 # estimate a time of the action
-                yield self.env.timeout(self.duration)
+                yield env.timeout(self.duration)
             else:
-                logger.debug(f"\nTime {self.env.now:5.2f} - No materials to remove\n")
+                logger.debug(f"\nTime {env.now:5.2f} - No materials to remove\n")
 
-        end_time = datetime.now() + timedelta(seconds=self.get_env().now)
+        end_time = datetime.now() + timedelta(seconds=env.now)
 
-        yield self.simulation.get_store_history().put({
+        yield simulation.get_store_history().put({
             'Type of Action': ActionEnum.REMOVE_RANDOM_MATERIAL.value,
             'Start'         : start_time,
             'Finish'        : end_time

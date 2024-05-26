@@ -2,6 +2,8 @@ from abc import abstractmethod
 
 from simpy import Environment
 
+from src.sim.drawer import Drawer
+from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.warehouse import Warehouse
 
 
@@ -49,8 +51,13 @@ class Action:
         return self.simulation
 
     @abstractmethod
-    def simulate_action(self):
+    def simulate_action(self, drawer: Drawer=None, destination: EnumWarehouse=None):
         """
         Abstract method that simulates the action of the instance.
+
+        :type drawer: Drawer
+        :type destination: EnumWarehouse
+        :param drawer: A drawer used in the simulation, sometimes it is not useful (e.g. GoToDeposit).
+        :param destination: A destination used in the simulation, sometimes it is not useful (e.g. GoToDeposit).
         """
         pass

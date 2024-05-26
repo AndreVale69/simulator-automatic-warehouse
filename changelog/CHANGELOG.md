@@ -21,8 +21,9 @@
   - `unload`
   - `load`
   - `horiz_move`
-- Improved the logic of the `Simulation` class. 
+- Improved the logic of the `Simulation` class.
   Created `Simulation` class as superclass and `WarehouseSimulation` as child to have any custom simulation method.
+- Improved logic of the `simulation_actions` methods. It now takes two parameters: `drawer` and `destination`.
 - Created a new module called `Algorithm` where it's possible to insert a new algorithm.
 - New methods added to the `Column` and `Carousel` classes: `is_full` and `is_empty`.
 - Moved the `gen_materials_and_drawers` static method from `Warehouse` to the `Column` class (for logical reasons).
@@ -57,6 +58,7 @@
 - Improved readability and naming of the methods used to decide where to insert a drawer.
 - Improved readability and speed of the `_high_position_algorithm`.
 - Improved readability of the `gen_rand` method in the `Warehouse` class.
+- Improved readability between simulation class methods.
 - Added new `__eq__` methods.
 - Added new `__hash__` methods.
 - Changed name of `get_max_num_space` method (`Drawer` class) to `get_num_space_occupied`.

@@ -1,7 +1,8 @@
-from simpy import Resource, Store
-from logging import getLogger
 from copy import deepcopy
+from logging import getLogger
 from random import choice
+
+from simpy import Resource, Store
 
 from src.sim.drawer import Drawer
 from src.sim.simulation.actions.action_enum import ActionEnum
@@ -77,16 +78,19 @@ class WarehouseSimulation(Simulation):
 
     def _simulate_actions(self):
         """ Simulate actions. """
+        # TODO if the actions are too many, divide them into groups
         carousel = self.warehouse.get_carousel()
         # if the deposit or the buffer are full, then update the counter
         balance_wh = carousel.is_deposit_full() + carousel.is_buffer_full()
         # get variables to reduce memory accesses
         env = self.env
         warehouse = self.warehouse
-        send_back_drawer = SendBackDrawer(env, warehouse, self, EnumWarehouse.COLUMN)
-        extract_drawer = ExtractDrawer(env, warehouse, self, EnumWarehouse.CAROUSEL)
+        send_back_drawer = SendBackDrawer(env, warehouse, self)
+        extract_drawer = ExtractDrawer(env, warehouse, self)
         insert_random_material = InsertRandomMaterial(env, warehouse, self, 2)
         remove_random_material = RemoveRandomMaterial(env, warehouse, self, 2)
+        column_val = EnumWarehouse.COLUMN
+        carousel_val = EnumWarehouse.CAROUSEL
         extract_drawer_val = ActionEnum.EXTRACT_DRAWER.value
         send_back_drawer_val = ActionEnum.SEND_BACK_DRAWER.value
         insert_random_material_val = ActionEnum.INSERT_RANDOM_MATERIAL.value
@@ -110,10 +114,10 @@ class WarehouseSimulation(Simulation):
             match rand_event:
                 case ActionEnum.EXTRACT_DRAWER.value:
                     balance_wh += 1
-                    yield env.process(extract_drawer.simulate_action())
+                    yield env.process(extract_drawer.simulate_action(destination=carousel_val))
                 case ActionEnum.SEND_BACK_DRAWER.value:
                     balance_wh -= 1
-                    yield env.process(send_back_drawer.simulate_action())
+                    yield env.process(send_back_drawer.simulate_action(destination=column_val))
                 case ActionEnum.INSERT_RANDOM_MATERIAL.value:
                     yield env.process(insert_random_material.simulate_action())
                 case ActionEnum.REMOVE_RANDOM_MATERIAL.value:

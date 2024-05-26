@@ -1,10 +1,14 @@
 from datetime import datetime, timedelta
+from logging import getLogger
+
 from simpy import Environment
 
 from src.sim.simulation.actions.action_enum import ActionEnum
 from src.sim.simulation.actions.material.insert_material.insert_material import InsertMaterial
 from src.sim.simulation.simulation import Simulation
 from src.sim.warehouse import Warehouse
+
+logger = getLogger(__name__)
 
 
 class InsertRandomMaterial(InsertMaterial):
@@ -25,21 +29,28 @@ class InsertRandomMaterial(InsertMaterial):
         super().__init__(env, warehouse, simulation, duration)
 
     # override
-    def simulate_action(self):
+    def simulate_action(self, drawer=None, destination=None):
+        assert drawer is None, logger.warning("A random material is added to the bay drawer, "
+                                              "so the drawer parameter is not taken into account.")
+        assert destination is None, logger.warning("The default destination parameter is bay, "
+                                                   "so the destination parameter is not taken into account.")
         from src.sim.material import gen_rand_material
 
-        start_time = datetime.now() + timedelta(seconds=self.env.now)
+        env, simulation = self.env, self.simulation
 
-        with self.simulation.get_res_deposit().request() as req:
+        start_time = datetime.now() + timedelta(seconds=env.now)
+
+        with simulation.get_res_deposit().request() as req:
             yield req
             # add random material
-            super().simulate_action().add_material(gen_rand_material())
+            logger.debug(f"Time {env.now:5.2f} - Start putting materials inside a drawer")
+            self.warehouse.get_carousel().get_deposit_entry().get_drawer().add_material(gen_rand_material())
             # estimate a time of the action
-            yield self.env.timeout(self.duration)
+            yield env.timeout(self.duration)
 
-        end_time = datetime.now() + timedelta(seconds=self.env.now)
+        end_time = datetime.now() + timedelta(seconds=env.now)
 
-        yield self.simulation.get_store_history().put({
+        yield simulation.get_store_history().put({
             'Type of Action': ActionEnum.INSERT_RANDOM_MATERIAL.value,
             'Start'         : start_time,
             'Finish'        : end_time

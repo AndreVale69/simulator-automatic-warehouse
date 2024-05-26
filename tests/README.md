@@ -8,9 +8,3 @@ Missing (simulation) tests:
 - [ ] Buffer action
 - [ ] Extract Drawer action
 - [ ] Send Back Drawer action
-- [ ] Go To Buffer action
-- [ ] Go To Deposit action
-- [ ] Load action
-- [ ] Move action
-- [ ] Unload action
-- [ ] Vertical action
