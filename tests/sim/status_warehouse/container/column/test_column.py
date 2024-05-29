@@ -19,6 +19,18 @@ class TestColumn(TestCase):
         )
         self.column = Column(self.column_config, self.warehouse)
 
+    def test_column_info_parameter(self):
+        # arrange
+        param_1: int = 1
+        param_2: str = 'str'
+        param_3: float = 3.6
+        param_4: int = 4
+
+        # act
+
+        # assert
+        self.assertRaises(TypeError, ColumnInfo, param_1, param_2, param_3, param_4)
+
     def test_last_position_is_occupied(self):
         # arrange
         column_1 = self.column
