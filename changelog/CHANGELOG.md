@@ -33,6 +33,7 @@
 - Added a `get_num_columns` method to get the number of columns in the warehouse.
 - Added `get_deposit_drawer` and `get_buffer_drawer` methods to the `Carousel` class (useful methods).
 - Added `last_position_is_occupied` method to the `Column` class.
+- Added `cleanup_columns` and `cleanup_carousel` methods to the `Warehouse` class.
 - Added a new exception in `horiz_move` if the offset is not found.
 - Added a new exception in `load` if the offset is not found.
 - Added default config path if none is specified (`configuration/sample_config.yaml`).

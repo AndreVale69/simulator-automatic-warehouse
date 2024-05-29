@@ -344,7 +344,13 @@ class Warehouse:
         return choice(container_drawer_entry)
 
     def cleanup(self):
-        """ Cleanup the warehouse. Each Entry will be EmptyEntry. """
+        """ Cleanup the warehouse (columns and carousel). Each Entry will be EmptyEntry. """
+        self.cleanup_columns()
+        self.cleanup_carousel()
+
+    def cleanup_columns(self):
         for column in self.columns_container:
             column.reset_container()
+
+    def cleanup_carousel(self):
         self.carousel.reset_container()
