@@ -76,6 +76,17 @@ class TestGetMethodsDrawerContainer(TestCase):
         # assert
         self.assertEqual(height_container_expected, height_container_get)
 
+    def test_get_num_entries(self):
+        # arrange
+        drawer_container = self.drawer_container
+
+        # act
+        num_entries_get = drawer_container.get_num_entries()
+        num_entries_expected = drawer_container.num_entries
+
+        # assert
+        self.assertEqual(num_entries_expected, num_entries_get)
+
     def test_get_width(self):
         # arrange
         drawer_container = self.drawer_container

@@ -48,12 +48,12 @@ class Column(DrawerContainer):
         self.height_last_position = info.height_last_position // self.get_def_space()
 
         # create container
-        for i in range(self.get_height_container()):
+        for i in range(self.get_num_entries()):
             self.create_new_space(EmptyEntry(info.x_offset, i))
 
     def __deepcopy__(self, memo):
         info = ColumnInfo(
-            height = self.get_height_container() * self.get_def_space(),
+            height =self.get_num_entries() * self.get_def_space(),
             x_offset = self.get_offset_x(),
             width = self.get_width(),
             height_last_position = self.get_height_last_position() * self.get_def_space()
@@ -118,7 +118,7 @@ class Column(DrawerContainer):
         return self.get_num_entries_free() == 0
 
     def is_empty(self) -> bool:
-        return (self.get_height_container() - self.height_last_position + 1) == self.get_num_entries_free()
+        return (self.get_num_entries() - self.height_last_position + 1) == self.get_num_entries_free()
 
     def add_drawer(self, drawer: Drawer, index: int = 0):
         """

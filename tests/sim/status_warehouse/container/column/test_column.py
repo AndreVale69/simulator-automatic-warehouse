@@ -75,7 +75,7 @@ class TestColumn(TestCase):
         # arrange
         drawer = Drawer()
         column = self.column
-        index = column.get_height_container()-1
+        index = column.get_num_entries() - 1
 
         # act
         column.add_drawer(drawer, index)
@@ -87,7 +87,7 @@ class TestColumn(TestCase):
         # arrange
         drawer = Drawer()
         column = self.column
-        index = column.get_height_container() - 1
+        index = column.get_num_entries() - 1
 
         # act
         column.add_drawer(drawer, index)

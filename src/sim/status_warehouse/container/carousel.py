@@ -37,7 +37,7 @@ class Carousel(DrawerContainer):
         self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
 
         # get first y to start
-        first_y = self.get_height_container() + self.get_hole()
+        first_y = self.get_num_entries() + self.get_hole()
 
         # create container with only two positions
         # create deposit
@@ -197,7 +197,7 @@ class Carousel(DrawerContainer):
         :param drawer: to show or to save.
         :raises RuntimeError: if the drawer already exists.
         """
-        first_y = self.get_height_container() + self.hole + self.deposit
+        first_y = self.get_num_entries() + self.hole + self.deposit
         is_deposit_full = self.is_deposit_full()
 
         # if the carousel is full, exception

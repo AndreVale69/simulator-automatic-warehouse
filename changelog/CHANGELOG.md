@@ -46,6 +46,9 @@
 - Changed `Column` class signature.
   It doesn't accept a dictionary anymore as parameter, but it wants a `ColumnInfo` class instantiation.
   This was done for clarity.
+- Changed `get_height_container` method to `get_num_entries`. 
+  The first returns the height of the container (config value) 
+  and the second returns the number of entries in the warehouse.
 
 ### Bug Fixes and Enhancements
 - Fixed random drawers generation in `Drawer` class. There were some problems (raise `ValueError`) when the

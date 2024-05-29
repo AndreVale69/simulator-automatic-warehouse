@@ -27,7 +27,8 @@ class DrawerContainer:
         self.height_warehouse = config["height_warehouse"]
         self.def_space = config["default_height_space"]
         self.width = width
-        self.height_container = height // self.get_def_space()
+        self.height_container = height
+        self.num_entries = height // self.get_def_space()
         self.offset_x = offset_x
 
     def __eq__(self, other):
@@ -37,7 +38,7 @@ class DrawerContainer:
                 self.get_def_space() == other.get_def_space() and
                 self.get_container() == other.get_container() and
                 self.get_offset_x() == other.get_offset_x() and
-                self.get_height_container() == other.get_height_container() and
+                self.get_num_entries() == other.get_num_entries() and
                 self.get_width() == other.get_width() and
                 self.get_num_drawers() == other.get_num_drawers() and
                 self.get_num_entries_occupied() == other.get_num_entries_occupied() and
@@ -54,7 +55,7 @@ class DrawerContainer:
                 hash(self.get_def_space()) ^
                 hash(tuple(self.get_container())) ^
                 hash(self.get_offset_x()) ^
-                hash(self.get_height_container()) ^
+                hash(self.get_num_entries()) ^
                 hash(self.get_width()) ^
                 hash(self.get_num_drawers()) ^
                 hash(self.get_num_entries_occupied()) ^
@@ -138,6 +139,15 @@ class DrawerContainer:
         :return: the x offset of the container.
         """
         return self.offset_x
+
+    def get_num_entries(self) -> int:
+        """
+        Get the number of entries (= get_height_container() // get_def_space()).
+
+        :rtype: int
+        :return: the number of entries.
+        """
+        return self.num_entries
 
     def get_height_container(self) -> int:
         """

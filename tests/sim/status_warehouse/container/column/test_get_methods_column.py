@@ -33,7 +33,7 @@ class TestGetMethodsColumn(TestCase):
 
         # act
         num_entries_free_get = column.get_num_entries_free()
-        num_entries_free_expected = column.get_height_container() - column.get_height_last_position() + 1
+        num_entries_free_expected = column.get_num_entries() - column.get_height_last_position() + 1
 
         # assert
         self.assertEqual(num_entries_free_get, num_entries_free_expected)
