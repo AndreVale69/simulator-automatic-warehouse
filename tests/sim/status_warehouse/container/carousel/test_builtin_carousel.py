@@ -1,19 +1,19 @@
 import copy
 from unittest import TestCase
 
-from src.sim.status_warehouse.container.carousel import Carousel
+from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
 from src.sim.warehouse import Warehouse
 
 
 class TestBuiltinCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.carousel_config = {
-            "deposit_height": 150,
-            "buffer_height": 150,
-            "x_offset": 125,
-            "width": 250
-        }
+        self.carousel_config = CarouselInfo (
+            deposit_height = 150,
+            buffer_height = 150,
+            x_offset = 125,
+            width = 250
+        )
         self.carousel = Carousel(self.carousel_config, self.warehouse)
 
     def test_deepcopy(self):
@@ -40,12 +40,14 @@ class TestBuiltinCarousel(TestCase):
     def test_hash(self):
         # arrange
         carousel_1 = self.carousel
-        carousel_2 = Carousel({
-            "deposit_height": 160,
-            "buffer_height": 160,
-            "x_offset": 150,
-            "width": 260
-        }, Warehouse())
+        carousel_2 = Carousel(
+            CarouselInfo(
+                deposit_height=self.carousel_config.deposit_height + 10,
+                buffer_height=self.carousel_config.buffer_height + 10,
+                x_offset=self.carousel_config.x_offset + 25,
+                width=self.carousel_config.width + 10
+            ),
+            Warehouse())
 
         # act
 

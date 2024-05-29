@@ -1,4 +1,4 @@
-import copy
+from copy import deepcopy
 
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.drawer_container import DrawerContainer
@@ -7,18 +7,29 @@ from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
+class CarouselInfo:
+    def __init__(self, deposit_height: int, buffer_height: int, x_offset: int, width: int):
+        if False in {isinstance(deposit_height, int), isinstance(buffer_height, int),
+                     isinstance(x_offset, int), isinstance(width, int)}:
+            raise TypeError("The parameters must be integers")
+        self.deposit_height: int = deposit_height
+        self.buffer_height: int = buffer_height
+        self.x_offset: int = x_offset
+        self.width: int = width
+
+
 class Carousel(DrawerContainer):
-    def __init__(self, info: dict, warehouse):
+    def __init__(self, info: CarouselInfo, warehouse):
         """
         The carousel represents the set of deposit (bay) and the buffer (drawer under the bay).
 
-        :type info: dict
+        :type info: CarouselInfo
         :type warehouse: Warehouse
-        :param info: dictionary containing information about the carousel (config).
+        :param info: class containing information about the carousel (config).
         :param warehouse: the warehouse where the carousel is located.
         """
-        height_carousel = info["deposit_height"] + info["buffer_height"]
-        super().__init__(height_carousel, info["x_offset"], info["width"], warehouse)
+        height_carousel = info.deposit_height + info.buffer_height
+        super().__init__(height_carousel, info.x_offset, info.width, warehouse)
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
         self.hole = config["carousel"]["hole_height"] // self.get_def_space()
         self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
@@ -34,14 +45,14 @@ class Carousel(DrawerContainer):
         self.create_new_space(EmptyEntry(self.get_offset_x(), first_y + (self.get_deposit() + self.get_buffer())))
 
     def __deepcopy__(self, memo):
-        info: dict = {
-            "deposit_height": self.get_deposit() * self.get_def_space(),
-            "buffer_height": self.get_buffer() * self.get_def_space(),
-            "x_offset": self.get_offset_x(),
-            "width": self.get_width()
-        }
+        info = CarouselInfo(
+            deposit_height = self.get_deposit() * self.get_def_space(),
+            buffer_height = self.get_buffer() * self.get_def_space(),
+            x_offset = self.get_offset_x(),
+            width = self.get_width()
+        )
         copy_obj = Carousel(info, self.get_warehouse())
-        copy_obj.container = copy.deepcopy(self.get_container(), memo)
+        copy_obj.container = deepcopy(self.get_container(), memo)
         return copy_obj
 
     def __eq__(self, other):

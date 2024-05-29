@@ -18,7 +18,7 @@ from copy import deepcopy
 from random import randint, choice
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
-from src.sim.status_warehouse.container.carousel import Carousel
+from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
 from src.sim.status_warehouse.container.column import Column
 from src.sim.material import gen_rand_material
 
@@ -51,7 +51,15 @@ class Warehouse:
         # respecting this order
         for col_data in config["columns"]:
             self.add_column(Column(col_data, self))
-        self.carousel = Carousel(config["carousel"], self)
+        self.carousel = Carousel(
+            CarouselInfo(
+                deposit_height=config["carousel"]["deposit_height"],
+                buffer_height=config["carousel"]["buffer_height"],
+                x_offset=config["carousel"]["x_offset"],
+                width=config["carousel"]["width"]
+            ),
+            self
+        )
 
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]

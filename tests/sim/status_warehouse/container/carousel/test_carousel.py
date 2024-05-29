@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from src.sim.drawer import Drawer
-from src.sim.status_warehouse.container.carousel import Carousel
+from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.warehouse import Warehouse
 
@@ -9,13 +9,25 @@ from src.sim.warehouse import Warehouse
 class TestCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.carousel_config = {
-            "deposit_height": 150,
-            "buffer_height": 150,
-            "x_offset": 125,
-            "width": 250
-        }
+        self.carousel_config = CarouselInfo (
+            deposit_height = 150,
+            buffer_height = 150,
+            x_offset = 125,
+            width = 250
+        )
         self.carousel = Carousel(self.carousel_config, self.warehouse)
+
+    def test_carousel_info_parameter(self):
+        # arrange
+        param_1: int = 1
+        param_2: str = 'str'
+        param_3: float = 3.6
+        param_4: int = 4
+
+        # act
+
+        # assert
+        self.assertRaises(TypeError, CarouselInfo, param_1, param_2, param_3, param_4)
 
     def test_is_full(self):
         # arrange
