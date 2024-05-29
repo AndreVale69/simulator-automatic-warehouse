@@ -58,6 +58,7 @@ class Carousel(DrawerContainer):
 
     def __hash__(self):
         return (
+            14951 ^
             DrawerContainer.__hash__(self) ^
             hash(self.buffer) ^
             hash(self.deposit) ^

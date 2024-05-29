@@ -56,6 +56,7 @@ class Column(DrawerContainer):
 
     def __hash__(self):
         return (
+            15199 ^
             DrawerContainer.__hash__(self) ^
             hash(self.get_height_last_position())
         )

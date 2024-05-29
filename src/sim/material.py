@@ -48,7 +48,7 @@ class Material:
         )
 
     def __hash__(self):
-        return hash((self.barcode, self.name, self.height, self.length, self.width))
+        return 13463 ^ hash((self.barcode, self.name, self.height, self.length, self.width))
 
     def __deepcopy__(self, memo):
         return Material(self.get_barcode(),

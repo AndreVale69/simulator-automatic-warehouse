@@ -24,4 +24,4 @@ class EmptyEntry(Entry):
         )
 
     def __hash__(self):
-        return Entry.__hash__(self)
+        return 18341 ^ Entry.__hash__(self)

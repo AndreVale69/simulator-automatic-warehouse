@@ -61,6 +61,7 @@
 - Improved readability of the `gen_rand` method in the `Warehouse` class.
 - Improved readability between simulation class methods.
 - Improved logic for abstract methods. They now throw a `NotImplementedError`.
+- Added different prime number in hash method for each class.
 - Added new `__eq__` methods.
 - Added new `__hash__` methods.
 - Changed name of `get_max_num_space` method (`Drawer` class) to `get_num_space_occupied`.

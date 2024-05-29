@@ -31,7 +31,7 @@ class DrawerEntry(Entry):
         )
 
     def __hash__(self):
-        return Entry.__hash__(self) ^ hash(self.drawer)
+        return 17581 ^ Entry.__hash__(self) ^ hash(self.drawer)
 
     def get_drawer(self) -> Drawer:
         """

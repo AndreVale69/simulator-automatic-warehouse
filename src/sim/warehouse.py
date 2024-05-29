@@ -93,7 +93,7 @@ class Warehouse:
 
     def __hash__(self):
         return (
-            1093 ^
+            32831 ^
             hash(self.get_height()) ^
             hash(tuple(self.get_cols_container())) ^
             hash(self.get_carousel()) ^

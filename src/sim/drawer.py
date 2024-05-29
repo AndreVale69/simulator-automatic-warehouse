@@ -34,7 +34,7 @@ class Drawer:
 
     def __hash__(self):
         return (
-                1093 ^
+                12637 ^
                 hash(tuple(self.items)) ^
                 hash(self.max_height) ^
                 hash(self.num_space)
