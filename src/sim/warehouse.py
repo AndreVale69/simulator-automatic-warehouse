@@ -19,7 +19,7 @@ from random import randint, choice
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 from src.sim.drawer import Drawer
 from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
-from src.sim.status_warehouse.container.column import Column
+from src.sim.status_warehouse.container.column import Column, ColumnInfo
 from src.sim.material import gen_rand_material
 
 logger = getLogger(__name__)
@@ -50,7 +50,15 @@ class Warehouse:
         # all columns must be added from minimum offset_x to greats offset_x
         # respecting this order
         for col_data in config["columns"]:
-            self.add_column(Column(col_data, self))
+            self.add_column(Column(
+                ColumnInfo(
+                    height=col_data["height"],
+                    x_offset=col_data["x_offset"],
+                    width=col_data["width"],
+                    height_last_position=col_data["height_last_position"]
+                ),
+                self
+            ))
         self.carousel = Carousel(
             CarouselInfo(
                 deposit_height=config["carousel"]["deposit_height"],

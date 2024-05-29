@@ -40,8 +40,11 @@
 - Changed the first drawerEntry reference. Now the first drawerEntry will be the lower limit.
   For example, a drawer with three entries; in the container the first drawerEntry will be position 2, 
   and entries 0 and 1 are simple drawerEntries.
-- Changed Carousel class signature.
-  It doesn't accept a dictionary anymore as parameter, but it wants a CarouselInfo class instantiation.
+- Changed `Carousel` class signature.
+  It doesn't accept a dictionary anymore as parameter, but it wants a `CarouselInfo` class instantiation.
+  This was done for clarity.
+- Changed `Column` class signature.
+  It doesn't accept a dictionary anymore as parameter, but it wants a `ColumnInfo` class instantiation.
   This was done for clarity.
 
 ### Bug Fixes and Enhancements

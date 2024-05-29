@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.sim.status_warehouse.container.column import Column
+from src.sim.status_warehouse.container.column import Column, ColumnInfo
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
@@ -124,12 +124,12 @@ class TestWarehouse(TestCase):
     def test_choice_random_drawer_with_empty_column(self):
         # arrange
         warehouse = Warehouse()
-        warehouse.add_column(Column({
-            "height": 325,
-            "x_offset": 125,
-            "width": 250,
-            "height_last_position": 75
-        }, warehouse))
+        warehouse.add_column(Column(ColumnInfo(
+            height = 325,
+            x_offset = 125,
+            width = 250,
+            height_last_position = 75
+        ), warehouse))
         drawers = []
 
         # act

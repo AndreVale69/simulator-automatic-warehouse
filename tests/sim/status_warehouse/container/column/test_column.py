@@ -2,7 +2,7 @@ import copy
 from unittest import TestCase
 
 from src.sim.drawer import Drawer
-from src.sim.status_warehouse.container.column import Column
+from src.sim.status_warehouse.container.column import Column, ColumnInfo
 from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
@@ -11,12 +11,12 @@ from src.sim.warehouse import Warehouse
 class TestColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.column_config = {
-            "height": 325,
-            "x_offset": 125,
-            "width": 250,
-            "height_last_position": 75
-        }
+        self.column_config = ColumnInfo(
+            height = 325,
+            x_offset = 125,
+            width = 250,
+            height_last_position = 75
+        )
         self.column = Column(self.column_config, self.warehouse)
 
     def test_last_position_is_occupied(self):

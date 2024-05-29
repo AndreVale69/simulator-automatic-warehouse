@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.sim.status_warehouse.container.column import Column
+from src.sim.status_warehouse.container.column import Column, ColumnInfo
 from src.sim.warehouse import Warehouse, MinimumOffsetReturns
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
@@ -122,12 +122,12 @@ class TestGetMethodsWarehouse(TestCase):
     def test_get_minimum_offset(self):
         # arrange
         warehouse = Warehouse()
-        col = Column({
-            'width': 200,
-            'height': 1000,
-            'x_offset': 1,
-            'height_last_position': 75
-        }, warehouse)
+        col = Column(ColumnInfo(
+            width = 200,
+            height = 1000,
+            x_offset = 1,
+            height_last_position = 75
+        ), warehouse)
         warehouse.add_column(col)
 
         # act

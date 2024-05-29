@@ -9,6 +9,21 @@ from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 
 
+
+class ColumnInfo:
+    """ Support class used as a parameter to help instantiate the Column class. """
+    def __init__(self, height: int, x_offset: int, width: int, height_last_position: int):
+        if False in {
+            isinstance(height, int), isinstance(x_offset, int),
+            isinstance(width, int), isinstance(height_last_position, int)
+        }:
+            raise TypeError("The parameters must be integers")
+        self.height: int = height
+        self.x_offset: int = x_offset
+        self.width: int = width
+        self.height_last_position = height_last_position
+
+
 class GenMaterialsAndDrawersReturns(NamedTuple):
     """ Values returned by the gen_materials_and_drawers method. """
     drawers_inserted: int
@@ -16,7 +31,7 @@ class GenMaterialsAndDrawersReturns(NamedTuple):
 
 
 class Column(DrawerContainer):
-    def __init__(self, info: dict, warehouse):
+    def __init__(self, info: ColumnInfo, warehouse):
         """
         The column is a simple column of the warehouse.
         It can't be where there is the bay and the buffer.
@@ -27,22 +42,22 @@ class Column(DrawerContainer):
         :param info: info about the column (config).
         :param warehouse: the warehouse where the column is located.
         """
-        super().__init__(info["height"], info["x_offset"], info["width"], warehouse)
+        super().__init__(info.height, info.x_offset, info.width, warehouse)
 
-        self.width = info["width"]
-        self.height_last_position = info["height_last_position"] // self.get_def_space()
+        self.width = info.width
+        self.height_last_position = info.height_last_position // self.get_def_space()
 
         # create container
         for i in range(self.get_height_container()):
-            self.create_new_space(EmptyEntry(info["x_offset"], i))
+            self.create_new_space(EmptyEntry(info.x_offset, i))
 
     def __deepcopy__(self, memo):
-        info: dict = {
-            "height": self.get_height_container() * self.get_def_space(),
-            "x_offset": self.get_offset_x(),
-            "width": self.get_width(),
-            "height_last_position": self.get_height_last_position() * self.get_def_space()
-        }
+        info = ColumnInfo(
+            height = self.get_height_container() * self.get_def_space(),
+            x_offset = self.get_offset_x(),
+            width = self.get_width(),
+            height_last_position = self.get_height_last_position() * self.get_def_space()
+        )
         copy_obj = Column(info, self.get_warehouse())
         copy_obj.container = copy.deepcopy(self.get_container(), memo)
         return copy_obj

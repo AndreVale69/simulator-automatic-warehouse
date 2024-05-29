@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.sim.status_warehouse.container.column import Column
+from src.sim.status_warehouse.container.column import Column, ColumnInfo
 from src.sim.status_warehouse.container.drawer_container import DrawerContainer
 from src.sim.warehouse import Warehouse
 
@@ -51,12 +51,12 @@ class TestBuiltinDrawerContainer(TestCase):
     def test_hash(self):
         # arrange
         drawer_container_1 = self.drawer_container
-        drawer_container_2 = Column({
-            "height": 5 * 25,
-            "x_offset": 150,
-            "width": 200,
-            "height_last_position": 50
-        }, self.warehouse)
+        drawer_container_2 = Column(ColumnInfo(
+            height = 5 * 25,
+            x_offset = 150,
+            width = 200,
+            height_last_position = 50
+        ), self.warehouse)
 
         # act
 
