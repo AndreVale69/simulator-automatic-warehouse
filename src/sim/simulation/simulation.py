@@ -96,4 +96,4 @@ class Simulation:
         Run a new simulation.
         Note: the simulation will create a new sequence of actions.
         """
-        pass
+        raise NotImplementedError

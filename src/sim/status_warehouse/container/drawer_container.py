@@ -72,7 +72,7 @@ class DrawerContainer:
         :rtype: int
         :return: how many seats are available.
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def is_full(self) -> bool:
@@ -82,7 +82,7 @@ class DrawerContainer:
         :rtype: bool
         :return: True if the container is full, False otherwise.
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def is_empty(self) -> bool:
@@ -92,7 +92,7 @@ class DrawerContainer:
         :rtype: bool
         :return: True if the container is empty, False otherwise.
         """
-        pass
+        raise NotImplementedError
 
     def get_warehouse(self):
         """

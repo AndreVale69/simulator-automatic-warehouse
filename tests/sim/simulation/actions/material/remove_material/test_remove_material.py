@@ -13,6 +13,15 @@ class TestRemoveMaterial(TestCase):
         self.duration = 10
         self.remove_material = RemoveMaterial(self.env, self.warehouse, None, self.duration)
 
+    def test_simulate_action_abstractmethod(self):
+        # arrange
+        remove_material = self.remove_material
+
+        # act
+
+        # assert
+        self.assertRaises(NotImplementedError, remove_material.simulate_action)
+
     def test_get_duration(self):
         # arrange
         remove_material = self.remove_material

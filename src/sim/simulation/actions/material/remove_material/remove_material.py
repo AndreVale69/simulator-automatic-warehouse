@@ -35,4 +35,4 @@ class RemoveMaterial(Action):
 
     @abstractmethod
     def simulate_action(self, drawer=None, destination=None):
-        pass
+        raise NotImplementedError

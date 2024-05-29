@@ -13,6 +13,15 @@ class TestInsertMaterial(TestCase):
         self.duration = 10
         self.insert_material = InsertMaterial(self.env, self.warehouse, None, self.duration)
 
+    def test_simulate_action_abstractmethod(self):
+        # arrange
+        insert_material = self.insert_material
+
+        # act
+
+        # assert
+        self.assertRaises(NotImplementedError, insert_material.simulate_action)
+
     def test_get_duration(self):
         # arrange
         insert_material = self.insert_material

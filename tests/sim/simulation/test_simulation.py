@@ -87,7 +87,6 @@ class TestSimulation(TestCase):
         simulation = self.simulation
 
         # act
-        res = simulation.run_simulation()
 
         # assert
-        self.assertIsNone(res)
+        self.assertRaises(NotImplementedError, simulation.run_simulation)

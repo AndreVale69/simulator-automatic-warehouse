@@ -46,7 +46,6 @@ class TestAction(TestCase):
         action = self.action
 
         # act
-        res = action.simulate_action()
 
         # assert
-        self.assertIsNone(res)
+        self.assertRaises(NotImplementedError, action.simulate_action)

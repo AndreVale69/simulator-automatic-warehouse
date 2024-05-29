@@ -56,17 +56,15 @@ class TestDrawerContainer(TestCase):
         drawer_container = DrawerContainer(1000, 425, 200, self.warehouse)
 
         # act
-        res = drawer_container.is_full()
 
         # assert
-        self.assertIsNone(res)
+        self.assertRaises(NotImplementedError, drawer_container.is_full)
 
     def test_is_empty_abstractmethod(self):
         # arrange
         drawer_container = DrawerContainer(1000, 425, 200, self.warehouse)
 
         # act
-        res = drawer_container.is_empty()
 
         # assert
-        self.assertIsNone(res)
+        self.assertRaises(NotImplementedError, drawer_container.is_empty)

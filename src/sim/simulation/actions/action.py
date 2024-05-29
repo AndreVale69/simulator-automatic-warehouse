@@ -60,4 +60,4 @@ class Action:
         :param drawer: A drawer used in the simulation, sometimes it is not useful (e.g. GoToDeposit).
         :param destination: A destination used in the simulation, sometimes it is not useful (e.g. GoToDeposit).
         """
-        pass
+        raise NotImplementedError
