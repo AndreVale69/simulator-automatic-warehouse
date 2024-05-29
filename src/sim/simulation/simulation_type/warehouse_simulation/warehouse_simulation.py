@@ -79,7 +79,7 @@ class WarehouseSimulation(Simulation):
 
     def _simulate_actions(self):
         """ Simulate actions. """
-        # TODO if the actions are too many, divide them into groups
+        # TODO if the actions are too many, divide them into groups (batches py3.12)
         carousel = self.warehouse.get_carousel()
         # if the deposit or the buffer are full, then update the counter
         balance_wh = carousel.is_deposit_full() + carousel.is_buffer_full()
