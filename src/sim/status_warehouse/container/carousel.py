@@ -8,6 +8,7 @@ from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSing
 
 
 class CarouselInfo:
+    """ Support class used as a parameter to help instantiate the Carousel class. """
     def __init__(self, deposit_height: int, buffer_height: int, x_offset: int, width: int):
         if False in {isinstance(deposit_height, int), isinstance(buffer_height, int),
                      isinstance(x_offset, int), isinstance(width, int)}:
