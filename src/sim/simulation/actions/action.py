@@ -57,7 +57,7 @@ class Action:
 
         :type tray: Tray
         :type destination: EnumWarehouse
-        :param tray: A tray used in the simulation, sometimes it is not useful (e.g. GoToDeposit).
-        :param destination: A destination used in the simulation, sometimes it is not useful (e.g. GoToDeposit).
+        :param tray: A tray used in the simulation, sometimes it is not useful (e.g. GoToBay).
+        :param destination: A destination used in the simulation, sometimes it is not useful (e.g. GoToBay).
         """
         raise NotImplementedError

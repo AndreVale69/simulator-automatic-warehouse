@@ -37,14 +37,14 @@ class WarehouseSimulation(Simulation):
 
         # allocation of carousel resources
         self.res_buffer = Resource(self.env, 1)
-        self.res_deposit = Resource(self.env, 1)
+        self.res_bay = Resource(self.env, 1)
 
     def __eq__(self, other):
         return (
             isinstance(other, WarehouseSimulation) and
             self.get_warehouse() == other.get_warehouse() and
             self.get_res_buffer() == other.get_res_buffer() and
-            self.get_res_deposit() == other.get_res_deposit() and
+            self.get_res_bay() == other.get_res_bay() and
             Simulation.__eq__(self, other)
         )
 
@@ -67,22 +67,22 @@ class WarehouseSimulation(Simulation):
         """
         return self.res_buffer
 
-    def get_res_deposit(self) -> Resource:
+    def get_res_bay(self) -> Resource:
         """
-        Get the resource of the deposit (bay).
+        Get the resource of the bay.
         It can be thought of as a resource lock (see SimPy resource).
 
         :rtype: simpy.Resource
-        :return: the resource of the deposit (bay).
+        :return: the resource of the bay.
         """
-        return self.res_deposit
+        return self.res_bay
 
     def _simulate_actions(self):
         """ Simulate actions. """
         # TODO if the actions are too many, divide them into groups (batches py3.12)
         carousel = self.warehouse.get_carousel()
-        # if the deposit or the buffer are full, then update the counter
-        balance_wh = carousel.is_deposit_full() + carousel.is_buffer_full()
+        # if the bay or the buffer are full, then update the counter
+        balance_wh = carousel.is_bay_full() + carousel.is_buffer_full()
         # get variables to reduce memory accesses
         env = self.env
         warehouse = self.warehouse
@@ -142,20 +142,20 @@ class WarehouseSimulation(Simulation):
         self.env.run(until=self.sim_time)
 
     def new_simulation(self, num_actions: int, num_gen_trays: int, num_gen_materials: int,
-                       gen_deposit: bool, gen_buffer: bool, time: int=None):
+                       gen_bay: bool, gen_buffer: bool, time: int=None):
         """
         Run a new simulation using custom parameters.
 
         :type num_actions: int
         :type num_gen_trays: int
         :type num_gen_materials: int
-        :type gen_deposit: bool
+        :type gen_bay: bool
         :type gen_buffer: bool
         :type time: int or None
         :param num_actions: number of actions to simulate
         :param num_gen_trays: number of trays to generate in the warehouse
         :param num_gen_materials: number of materials to generate in the warehouse
-        :param gen_deposit: True to generate a tray in the deposit, False otherwise
+        :param gen_bay: True to generate a tray in the bay, False otherwise
         :param gen_buffer: True to generate a tray in the buffer, False otherwise
         :param time: the maximum time of the simulation, otherwise None to remove the limit
         """
@@ -164,7 +164,7 @@ class WarehouseSimulation(Simulation):
         self.sim_num_actions = num_actions
 
         # random gen
-        self.warehouse.gen_rand(gen_deposit, gen_buffer, num_gen_trays, num_gen_materials)
+        self.warehouse.gen_rand(gen_bay, gen_buffer, num_gen_trays, num_gen_materials)
 
         # reset events to simulate list
         self.events_to_simulate.clear()
@@ -172,15 +172,15 @@ class WarehouseSimulation(Simulation):
         # run a new simulation
         self.run_simulation()
 
-    def go_to_deposit(self):
+    def go_to_bay(self):
         """
-        Simulation method used to go to deposit.
+        Simulation method used to go to bay.
         """
         warehouse = self.get_warehouse()
         # take current position (y)
         curr_pos = warehouse.get_pos_y_floor()
         # take destination position (y)
-        dep_pos = warehouse.get_carousel().get_deposit_entry().get_pos_y()
+        dep_pos = warehouse.get_carousel().get_bay_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
         # set new y position of the floor
         warehouse.set_pos_y_floor(dep_pos)
@@ -207,23 +207,23 @@ class WarehouseSimulation(Simulation):
         :type load_in_buffer: bool
         :param tray_to_insert: tray that will be inserted into the warehouse
         :param destination: destination of the tray
-        :param load_in_buffer: True to load the carousel into the buffer, otherwise into the deposit (bay)
+        :param load_in_buffer: True to load the carousel into the buffer, otherwise into the bay
         """
         warehouse = self.get_warehouse()
         carousel = warehouse.get_carousel()
-        y_dep = carousel.get_deposit_entry().get_pos_y()
+        y_dep = carousel.get_bay_entry().get_pos_y()
         y_buf = carousel.get_buffer_entry().get_pos_y()
         # update the y position
         tray_to_insert.set_best_y(y_dep)
 
         # calculate time to move (y)
         if load_in_buffer:
-            # if the deposit is full but the buffer isn't full
+            # if the bay is full but the buffer isn't full
             if carousel.is_buffer_full():
-                raise NotImplementedError("Deposit and buffer are full! Collision!")
+                raise NotImplementedError("Bay and buffer are full! Collision!")
             # update the y destination
             tray_to_insert.set_best_y(y_buf)
-            logger.debug(f"Time {self.env.now:5.2f} - Deposit is full! Start vertical move to buffer")
+            logger.debug(f"Time {self.env.now:5.2f} - Bay is full! Start vertical move to buffer")
             yield self.env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
             # set new y position of the floor
             warehouse.set_pos_y_floor(y_buf)
@@ -234,14 +234,14 @@ class WarehouseSimulation(Simulation):
 
     def loading_buffer_and_remove(self):
         """
-        Vertical movement of carousel loading from buffer to deposit.
+        Vertical movement of carousel loading from buffer to bay.
         """
         carousel = self.get_warehouse().get_carousel()
         buffer: TrayEntry = carousel.get_buffer_entry()
 
         # calculate loading buffer time
         start_pos = buffer.get_pos_y()
-        end_pos = carousel.get_deposit_entry().get_pos_y()
+        end_pos = carousel.get_bay_entry().get_pos_y()
         loading_buffer_time = self.vertical_move(start_pos, end_pos)
 
         # exec simulate
@@ -256,7 +256,7 @@ class WarehouseSimulation(Simulation):
 
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
         """
-        A simple vertical movement of the floor or the tray inside the carousel (buffer to deposit).
+        A simple vertical movement of the floor or the tray inside the carousel (buffer to bay).
 
         :type start_pos: int
         :type end_pos: int

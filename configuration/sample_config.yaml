@@ -49,7 +49,7 @@ columns:
     height_last_position: 75
 
 
-# The carousel of the warehouse, composed by a buffer and a deposit.
+# The carousel of the warehouse, composed by a buffer and a bay.
 # At the moment (version 0.0.1) there can only be one carousel in the warehouse.
 # As the column has a description used by the user for readability.
 carousel:
@@ -60,8 +60,8 @@ carousel:
   # The height of the hole.
   # The hole is the space into which an operator can 'enter' the warehouse to place materials.
   hole_height: 375
-  # The height of deposit and buffer.
-  deposit_height: 150
+  # The height of bay and buffer.
+  bay_height: 150
   buffer_height: 150
   offset_formula_description: "width / 2"
   x_offset: 125
@@ -81,7 +81,7 @@ simulation:
   # The number of materials to be generated.
   # The materials are placed in random trays.
   materials_to_gen: 3
-  # Specify whether you want a tray in a deposit and/or in a buffer.
+  # Specify whether you want a tray in a bay and/or in a buffer.
   # The number of trays to be created is independent of the value of these fields.
-  gen_deposit: false
+  gen_bay: false
   gen_buffer: false

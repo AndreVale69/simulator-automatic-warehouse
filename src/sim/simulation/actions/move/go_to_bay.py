@@ -9,10 +9,10 @@ from src.sim.warehouse import Warehouse
 logger = getLogger(__name__)
 
 
-class GoToDeposit(Move):
+class GoToBay(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         """
-        Movement to go to the deposit.
+        Movement to go to the bay.
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -25,10 +25,10 @@ class GoToDeposit(Move):
 
     # override
     def simulate_action(self, tray=None, destination=None):
-        assert tray is None, logger.warning("A go to deposit move is the default go to deposit move, "
+        assert tray is None, logger.warning("A go to bay move is the default go to bay move, "
                                               "so the tray parameter is not taken into account.")
         assert destination is None, logger.warning("The default destination parameter is bay, "
                                                    "so the destination parameter is not taken into account.")
         env = self.env
-        logger.debug(f"Time {env.now:5.2f} - Start come back to deposit position")
-        yield env.process(self.simulation.go_to_deposit())
+        logger.debug(f"Time {env.now:5.2f} - Start come back to bay position")
+        yield env.process(self.simulation.go_to_bay())

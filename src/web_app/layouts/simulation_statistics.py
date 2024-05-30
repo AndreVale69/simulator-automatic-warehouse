@@ -13,7 +13,7 @@ class SimulationInput(NamedTuple):
     num_actions: int
     trays_to_gen: int
     materials_to_gen: int
-    gen_deposit: bool
+    gen_bay: bool
     gen_buffer: bool
     time: int | str
 
@@ -55,8 +55,8 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                 html.Td(id="materials_to_gen_sim_stats", children=simulation_input.materials_to_gen)
             ]),
             html.Tr([
-                html.Td("Deposit tray generated"),
-                html.Td(id="gen_deposit_sim_stats", children=str(simulation_input.gen_deposit))
+                html.Td("Bay tray generated"),
+                html.Td(id="gen_bay_sim_stats", children=str(simulation_input.gen_bay))
             ]),
             html.Tr([
                 html.Td("Buffer tray generated"),

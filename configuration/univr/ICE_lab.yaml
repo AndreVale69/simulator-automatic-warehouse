@@ -23,7 +23,7 @@ carousel:
   description: "carousel-bay_and_buffer"
   width: 250
   hole_height: 375
-  deposit_height: 150
+  bay_height: 150
   buffer_height: 150
   offset_formula_description: "width / 2"
   x_offset: 125
@@ -35,5 +35,5 @@ simulation:
   num_actions: 1000
   trays_to_gen: 5
   materials_to_gen: 3
-  gen_deposit: false
+  gen_bay: false
   gen_buffer: false

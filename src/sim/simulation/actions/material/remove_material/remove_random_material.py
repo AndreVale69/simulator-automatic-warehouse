@@ -16,7 +16,7 @@ class RemoveRandomMaterial(RemoveMaterial):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         """
         The remove random material action is the movement
-        performed by the person who has removed a material from the deposit (bay) to their hand.
+        performed by the person who has removed a material from the bay to their hand.
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -39,10 +39,10 @@ class RemoveRandomMaterial(RemoveMaterial):
         env, simulation = self.env, self.simulation
         start_time = datetime.now() + timedelta(seconds=env.now)
 
-        with simulation.get_res_deposit().request() as req:
+        with simulation.get_res_bay().request() as req:
             yield req
             logger.debug(f"Time {env.now:5.2f} - Start removing material from a tray")
-            tray_output = self.warehouse.get_carousel().get_deposit_tray()
+            tray_output = self.warehouse.get_carousel().get_bay_tray()
             # check if there is a material to remove
             if tray_output.get_num_materials() != 0:
                 # remove a random material

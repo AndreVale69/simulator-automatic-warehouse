@@ -9,11 +9,11 @@ from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSing
 
 class CarouselInfo:
     """ Support class used as a parameter to help instantiate the Carousel class. """
-    def __init__(self, deposit_height: int, buffer_height: int, x_offset: int, width: int):
-        if False in {isinstance(deposit_height, int), isinstance(buffer_height, int),
+    def __init__(self, bay_height: int, buffer_height: int, x_offset: int, width: int):
+        if False in {isinstance(bay_height, int), isinstance(buffer_height, int),
                      isinstance(x_offset, int), isinstance(width, int)}:
             raise TypeError("The parameters must be integers")
-        self.deposit_height: int = deposit_height
+        self.bay_height: int = bay_height
         self.buffer_height: int = buffer_height
         self.x_offset: int = x_offset
         self.width: int = width
@@ -22,32 +22,32 @@ class CarouselInfo:
 class Carousel(TrayContainer):
     def __init__(self, info: CarouselInfo, warehouse):
         """
-        The carousel represents the set of deposit (bay) and the buffer (tray under the bay).
+        The carousel represents the set of bay and the buffer (tray under the bay).
 
         :type info: CarouselInfo
         :type warehouse: Warehouse
         :param info: class containing information about the carousel (config).
         :param warehouse: the warehouse where the carousel is located.
         """
-        height_carousel = info.deposit_height + info.buffer_height
+        height_carousel = info.bay_height + info.buffer_height
         super().__init__(height_carousel, info.x_offset, info.width, warehouse)
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
         self.hole = config["carousel"]["hole_height"] // self.get_def_space()
-        self.deposit = config["carousel"]["deposit_height"] // self.get_def_space()
+        self.bay = config["carousel"]["bay_height"] // self.get_def_space()
         self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
 
         # get first y to start
         first_y = self.get_num_entries() + self.get_hole()
 
         # create container with only two positions
-        # create deposit
+        # create bay
         self.create_new_space(EmptyEntry(self.get_offset_x(), first_y))
         # create buffer
-        self.create_new_space(EmptyEntry(self.get_offset_x(), first_y + (self.get_deposit() + self.get_buffer())))
+        self.create_new_space(EmptyEntry(self.get_offset_x(), first_y + (self.get_bay() + self.get_buffer())))
 
     def __deepcopy__(self, memo):
         info = CarouselInfo(
-            deposit_height = self.get_deposit() * self.get_def_space(),
+            bay_height = self.get_bay() * self.get_def_space(),
             buffer_height = self.get_buffer() * self.get_def_space(),
             x_offset = self.get_offset_x(),
             width = self.get_width()
@@ -60,9 +60,9 @@ class Carousel(TrayContainer):
         return (
             isinstance(other, Carousel) and
             self.get_buffer() == other.get_buffer() and
-            self.get_deposit() == other.get_deposit() and
+            self.get_bay() == other.get_bay() and
             self.get_hole() == other.get_hole() and
-            self.get_deposit_entry() == other.get_deposit_entry() and
+            self.get_bay_entry() == other.get_bay_entry() and
             self.get_buffer_entry() == other.get_buffer_entry() and
             self.get_num_trays() == other.get_num_trays() and
             TrayContainer.__eq__(self, other)
@@ -73,9 +73,9 @@ class Carousel(TrayContainer):
             14951 ^
             TrayContainer.__hash__(self) ^
             hash(self.buffer) ^
-            hash(self.deposit) ^
+            hash(self.bay) ^
             hash(self.hole) ^
-            hash(self.get_deposit_entry()) ^
+            hash(self.get_bay_entry()) ^
             hash(self.get_buffer_entry()) ^
             hash(self.get_num_trays())
         )
@@ -89,14 +89,14 @@ class Carousel(TrayContainer):
         """
         return self.buffer
 
-    def get_deposit(self) -> int:
+    def get_bay(self) -> int:
         """
-        Get the height of the deposit of the carousel.
+        Get the height of the bay of the carousel.
 
         :rtype: int
-        :return: the height of the deposit of the carousel.
+        :return: the height of the bay of the carousel.
         """
-        return self.deposit
+        return self.bay
 
     def get_hole(self) -> int:
         """
@@ -109,22 +109,22 @@ class Carousel(TrayContainer):
         """
         return self.hole
 
-    def get_deposit_entry(self) -> TrayEntry | EmptyEntry:
+    def get_bay_entry(self) -> TrayEntry | EmptyEntry:
         """
-        Get the deposit (bay) entry or an empty entry.
+        Get the bay entry or an empty entry.
 
         :rtype: TrayEntry | EmptyEntry
-        :return: the deposit (bay) entry or an empty entry.
+        :return: the bay entry or an empty entry.
         """
         return self.container[0]
 
-    def get_deposit_tray(self) -> Tray:
+    def get_bay_tray(self) -> Tray:
         """
-        Get the deposit (bay) tray.
+        Get the bay tray.
 
         :rtype: Tray
-        :return: the Tray object of the deposit (bay).
-        :raises AttributeError: when the deposit (bay) is empty and there is no tray.
+        :return: the Tray object of the bay.
+        :raises AttributeError: when the bay is empty and there is no tray.
         """
         return self.container[0].get_tray()
 
@@ -154,7 +154,7 @@ class Carousel(TrayContainer):
         :rtype: int
         :return: the number of trays there are.
         """
-        return isinstance(self.get_deposit_entry(), TrayEntry) + isinstance(self.get_buffer_entry(), TrayEntry)
+        return isinstance(self.get_bay_entry(), TrayEntry) + isinstance(self.get_buffer_entry(), TrayEntry)
 
     def get_num_entries_free(self) -> int:
         count = 0
@@ -164,10 +164,10 @@ class Carousel(TrayContainer):
         return count
 
     def is_full(self) -> bool:
-        return self.is_buffer_full() and self.is_deposit_full()
+        return self.is_buffer_full() and self.is_bay_full()
 
     def is_empty(self) -> bool:
-        return not self.is_buffer_full() and not self.is_deposit_full()
+        return not self.is_buffer_full() and not self.is_bay_full()
 
     def is_buffer_full(self) -> bool:
         """
@@ -179,33 +179,33 @@ class Carousel(TrayContainer):
         # check if the first position of buffer have a Tray
         return isinstance(self.get_buffer_entry(), TrayEntry)
 
-    def is_deposit_full(self) -> bool:
+    def is_bay_full(self) -> bool:
         """
-        Check if the deposit (bay) is full.
+        Check if the bay is full.
 
         :rtype: bool
         :return: True if is full, False otherwise.
         """
-        # check if the first position of deposit have a Tray
-        return isinstance(self.get_deposit_entry(), TrayEntry)
+        # check if the first position of bay have a Tray
+        return isinstance(self.get_bay_entry(), TrayEntry)
 
     def add_tray(self, tray: Tray):
         """
-        Add a tray in the buffer area or show as an output (deposit).
+        Add a tray in the buffer area or show as an output (bay).
 
         :type tray: Tray
         :param tray: to show or to save.
         :raises RuntimeError: if the tray already exists.
         """
-        first_y = self.get_num_entries() + self.hole + self.deposit
-        is_deposit_full = self.is_deposit_full()
+        first_y = self.get_num_entries() + self.hole + self.bay
+        is_bay_full = self.is_bay_full()
 
         # if the carousel is full, exception
-        if self.is_buffer_full() and is_deposit_full:
+        if self.is_buffer_full() and is_bay_full:
             raise RuntimeError("Collision!")
 
-        # add the trayEntry in the buffer iff the deposit is full
-        self._create_trayEntry(tray, first_y, is_buffer=is_deposit_full)
+        # add the trayEntry in the buffer iff the bay is full
+        self._create_trayEntry(tray, first_y, is_buffer=is_bay_full)
 
     def _create_trayEntry(self, tray: Tray, first_y: int, is_buffer: bool):
         """
@@ -242,10 +242,10 @@ class Carousel(TrayContainer):
         first_entry: TrayEntry = tray.get_first_trayEntry()
         entry_y_to_rmv = first_entry.get_pos_y()
         entry_x_to_rmv = first_entry.get_offset_x()
-        deposit_entry: TrayEntry | EmptyEntry = self.container[0]
+        bay_entry: TrayEntry | EmptyEntry = self.container[0]
         buffer_entry: TrayEntry | EmptyEntry = self.container[1]
 
-        if isinstance(deposit_entry, TrayEntry) and deposit_entry.get_tray() == tray:
+        if isinstance(bay_entry, TrayEntry) and bay_entry.get_tray() == tray:
             self.container[0] = EmptyEntry(entry_x_to_rmv, entry_y_to_rmv)
             return True
         elif isinstance(buffer_entry, TrayEntry) and buffer_entry.get_tray() == tray:

@@ -61,7 +61,7 @@ class Warehouse:
             ))
         self.carousel = Carousel(
             CarouselInfo(
-                deposit_height=config["carousel"]["deposit_height"],
+                bay_height=config["carousel"]["bay_height"],
                 buffer_height=config["carousel"]["buffer_height"],
                 x_offset=config["carousel"]["x_offset"],
                 width=config["carousel"]["width"]
@@ -72,11 +72,11 @@ class Warehouse:
         self.def_space = config["default_height_space"]
         self.speed_per_sec = config["speed_per_sec"]
         self.max_height_material = config["carousel"]["buffer_height"] // self.get_def_space()
-        self.pos_y_floor = self.carousel.get_deposit_entry().get_pos_y()
+        self.pos_y_floor = self.carousel.get_bay_entry().get_pos_y()
 
         # generate a configuration based on YAML
         self.gen_rand(
-            gen_deposit=config["simulation"]["gen_deposit"],
+            gen_bay=config["simulation"]["gen_bay"],
             gen_buffer=config["simulation"]["gen_buffer"],
             num_trays=config["simulation"]["trays_to_gen"],
             num_materials=config["simulation"]["materials_to_gen"]
@@ -286,17 +286,17 @@ class Warehouse:
         """
         return False not in [col.is_full() for col in self.get_cols_container()]
 
-    def gen_rand(self, gen_deposit: bool, gen_buffer: bool, num_trays: int, num_materials: int):
+    def gen_rand(self, gen_bay: bool, gen_buffer: bool, num_trays: int, num_materials: int):
         """
         Generate a random warehouse.
         Be careful!
         Every entry in the warehouse will be reset!
 
-        :type gen_deposit: bool
+        :type gen_bay: bool
         :type gen_buffer: bool
         :type num_trays: int
         :type num_materials: int
-        :param gen_deposit: True generate a tray in the deposit, otherwise generate an EmptyEntry
+        :param gen_bay: True generate a tray in the bay, otherwise generate an EmptyEntry
         :param gen_buffer: True generate a tray in the buffer, otherwise generate an EmptyEntry
         :param num_trays: numbers of trays
         :param num_materials: numbers of materials
@@ -304,8 +304,8 @@ class Warehouse:
         # cleanup the warehouse
         self.cleanup()
 
-        # generate a tray in the deposit and/or buffer
-        if gen_deposit:
+        # generate a tray in the bay and/or buffer
+        if gen_bay:
             # create a new one
             self.carousel.add_tray(tray=Tray([gen_rand_material()]))
         if gen_buffer:

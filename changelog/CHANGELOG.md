@@ -5,13 +5,13 @@
 ### New Features and Improvements
 - Random tray generation added to the `Tray` class. It's now possible to generate only one tray.
 - Improved `get_minimum_offset` method to calculate the minimum offset between columns in the warehouse.
-- Improved `gen_rand` method in the `Warehouse` class. Now it cleanup the warehouse and then generate a deposit 
+- Improved `gen_rand` method in the `Warehouse` class. Now it cleanup the warehouse and then generate a bay 
   (bool parameter), a buffer (bool parameter), and populates the columns.
 - Improved simulation execution. Moved **all** simulation methods from `Warehouse` class to `Simulation` class. 
   The list of moved methods is:
   - `run_simulation`
   - `new_simulation`
-  - `go_to_deposit`
+  - `go_to_bay`
   - `go_to_buffer`
   - `load_in_carousel`
   - `loading_buffer_and_remove`
@@ -31,7 +31,7 @@
 - Added a `min_height` parameter when randomly generating a material in the `Material` class.
 - Added a `cleanup` method to cleanup the warehouse.
 - Added a `get_num_columns` method to get the number of columns in the warehouse.
-- Added `get_deposit_tray` and `get_buffer_tray` methods to the `Carousel` class (useful methods).
+- Added `get_bay_tray` and `get_buffer_tray` methods to the `Carousel` class (useful methods).
 - Added `last_position_is_occupied` method to the `Column` class.
 - Added `cleanup_columns` and `cleanup_carousel` methods to the `Warehouse` class.
 - Added a new exception in `horiz_move` if the offset is not found.
@@ -51,6 +51,7 @@
   The first returns the height of the container (config value) 
   and the second returns the number of entries in the warehouse.
 - `Drawer` name changed to `Tray`.
+- `Deposit` name changed to `Bay`.
 
 ### Bug Fixes and Enhancements
 - Fixed random trays generation in `Tray` class. There were some problems (raise `ValueError`) when the

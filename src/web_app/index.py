@@ -118,7 +118,7 @@ def index_layout():
                                 dbc.Label('Do you want fill carousel?'),
                                 dbc.Checklist(
                                     options=[
-                                        {"value": "gen_deposit", "label": "Generate deposit tray"},
+                                        {"value": "gen_bay", "label": "Generate bay tray"},
                                         {"value": "gen_buffer", "label": "Generate buffer tray"},
                                     ],
                                     id="checklist_generators",
@@ -280,8 +280,8 @@ def index_layout():
                                         dbc.Input(type="text", value=f"{warehouse_config['carousel']['hole_height']} cm", disabled=True)
                                     ]),
                                     dbc.ListGroupItem([
-                                        dbc.Label(html.B("Deposit height:")),
-                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['deposit_height']} cm", disabled=True)
+                                        dbc.Label(html.B("Bay height:")),
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['bay_height']} cm", disabled=True)
                                     ]),
                                     dbc.ListGroupItem([
                                         dbc.Label(html.B("Buffer height:")),
@@ -289,7 +289,7 @@ def index_layout():
                                     ]),
                                     dbc.ListGroupItem([
                                         dbc.Label(html.B("Bay height:")),
-                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['deposit_height'] + warehouse_config['carousel']['buffer_height']} cm", disabled=True)
+                                        dbc.Input(type="text", value=f"{warehouse_config['carousel']['bay_height'] + warehouse_config['carousel']['buffer_height']} cm", disabled=True)
                                     ]),
                                     dbc.ListGroupItem([
                                         dbc.Label(html.B("Offset:")),
@@ -310,7 +310,7 @@ def index_layout():
                         warehouse_config['simulation']['num_actions'],
                         warehouse_config['simulation']['trays_to_gen'],
                         warehouse_config['simulation']['materials_to_gen'],
-                        warehouse_config['simulation']['gen_deposit'],
+                        warehouse_config['simulation']['gen_bay'],
                         warehouse_config['simulation']['gen_buffer'],
                         warehouse_config['simulation'].get('time', 'Not specified')
                     )
@@ -636,7 +636,7 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                         num_actions_sim, num_trays_sim, num_materials_sim, checkbox_time_sim, time_sim
                     )
             ):
-                # check if a checkbox (deposit/buffer tray) has been triggered
+                # check if a checkbox (bay/buffer tray) has been triggered
                 checklist_generators = {} if checklist_generators is None else checklist_generators
                 if time_sim is not None:
                     time_converted = datetime.strptime(time_sim, '%H:%M:%S')
@@ -645,7 +645,7 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                 simulation.new_simulation(num_actions=num_actions_sim,
                                           num_gen_trays=num_trays_sim,
                                           num_gen_materials=num_materials_sim,
-                                          gen_deposit=True if 'gen_deposit' in checklist_generators else False,
+                                          gen_bay=True if 'gen_bay' in checklist_generators else False,
                                           gen_buffer=True if 'gen_buffer' in checklist_generators else False,
                                           time=time_sim)
                 end_sim = datetime.now()
@@ -839,7 +839,7 @@ def config_show_cols(col):
     Output("num_action_sim_stats", "children"),
     Output("trays_to_gen_sim_stats", "children"),
     Output("materials_to_gen_sim_stats", "children"),
-    Output("gen_deposit_sim_stats", "children"),
+    Output("gen_bay_sim_stats", "children"),
     Output("gen_buffer_sim_stats", "children"),
     Output("total_time_sim_stats", "children"),
 
@@ -866,7 +866,7 @@ def stats_number_of_simulated_actions_requested(
             FieldsNewSimulationArgs(num_actions_sim, num_trays_sim, num_materials_sim, checkbox_time_sim, time_sim)
     ):
         return (num_actions_sim, num_trays_sim, num_materials_sim,
-                'True' if 'gen_deposit' in
+                'True' if 'gen_bay' in
                           (checklist_generators := {} if checklist_generators is None else checklist_generators)
                 else 'False',
                 'True' if 'gen_buffer' in checklist_generators else 'False',

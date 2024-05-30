@@ -4,7 +4,7 @@ from logging import getLogger
 from simpy import Environment
 
 from src.sim.simulation.actions.action_enum import ActionEnum
-from src.sim.simulation.actions.move.go_to_deposit import GoToDeposit
+from src.sim.simulation.actions.move.go_to_bay import GoToBay
 from src.sim.simulation.actions.move.load import Load
 from src.sim.simulation.actions.move.move import Move
 from src.sim.simulation.actions.move.unload import Unload
@@ -29,7 +29,7 @@ class SendBackTray(Move):
         :param simulation: the simulation where the action is performed.
         """
         super().__init__(env, warehouse, simulation)
-        self._go_to_deposit: GoToDeposit = GoToDeposit(env, warehouse, simulation)
+        self._go_to_bay: GoToBay = GoToBay(env, warehouse, simulation)
         self._unload: Unload = Unload(env, warehouse, simulation)
         self._vertical: Vertical = Vertical(env, warehouse, simulation)
         self._load: Load = Load(env, warehouse, simulation)
@@ -42,11 +42,11 @@ class SendBackTray(Move):
 
         start_time = datetime.now() + timedelta(seconds=env.now)
 
-        with simulation.get_res_deposit().request() as req:
-            # try to take the tray inside the deposit
+        with simulation.get_res_bay().request() as req:
+            # try to take the tray inside the bay
             yield req
             # set the tray
-            tray = carousel.get_deposit_tray()
+            tray = carousel.get_bay_tray()
             # unloading tray
             yield env.process(self._unload.simulate_action(tray, destination))
 
@@ -58,9 +58,9 @@ class SendBackTray(Move):
         # loading tray
         yield env.process(self._load.simulate_action(tray, destination))
 
-        # check GoToDeposit move
-        if carousel.is_deposit_full():
-            yield env.process(self._go_to_deposit.simulate_action())
+        # check GoToBay move
+        if carousel.is_bay_full():
+            yield env.process(self._go_to_bay.simulate_action())
 
         # wait the buffer process
         yield wait_buff

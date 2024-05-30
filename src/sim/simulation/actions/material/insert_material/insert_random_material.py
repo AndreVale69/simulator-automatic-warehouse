@@ -15,7 +15,7 @@ class InsertRandomMaterial(InsertMaterial):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         """
         The insert random material action is the movement
-        performed by the person who has put a material from his hand to the deposit (bay).
+        performed by the person who has put a material from his hand to the bay.
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -40,11 +40,11 @@ class InsertRandomMaterial(InsertMaterial):
 
         start_time = datetime.now() + timedelta(seconds=env.now)
 
-        with simulation.get_res_deposit().request() as req:
+        with simulation.get_res_bay().request() as req:
             yield req
             # add random material
             logger.debug(f"Time {env.now:5.2f} - Start putting materials inside a tray")
-            self.warehouse.get_carousel().get_deposit_entry().get_tray().add_material(gen_rand_material())
+            self.warehouse.get_carousel().get_bay_entry().get_tray().add_material(gen_rand_material())
             # estimate a time of the action
             yield env.timeout(self.duration)
 

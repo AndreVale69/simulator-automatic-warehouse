@@ -11,7 +11,7 @@ class TestGetMethodsCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = CarouselInfo (
-            deposit_height = 150,
+            bay_height = 150,
             buffer_height = 150,
             x_offset = 125,
             width = 250
@@ -29,16 +29,16 @@ class TestGetMethodsCarousel(TestCase):
         # assert
         self.assertEqual(buffer_get, buffer_expected)
 
-    def test_get_deposit(self):
+    def test_get_bay(self):
         # arrange
         carousel = self.carousel
 
         # act
-        deposit_get = carousel.get_deposit()
-        deposit_expected = carousel.deposit
+        bay_get = carousel.get_bay()
+        bay_expected = carousel.bay
 
         # assert
-        self.assertEqual(deposit_get, deposit_expected)
+        self.assertEqual(bay_get, bay_expected)
 
     def test_get_hole(self):
         # arrange
@@ -51,30 +51,30 @@ class TestGetMethodsCarousel(TestCase):
         # assert
         self.assertEqual(hole_get, hole_expected)
 
-    def test_get_deposit_entry(self):
+    def test_get_bay_entry(self):
         # arrange
         carousel = self.carousel
 
         # act
-        deposit_entry_get = carousel.get_deposit_entry()
-        deposit_entry_expected = carousel.container[0]
+        bay_entry_get = carousel.get_bay_entry()
+        bay_entry_expected = carousel.container[0]
 
         # assert
-        self.assertEqual(deposit_entry_get, deposit_entry_expected)
+        self.assertEqual(bay_entry_get, bay_entry_expected)
 
-    def test_get_deposit_tray(self):
+    def test_get_bay_tray(self):
         # arrange
-        deposit_tray = Tray()
+        bay_tray = Tray()
         carousel = self.carousel
         carousel.reset_container()
-        carousel.add_tray(deposit_tray)
+        carousel.add_tray(bay_tray)
 
         # act
-        deposit_tray_get = carousel.get_deposit_tray()
-        deposit_tray_expected = deposit_tray
+        bay_tray_get = carousel.get_bay_tray()
+        bay_tray_expected = bay_tray
 
         # assert
-        self.assertEqual(deposit_tray_get, deposit_tray_expected)
+        self.assertEqual(bay_tray_get, bay_tray_expected)
 
     def test_get_buffer_entry(self):
         # arrange
@@ -89,11 +89,11 @@ class TestGetMethodsCarousel(TestCase):
 
     def test_get_buffer_tray(self):
         # arrange
-        deposit_tray = Tray()
+        bay_tray = Tray()
         buffer_tray = Tray()
         carousel = self.carousel
         carousel.reset_container()
-        carousel.add_tray(deposit_tray)
+        carousel.add_tray(bay_tray)
         carousel.add_tray(buffer_tray)
 
         # act
@@ -109,7 +109,7 @@ class TestGetMethodsCarousel(TestCase):
 
         # act
         num_trays_get = carousel.get_num_trays()
-        num_trays_expected = (isinstance(carousel.get_deposit_entry(), TrayEntry) +
+        num_trays_expected = (isinstance(carousel.get_bay_entry(), TrayEntry) +
                                 isinstance(carousel.get_buffer_entry(), TrayEntry))
 
         # assert

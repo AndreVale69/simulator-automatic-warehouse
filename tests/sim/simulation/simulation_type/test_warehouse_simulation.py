@@ -38,7 +38,7 @@ class TestWarehouseSimulation(TestCase):
         num_actions = simulation["num_actions"]
         num_gen_trays = simulation["trays_to_gen"]
         num_gen_materials = simulation["materials_to_gen"]
-        gen_deposit = simulation["gen_deposit"]
+        gen_bay = simulation["gen_bay"]
         gen_buffer = simulation["gen_buffer"]
         time = simulation["time"]
 
@@ -48,7 +48,7 @@ class TestWarehouseSimulation(TestCase):
             num_actions,
             num_gen_trays,
             num_gen_materials,
-            gen_deposit,
+            gen_bay,
             gen_buffer,
             time
         )

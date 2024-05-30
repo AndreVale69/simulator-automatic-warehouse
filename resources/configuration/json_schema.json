@@ -55,7 +55,7 @@
           "type": "integer",
           "minimum": 0
         },
-        "deposit_height": {
+        "bay_height": {
           "type": "integer",
           "minimum": 0
         },
@@ -74,7 +74,7 @@
       "required": [
         "width",
         "hole_height",
-        "deposit_height",
+        "bay_height",
         "buffer_height",
         "x_offset"
       ]
@@ -109,7 +109,7 @@
           "type": "integer",
           "minimum": 0
         },
-        "gen_deposit": {
+        "gen_bay": {
           "type": "boolean"
         },
         "gen_buffer": {
@@ -120,7 +120,7 @@
         "num_actions",
         "trays_to_gen",
         "materials_to_gen",
-        "gen_deposit",
+        "gen_bay",
         "gen_buffer"
       ]
     }

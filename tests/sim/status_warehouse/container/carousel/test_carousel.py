@@ -10,7 +10,7 @@ class TestCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = CarouselInfo (
-            deposit_height = 150,
+            bay_height = 150,
             buffer_height = 150,
             x_offset = 125,
             width = 250
@@ -35,7 +35,7 @@ class TestCarousel(TestCase):
 
         # act
         is_full = carousel.is_full()
-        expected_is_full = carousel.is_buffer_full() and carousel.is_deposit_full()
+        expected_is_full = carousel.is_buffer_full() and carousel.is_bay_full()
 
         # assert
         self.assertEqual(is_full, expected_is_full)
@@ -46,7 +46,7 @@ class TestCarousel(TestCase):
 
         # act
         is_empty = carousel.is_empty()
-        expected_is_empty = not carousel.is_buffer_full() and not carousel.is_deposit_full()
+        expected_is_empty = not carousel.is_buffer_full() and not carousel.is_bay_full()
 
         # assert
         self.assertEqual(is_empty, expected_is_empty)
@@ -62,16 +62,16 @@ class TestCarousel(TestCase):
         # assert
         self.assertEqual(is_buffer_full, expected_is_buffer_full)
 
-    def test_is_deposit_full(self):
+    def test_is_bay_full(self):
         # arrange
         carousel = self.carousel
 
         # act
-        is_deposit_full = carousel.is_deposit_full()
-        expected_is_deposit_full = isinstance(carousel.get_deposit_entry(), TrayEntry)
+        is_bay_full = carousel.is_bay_full()
+        expected_is_bay_full = isinstance(carousel.get_bay_entry(), TrayEntry)
 
         # assert
-        self.assertEqual(is_deposit_full, expected_is_deposit_full)
+        self.assertEqual(is_bay_full, expected_is_bay_full)
 
     def test_add_tray(self):
         # arrange
@@ -85,7 +85,7 @@ class TestCarousel(TestCase):
         carousel.add_tray(tray)
 
         # assert
-        self.assertTrue(carousel.is_deposit_full())
+        self.assertTrue(carousel.is_bay_full())
         self.assertFalse(carousel.is_buffer_full())
 
     def test_add_tray_full(self):
@@ -114,7 +114,7 @@ class TestCarousel(TestCase):
         self.assertTrue(carousel.is_empty())
         carousel.add_tray(tray_1)
         carousel.add_tray(tray_2)
-        self.assertTrue(carousel.is_deposit_full())
+        self.assertTrue(carousel.is_bay_full())
         self.assertTrue(carousel.is_buffer_full())
 
         # act

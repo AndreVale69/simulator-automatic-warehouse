@@ -5,7 +5,7 @@ from simpy import Environment
 
 from src.sim.simulation.actions.action_enum import ActionEnum
 from src.sim.simulation.actions.move.go_to_buffer import GoToBuffer
-from src.sim.simulation.actions.move.go_to_deposit import GoToDeposit
+from src.sim.simulation.actions.move.go_to_bay import GoToBay
 from src.sim.simulation.actions.move.move import Move
 from src.sim.simulation.actions.move.unload import Unload
 from src.sim.simulation.actions.move.vertical import Vertical
@@ -18,7 +18,7 @@ logger = getLogger(__name__)
 class ExtractTray(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         """
-        The extract of a tray (ExtractTray action) is the movement from a column to the deposit (bay).
+        The extract of a tray (ExtractTray action) is the movement from a column to the bay.
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -28,7 +28,7 @@ class ExtractTray(Move):
         :param simulation: the simulation where the action is performed.
         """
         super().__init__(env, warehouse, simulation)
-        self._go_to_deposit: GoToDeposit = GoToDeposit(env, warehouse, simulation)
+        self._go_to_bay: GoToBay = GoToBay(env, warehouse, simulation)
         self._go_to_buffer: GoToBuffer = GoToBuffer(env, warehouse, simulation)
         self._unload: Unload = Unload(env, warehouse, simulation)
         self._vertical: Vertical = Vertical(env, warehouse, simulation)
@@ -42,21 +42,21 @@ class ExtractTray(Move):
 
         start_time = datetime.now() + timedelta(seconds=env.now)
 
-        # try to release the tray in the deposit
-        if not carousel.is_deposit_full():
-            with simulation.get_res_deposit().request() as req:
+        # try to release the tray in the bay
+        if not carousel.is_bay_full():
+            with simulation.get_res_bay().request() as req:
                 yield req
                 yield env.process(self._actions(destination, False))
         else:
-            # if the deposit is under process by another one, release it inside the buffer
+            # if the bay is under process by another one, release it inside the buffer
             with simulation.get_res_buffer().request() as req:
                 yield req
                 yield env.process(self._actions(destination, True))
             # exec Buffer process
             wait_buff = env.process(self.get_buffer().simulate_action())
-            # check GoToDeposit move
-            if carousel.is_deposit_full():
-                yield env.process(self._go_to_deposit.simulate_action())
+            # check GoToBay move
+            if carousel.is_bay_full():
+                yield env.process(self._go_to_bay.simulate_action())
             # wait the buffer process
             yield wait_buff
 
@@ -71,7 +71,7 @@ class ExtractTray(Move):
     def _actions(self, destination, load_in_buffer: bool):
         """
         Perform the real action.
-        If the deposit is full, load_in_buffer should be True.
+        If the bay is full, load_in_buffer should be True.
 
         :type destination: EnumWarehouse
         :type load_in_buffer: bool
@@ -86,9 +86,9 @@ class ExtractTray(Move):
         yield env.process(self._vertical.simulate_action(tray, destination))
         # unloading tray
         yield env.process(self._unload.simulate_action(tray, destination))
-        # come back to the deposit
+        # come back to the bay
         yield env.process(
-            self._go_to_buffer.simulate_action() if load_in_buffer else self._go_to_deposit.simulate_action()
+            self._go_to_buffer.simulate_action() if load_in_buffer else self._go_to_bay.simulate_action()
         )
         logger.debug(f"Time {env.now:5.2f} - Start to load in the carousel")
         yield env.process(simulation.load_in_carousel(tray, destination, load_in_buffer))

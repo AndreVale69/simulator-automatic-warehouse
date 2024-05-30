@@ -103,7 +103,7 @@ class TestGetMethodsWarehouse(TestCase):
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         # act
-        trays_expected: int = config['simulation']['trays_to_gen'] + config["simulation"]["gen_deposit"] + config["simulation"]["gen_buffer"]
+        trays_expected: int = config['simulation']['trays_to_gen'] + config["simulation"]["gen_bay"] + config["simulation"]["gen_buffer"]
 
         # assert
         self.assertEqual(warehouse.get_num_trays(), trays_expected)

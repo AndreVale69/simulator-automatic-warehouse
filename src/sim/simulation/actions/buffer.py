@@ -12,7 +12,7 @@ logger = getLogger(__name__)
 class Buffer(Action):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         """
-        The buffer action is the movement from the buffer entry to the deposit (bay) entry.
+        The buffer action is the movement from the buffer entry to the bay entry.
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -33,11 +33,11 @@ class Buffer(Action):
         # try to take buffer resource
         with simulation.get_res_buffer().request() as req_buf:
             yield req_buf
-            # try to take deposit resource
-            with simulation.get_res_deposit().request() as req_dep:
+            # try to take bay resource
+            with simulation.get_res_bay().request() as req_dep:
                 yield req_dep
-                # check if the deposit and the buffer are empty and full iff the resources are taken
-                if carousel.is_buffer_full() and not carousel.is_deposit_full():
-                    logger.debug(f"Time {env.now:5.2f} - Start loading buffer tray inside the deposit")
+                # check if the bay and the buffer are empty and full iff the resources are taken
+                if carousel.is_buffer_full() and not carousel.is_bay_full():
+                    logger.debug(f"Time {env.now:5.2f} - Start loading buffer tray inside the bay")
                     yield env.process(simulation.loading_buffer_and_remove())
-                    logger.debug(f"Time {env.now:5.2f} - Finish loading buffer tray inside the deposit")
+                    logger.debug(f"Time {env.now:5.2f} - Finish loading buffer tray inside the bay")
