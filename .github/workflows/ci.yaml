@@ -22,7 +22,7 @@ jobs:
           pip install pytest-cov
           pip install -r requirements.txt
       - name: Run tests and collect coverage
-        run: WAREHOUSE_CONFIGURATION_FILE_PATH="tests/test_config.yaml" PYTHONPATH=. pytest --cov ./src/sim
+        run: WAREHOUSE_CONFIGURATION_FILE_PATH="tests/test_config.yaml" PYTHONPATH=. pytest --cov ./src
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
