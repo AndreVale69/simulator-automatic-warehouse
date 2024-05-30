@@ -7,7 +7,7 @@ from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSing
 class Material:
     def __init__(self, barcode: hex, name: str, height: int, length: int, width: int):
         """
-        Class that represents a material that can be found inside a drawer.
+        Class that represents a material that can be found inside a tray.
 
         :type barcode: hex
         :type name: str
@@ -20,7 +20,7 @@ class Material:
         :param length: length of a material.
         :param width: width of a material.
         """
-        # maximum height of a material to fit into a drawer
+        # maximum height of a material to fit into a tray
         config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
         max_height_material = config["carousel"]["buffer_height"]
 

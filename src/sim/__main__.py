@@ -18,11 +18,11 @@ def run_simulator():
 
 
 # OLD ERRORS:
-# AttributeError: 'EmptyEntry' object has no attribute 'get_drawer'
+# AttributeError: 'EmptyEntry' object has no attribute 'get_tray'
 # work(705, 10000)
 
 # AttributeError: 'int' object has no attribute 'offset_x'
 # work(4, 100)
 
-# Collision!: remove_drawer doesn't work properly
+# Collision!: remove_tray doesn't work properly
 # work(4999)

@@ -7,12 +7,12 @@ class TestHash(TestCase):
         self.prime_numbers = {
             'Warehouse': 32831,
             'EmptyEntry': 18341,
-            'DrawerEntry': 17581,
-            'DrawerContainer': 16963,
+            'TrayEntry': 17581,
+            'TrayContainer': 16963,
             'Column': 15199,
             'Carousel': 14951,
             'Material': 13463,
-            'Drawer': 12637,
+            'Tray': 12637,
             'Entry': 11497
         }
         self.prime_numbers_values = list(self.prime_numbers.values())

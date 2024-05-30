@@ -24,13 +24,13 @@ class Vertical(Move):
         """
         super().__init__(env, warehouse, simulation)
 
-    def simulate_action(self, drawer=None, destination=None):
-        assert drawer is not None, logger.error("The drawer cannot be None!")
+    def simulate_action(self, tray=None, destination=None):
+        assert tray is not None, logger.error("The tray cannot be None!")
         assert destination is not None, logger.error("The destination cannot be None!")
         env = self.env
         logger.debug(f"Time {env.now:5.2f} - Start vertical move")
         yield env.process(
-            self.simulation.reach_drawer_height(drawer)
+            self.simulation.reach_tray_height(tray)
             if destination == EnumWarehouse.CAROUSEL else
-            self.simulation.allocate_best_pos(drawer)
+            self.simulation.allocate_best_pos(tray)
         )

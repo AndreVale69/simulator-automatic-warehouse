@@ -34,5 +34,5 @@ class RemoveMaterial(Action):
         return self.duration
 
     @abstractmethod
-    def simulate_action(self, drawer=None, destination=None):
+    def simulate_action(self, tray=None, destination=None):
         raise NotImplementedError

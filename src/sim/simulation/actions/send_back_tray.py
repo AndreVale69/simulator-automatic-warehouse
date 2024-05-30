@@ -15,11 +15,11 @@ from src.sim.warehouse import Warehouse
 logger = getLogger(__name__)
 
 
-class SendBackDrawer(Move):
+class SendBackTray(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         """
-        The send-back of a drawer (SendBackDrawer action)
-        is the movement of a drawer from the bay to one of the columns.
+        The send-back of a tray (SendBackTray action)
+        is the movement of a tray from the bay to one of the columns.
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -34,29 +34,29 @@ class SendBackDrawer(Move):
         self._vertical: Vertical = Vertical(env, warehouse, simulation)
         self._load: Load = Load(env, warehouse, simulation)
 
-    def simulate_action(self, drawer=None, destination=None):
-        assert drawer is None, logger.warning("The default action is to remove the drawer from the bay, "
-                                              "so the drawer parameter is not taken into account.")
+    def simulate_action(self, tray=None, destination=None):
+        assert tray is None, logger.warning("The default action is to remove the tray from the bay, "
+                                              "so the tray parameter is not taken into account.")
         simulation, warehouse, env = self.simulation, self.warehouse, self.env
         carousel = warehouse.get_carousel()
 
         start_time = datetime.now() + timedelta(seconds=env.now)
 
         with simulation.get_res_deposit().request() as req:
-            # try to take the drawer inside the deposit
+            # try to take the tray inside the deposit
             yield req
-            # set the drawer
-            drawer = carousel.get_deposit_drawer()
-            # unloading drawer
-            yield env.process(self._unload.simulate_action(drawer, destination))
+            # set the tray
+            tray = carousel.get_deposit_tray()
+            # unloading tray
+            yield env.process(self._unload.simulate_action(tray, destination))
 
         # exec Buffer process
         wait_buff = env.process(self.get_buffer().simulate_action())
 
         # move the floor
-        yield env.process(self._vertical.simulate_action(drawer, destination))
-        # loading drawer
-        yield env.process(self._load.simulate_action(drawer, destination))
+        yield env.process(self._vertical.simulate_action(tray, destination))
+        # loading tray
+        yield env.process(self._load.simulate_action(tray, destination))
 
         # check GoToDeposit move
         if carousel.is_deposit_full():
@@ -68,7 +68,7 @@ class SendBackDrawer(Move):
         end_time = datetime.now() + timedelta(seconds=env.now)
 
         yield simulation.get_store_history().put({
-            'Type of Action': ActionEnum.SEND_BACK_DRAWER.value,
+            'Type of Action': ActionEnum.SEND_BACK_TRAY.value,
             'Start'         : start_time,
             'Finish'        : end_time
         })

@@ -5,8 +5,8 @@ class ActionEnum(Enum):
     """
     Enumerate of the possible actions.
     """
-    EXTRACT_DRAWER = "ExtractDrawer"
-    SEND_BACK_DRAWER = "SendBackDrawer"
+    EXTRACT_TRAY = "ExtractTray"
+    SEND_BACK_TRAY = "SendBackTray"
     INSERT_RANDOM_MATERIAL = "InsertRandomMaterial"
     REMOVE_RANDOM_MATERIAL = "RemoveRandomMaterial"
 
@@ -25,10 +25,10 @@ class ActionEnum(Enum):
         :return: the ActionEnum or None
         """
         match action_str:
-            case ActionEnum.EXTRACT_DRAWER.value:
-                return ActionEnum.EXTRACT_DRAWER
-            case ActionEnum.SEND_BACK_DRAWER.value:
-                return ActionEnum.SEND_BACK_DRAWER
+            case ActionEnum.EXTRACT_TRAY.value:
+                return ActionEnum.EXTRACT_TRAY
+            case ActionEnum.SEND_BACK_TRAY.value:
+                return ActionEnum.SEND_BACK_TRAY
             case ActionEnum.INSERT_RANDOM_MATERIAL.value:
                 return ActionEnum.INSERT_RANDOM_MATERIAL
             case ActionEnum.REMOVE_RANDOM_MATERIAL.value:

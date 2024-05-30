@@ -17,7 +17,7 @@ else:
 from copy import deepcopy
 from random import randint, choice
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
-from src.sim.drawer import Drawer
+from src.sim.tray import Tray
 from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
 from src.sim.status_warehouse.container.column import Column, ColumnInfo
 from src.sim.material import gen_rand_material
@@ -78,7 +78,7 @@ class Warehouse:
         self.gen_rand(
             gen_deposit=config["simulation"]["gen_deposit"],
             gen_buffer=config["simulation"]["gen_buffer"],
-            num_drawers=config["simulation"]["drawers_to_gen"],
+            num_trays=config["simulation"]["trays_to_gen"],
             num_materials=config["simulation"]["materials_to_gen"]
         )
 
@@ -104,7 +104,7 @@ class Warehouse:
             self.get_speed_per_sec() == other.get_speed_per_sec() and
             self.get_max_height_material() == other.get_max_height_material() and
             self.get_pos_y_floor() == other.get_pos_y_floor() and
-            self.get_num_drawers() == other.get_num_drawers()
+            self.get_num_trays() == other.get_num_trays()
         )
 
     def __hash__(self):
@@ -117,7 +117,7 @@ class Warehouse:
             hash(self.get_speed_per_sec()) ^
             hash(self.get_max_height_material()) ^
             hash(self.get_pos_y_floor()) ^
-            hash(self.get_num_drawers())
+            hash(self.get_num_trays())
         )
 
     def get_height(self) -> int:
@@ -160,10 +160,10 @@ class Warehouse:
 
     def get_def_space(self) -> int:
         """
-        Get the height (distance) between two drawers (config value).
+        Get the height (distance) between two trays (config value).
 
         :rtype: int
-        :return: the height (distance) between two drawers (config value).
+        :return: the height (distance) between two trays (config value).
         """
         return self.def_space
 
@@ -197,17 +197,17 @@ class Warehouse:
         """
         return self.pos_y_floor
 
-    def get_num_drawers(self) -> int:
+    def get_num_trays(self) -> int:
         """
-        Get the number of drawers in the warehouse.
+        Get the number of trays in the warehouse.
 
         :rtype: int
-        :return: the number of drawers in the warehouse.
+        :return: the number of trays in the warehouse.
         """
         ris = 0
         for col in self.get_cols_container():
-            ris += col.get_num_drawers()
-        ris += self.get_carousel().get_num_drawers()
+            ris += col.get_num_trays()
+        ris += self.get_carousel().get_num_trays()
         return ris
 
     def get_num_columns(self) -> int:
@@ -286,7 +286,7 @@ class Warehouse:
         """
         return False not in [col.is_full() for col in self.get_cols_container()]
 
-    def gen_rand(self, gen_deposit: bool, gen_buffer: bool, num_drawers: int, num_materials: int):
+    def gen_rand(self, gen_deposit: bool, gen_buffer: bool, num_trays: int, num_materials: int):
         """
         Generate a random warehouse.
         Be careful!
@@ -294,54 +294,54 @@ class Warehouse:
 
         :type gen_deposit: bool
         :type gen_buffer: bool
-        :type num_drawers: int
+        :type num_trays: int
         :type num_materials: int
-        :param gen_deposit: True generate a drawer in the deposit, otherwise generate an EmptyEntry
-        :param gen_buffer: True generate a drawer in the buffer, otherwise generate an EmptyEntry
-        :param num_drawers: numbers of drawers
+        :param gen_deposit: True generate a tray in the deposit, otherwise generate an EmptyEntry
+        :param gen_buffer: True generate a tray in the buffer, otherwise generate an EmptyEntry
+        :param num_trays: numbers of trays
         :param num_materials: numbers of materials
         """
         # cleanup the warehouse
         self.cleanup()
 
-        # generate a drawer in the deposit and/or buffer
+        # generate a tray in the deposit and/or buffer
         if gen_deposit:
             # create a new one
-            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
+            self.carousel.add_tray(tray=Tray([gen_rand_material()]))
         if gen_buffer:
             # create a new one
-            self.carousel.add_drawer(drawer=Drawer([gen_rand_material()]))
+            self.carousel.add_tray(tray=Tray([gen_rand_material()]))
 
         # populate the columns
         columns: list[Column] = self.get_cols_container()
-        # until there are drawers to insert and the warehouse isn't full
-        while num_drawers > 0 and not self.is_full():
+        # until there are trays to insert and the warehouse isn't full
+        while num_trays > 0 and not self.is_full():
             # choice a random column
             rand_col: Column = choice(columns)
-            # generate random number to decide how many drawers insert inside the column
-            rand_num_drawers = randint(1, num_drawers)
-            res = rand_col.gen_materials_and_drawers(rand_num_drawers, num_materials)
-            num_drawers -= res.drawers_inserted
+            # generate random number to decide how many trays insert inside the column
+            rand_num_trays = randint(1, num_trays)
+            res = rand_col.gen_materials_and_trays(rand_num_trays, num_materials)
+            num_trays -= res.trays_inserted
             num_materials -= res.materials_inserted
         # if there isn't anything else to add
-        if num_drawers == 0 and num_materials == 0:
+        if num_trays == 0 and num_materials == 0:
             logger.info("The creation of random warehouse is completed.")
         else:
             logger.warning(f"The creation of random warehouse is not completed at 100%: "
-                           f"drawers left: {num_drawers}, materials left: {num_materials}")
+                           f"trays left: {num_trays}, materials left: {num_materials}")
 
-    def choice_random_drawer(self) -> Drawer:
+    def choice_random_tray(self) -> Tray:
         """
-        Choose a random drawer from the warehouse.
+        Choose a random tray from the warehouse.
 
-        :rtype: Drawer
-        :return: the random drawer chosen from the warehouse
+        :rtype: Tray
+        :return: the random tray chosen from the warehouse
         """
-        container_drawer_entry = []
+        container_tray_entry = []
         for col in self.get_cols_container():
-            container_drawer_entry.extend(col.get_drawers())
-        assert len(container_drawer_entry) > 0, "The warehouse is empty!"
-        return choice(container_drawer_entry)
+            container_tray_entry.extend(col.get_trays())
+        assert len(container_tray_entry) > 0, "The warehouse is empty!"
+        return choice(container_tray_entry)
 
     def cleanup(self):
         """ Cleanup the warehouse (columns and carousel). Each Entry will be EmptyEntry. """

@@ -1,15 +1,15 @@
 from abc import abstractmethod
 
-from src.sim.drawer import Drawer
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.tray import Tray
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
-class DrawerContainer:
+class TrayContainer:
     def __init__(self, height: int, offset_x: int, width: int, warehouse):
         """
-        A superclass representing the drawer container of a column or carousel.
+        A superclass representing the tray container of a column or carousel.
 
         :type height: int
         :type offset_x: int
@@ -33,17 +33,17 @@ class DrawerContainer:
 
     def __eq__(self, other):
         return (
-                isinstance(other, DrawerContainer) and
+                isinstance(other, TrayContainer) and
                 self.get_height_warehouse() == other.get_height_warehouse() and
                 self.get_def_space() == other.get_def_space() and
                 self.get_container() == other.get_container() and
                 self.get_offset_x() == other.get_offset_x() and
                 self.get_num_entries() == other.get_num_entries() and
                 self.get_width() == other.get_width() and
-                self.get_num_drawers() == other.get_num_drawers() and
+                self.get_num_trays() == other.get_num_trays() and
                 self.get_num_entries_occupied() == other.get_num_entries_occupied() and
                 self.get_num_entries_free() == other.get_num_entries_free() and
-                self.get_drawers() == other.get_drawers() and
+                self.get_trays() == other.get_trays() and
                 self.get_entries_occupied() == other.get_entries_occupied() and
                 self.get_num_materials() == other.get_num_materials()
         )
@@ -57,10 +57,10 @@ class DrawerContainer:
                 hash(self.get_offset_x()) ^
                 hash(self.get_num_entries()) ^
                 hash(self.get_width()) ^
-                hash(self.get_num_drawers()) ^
+                hash(self.get_num_trays()) ^
                 hash(self.get_num_entries_occupied()) ^
                 hash(self.get_num_entries_free()) ^
-                hash(tuple(self.get_drawers())) ^
+                hash(tuple(self.get_trays())) ^
                 hash(tuple(self.get_entries_occupied())) ^
                 hash(self.get_num_materials())
         )
@@ -122,11 +122,11 @@ class DrawerContainer:
         """
         return self.def_space
 
-    def get_container(self) -> list[DrawerEntry | EmptyEntry]:
+    def get_container(self) -> list[TrayEntry | EmptyEntry]:
         """
         Get the full list of entries for the container in the warehouse.
 
-        :rtype: list[DrawerEntry | EmptyEntry]
+        :rtype: list[TrayEntry | EmptyEntry]
         :return: the full list of entries for the container in the warehouse.
         """
         return self.container
@@ -167,21 +167,21 @@ class DrawerContainer:
         """
         return self.width
 
-    def get_num_drawers(self) -> int:
+    def get_num_trays(self) -> int:
         """
-        Get how many drawers there are in the container.
+        Get how many trays there are in the container.
 
         :rtype: int
-        :return: how many drawers there are in the container.
+        :return: how many trays there are in the container.
         """
         count = index = 0
-        col: list[DrawerEntry | EmptyEntry] = self.get_container()
+        col: list[TrayEntry | EmptyEntry] = self.get_container()
         len_col = len(col)
         while index < len_col:
             entry = col[index]
-            if isinstance(entry, DrawerEntry):
-                # how many entries occupies the drawer
-                index += entry.get_drawer().get_num_space_occupied()
+            if isinstance(entry, TrayEntry):
+                # how many entries occupies the tray
+                index += entry.get_tray().get_num_space_occupied()
                 count += 1
             else:
                 index += 1
@@ -196,40 +196,40 @@ class DrawerContainer:
         """
         num_entry_occupied = 0
         for entry in self.get_container():
-            if isinstance(entry, DrawerEntry):
+            if isinstance(entry, TrayEntry):
                 num_entry_occupied += 1
         return num_entry_occupied
 
-    def get_drawers(self) -> list[Drawer]:
+    def get_trays(self) -> list[Tray]:
         """
-        Get every Drawer in the container.
+        Get every Tray in the container.
 
-        :rtype: list[Drawer]
-        :return: a list of Drawers in the container.
+        :rtype: list[Tray]
+        :return: a list of Trays in the container.
         """
-        drawers = []
+        trays = []
         index = 0
-        col: list[DrawerEntry | EmptyEntry] = self.get_container()
+        col: list[TrayEntry | EmptyEntry] = self.get_container()
         len_col = len(col)
         while index < len_col:
             entry = col[index]
-            if isinstance(entry, DrawerEntry):
-                # how many entries occupies the drawer
-                drawer = entry.get_drawer()
-                index += drawer.get_num_space_occupied()
-                drawers.append(drawer)
+            if isinstance(entry, TrayEntry):
+                # how many entries occupies the tray
+                tray = entry.get_tray()
+                index += tray.get_num_space_occupied()
+                trays.append(tray)
             else:
                 index += 1
-        return drawers
+        return trays
 
-    def get_entries_occupied(self) -> list[DrawerEntry]:
+    def get_entries_occupied(self) -> list[TrayEntry]:
         """
-        Get every DrawerEntry in the container.
+        Get every TrayEntry in the container.
 
-        :rtype: list[DrawerEntry]
-        :return: a list of DrawerEntry in the container.
+        :rtype: list[TrayEntry]
+        :return: a list of TrayEntry in the container.
         """
-        return [entry for entry in self.container if isinstance(entry, DrawerEntry)]
+        return [entry for entry in self.container if isinstance(entry, TrayEntry)]
 
     def get_num_materials(self) -> int:
         """
@@ -239,8 +239,8 @@ class DrawerContainer:
         :return: how many materials there are.
         """
         count = 0
-        for drawer in self.get_drawers():
-            count += drawer.get_num_materials()
+        for tray in self.get_trays():
+            count += tray.get_num_materials()
         return count
 
     def set_warehouse(self, new_warehouse):
@@ -252,11 +252,11 @@ class DrawerContainer:
         """
         self.warehouse = new_warehouse
 
-    def create_new_space(self, element: EmptyEntry | DrawerEntry):
+    def create_new_space(self, element: EmptyEntry | TrayEntry):
         """
         Create a new space inside the container.
 
-        :type element: EmptyEntry | DrawerEntry
+        :type element: EmptyEntry | TrayEntry
         :param element: entry of the new space to be created.
         """
         self.container.append(element)
@@ -265,6 +265,6 @@ class DrawerContainer:
         """ Clean up the container using EmptyEntry instances. """
         offset_x, ptr_container = self.offset_x, self.container
         for index, entry in enumerate(ptr_container):
-            # if it's a drawer, remove it (overwriting)
-            if isinstance(entry, DrawerEntry):
+            # if it's a tray, remove it (overwriting)
+            if isinstance(entry, TrayEntry):
                 ptr_container[index] = EmptyEntry(offset_x, entry.get_pos_y())

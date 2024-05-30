@@ -101,7 +101,7 @@
           "type": "integer",
           "minimum": 0
         },
-        "drawers_to_gen": {
+        "trays_to_gen": {
           "type": "integer",
           "minimum": 0
         },
@@ -118,7 +118,7 @@
       },
       "required": [
         "num_actions",
-        "drawers_to_gen",
+        "trays_to_gen",
         "materials_to_gen",
         "gen_deposit",
         "gen_buffer"

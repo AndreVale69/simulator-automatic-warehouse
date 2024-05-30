@@ -97,16 +97,16 @@ class TestGetMethodsWarehouse(TestCase):
         # assert
         self.assertEqual(pos_y_floor_get, pos_y_floor_expected)
 
-    def test_get_num_drawers(self):
+    def test_get_num_trays(self):
         # arrange
         warehouse = self.warehouse
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         # act
-        drawers_expected: int = config['simulation']['drawers_to_gen'] + config["simulation"]["gen_deposit"] + config["simulation"]["gen_buffer"]
+        trays_expected: int = config['simulation']['trays_to_gen'] + config["simulation"]["gen_deposit"] + config["simulation"]["gen_buffer"]
 
         # assert
-        self.assertEqual(warehouse.get_num_drawers(), drawers_expected)
+        self.assertEqual(warehouse.get_num_trays(), trays_expected)
 
     def test_get_num_columns(self):
         # arrange

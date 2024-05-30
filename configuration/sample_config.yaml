@@ -5,7 +5,7 @@
 # It's an important field largely used by the simulator to calculate the simulation time.
 height_warehouse: 1000
 
-# The height (distance) between two drawers.
+# The height (distance) between two trays.
 default_height_space: 25
 
 # The speed of the platform.
@@ -36,7 +36,7 @@ columns:
     x_offset: 125
     # The height of the last position.
     # Each Automatic Warehouse has a fixed height.
-    # The last position (at the top of the store) where a drawer can be found.
+    # The last position (at the top of the store) where a tray can be found.
     height_last_position: 75
 
   # The following column has a height equal to the height of the warehouse, and the offset is made up of:
@@ -75,13 +75,13 @@ simulation:
   time: 10000
   # The number of actions to be performed.
   num_actions: 100
-  # The number of drawers to be generated.
+  # The number of trays to be generated.
   # At the moment (version 0.0.1), the warehouse is filled from top to bottom.
-  drawers_to_gen: 5
+  trays_to_gen: 5
   # The number of materials to be generated.
-  # The materials are placed in random drawers.
+  # The materials are placed in random trays.
   materials_to_gen: 3
-  # Specify whether you want a drawer in a deposit and/or in a buffer.
-  # The number of drawers to be created is independent of the value of these fields.
+  # Specify whether you want a tray in a deposit and/or in a buffer.
+  # The number of trays to be created is independent of the value of these fields.
   gen_deposit: false
   gen_buffer: false

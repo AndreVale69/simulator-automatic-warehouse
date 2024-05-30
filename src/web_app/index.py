@@ -104,9 +104,9 @@ def index_layout():
                                 # TODO: add '?' and write in what does it means. You can use also 'info' icon (boostrap)
                             ]),
                             dbc.ListGroupItem([
-                                dbc.Label('Total number of drawers:'),
-                                dbc.Input(id='num_drawers_sim', type='number', min=1, step=1, placeholder='# Drawers')
-                                # TODO: add check to avoid the number of drawers
+                                dbc.Label('Total number of trays:'),
+                                dbc.Input(id='num_trays_sim', type='number', min=1, step=1, placeholder='# Trays')
+                                # TODO: add check to avoid the number of trays
                                 #       being greater than the height of the warehouse.
                             ]),
                             dbc.ListGroupItem([
@@ -118,8 +118,8 @@ def index_layout():
                                 dbc.Label('Do you want fill carousel?'),
                                 dbc.Checklist(
                                     options=[
-                                        {"value": "gen_deposit", "label": "Generate deposit drawer"},
-                                        {"value": "gen_buffer", "label": "Generate buffer drawer"},
+                                        {"value": "gen_deposit", "label": "Generate deposit tray"},
+                                        {"value": "gen_buffer", "label": "Generate buffer tray"},
                                     ],
                                     id="checklist_generators",
                                 )
@@ -308,7 +308,7 @@ def index_layout():
                     warehouse_statistics,
                     SimulationInput(
                         warehouse_config['simulation']['num_actions'],
-                        warehouse_config['simulation']['drawers_to_gen'],
+                        warehouse_config['simulation']['trays_to_gen'],
                         warehouse_config['simulation']['materials_to_gen'],
                         warehouse_config['simulation']['gen_deposit'],
                         warehouse_config['simulation']['gen_buffer'],
@@ -378,7 +378,7 @@ def display_page(pathname):
     Output("btn_new_simulation", "children", allow_duplicate=True),
     Input("btn_new_simulation", "n_clicks"),
     State('num_actions_sim', 'value'),
-    State('num_drawers_sim', 'value'),
+    State('num_trays_sim', 'value'),
     State('num_materials_sim', 'value'),
     State('checkbox_time_sim', 'value'),
     State('time_sim', 'value'),
@@ -387,12 +387,12 @@ def display_page(pathname):
 @cache.memoize()
 def load_loading_button(n,
                         num_actions_sim,
-                        num_drawers_sim,
+                        num_trays_sim,
                         num_materials_sim,
                         checkbox_time_sim,
                         time_sim):
     if fields_new_simulation_are_valid(
-            FieldsNewSimulationArgs(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
+            FieldsNewSimulationArgs(num_actions_sim, num_trays_sim, num_materials_sim, checkbox_time_sim, time_sim)
     ):
         return True, [dbc.Spinner(size="sm"), " Loading..."]
 
@@ -486,7 +486,7 @@ def download_graph(b_svg, b_pdf, b_csv, b_xlsx):
     Input('btn_new_simulation', 'n_clicks'),
 
     State('num_actions_sim', 'value'),
-    State('num_drawers_sim', 'value'),
+    State('num_trays_sim', 'value'),
     State('num_materials_sim', 'value'),
     State('checklist_generators', 'value'),
     State('checkbox_time_sim', 'value'),
@@ -514,7 +514,7 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
                                val_actual_tab, val_set_step_graph,
                                # trigger new simulation button
                                clicks_btn,
-                               num_actions_sim, num_drawers_sim, num_materials_sim,
+                               num_actions_sim, num_trays_sim, num_materials_sim,
                                checklist_generators, checkbox_time_sim,
                                time_sim,
                                timeline_old,
@@ -633,17 +633,17 @@ def update_timeline_components(val_btn_right, val_btn_left, val_btn_right_end, v
             # run new simulation if there are no probs
             if fields_new_simulation_are_valid(
                     FieldsNewSimulationArgs(
-                        num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim
+                        num_actions_sim, num_trays_sim, num_materials_sim, checkbox_time_sim, time_sim
                     )
             ):
-                # check if a checkbox (deposit/buffer drawer) has been triggered
+                # check if a checkbox (deposit/buffer tray) has been triggered
                 checklist_generators = {} if checklist_generators is None else checklist_generators
                 if time_sim is not None:
                     time_converted = datetime.strptime(time_sim, '%H:%M:%S')
                     time_sim = time_converted.second + (time_converted.minute * 60) + ((time_converted.hour * 60) * 60)
                 start_sim = datetime.now()
                 simulation.new_simulation(num_actions=num_actions_sim,
-                                          num_gen_drawers=num_drawers_sim,
+                                          num_gen_trays=num_trays_sim,
                                           num_gen_materials=num_materials_sim,
                                           gen_deposit=True if 'gen_deposit' in checklist_generators else False,
                                           gen_buffer=True if 'gen_buffer' in checklist_generators else False,
@@ -783,14 +783,14 @@ def invalid_num_actions_sim(num_actions_sim_val, btn_new_simulation_val):
 
 
 @app.callback(
-    Output('num_drawers_sim', 'invalid'),
-    Input('num_drawers_sim', 'value'),
+    Output('num_trays_sim', 'invalid'),
+    Input('num_trays_sim', 'value'),
     Input('btn_new_simulation', 'n_clicks'),
     prevent_initial_call=True
 )
 @cache.memoize()
-def invalid_num_drawers_sim(num_drawers_sim_val, btn_new_simulation_val):
-    return True if num_drawers_sim_val is None else False
+def invalid_num_trays_sim(num_trays_sim_val, btn_new_simulation_val):
+    return True if num_trays_sim_val is None else False
 
 
 @app.callback(
@@ -837,7 +837,7 @@ def config_show_cols(col):
 
 @app.callback(
     Output("num_action_sim_stats", "children"),
-    Output("drawers_to_gen_sim_stats", "children"),
+    Output("trays_to_gen_sim_stats", "children"),
     Output("materials_to_gen_sim_stats", "children"),
     Output("gen_deposit_sim_stats", "children"),
     Output("gen_buffer_sim_stats", "children"),
@@ -845,7 +845,7 @@ def config_show_cols(col):
 
     Input("btn_new_simulation", "n_clicks"),
     State('num_actions_sim', 'value'),
-    State('num_drawers_sim', 'value'),
+    State('num_trays_sim', 'value'),
     State('num_materials_sim', 'value'),
     State('checkbox_time_sim', 'value'),
     State('time_sim', 'value'),
@@ -856,16 +856,16 @@ def config_show_cols(col):
 def stats_number_of_simulated_actions_requested(
         btn_new_simulation,
         num_actions_sim,
-        num_drawers_sim,
+        num_trays_sim,
         num_materials_sim,
         checkbox_time_sim,
         time_sim,
         checklist_generators
 ):
     if fields_new_simulation_are_valid(
-            FieldsNewSimulationArgs(num_actions_sim, num_drawers_sim, num_materials_sim, checkbox_time_sim, time_sim)
+            FieldsNewSimulationArgs(num_actions_sim, num_trays_sim, num_materials_sim, checkbox_time_sim, time_sim)
     ):
-        return (num_actions_sim, num_drawers_sim, num_materials_sim,
+        return (num_actions_sim, num_trays_sim, num_materials_sim,
                 'True' if 'gen_deposit' in
                           (checklist_generators := {} if checklist_generators is None else checklist_generators)
                 else 'False',
@@ -880,15 +880,15 @@ def stats_number_of_simulated_actions_requested(
     Output("output_stats-actions_started-data_table", "children", allow_duplicate=True),
     Output("output_stats-actions_started-figure", "figure", allow_duplicate=True),
     Input("output_stats-actions_started-none", "n_clicks"),
-    Input("output_stats-actions_started-ExtractDrawer", "n_clicks"),
-    Input("output_stats-actions_started-SendBackDrawer", "n_clicks"),
+    Input("output_stats-actions_started-ExtractTray", "n_clicks"),
+    Input("output_stats-actions_started-SendBackTray", "n_clicks"),
     Input("output_stats-actions_started-InsertRandomMaterial", "n_clicks"),
     Input("output_stats-actions_started-RemoveRandomMaterial", "n_clicks"),
     prevent_initial_call=True
 )
 def output_stats_actions_started_menu_triggered(none,
-                                                extract_drawer,
-                                                send_back_drawer,
+                                                extract_tray,
+                                                send_back_tray,
                                                 insert_random_material,
                                                 remove_random_material
                                                 ):
@@ -909,15 +909,15 @@ def output_stats_actions_started_menu_triggered(none,
     Output("output_stats-actions_finished-data_table", "children", allow_duplicate=True),
     Output("output_stats-actions_finished-figure", "figure", allow_duplicate=True),
     Input("output_stats-actions_finished-none", "n_clicks"),
-    Input("output_stats-actions_finished-ExtractDrawer", "n_clicks"),
-    Input("output_stats-actions_finished-SendBackDrawer", "n_clicks"),
+    Input("output_stats-actions_finished-ExtractTray", "n_clicks"),
+    Input("output_stats-actions_finished-SendBackTray", "n_clicks"),
     Input("output_stats-actions_finished-InsertRandomMaterial", "n_clicks"),
     Input("output_stats-actions_finished-RemoveRandomMaterial", "n_clicks"),
     prevent_initial_call=True
 )
 def output_stats_actions_finished_menu_triggered(none,
-                                                 extract_drawer,
-                                                 send_back_drawer,
+                                                 extract_tray,
+                                                 send_back_tray,
                                                  insert_random_material,
                                                  remove_random_material
                                                  ):
@@ -938,15 +938,15 @@ def output_stats_actions_finished_menu_triggered(none,
     Output("output_stats-actions_completed-data_table", "children", allow_duplicate=True),
     Output("output_stats-actions_completed-figure", "figure", allow_duplicate=True),
     Input("output_stats-actions_completed-none", "n_clicks"),
-    Input("output_stats-actions_completed-ExtractDrawer", "n_clicks"),
-    Input("output_stats-actions_completed-SendBackDrawer", "n_clicks"),
+    Input("output_stats-actions_completed-ExtractTray", "n_clicks"),
+    Input("output_stats-actions_completed-SendBackTray", "n_clicks"),
     Input("output_stats-actions_completed-InsertRandomMaterial", "n_clicks"),
     Input("output_stats-actions_completed-RemoveRandomMaterial", "n_clicks"),
     prevent_initial_call=True
 )
 def output_stats_actions_completed_menu_triggered(none,
-                                                 extract_drawer,
-                                                 send_back_drawer,
+                                                 extract_tray,
+                                                 send_back_tray,
                                                  insert_random_material,
                                                  remove_random_material
                                                  ):

@@ -2,11 +2,11 @@ import copy
 import uuid
 from unittest import TestCase
 
-from src.sim.drawer import gen_rand_drawers, Drawer
+from src.sim.tray import gen_rand_trays, Tray
 from src.sim.material import gen_rand_material, Material
 
 
-class TestBuiltinDrawer(TestCase):
+class TestBuiltinTray(TestCase):
     def test_eq(self):
         # arrange
         hex_material = uuid.uuid4().hex
@@ -25,16 +25,16 @@ class TestBuiltinDrawer(TestCase):
                          height=50,
                          length=50,
                          width=50)
-        drawer_1 = Drawer([mat_1, mat_2])
-        drawer_2 = Drawer([mat_1, mat_2])
-        drawer_3 = Drawer([mat_1, mat_2, mat_3])
+        tray_1 = Tray([mat_1, mat_2])
+        tray_2 = Tray([mat_1, mat_2])
+        tray_3 = Tray([mat_1, mat_2, mat_3])
 
         # act
 
         # assert
-        self.assertNotEqual(id(drawer_1), id(drawer_2))
-        self.assertEqual(drawer_1, drawer_2)
-        self.assertNotEqual(drawer_1, drawer_3)
+        self.assertNotEqual(id(tray_1), id(tray_2))
+        self.assertEqual(tray_1, tray_2)
+        self.assertNotEqual(tray_1, tray_3)
 
     def test_hash(self):
         # arrange
@@ -54,28 +54,28 @@ class TestBuiltinDrawer(TestCase):
                          height=50,
                          length=50,
                          width=50)
-        drawer_1 = Drawer([mat_1, mat_2])
-        drawer_2 = Drawer([mat_1, mat_2])
-        drawer_3 = Drawer([mat_1, mat_2, mat_3])
+        tray_1 = Tray([mat_1, mat_2])
+        tray_2 = Tray([mat_1, mat_2])
+        tray_3 = Tray([mat_1, mat_2, mat_3])
 
         # act
 
         # assert
-        self.assertNotEqual(id(drawer_1), id(drawer_2))
-        self.assertEqual(drawer_1, drawer_2)
-        self.assertNotEqual(drawer_1, drawer_3)
-        self.assertEqual(hash(drawer_1), hash(drawer_1))
-        self.assertEqual(hash(drawer_1), hash(drawer_2))
-        self.assertNotEqual(hash(drawer_1), hash(drawer_3))
+        self.assertNotEqual(id(tray_1), id(tray_2))
+        self.assertEqual(tray_1, tray_2)
+        self.assertNotEqual(tray_1, tray_3)
+        self.assertEqual(hash(tray_1), hash(tray_1))
+        self.assertEqual(hash(tray_1), hash(tray_2))
+        self.assertNotEqual(hash(tray_1), hash(tray_3))
 
     def test_deepcopy(self):
         # arrange
-        drawer: Drawer = gen_rand_drawers(1, [gen_rand_material(max_height=100)])[0]
+        tray: Tray = gen_rand_trays(1, [gen_rand_material(max_height=100)])[0]
 
         # act
-        deepcopy_drawer = copy.deepcopy(drawer)
+        deepcopy_tray = copy.deepcopy(tray)
 
         # assert
-        self.assertIsInstance(deepcopy_drawer, Drawer)
-        self.assertEqual(drawer, deepcopy_drawer)
-        self.assertNotEqual(id(drawer), id(deepcopy_drawer))
+        self.assertIsInstance(deepcopy_tray, Tray)
+        self.assertEqual(tray, deepcopy_tray)
+        self.assertNotEqual(id(tray), id(deepcopy_tray))

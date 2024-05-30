@@ -1,68 +1,68 @@
 import copy
 from unittest import TestCase
 
-from src.sim.drawer import Drawer
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.tray import Tray
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 
 
-class TestDrawerEntry(TestCase):
+class TestTrayEntry(TestCase):
     def setUp(self):
         self.offset_x = 200
         self.pos_y = 100
-        self.drawer = Drawer()
-        self.drawer_entry = DrawerEntry(self.offset_x, self.pos_y)
-        self.drawer_entry.add_drawer(self.drawer)
+        self.tray = Tray()
+        self.tray_entry = TrayEntry(self.offset_x, self.pos_y)
+        self.tray_entry.add_tray(self.tray)
 
     def test_deepcopy(self):
         # arrange
-        drawer_entry = self.drawer_entry
+        tray_entry = self.tray_entry
 
         # act
-        deepcopy_drawer_entry = copy.deepcopy(drawer_entry)
+        deepcopy_tray_entry = copy.deepcopy(tray_entry)
 
         # assert
-        self.assertIsInstance(deepcopy_drawer_entry, DrawerEntry)
-        self.assertEqual(drawer_entry, deepcopy_drawer_entry)
-        self.assertNotEqual(id(drawer_entry), id(deepcopy_drawer_entry))
+        self.assertIsInstance(deepcopy_tray_entry, TrayEntry)
+        self.assertEqual(tray_entry, deepcopy_tray_entry)
+        self.assertNotEqual(id(tray_entry), id(deepcopy_tray_entry))
 
     def test_eq(self):
         # arrange
-        drawer_entry = self.drawer_entry
+        tray_entry = self.tray_entry
 
         # act
 
         # assert
-        self.assertTrue(drawer_entry.__eq__(drawer_entry))
+        self.assertTrue(tray_entry.__eq__(tray_entry))
 
     def test_hash(self):
         # arrange
-        drawer_entry_1 = self.drawer_entry
-        drawer_entry_2 = DrawerEntry(self.offset_x+1, self.pos_y+1)
+        tray_entry_1 = self.tray_entry
+        tray_entry_2 = TrayEntry(self.offset_x+1, self.pos_y+1)
 
         # act
 
         # assert
-        self.assertEqual(hash(drawer_entry_1), hash(drawer_entry_1))
-        self.assertNotEqual(hash(drawer_entry_1), hash(drawer_entry_2))
+        self.assertEqual(hash(tray_entry_1), hash(tray_entry_1))
+        self.assertNotEqual(hash(tray_entry_1), hash(tray_entry_2))
 
-    def test_get_drawer(self):
+    def test_get_tray(self):
         # arrange
-        drawer_entry = self.drawer_entry
+        tray_entry = self.tray_entry
 
         # act
-        drawer_entry_get = drawer_entry.get_drawer()
-        drawer_entry_expected = drawer_entry.drawer
+        tray_entry_get = tray_entry.get_tray()
+        tray_entry_expected = tray_entry.tray
 
         # assert
-        self.assertEqual(drawer_entry_get, drawer_entry_expected)
+        self.assertEqual(tray_entry_get, tray_entry_expected)
 
-    def test_add_drawer(self):
+    def test_add_tray(self):
         # arrange
-        drawer_entry = self.drawer_entry
-        drawer_entry.drawer = None
-        self.assertIsNone(drawer_entry.get_drawer())
+        tray_entry = self.tray_entry
+        tray_entry.tray = None
+        self.assertIsNone(tray_entry.get_tray())
 
         # act
-        drawer_entry.add_drawer(self.drawer)
+        tray_entry.add_tray(self.tray)
 
-        self.assertEqual(drawer_entry.get_drawer(), self.drawer)
+        self.assertEqual(tray_entry.get_tray(), self.tray)

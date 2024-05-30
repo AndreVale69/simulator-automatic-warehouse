@@ -4,7 +4,7 @@ from src.sim.status_warehouse.entry.entry import Entry
 class EmptyEntry(Entry):
     def __init__(self, offset_x: int, pos_y: int):
         """
-        It is an entry of the warehouse where there is no drawer.
+        It is an entry of the warehouse where there is no tray.
 
         :type offset_x: int
         :type pos_y: int

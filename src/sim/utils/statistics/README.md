@@ -106,7 +106,7 @@ section, but the following refers to a single action given as a parameter.
 
 #### `action_started_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`
 
-An example of how to call: `warehouse_statistics.action_started_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.HOUR)`
+An example of how to call: `warehouse_statistics.action_started_every(ActionEnum.EXTRACT_TRAY, TimeEnum.HOUR)`
 
 | Start            | count |
 |:-----------------|:------|
@@ -117,7 +117,7 @@ An example of how to call: `warehouse_statistics.action_started_every(ActionEnum
 
 #### `action_finished_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`
 
-An example of how to call: `warehouse_statistics.action_finished_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.HOUR)`
+An example of how to call: `warehouse_statistics.action_finished_every(ActionEnum.EXTRACT_TRAY, TimeEnum.HOUR)`
 
 | Finish           | count |
 |:-----------------|:------|
@@ -128,15 +128,15 @@ An example of how to call: `warehouse_statistics.action_finished_every(ActionEnu
 
 #### `action_completed_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame`
 
-An example of how to call: `warehouse_statistics.action_completed_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.HOUR)`
+An example of how to call: `warehouse_statistics.action_completed_every(ActionEnum.EXTRACT_TRAY, TimeEnum.HOUR)`
 
 |   | Type of Action | Start            | Finish           | Count |
 |:--|:---------------|:-----------------|:-----------------|:------|
-| 0 | ExtractDrawer  | 2024-02-18 14:00 | 2024-02-18 14:00 | 82    |
-| 1 | ExtractDrawer  | 2024-02-18 14:00 | 2024-02-18 15:00 | 1     |
-| 2 | ExtractDrawer  | 2024-02-18 15:00 | 2024-02-18 15:00 | 93    |
-| 3 | ExtractDrawer  | 2024-02-18 15:00 | 2024-02-18 16:00 | 1     |
-| 4 | ExtractDrawer  | 2024-02-18 16:00 | 2024-02-18 16:00 | 73    |
+| 0 | ExtractTray  | 2024-02-18 14:00 | 2024-02-18 14:00 | 82    |
+| 1 | ExtractTray  | 2024-02-18 14:00 | 2024-02-18 15:00 | 1     |
+| 2 | ExtractTray  | 2024-02-18 15:00 | 2024-02-18 15:00 | 93    |
+| 3 | ExtractTray  | 2024-02-18 15:00 | 2024-02-18 16:00 | 1     |
+| 4 | ExtractTray  | 2024-02-18 16:00 | 2024-02-18 16:00 | 73    |
 
 
 

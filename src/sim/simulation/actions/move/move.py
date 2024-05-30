@@ -30,5 +30,5 @@ class Move(Action):
         """
         return self.buffer
 
-    def simulate_action(self, drawer=None, destination=None):
+    def simulate_action(self, tray=None, destination=None):
         pass

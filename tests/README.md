@@ -6,5 +6,5 @@ Use the following environment variables to run the tests:
 Missing (simulation) tests:
 
 - [ ] Buffer action
-- [ ] Extract Drawer action
-- [ ] Send Back Drawer action
+- [ ] Extract Tray action
+- [ ] Send Back Tray action

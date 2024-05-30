@@ -29,9 +29,9 @@ class InsertRandomMaterial(InsertMaterial):
         super().__init__(env, warehouse, simulation, duration)
 
     # override
-    def simulate_action(self, drawer=None, destination=None):
-        assert drawer is None, logger.warning("A random material is added to the bay drawer, "
-                                              "so the drawer parameter is not taken into account.")
+    def simulate_action(self, tray=None, destination=None):
+        assert tray is None, logger.warning("A random material is added to the bay tray, "
+                                              "so the tray parameter is not taken into account.")
         assert destination is None, logger.warning("The default destination parameter is bay, "
                                                    "so the destination parameter is not taken into account.")
         from src.sim.material import gen_rand_material
@@ -43,8 +43,8 @@ class InsertRandomMaterial(InsertMaterial):
         with simulation.get_res_deposit().request() as req:
             yield req
             # add random material
-            logger.debug(f"Time {env.now:5.2f} - Start putting materials inside a drawer")
-            self.warehouse.get_carousel().get_deposit_entry().get_drawer().add_material(gen_rand_material())
+            logger.debug(f"Time {env.now:5.2f} - Start putting materials inside a tray")
+            self.warehouse.get_carousel().get_deposit_entry().get_tray().add_material(gen_rand_material())
             # estimate a time of the action
             yield env.timeout(self.duration)
 

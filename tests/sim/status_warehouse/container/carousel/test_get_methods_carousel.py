@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from src.sim.drawer import Drawer
+from src.sim.tray import Tray
 from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
 
@@ -62,19 +62,19 @@ class TestGetMethodsCarousel(TestCase):
         # assert
         self.assertEqual(deposit_entry_get, deposit_entry_expected)
 
-    def test_get_deposit_drawer(self):
+    def test_get_deposit_tray(self):
         # arrange
-        deposit_drawer = Drawer()
+        deposit_tray = Tray()
         carousel = self.carousel
         carousel.reset_container()
-        carousel.add_drawer(deposit_drawer)
+        carousel.add_tray(deposit_tray)
 
         # act
-        deposit_drawer_get = carousel.get_deposit_drawer()
-        deposit_drawer_expected = deposit_drawer
+        deposit_tray_get = carousel.get_deposit_tray()
+        deposit_tray_expected = deposit_tray
 
         # assert
-        self.assertEqual(deposit_drawer_get, deposit_drawer_expected)
+        self.assertEqual(deposit_tray_get, deposit_tray_expected)
 
     def test_get_buffer_entry(self):
         # arrange
@@ -87,33 +87,33 @@ class TestGetMethodsCarousel(TestCase):
         # assert
         self.assertEqual(buffer_entry_get, buffer_entry_expected)
 
-    def test_get_buffer_drawer(self):
+    def test_get_buffer_tray(self):
         # arrange
-        deposit_drawer = Drawer()
-        buffer_drawer = Drawer()
+        deposit_tray = Tray()
+        buffer_tray = Tray()
         carousel = self.carousel
         carousel.reset_container()
-        carousel.add_drawer(deposit_drawer)
-        carousel.add_drawer(buffer_drawer)
+        carousel.add_tray(deposit_tray)
+        carousel.add_tray(buffer_tray)
 
         # act
-        buffer_drawer_get = carousel.get_buffer_drawer()
-        buffer_drawer_expected = buffer_drawer
+        buffer_tray_get = carousel.get_buffer_tray()
+        buffer_tray_expected = buffer_tray
 
         # assert
-        self.assertEqual(buffer_drawer_get, buffer_drawer_expected)
+        self.assertEqual(buffer_tray_get, buffer_tray_expected)
 
-    def test_get_num_drawers(self):
+    def test_get_num_trays(self):
         # arrange
         carousel = self.carousel
 
         # act
-        num_drawers_get = carousel.get_num_drawers()
-        num_drawers_expected = (isinstance(carousel.get_deposit_entry(), DrawerEntry) +
-                                isinstance(carousel.get_buffer_entry(), DrawerEntry))
+        num_trays_get = carousel.get_num_trays()
+        num_trays_expected = (isinstance(carousel.get_deposit_entry(), TrayEntry) +
+                                isinstance(carousel.get_buffer_entry(), TrayEntry))
 
         # assert
-        self.assertEqual(num_drawers_get, num_drawers_expected)
+        self.assertEqual(num_trays_get, num_trays_expected)
 
     def test_get_num_entries_free(self):
         # arrange

@@ -11,7 +11,7 @@ class TestRemoveRandomMaterial(TestCase):
         # arrange
         simulation = WarehouseSimulation(Warehouse())
         duration = 5
-        init_num_materials: int = simulation.get_warehouse().get_carousel().get_deposit_drawer().get_num_materials()
+        init_num_materials: int = simulation.get_warehouse().get_carousel().get_deposit_tray().get_num_materials()
         material = RemoveRandomMaterial(simulation.get_environment(), simulation.get_warehouse(), simulation, duration)
 
         # act
@@ -24,4 +24,4 @@ class TestRemoveRandomMaterial(TestCase):
         self.assertIsInstance(action_performed, dict)
         self.assertEqual(ActionEnum.REMOVE_RANDOM_MATERIAL.value, action_performed['Type of Action'])
         self.assertGreaterEqual((action_performed['Finish']-action_performed['Start']).total_seconds(), duration)
-        self.assertLess(simulation.get_warehouse().get_carousel().get_deposit_drawer().get_num_materials(), init_num_materials)
+        self.assertLess(simulation.get_warehouse().get_carousel().get_deposit_tray().get_num_materials(), init_num_materials)

@@ -3,7 +3,7 @@ from unittest import TestCase
 from src.sim.status_warehouse.entry.entry import Entry
 
 
-class TestDrawerEntry(TestCase):
+class TestTrayEntry(TestCase):
     def setUp(self):
         self.offset_x = 200
         self.pos_y = 100

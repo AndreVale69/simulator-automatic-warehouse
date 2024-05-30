@@ -36,7 +36,7 @@ class TestWarehouseSimulation(TestCase):
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()
         simulation = config["simulation"]
         num_actions = simulation["num_actions"]
-        num_gen_drawers = simulation["drawers_to_gen"]
+        num_gen_trays = simulation["trays_to_gen"]
         num_gen_materials = simulation["materials_to_gen"]
         gen_deposit = simulation["gen_deposit"]
         gen_buffer = simulation["gen_buffer"]
@@ -46,7 +46,7 @@ class TestWarehouseSimulation(TestCase):
         self.assertListEqual(warehouse_simulation.get_store_history().items, [])
         warehouse_simulation.new_simulation(
             num_actions,
-            num_gen_drawers,
+            num_gen_trays,
             num_gen_materials,
             gen_deposit,
             gen_buffer,

@@ -58,35 +58,35 @@ class TestWarehouseStatistics(TestCase):
         warehouse_statistics = self.warehouse_statistics
 
         # act
-        res = warehouse_statistics.action_started_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.MINUTE)
+        res = warehouse_statistics.action_started_every(ActionEnum.EXTRACT_TRAY, TimeEnum.MINUTE)
 
         # assert
         self.assertIsInstance(res, DataFrame)
         self.assertIsNotNone(res.get('Type of Action'))
         self.assertIsNotNone(res.get('Start'))
         self.assertIsNotNone(res.get('Count'))
-        self.assertNotIn(False, [action == ActionEnum.EXTRACT_DRAWER.value for action in res.get('Type of Action')])
+        self.assertNotIn(False, [action == ActionEnum.EXTRACT_TRAY.value for action in res.get('Type of Action')])
 
     def test_action_finished_every(self):
         # arrange
         warehouse_statistics = self.warehouse_statistics
 
         # act
-        res = warehouse_statistics.action_finished_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.MINUTE)
+        res = warehouse_statistics.action_finished_every(ActionEnum.EXTRACT_TRAY, TimeEnum.MINUTE)
 
         # assert
         self.assertIsInstance(res, DataFrame)
         self.assertIsNotNone(res.get('Type of Action'))
         self.assertIsNotNone(res.get('Finish'))
         self.assertIsNotNone(res.get('Count'))
-        self.assertNotIn(False, [action == ActionEnum.EXTRACT_DRAWER.value for action in res.get('Type of Action')])
+        self.assertNotIn(False, [action == ActionEnum.EXTRACT_TRAY.value for action in res.get('Type of Action')])
 
     def test_action_completed_every(self):
         # arrange
         warehouse_statistics = self.warehouse_statistics
 
         # act
-        res = warehouse_statistics.action_completed_every(ActionEnum.EXTRACT_DRAWER, TimeEnum.MINUTE)
+        res = warehouse_statistics.action_completed_every(ActionEnum.EXTRACT_TRAY, TimeEnum.MINUTE)
 
         # assert
         self.assertIsInstance(res, DataFrame)
@@ -94,15 +94,15 @@ class TestWarehouseStatistics(TestCase):
         self.assertIsNotNone(res.get('Start'))
         self.assertIsNotNone(res.get('Finish'))
         self.assertIsNotNone(res.get('Count'))
-        self.assertNotIn(False, [action == ActionEnum.EXTRACT_DRAWER.value for action in res.get('Type of Action')])
+        self.assertNotIn(False, [action == ActionEnum.EXTRACT_TRAY.value for action in res.get('Type of Action')])
 
     def test_count_action_completed(self):
         # arrange
         warehouse_statistics = self.warehouse_statistics
 
         # act
-        expected = warehouse_statistics._warehouse_actions.groupby("Type of Action").count().get("Finish").get(ActionEnum.EXTRACT_DRAWER.value)
-        res = warehouse_statistics.count_action_completed(ActionEnum.EXTRACT_DRAWER)
+        expected = warehouse_statistics._warehouse_actions.groupby("Type of Action").count().get("Finish").get(ActionEnum.EXTRACT_TRAY.value)
+        res = warehouse_statistics.count_action_completed(ActionEnum.EXTRACT_TRAY)
 
         # assert
         self.assertIsInstance(res, int64)

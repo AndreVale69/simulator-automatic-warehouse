@@ -1,8 +1,8 @@
 from copy import deepcopy
 
-from src.sim.drawer import Drawer
-from src.sim.status_warehouse.container.drawer_container import DrawerContainer
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.tray import Tray
+from src.sim.status_warehouse.container.tray_container import TrayContainer
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
@@ -19,10 +19,10 @@ class CarouselInfo:
         self.width: int = width
 
 
-class Carousel(DrawerContainer):
+class Carousel(TrayContainer):
     def __init__(self, info: CarouselInfo, warehouse):
         """
-        The carousel represents the set of deposit (bay) and the buffer (drawer under the bay).
+        The carousel represents the set of deposit (bay) and the buffer (tray under the bay).
 
         :type info: CarouselInfo
         :type warehouse: Warehouse
@@ -64,20 +64,20 @@ class Carousel(DrawerContainer):
             self.get_hole() == other.get_hole() and
             self.get_deposit_entry() == other.get_deposit_entry() and
             self.get_buffer_entry() == other.get_buffer_entry() and
-            self.get_num_drawers() == other.get_num_drawers() and
-            DrawerContainer.__eq__(self, other)
+            self.get_num_trays() == other.get_num_trays() and
+            TrayContainer.__eq__(self, other)
         )
 
     def __hash__(self):
         return (
             14951 ^
-            DrawerContainer.__hash__(self) ^
+            TrayContainer.__hash__(self) ^
             hash(self.buffer) ^
             hash(self.deposit) ^
             hash(self.hole) ^
             hash(self.get_deposit_entry()) ^
             hash(self.get_buffer_entry()) ^
-            hash(self.get_num_drawers())
+            hash(self.get_num_trays())
         )
 
     def get_buffer(self) -> int:
@@ -109,52 +109,52 @@ class Carousel(DrawerContainer):
         """
         return self.hole
 
-    def get_deposit_entry(self) -> DrawerEntry | EmptyEntry:
+    def get_deposit_entry(self) -> TrayEntry | EmptyEntry:
         """
         Get the deposit (bay) entry or an empty entry.
 
-        :rtype: DrawerEntry | EmptyEntry
+        :rtype: TrayEntry | EmptyEntry
         :return: the deposit (bay) entry or an empty entry.
         """
         return self.container[0]
 
-    def get_deposit_drawer(self) -> Drawer:
+    def get_deposit_tray(self) -> Tray:
         """
-        Get the deposit (bay) drawer.
+        Get the deposit (bay) tray.
 
-        :rtype: Drawer
-        :return: the Drawer object of the deposit (bay).
-        :raises AttributeError: when the deposit (bay) is empty and there is no drawer.
+        :rtype: Tray
+        :return: the Tray object of the deposit (bay).
+        :raises AttributeError: when the deposit (bay) is empty and there is no tray.
         """
-        return self.container[0].get_drawer()
+        return self.container[0].get_tray()
 
-    def get_buffer_entry(self) -> DrawerEntry | EmptyEntry:
+    def get_buffer_entry(self) -> TrayEntry | EmptyEntry:
         """
         Get the buffer entry or an empty entry.
 
-        :rtype: DrawerEntry | EmptyEntry
+        :rtype: TrayEntry | EmptyEntry
         :return: the buffer entry or an empty entry.
         """
         return self.container[1]
 
-    def get_buffer_drawer(self) -> Drawer:
+    def get_buffer_tray(self) -> Tray:
         """
         Get the buffer entry or an empty entry.
 
-        :rtype: Drawer
+        :rtype: Tray
         :return: the buffer entry or an empty entry.
-        :raises AttributeError: when the buffer is empty and there is no drawer.
+        :raises AttributeError: when the buffer is empty and there is no tray.
         """
-        return self.container[1].get_drawer()
+        return self.container[1].get_tray()
 
-    def get_num_drawers(self) -> int:
+    def get_num_trays(self) -> int:
         """
-        Get how many drawers there are.
+        Get how many trays there are.
 
         :rtype: int
-        :return: the number of drawers there are.
+        :return: the number of trays there are.
         """
-        return isinstance(self.get_deposit_entry(), DrawerEntry) + isinstance(self.get_buffer_entry(), DrawerEntry)
+        return isinstance(self.get_deposit_entry(), TrayEntry) + isinstance(self.get_buffer_entry(), TrayEntry)
 
     def get_num_entries_free(self) -> int:
         count = 0
@@ -176,8 +176,8 @@ class Carousel(DrawerContainer):
         :rtype: bool
         :return: True if is full, False otherwise.
         """
-        # check if the first position of buffer have a Drawer
-        return isinstance(self.get_buffer_entry(), DrawerEntry)
+        # check if the first position of buffer have a Tray
+        return isinstance(self.get_buffer_entry(), TrayEntry)
 
     def is_deposit_full(self) -> bool:
         """
@@ -186,16 +186,16 @@ class Carousel(DrawerContainer):
         :rtype: bool
         :return: True if is full, False otherwise.
         """
-        # check if the first position of deposit have a Drawer
-        return isinstance(self.get_deposit_entry(), DrawerEntry)
+        # check if the first position of deposit have a Tray
+        return isinstance(self.get_deposit_entry(), TrayEntry)
 
-    def add_drawer(self, drawer: Drawer):
+    def add_tray(self, tray: Tray):
         """
-        Add a drawer in the buffer area or show as an output (deposit).
+        Add a tray in the buffer area or show as an output (deposit).
 
-        :type drawer: Drawer
-        :param drawer: to show or to save.
-        :raises RuntimeError: if the drawer already exists.
+        :type tray: Tray
+        :param tray: to show or to save.
+        :raises RuntimeError: if the tray already exists.
         """
         first_y = self.get_num_entries() + self.hole + self.deposit
         is_deposit_full = self.is_deposit_full()
@@ -204,51 +204,51 @@ class Carousel(DrawerContainer):
         if self.is_buffer_full() and is_deposit_full:
             raise RuntimeError("Collision!")
 
-        # add the drawerEntry in the buffer iff the deposit is full
-        self._create_drawerEntry(drawer, first_y, is_buffer=is_deposit_full)
+        # add the trayEntry in the buffer iff the deposit is full
+        self._create_trayEntry(tray, first_y, is_buffer=is_deposit_full)
 
-    def _create_drawerEntry(self, drawer: Drawer, first_y: int, is_buffer: bool):
+    def _create_trayEntry(self, tray: Tray, first_y: int, is_buffer: bool):
         """
-        Create a drawer entry.
+        Create a tray entry.
 
-        :type drawer: Drawer
+        :type tray: Tray
         :type first_y: int
         :type is_buffer: bool
-        :param drawer: the drawer to insert.
-        :param first_y: the y position of the drawer to insert.
+        :param tray: the tray to insert.
+        :param first_y: the y position of the tray to insert.
         :param is_buffer: True if to insert in the buffer position, False if to insert in the bay position.
         """
         # initialize positions
         if is_buffer:
             first_y += self.get_buffer()
-        drawer_entry = DrawerEntry(self.get_offset_x(), first_y)
-        # connect Drawer to entry
-        drawer_entry.add_drawer(drawer)
+        tray_entry = TrayEntry(self.get_offset_x(), first_y)
+        # connect Tray to entry
+        tray_entry.add_tray(tray)
         # add to container
-        self.get_container()[int(is_buffer)] = drawer_entry
-        # connect Entry just added to relative Drawer
-        drawer.set_first_drawerEntry(drawer_entry)
+        self.get_container()[int(is_buffer)] = tray_entry
+        # connect Entry just added to relative Tray
+        tray.set_first_trayEntry(tray_entry)
 
     # override
-    def remove_drawer(self, drawer: Drawer) -> bool:
+    def remove_tray(self, tray: Tray) -> bool:
         """
-        Remove a drawer.
+        Remove a tray.
 
-        :type drawer: Drawer
+        :type tray: Tray
         :rtype: bool
-        :param drawer: the drawer to remove.
-        :return: True if the drawer was removed, False otherwise.
+        :param tray: the tray to remove.
+        :return: True if the tray was removed, False otherwise.
         """
-        first_entry: DrawerEntry = drawer.get_first_drawerEntry()
+        first_entry: TrayEntry = tray.get_first_trayEntry()
         entry_y_to_rmv = first_entry.get_pos_y()
         entry_x_to_rmv = first_entry.get_offset_x()
-        deposit_entry: DrawerEntry | EmptyEntry = self.container[0]
-        buffer_entry: DrawerEntry | EmptyEntry = self.container[1]
+        deposit_entry: TrayEntry | EmptyEntry = self.container[0]
+        buffer_entry: TrayEntry | EmptyEntry = self.container[1]
 
-        if isinstance(deposit_entry, DrawerEntry) and deposit_entry.get_drawer() == drawer:
+        if isinstance(deposit_entry, TrayEntry) and deposit_entry.get_tray() == tray:
             self.container[0] = EmptyEntry(entry_x_to_rmv, entry_y_to_rmv)
             return True
-        elif isinstance(buffer_entry, DrawerEntry) and buffer_entry.get_drawer() == drawer:
+        elif isinstance(buffer_entry, TrayEntry) and buffer_entry.get_tray() == tray:
             self.container[1] = EmptyEntry(entry_x_to_rmv, entry_y_to_rmv)
             return True
         return False

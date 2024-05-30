@@ -21,7 +21,7 @@ class TestMove(TestCase):
 
         # act
         self.move.buffer = self.buffer
-        drawer = move.get_buffer()
+        tray = move.get_buffer()
 
         # assert
-        self.assertEqual(drawer, self.buffer)
+        self.assertEqual(tray, self.buffer)

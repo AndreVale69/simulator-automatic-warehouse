@@ -33,7 +33,7 @@ simulation:
   # optional
   # time: 10000
   num_actions: 1000
-  drawers_to_gen: 5
+  trays_to_gen: 5
   materials_to_gen: 3
   gen_deposit: false
   gen_buffer: false

@@ -12,7 +12,7 @@ class DecidePositionReturns(NamedTuple):
 
 def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm) -> DecidePositionReturns:
     """
-    Run the algorithm to decide where to insert a drawer.
+    Run the algorithm to decide where to insert a tray.
     It returns a NamedTuple where we can find the index and the best column.
 
     :type columns: list[Column]
@@ -20,14 +20,14 @@ def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm)
     :type algorithm: Algorithm
     :rtype: DecidePositionReturns
     :param columns: the columns checked by the algorithm to find the best position.
-    :param space_req: space requested from drawer.
+    :param space_req: space requested from tray.
     :param algorithm: algorithm used.
     :return: if there is a space [index_position_where_insert, column_where_insert].
     :raises NotImplementedError: if the algorithm is not implemented.
     :raises ValueError: if the algorithm cannot find a position for the space requested.
     """
     assert len(columns) > 0, "At least one column is required."
-    assert space_req > 0, "The space requested from the drawer must be greater than zero."
+    assert space_req > 0, "The space requested from the tray must be greater than zero."
 
     # select the algorithm to be used
     match algorithm:
@@ -60,7 +60,7 @@ def _high_position_algorithm(column: Column, space_req: int) -> int:
     :type space_req: int
     :rtype: int
     :param column: the column where we want to find the best position.
-    :param space_req: space required for the drawer.
+    :param space_req: space required for the tray.
     :return: the highest position (index) of the column given a space (space_req parameter).
     :raise ValueError: if the algorithm cannot find a position for the space requested.
     """
@@ -69,7 +69,7 @@ def _high_position_algorithm(column: Column, space_req: int) -> int:
 
     # verify the highest position:
     # - if the first available entry in the last position is empty (-1 because the start index is 0 and not 1)
-    # - if the space required for the drawer is less than or equal to the height of the last position
+    # - if the space required for the tray is less than or equal to the height of the last position
     if type(container[start_index - 1]) is EmptyEntry and space_req <= height_last_pos:
         # take the highest position (from the top) as index
         return start_index - space_req

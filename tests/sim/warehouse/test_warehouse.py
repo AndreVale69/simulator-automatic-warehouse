@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from src.sim.status_warehouse.container.column import Column, ColumnInfo
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
 from src.sim.warehouse_configuration_singleton import WarehouseConfigurationSingleton
@@ -70,7 +70,7 @@ class TestWarehouse(TestCase):
         for col in warehouse.get_cols_container():
             for index, entry in enumerate(col.get_container()):
                 if isinstance(entry, EmptyEntry):
-                    col.get_container()[index] = DrawerEntry(entry.get_offset_x(), entry.get_pos_y())
+                    col.get_container()[index] = TrayEntry(entry.get_offset_x(), entry.get_pos_y())
 
         # act
 
@@ -81,21 +81,21 @@ class TestWarehouse(TestCase):
         # arrange
         warehouse = Warehouse()
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        drawers_to_gen = config["simulation"]["drawers_to_gen"] + config["simulation"]["gen_deposit"] + config["simulation"]["gen_buffer"]
+        trays_to_gen = config["simulation"]["trays_to_gen"] + config["simulation"]["gen_deposit"] + config["simulation"]["gen_buffer"]
         materials_to_gen = config["simulation"]["materials_to_gen"]
-        drawers_find = 0
+        trays_find = 0
         materials_find = 0
 
         # act
         for col in warehouse.get_cols_container():
-            drawers_find += col.get_num_drawers()
-            for drawer in col.get_drawers():
-                materials_find += drawer.get_num_materials()
-        drawers_find += warehouse.get_carousel().is_buffer_full()
-        drawers_find += warehouse.get_carousel().is_deposit_full()
+            trays_find += col.get_num_trays()
+            for tray in col.get_trays():
+                materials_find += tray.get_num_materials()
+        trays_find += warehouse.get_carousel().is_buffer_full()
+        trays_find += warehouse.get_carousel().is_deposit_full()
 
         # assert
-        self.assertEqual(drawers_to_gen, drawers_find)
+        self.assertEqual(trays_to_gen, trays_find)
         self.assertEqual(materials_to_gen, materials_find)
 
     def test_gen_rand_full(self):
@@ -109,19 +109,19 @@ class TestWarehouse(TestCase):
         # assert
         self.assertTrue(res)
 
-    def test_choice_random_drawer(self):
+    def test_choice_random_tray(self):
         # arrange
-        drawers = []
+        trays = []
         warehouse = Warehouse()
 
         # act
         for col in warehouse.get_cols_container():
-            drawers.extend(col.get_drawers())
+            trays.extend(col.get_trays())
 
         # assert
-        self.assertIn(warehouse.choice_random_drawer(), drawers)
+        self.assertIn(warehouse.choice_random_tray(), trays)
 
-    def test_choice_random_drawer_with_empty_column(self):
+    def test_choice_random_tray_with_empty_column(self):
         # arrange
         warehouse = Warehouse()
         warehouse.add_column(Column(ColumnInfo(
@@ -130,14 +130,14 @@ class TestWarehouse(TestCase):
             width = 250,
             height_last_position = 75
         ), warehouse))
-        drawers = []
+        trays = []
 
         # act
         for col in warehouse.get_cols_container():
-            drawers.extend(col.get_drawers())
+            trays.extend(col.get_trays())
 
         # assert
-        self.assertIn(warehouse.choice_random_drawer(), drawers)
+        self.assertIn(warehouse.choice_random_tray(), trays)
 
     def test_cleanup(self):
         # arrange
@@ -147,4 +147,4 @@ class TestWarehouse(TestCase):
         warehouse.cleanup()
 
         # assert
-        self.assertEqual(warehouse.get_num_drawers(), 0)
+        self.assertEqual(warehouse.get_num_trays(), 0)

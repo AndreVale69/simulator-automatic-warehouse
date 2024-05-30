@@ -24,9 +24,9 @@ class Buffer(Action):
         super().__init__(env, warehouse, simulation)
 
     # override
-    def simulate_action(self, drawer=None, destination=None):
-        assert drawer is None, logger.warning("The buffer checks the two positions in the carousel, "
-                                              "so the drawer parameter is not taken into account")
+    def simulate_action(self, tray=None, destination=None):
+        assert tray is None, logger.warning("The buffer checks the two positions in the carousel, "
+                                              "so the tray parameter is not taken into account")
         assert destination is None, logger.warning("The default destination parameter is bay and buffer, "
                                                    "so the destination parameter is not taken into account.")
         simulation, carousel, env = self.simulation, self.warehouse.get_carousel(), self.env
@@ -38,6 +38,6 @@ class Buffer(Action):
                 yield req_dep
                 # check if the deposit and the buffer are empty and full iff the resources are taken
                 if carousel.is_buffer_full() and not carousel.is_deposit_full():
-                    logger.debug(f"Time {env.now:5.2f} - Start loading buffer drawer inside the deposit")
+                    logger.debug(f"Time {env.now:5.2f} - Start loading buffer tray inside the deposit")
                     yield env.process(simulation.loading_buffer_and_remove())
-                    logger.debug(f"Time {env.now:5.2f} - Finish loading buffer drawer inside the deposit")
+                    logger.debug(f"Time {env.now:5.2f} - Finish loading buffer tray inside the deposit")

@@ -15,10 +15,10 @@ from src.sim.warehouse import Warehouse
 logger = getLogger(__name__)
 
 
-class ExtractDrawer(Move):
+class ExtractTray(Move):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         """
-        The extract of a drawer (ExtractDrawer action) is the movement from a column to the deposit (bay).
+        The extract of a tray (ExtractTray action) is the movement from a column to the deposit (bay).
 
         :type env: Environment
         :type warehouse: Warehouse
@@ -33,16 +33,16 @@ class ExtractDrawer(Move):
         self._unload: Unload = Unload(env, warehouse, simulation)
         self._vertical: Vertical = Vertical(env, warehouse, simulation)
 
-    def simulate_action(self, drawer=None, destination=None):
-        assert drawer is None, logger.warning("The default action is to select a random drawer from the warehouse, "
-                                              "so the drawer parameter is not taken into account.")
+    def simulate_action(self, tray=None, destination=None):
+        assert tray is None, logger.warning("The default action is to select a random tray from the warehouse, "
+                                              "so the tray parameter is not taken into account.")
         assert destination is not None, logger.error("The destination cannot be None!")
         simulation, warehouse, env = self.simulation, self.warehouse, self.env
         carousel = warehouse.get_carousel()
 
         start_time = datetime.now() + timedelta(seconds=env.now)
 
-        # try to release the drawer in the deposit
+        # try to release the tray in the deposit
         if not carousel.is_deposit_full():
             with simulation.get_res_deposit().request() as req:
                 yield req
@@ -63,7 +63,7 @@ class ExtractDrawer(Move):
         end_time = datetime.now() + timedelta(seconds=env.now)
 
         yield simulation.get_store_history().put({
-            'Type of Action': ActionEnum.EXTRACT_DRAWER.value,
+            'Type of Action': ActionEnum.EXTRACT_TRAY.value,
             'Start'         : start_time,
             'Finish'        : end_time
         })
@@ -76,19 +76,19 @@ class ExtractDrawer(Move):
         :type destination: EnumWarehouse
         :type load_in_buffer: bool
         :param destination: the destination.
-        :param load_in_buffer: True to send the drawer inside the buffer, False to send the drawer in the bay.
+        :param load_in_buffer: True to send the tray inside the buffer, False to send the tray in the bay.
         """
         simulation, warehouse, env = self.simulation, self.warehouse, self.env
 
-        # choice a random drawer
-        drawer = warehouse.choice_random_drawer()
+        # choice a random tray
+        tray = warehouse.choice_random_tray()
         # move the floor
-        yield env.process(self._vertical.simulate_action(drawer, destination))
-        # unloading drawer
-        yield env.process(self._unload.simulate_action(drawer, destination))
+        yield env.process(self._vertical.simulate_action(tray, destination))
+        # unloading tray
+        yield env.process(self._unload.simulate_action(tray, destination))
         # come back to the deposit
         yield env.process(
             self._go_to_buffer.simulate_action() if load_in_buffer else self._go_to_deposit.simulate_action()
         )
         logger.debug(f"Time {env.now:5.2f} - Start to load in the carousel")
-        yield env.process(simulation.load_in_carousel(drawer, destination, load_in_buffer))
+        yield env.process(simulation.load_in_carousel(tray, destination, load_in_buffer))

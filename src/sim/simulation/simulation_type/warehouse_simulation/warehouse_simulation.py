@@ -5,15 +5,15 @@ from random import choice
 
 from simpy import Resource, Store
 
-from src.sim.drawer import Drawer
+from src.sim.tray import Tray
 from src.sim.simulation.actions.action_enum import ActionEnum
 from src.sim.simulation.actions.buffer import Buffer
-from src.sim.simulation.actions.extract_drawer import ExtractDrawer
+from src.sim.simulation.actions.extract_tray import ExtractTray
 from src.sim.simulation.actions.material.insert_material.insert_random_material import InsertRandomMaterial
 from src.sim.simulation.actions.material.remove_material.remove_random_material import RemoveRandomMaterial
-from src.sim.simulation.actions.send_back_drawer import SendBackDrawer
+from src.sim.simulation.actions.send_back_tray import SendBackTray
 from src.sim.simulation.simulation import Simulation
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 from src.sim.status_warehouse.enum_warehouse import EnumWarehouse
 from src.sim.utils.decide_position_algorithm.algorithm import decide_position
 from src.sim.utils.decide_position_algorithm.enum_algorithm import Algorithm
@@ -86,20 +86,20 @@ class WarehouseSimulation(Simulation):
         # get variables to reduce memory accesses
         env = self.env
         warehouse = self.warehouse
-        send_back_drawer = SendBackDrawer(env, warehouse, self)
-        extract_drawer = ExtractDrawer(env, warehouse, self)
+        send_back_tray = SendBackTray(env, warehouse, self)
+        extract_tray = ExtractTray(env, warehouse, self)
         insert_random_material = InsertRandomMaterial(env, warehouse, self, 2)
         remove_random_material = RemoveRandomMaterial(env, warehouse, self, 2)
         column_val = EnumWarehouse.COLUMN
         carousel_val = EnumWarehouse.CAROUSEL
-        extract_drawer_val = ActionEnum.EXTRACT_DRAWER.value
-        send_back_drawer_val = ActionEnum.SEND_BACK_DRAWER.value
+        extract_tray_val = ActionEnum.EXTRACT_TRAY.value
+        send_back_tray_val = ActionEnum.SEND_BACK_TRAY.value
         insert_random_material_val = ActionEnum.INSERT_RANDOM_MATERIAL.value
         remove_random_material_val = ActionEnum.REMOVE_RANDOM_MATERIAL.value
         # prepare domains
-        case_1 = [send_back_drawer_val, extract_drawer_val,
+        case_1 = [send_back_tray_val, extract_tray_val,
                   insert_random_material_val, remove_random_material_val]
-        case_2 = [send_back_drawer_val, insert_random_material_val, remove_random_material_val]
+        case_2 = [send_back_tray_val, insert_random_material_val, remove_random_material_val]
         # run "control of buffer" process
         yield env.process(Buffer(env, warehouse, self).simulate_action())
         start = datetime.now()
@@ -107,19 +107,19 @@ class WarehouseSimulation(Simulation):
         for num_action in range(self.sim_num_actions):
             logger.debug(f"~ Operation #{num_action} ~")
             # before the random selection, choose the domain to take into account the balance
-            rand_event = extract_drawer_val
+            rand_event = extract_tray_val
             if balance_wh == 1:
                 rand_event = choice(case_1)
             elif balance_wh == 2:
                 rand_event = choice(case_2)
             # process the event
             match rand_event:
-                case ActionEnum.EXTRACT_DRAWER.value:
+                case ActionEnum.EXTRACT_TRAY.value:
                     balance_wh += 1
-                    yield env.process(extract_drawer.simulate_action(destination=carousel_val))
-                case ActionEnum.SEND_BACK_DRAWER.value:
+                    yield env.process(extract_tray.simulate_action(destination=carousel_val))
+                case ActionEnum.SEND_BACK_TRAY.value:
                     balance_wh -= 1
-                    yield env.process(send_back_drawer.simulate_action(destination=column_val))
+                    yield env.process(send_back_tray.simulate_action(destination=column_val))
                 case ActionEnum.INSERT_RANDOM_MATERIAL.value:
                     yield env.process(insert_random_material.simulate_action())
                 case ActionEnum.REMOVE_RANDOM_MATERIAL.value:
@@ -141,22 +141,22 @@ class WarehouseSimulation(Simulation):
         # run simulation
         self.env.run(until=self.sim_time)
 
-    def new_simulation(self, num_actions: int, num_gen_drawers: int, num_gen_materials: int,
+    def new_simulation(self, num_actions: int, num_gen_trays: int, num_gen_materials: int,
                        gen_deposit: bool, gen_buffer: bool, time: int=None):
         """
         Run a new simulation using custom parameters.
 
         :type num_actions: int
-        :type num_gen_drawers: int
+        :type num_gen_trays: int
         :type num_gen_materials: int
         :type gen_deposit: bool
         :type gen_buffer: bool
         :type time: int or None
         :param num_actions: number of actions to simulate
-        :param num_gen_drawers: number of drawers to generate in the warehouse
+        :param num_gen_trays: number of trays to generate in the warehouse
         :param num_gen_materials: number of materials to generate in the warehouse
-        :param gen_deposit: True to generate a drawer in the deposit, False otherwise
-        :param gen_buffer: True to generate a drawer in the buffer, False otherwise
+        :param gen_deposit: True to generate a tray in the deposit, False otherwise
+        :param gen_buffer: True to generate a tray in the buffer, False otherwise
         :param time: the maximum time of the simulation, otherwise None to remove the limit
         """
         # setting new simulation settings:
@@ -164,7 +164,7 @@ class WarehouseSimulation(Simulation):
         self.sim_num_actions = num_actions
 
         # random gen
-        self.warehouse.gen_rand(gen_deposit, gen_buffer, num_gen_drawers, num_gen_materials)
+        self.warehouse.gen_rand(gen_deposit, gen_buffer, num_gen_trays, num_gen_materials)
 
         # reset events to simulate list
         self.events_to_simulate.clear()
@@ -198,15 +198,15 @@ class WarehouseSimulation(Simulation):
         # set new y position of the floor
         warehouse.set_pos_y_floor(buf_pos)
 
-    def load_in_carousel(self, drawer_to_insert: Drawer, destination: EnumWarehouse, load_in_buffer: bool):
+    def load_in_carousel(self, tray_to_insert: Tray, destination: EnumWarehouse, load_in_buffer: bool):
         """
         Simulation method used to load the carousel into the warehouse.
 
-        :type drawer_to_insert: Drawer
+        :type tray_to_insert: Tray
         :type destination: EnumWarehouse
         :type load_in_buffer: bool
-        :param drawer_to_insert: drawer that will be inserted into the warehouse
-        :param destination: destination of the drawer
+        :param tray_to_insert: tray that will be inserted into the warehouse
+        :param destination: destination of the tray
         :param load_in_buffer: True to load the carousel into the buffer, otherwise into the deposit (bay)
         """
         warehouse = self.get_warehouse()
@@ -214,7 +214,7 @@ class WarehouseSimulation(Simulation):
         y_dep = carousel.get_deposit_entry().get_pos_y()
         y_buf = carousel.get_buffer_entry().get_pos_y()
         # update the y position
-        drawer_to_insert.set_best_y(y_dep)
+        tray_to_insert.set_best_y(y_dep)
 
         # calculate time to move (y)
         if load_in_buffer:
@@ -222,7 +222,7 @@ class WarehouseSimulation(Simulation):
             if carousel.is_buffer_full():
                 raise NotImplementedError("Deposit and buffer are full! Collision!")
             # update the y destination
-            drawer_to_insert.set_best_y(y_buf)
+            tray_to_insert.set_best_y(y_buf)
             logger.debug(f"Time {self.env.now:5.2f} - Deposit is full! Start vertical move to buffer")
             yield self.env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
             # set new y position of the floor
@@ -230,14 +230,14 @@ class WarehouseSimulation(Simulation):
             logger.debug(f"Time {self.env.now:5.2f} - Start to load in the buffer")
 
         # and load inside the carousel
-        yield self.env.process(self.load(drawer_to_insert, destination))
+        yield self.env.process(self.load(tray_to_insert, destination))
 
     def loading_buffer_and_remove(self):
         """
         Vertical movement of carousel loading from buffer to deposit.
         """
         carousel = self.get_warehouse().get_carousel()
-        buffer: DrawerEntry = carousel.get_buffer_entry()
+        buffer: TrayEntry = carousel.get_buffer_entry()
 
         # calculate loading buffer time
         start_pos = buffer.get_pos_y()
@@ -247,16 +247,16 @@ class WarehouseSimulation(Simulation):
         # exec simulate
         yield self.env.timeout(loading_buffer_time)
 
-        # obtain the drawer inside the buffer
-        drawer_to_show = buffer.get_drawer()
+        # obtain the tray inside the buffer
+        tray_to_show = buffer.get_tray()
         # remove from buffer
-        carousel.remove_drawer(drawer_to_show)
-        # and insert drawer in correct position (outside)
-        carousel.add_drawer(drawer_to_show)
+        carousel.remove_tray(tray_to_show)
+        # and insert tray in correct position (outside)
+        carousel.add_tray(tray_to_show)
 
     def vertical_move(self, start_pos: int, end_pos: int) -> float:
         """
-        A simple vertical movement of the floor or the drawer inside the carousel (buffer to deposit).
+        A simple vertical movement of the floor or the tray inside the carousel (buffer to deposit).
 
         :type start_pos: int
         :type end_pos: int
@@ -273,12 +273,12 @@ class WarehouseSimulation(Simulation):
         # formula of vertical move
         return (eff_distance / 100) / warehouse.get_speed_per_sec()
 
-    def allocate_best_pos(self, drawer: Drawer):
+    def allocate_best_pos(self, tray: Tray):
         """
-        Simulation method used to allocate the best position of the drawer in the warehouse.
+        Simulation method used to allocate the best position of the tray in the warehouse.
 
-        :type drawer: Drawer
-        :param drawer: drawer to allocate
+        :type tray: Tray
+        :param tray: tray to allocate
         """
         warehouse = self.get_warehouse()
         # start position
@@ -286,32 +286,32 @@ class WarehouseSimulation(Simulation):
         # calculate destination position
         decide_position_res = decide_position(
             columns=warehouse.get_cols_container(),
-            space_req=drawer.get_num_space_occupied(),
+            space_req=tray.get_num_space_occupied(),
             algorithm=Algorithm.HIGH_POSITION
         )
         pos_to_insert = decide_position_res.index
         # temporarily save the coordinates
-        drawer.set_best_y(pos_to_insert)
-        drawer.set_best_offset_x(decide_position_res.column.get_offset_x())
+        tray.set_best_y(pos_to_insert)
+        tray.set_best_offset_x(decide_position_res.column.get_offset_x())
         # start the move
         vertical_move = self.vertical_move(start_pos, pos_to_insert)
         yield self.env.timeout(vertical_move)
         # set new y position of the floor
         warehouse.set_pos_y_floor(pos_to_insert)
 
-    def reach_drawer_height(self, drawer: Drawer):
+    def reach_tray_height(self, tray: Tray):
         """
-        Simulation method used to reach the height of the drawer in the warehouse.
+        Simulation method used to reach the height of the tray in the warehouse.
 
-        :type drawer: Drawer
-        :param drawer: drawer to reach
+        :type tray: Tray
+        :param tray: tray to reach
         """
         warehouse = self.get_warehouse()
-        # save coordinates inside drawer
-        y = drawer.get_first_drawerEntry().get_pos_y()
-        x = drawer.get_first_drawerEntry().get_offset_x()
-        drawer.set_best_y(y)
-        drawer.set_best_offset_x(x)
+        # save coordinates inside tray
+        y = tray.get_first_trayEntry().get_pos_y()
+        x = tray.get_first_trayEntry().get_offset_x()
+        tray.set_best_y(y)
+        tray.set_best_offset_x(x)
         # start the move
         vertical_move = self.vertical_move(start_pos=warehouse.get_pos_y_floor(),
                                            end_pos=y)
@@ -319,67 +319,67 @@ class WarehouseSimulation(Simulation):
         # set new y position of the floor
         warehouse.set_pos_y_floor(y)
 
-    def unload(self, drawer: Drawer, rmv_from_cols: bool):
+    def unload(self, tray: Tray, rmv_from_cols: bool):
         """
-        Simulation method used to unload a drawer from the carousel or from the columns.
+        Simulation method used to unload a tray from the carousel or from the columns.
 
-        :type drawer: Drawer
+        :type tray: Tray
         :type rmv_from_cols: bool
-        :param drawer: drawer to unload
-        :param rmv_from_cols: True to unload the drawer from the columns, otherwise unload from the carousel
+        :param tray: tray to unload
+        :param rmv_from_cols: True to unload the tray from the columns, otherwise unload from the carousel
         """
         warehouse = self.get_warehouse()
         # take x offset
-        offset_x_drawer = drawer.get_first_drawerEntry().get_offset_x()
+        offset_x_tray = tray.get_first_trayEntry().get_offset_x()
         # start the move
-        yield self.env.timeout(self.horiz_move(offset_x_drawer))
+        yield self.env.timeout(self.horiz_move(offset_x_tray))
         # update warehouse
-        # if drawer hasn't been removed
+        # if tray hasn't been removed
         if rmv_from_cols:
             for col in warehouse.get_cols_container():
-                if col.remove_drawer(drawer):
+                if col.remove_tray(tray):
                     break
         else:
-            warehouse.get_carousel().remove_drawer(drawer)
-        # if not self.get_carousel().remove_drawer(drawer):
+            warehouse.get_carousel().remove_tray(tray)
+        # if not self.get_carousel().remove_tray(tray):
         #     # find in a column and terminate
         #     for col in self.get_cols_container():
-        #         if col.remove_drawer(drawer):
+        #         if col.remove_tray(tray):
         #             break
 
-    def load(self, drawer: Drawer, destination: EnumWarehouse) -> None:
+    def load(self, tray: Tray, destination: EnumWarehouse) -> None:
         """
-        Simulation method used to load the drawer into the warehouse.
+        Simulation method used to load the tray into the warehouse.
 
-        :type drawer: Drawer
+        :type tray: Tray
         :type destination: EnumWarehouse
-        :param drawer: drawer to load
-        :param destination: destination of the drawer
-        :raises ValueError: if the offset of the drawer is not equal to any column in the warehouse
+        :param tray: tray to load
+        :param destination: destination of the tray
+        :raises ValueError: if the offset of the tray is not equal to any column in the warehouse
         """
         warehouse = self.get_warehouse()
         # take destination coordinates
-        dest_x_drawer = drawer.get_best_offset_x()
-        dest_y_drawer = drawer.get_best_y()
+        dest_x_tray = tray.get_best_offset_x()
+        dest_y_tray = tray.get_best_y()
         # start the move
-        yield self.env.timeout(self.horiz_move(dest_x_drawer))
+        yield self.env.timeout(self.horiz_move(dest_x_tray))
         # update warehouse
         # if destination is carousel, add
         if destination == EnumWarehouse.CAROUSEL:
-            return warehouse.get_carousel().add_drawer(drawer)
+            return warehouse.get_carousel().add_tray(tray)
         # otherwise, check the offset of column
         for col in warehouse.get_cols_container():
-            if col.get_offset_x() == dest_x_drawer:
-                return col.add_drawer(drawer, dest_y_drawer)
-        raise ValueError(f"Offset x not found: {dest_x_drawer}")
+            if col.get_offset_x() == dest_x_tray:
+                return col.add_tray(tray, dest_y_tray)
+        raise ValueError(f"Offset x not found: {dest_x_tray}")
 
     def horiz_move(self, offset_x: int) -> float:
         """
-        Search in the column/carousel where is the drawer.
+        Search in the column/carousel where is the tray.
 
         :type offset_x: int
         :rtype: float | None
-        :param offset_x: offset of the drawer to search
+        :param offset_x: offset of the tray to search
         :return: the time estimated or None if not found
         :raises ValueError: if the offset is not valid
         """

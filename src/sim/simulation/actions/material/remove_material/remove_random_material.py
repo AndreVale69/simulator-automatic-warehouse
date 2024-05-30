@@ -30,9 +30,9 @@ class RemoveRandomMaterial(RemoveMaterial):
         super().__init__(env, warehouse, simulation, duration)
 
     # override
-    def simulate_action(self, drawer=None, destination=None):
-        assert drawer is None, logger.warning("A random material is removed from the bay drawer, "
-                                              "so the drawer parameter is not taken into account.")
+    def simulate_action(self, tray=None, destination=None):
+        assert tray is None, logger.warning("A random material is removed from the bay tray, "
+                                              "so the tray parameter is not taken into account.")
         assert destination is None, logger.warning("The default destination parameter is bay, "
                                                    "so the destination parameter is not taken into account.")
 
@@ -41,12 +41,12 @@ class RemoveRandomMaterial(RemoveMaterial):
 
         with simulation.get_res_deposit().request() as req:
             yield req
-            logger.debug(f"Time {env.now:5.2f} - Start removing material from a drawer")
-            drawer_output = self.warehouse.get_carousel().get_deposit_drawer()
+            logger.debug(f"Time {env.now:5.2f} - Start removing material from a tray")
+            tray_output = self.warehouse.get_carousel().get_deposit_tray()
             # check if there is a material to remove
-            if drawer_output.get_num_materials() != 0:
+            if tray_output.get_num_materials() != 0:
                 # remove a random material
-                drawer_output.remove_material(choice(drawer_output.get_items()))
+                tray_output.remove_material(choice(tray_output.get_items()))
                 # estimate a time of the action
                 yield env.timeout(self.duration)
             else:

@@ -24,9 +24,9 @@ class GoToDeposit(Move):
         super().__init__(env, warehouse, simulation)
 
     # override
-    def simulate_action(self, drawer=None, destination=None):
-        assert drawer is None, logger.warning("A go to deposit move is the default go to deposit move, "
-                                              "so the drawer parameter is not taken into account.")
+    def simulate_action(self, tray=None, destination=None):
+        assert tray is None, logger.warning("A go to deposit move is the default go to deposit move, "
+                                              "so the tray parameter is not taken into account.")
         assert destination is None, logger.warning("The default destination parameter is bay, "
                                                    "so the destination parameter is not taken into account.")
         env = self.env

@@ -11,7 +11,7 @@ from src.sim.utils.statistics.warehouse_statistics import WarehouseStatistics, T
 
 class SimulationInput(NamedTuple):
     num_actions: int
-    drawers_to_gen: int
+    trays_to_gen: int
     materials_to_gen: int
     gen_deposit: bool
     gen_buffer: bool
@@ -47,19 +47,19 @@ def _create_body(warehouse_statistics: WarehouseStatistics, simulation_input: Si
                 html.Td(id="num_action_sim_stats", children=simulation_input.num_actions)
             ]),
             html.Tr([
-                html.Td("Drawers requested to generate"),
-                html.Td(id="drawers_to_gen_sim_stats", children=simulation_input.drawers_to_gen)
+                html.Td("Trays requested to generate"),
+                html.Td(id="trays_to_gen_sim_stats", children=simulation_input.trays_to_gen)
             ]),
             html.Tr([
                 html.Td("Materials requested to generate"),
                 html.Td(id="materials_to_gen_sim_stats", children=simulation_input.materials_to_gen)
             ]),
             html.Tr([
-                html.Td("Deposit drawer generated"),
+                html.Td("Deposit tray generated"),
                 html.Td(id="gen_deposit_sim_stats", children=str(simulation_input.gen_deposit))
             ]),
             html.Tr([
-                html.Td("Buffer drawer generated"),
+                html.Td("Buffer tray generated"),
                 html.Td(id="gen_buffer_sim_stats", children=str(simulation_input.gen_buffer))
             ]),
             html.Tr([

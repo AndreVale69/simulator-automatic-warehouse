@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from src.sim.drawer import Drawer
+from src.sim.tray import Tray
 from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 from src.sim.warehouse import Warehouse
 
 
@@ -57,7 +57,7 @@ class TestCarousel(TestCase):
 
         # act
         is_buffer_full = carousel.is_buffer_full()
-        expected_is_buffer_full = isinstance(carousel.get_buffer_entry(), DrawerEntry)
+        expected_is_buffer_full = isinstance(carousel.get_buffer_entry(), TrayEntry)
 
         # assert
         self.assertEqual(is_buffer_full, expected_is_buffer_full)
@@ -68,59 +68,59 @@ class TestCarousel(TestCase):
 
         # act
         is_deposit_full = carousel.is_deposit_full()
-        expected_is_deposit_full = isinstance(carousel.get_deposit_entry(), DrawerEntry)
+        expected_is_deposit_full = isinstance(carousel.get_deposit_entry(), TrayEntry)
 
         # assert
         self.assertEqual(is_deposit_full, expected_is_deposit_full)
 
-    def test_add_drawer(self):
+    def test_add_tray(self):
         # arrange
-        drawer = Drawer()
+        tray = Tray()
         warehouse = self.warehouse
         carousel = warehouse.get_carousel()
 
         # act
         carousel.reset_container()
         self.assertTrue(carousel.is_empty())
-        carousel.add_drawer(drawer)
+        carousel.add_tray(tray)
 
         # assert
         self.assertTrue(carousel.is_deposit_full())
         self.assertFalse(carousel.is_buffer_full())
 
-    def test_add_drawer_full(self):
+    def test_add_tray_full(self):
         # arrange
-        drawer_1 = Drawer()
-        drawer_2 = Drawer()
+        tray_1 = Tray()
+        tray_2 = Tray()
         warehouse = self.warehouse
         carousel = warehouse.get_carousel()
 
         # act
         carousel.reset_container()
         self.assertTrue(carousel.is_empty())
-        carousel.add_drawer(drawer_1)
-        carousel.add_drawer(drawer_2)
+        carousel.add_tray(tray_1)
+        carousel.add_tray(tray_2)
 
         # assert
         self.assertTrue(carousel.is_full())
-        self.assertRaises(RuntimeError, carousel.add_drawer, drawer_1)
+        self.assertRaises(RuntimeError, carousel.add_tray, tray_1)
 
-    def test_remove_drawer(self):
+    def test_remove_tray(self):
         # arrange
-        drawer_1 = Drawer()
-        drawer_2 = Drawer()
+        tray_1 = Tray()
+        tray_2 = Tray()
         carousel = self.carousel
         carousel.reset_container()
         self.assertTrue(carousel.is_empty())
-        carousel.add_drawer(drawer_1)
-        carousel.add_drawer(drawer_2)
+        carousel.add_tray(tray_1)
+        carousel.add_tray(tray_2)
         self.assertTrue(carousel.is_deposit_full())
         self.assertTrue(carousel.is_buffer_full())
 
         # act
-        successful_remove_1 = carousel.remove_drawer(drawer_1)
-        successful_remove_2 = carousel.remove_drawer(drawer_2)
-        failure_remove = carousel.remove_drawer(drawer_1)
+        successful_remove_1 = carousel.remove_tray(tray_1)
+        successful_remove_2 = carousel.remove_tray(tray_2)
+        failure_remove = carousel.remove_tray(tray_1)
 
         # assert
         self.assertTrue(successful_remove_1)

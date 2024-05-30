@@ -1,9 +1,9 @@
 import copy
 from unittest import TestCase
 
-from src.sim.drawer import Drawer
+from src.sim.tray import Tray
 from src.sim.status_warehouse.container.column import Column, ColumnInfo
-from src.sim.status_warehouse.entry.drawer_entry import DrawerEntry
+from src.sim.status_warehouse.entry.tray_entry import TrayEntry
 from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
 from src.sim.warehouse import Warehouse
 
@@ -37,7 +37,7 @@ class TestColumn(TestCase):
         column_1.reset_container()
         column_2: Column = copy.deepcopy(column_1)
         for i in range(column_2.get_height_last_position()):
-            column_2.get_container()[i] = DrawerEntry(column_2.get_offset_x(), i)
+            column_2.get_container()[i] = TrayEntry(column_2.get_offset_x(), i)
 
         # act
         last_position_is_occupied_col1 = column_1.last_position_is_occupied()
@@ -52,7 +52,7 @@ class TestColumn(TestCase):
         column = self.column
         container = column.get_container()
         for i in range(len(container)):
-            container[i] = DrawerEntry(container[i].get_offset_x(), i)
+            container[i] = TrayEntry(container[i].get_offset_x(), i)
 
         # act
         is_full = column.is_full()
@@ -71,57 +71,57 @@ class TestColumn(TestCase):
         # assert
         self.assertTrue(is_empty)
 
-    def test_add_drawer(self):
+    def test_add_tray(self):
         # arrange
-        drawer = Drawer()
+        tray = Tray()
         column = self.column
         index = column.get_num_entries() - 1
 
         # act
-        column.add_drawer(drawer, index)
+        column.add_tray(tray, index)
 
         # assert
-        self.assertTrue(isinstance(column.get_container()[index], DrawerEntry))
+        self.assertTrue(isinstance(column.get_container()[index], TrayEntry))
 
-    def test_remove_drawer(self):
+    def test_remove_tray(self):
         # arrange
-        drawer = Drawer()
+        tray = Tray()
         column = self.column
         index = column.get_num_entries() - 1
 
         # act
-        column.add_drawer(drawer, index)
+        column.add_tray(tray, index)
 
         # assert
-        self.assertTrue(isinstance(column.get_container()[index], DrawerEntry))
-        self.assertTrue(column.remove_drawer(drawer))
+        self.assertTrue(isinstance(column.get_container()[index], TrayEntry))
+        self.assertTrue(column.remove_tray(tray))
 
-    def test_gen_materials_and_drawers(self):
+    def test_gen_materials_and_trays(self):
         # arrange
         column = self.column
         materials_to_add = 3
-        drawers_to_add = 3
+        trays_to_add = 3
 
         # act
-        res = column.gen_materials_and_drawers(num_drawers=drawers_to_add, num_materials=materials_to_add)
+        res = column.gen_materials_and_trays(num_trays=trays_to_add, num_materials=materials_to_add)
 
         # assert
-        self.assertEqual(res.drawers_inserted, drawers_to_add)
+        self.assertEqual(res.trays_inserted, trays_to_add)
         self.assertEqual(res.materials_inserted, materials_to_add)
 
-    def test_gen_materials_and_drawers_limit(self):
+    def test_gen_materials_and_trays_limit(self):
         # arrange
         column = self.column
         container_col = self.column.get_container()
         for i in range(len(container_col)):
-            container_col[i] = DrawerEntry(container_col[i].get_offset_x(), i)
+            container_col[i] = TrayEntry(container_col[i].get_offset_x(), i)
         container_col[-1] = EmptyEntry(container_col[-1].get_offset_x(), container_col[-1].get_pos_y())
         materials_to_add = 100
-        drawers_to_add = 1
+        trays_to_add = 1
 
         # act
-        res = column.gen_materials_and_drawers(num_drawers=drawers_to_add, num_materials=materials_to_add)
+        res = column.gen_materials_and_trays(num_trays=trays_to_add, num_materials=materials_to_add)
 
         # assert
-        self.assertLessEqual(res.drawers_inserted, drawers_to_add)
+        self.assertLessEqual(res.trays_inserted, trays_to_add)
         self.assertLessEqual(res.materials_inserted, materials_to_add)
