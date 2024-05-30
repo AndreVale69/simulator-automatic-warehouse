@@ -65,7 +65,7 @@ You can create another configuration following the json schema
 Finally, it's possible to manage the console log using the environment variables:
  - `NO_CONSOLE_LOG`: If set, console logs are not displayed.
  - `DEBUG_LOG`: if set, debug logging will be printed to the console.
- - `FILENAME_DEBUG_LOG`: if set, save the debug log to file (e.g. `sim.log`).
+ - `FILENAME_DEBUG_LOG`: if set, save the debug log to file (e.g. `log`).
 
 #### Website
 
@@ -88,7 +88,7 @@ python3.12 run_webpage.py
 ```
 
 **Note**: 
-the username and password to access at the page can be found in the [`index.py`](src/web_app/index.py) file 
+the username and password to access at the page can be found in the [`index.py`](tmp/web_app/index.py) file 
 after the `app` variable declaration. 
 The default, the values are:
 

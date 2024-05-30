@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.sim.status_warehouse.entry.entry import Entry
+from src.status_warehouse.entry.entry import Entry
 
 
 class TestTrayEntry(TestCase):

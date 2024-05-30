@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.sim.material import gen_rand_material
+from src.material import gen_rand_material
 
 
 class TestGetMethodsMaterial(TestCase):

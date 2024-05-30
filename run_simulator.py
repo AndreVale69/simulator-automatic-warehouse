@@ -1,4 +1,15 @@
-from src.sim.__main__ import run_simulator
+from time import sleep
+
+from src.simulation.simulation_type.warehouse_simulation.warehouse_simulation import WarehouseSimulation
+from src.warehouse import Warehouse
+
+
+def run_simulator():
+    # gen warehouse and run simulation
+    warehouse = Warehouse()
+    simulation = WarehouseSimulation(warehouse)
+    simulation.run_simulation()
 
 if __name__ == '__main__':
     run_simulator()
+    sleep(100000)

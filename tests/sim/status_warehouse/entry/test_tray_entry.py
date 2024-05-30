@@ -1,8 +1,8 @@
 import copy
 from unittest import TestCase
 
-from src.sim.tray import Tray
-from src.sim.status_warehouse.entry.tray_entry import TrayEntry
+from src.tray import Tray
+from src.status_warehouse.entry.tray_entry import TrayEntry
 
 
 class TestTrayEntry(TestCase):

@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from pandas import DataFrame
 
-from src.sim.simulation.simulation import Simulation
+from src.simulation.simulation import Simulation
 
 
 class TestSimulation(TestCase):

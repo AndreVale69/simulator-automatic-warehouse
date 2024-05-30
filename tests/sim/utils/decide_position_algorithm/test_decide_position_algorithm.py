@@ -1,12 +1,12 @@
 import uuid
 from unittest import TestCase
 
-from src.sim.tray import Tray
-from src.sim.material import Material
-from src.sim.status_warehouse.entry.tray_entry import TrayEntry
-from src.sim.utils.decide_position_algorithm.algorithm import decide_position
-from src.sim.utils.decide_position_algorithm.enum_algorithm import Algorithm
-from src.sim.warehouse import Warehouse
+from src.tray import Tray
+from src.material import Material
+from src.status_warehouse.entry.tray_entry import TrayEntry
+from src.utils.decide_position_algorithm.algorithm import decide_position
+from src.utils.decide_position_algorithm.enum_algorithm import Algorithm
+from src.warehouse import Warehouse
 
 
 class BaseDecidePositionAlgorithm(TestCase):

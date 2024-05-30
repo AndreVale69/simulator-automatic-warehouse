@@ -1,7 +1,7 @@
 import copy
 from unittest import TestCase
 
-from src.sim.warehouse import Warehouse
+from src.warehouse import Warehouse
 
 
 class TestBuiltinWarehouse(TestCase):

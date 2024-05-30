@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.sim.simulation.actions.action_enum import ActionEnum
+from src.simulation.actions.action_enum import ActionEnum
 
 
 class TestActionEnum(TestCase):

@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from simpy import Environment
 
-from src.sim.simulation.actions.action import Action
-from src.sim.warehouse import Warehouse
+from src.simulation.actions.action import Action
+from src.warehouse import Warehouse
 
 
 class TestAction(TestCase):

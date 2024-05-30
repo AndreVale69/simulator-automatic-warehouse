@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from src.sim.status_warehouse.container.column import Column, ColumnInfo
-from src.sim.status_warehouse.container.tray_container import TrayContainer
-from src.sim.warehouse import Warehouse
+from src.status_warehouse.container.column import Column, ColumnInfo
+from src.status_warehouse.container.tray_container import TrayContainer
+from src.warehouse import Warehouse
 
 
 class TestBuiltinTrayContainer(TestCase):

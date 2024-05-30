@@ -1,8 +1,8 @@
 import copy
 from unittest import TestCase
 
-from src.sim.status_warehouse.container.carousel import Carousel, CarouselInfo
-from src.sim.warehouse import Warehouse
+from src.status_warehouse.container.carousel import Carousel, CarouselInfo
+from src.warehouse import Warehouse
 
 
 class TestBuiltinCarousel(TestCase):

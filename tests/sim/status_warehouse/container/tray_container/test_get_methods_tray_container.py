@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from src.sim.status_warehouse.entry.tray_entry import TrayEntry
-from src.sim.warehouse import Warehouse
+from src.status_warehouse.entry.tray_entry import TrayEntry
+from src.warehouse import Warehouse
 
 
 class TestGetMethodsTrayContainer(TestCase):

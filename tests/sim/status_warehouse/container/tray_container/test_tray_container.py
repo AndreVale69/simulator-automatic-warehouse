@@ -1,10 +1,10 @@
 import copy
 from unittest import TestCase
 
-from src.sim.status_warehouse.container.tray_container import TrayContainer
-from src.sim.status_warehouse.entry.tray_entry import TrayEntry
-from src.sim.status_warehouse.entry.empty_entry import EmptyEntry
-from src.sim.warehouse import Warehouse
+from src.status_warehouse.container.tray_container import TrayContainer
+from src.status_warehouse.entry.tray_entry import TrayEntry
+from src.status_warehouse.entry.empty_entry import EmptyEntry
+from src.warehouse import Warehouse
 
 
 class TestTrayContainer(TestCase):
