@@ -2,16 +2,17 @@ import copy
 from unittest import TestCase
 
 from src.tray import Tray
-from src.status_warehouse.container.column import Column, ColumnInfo
+from src.status_warehouse.container.column import Column
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
 from src.warehouse import Warehouse
+from src.warehouse_configuration_singleton import ColumnConfiguration
 
 
 class TestColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.column_config = ColumnInfo(
+        self.column_config = ColumnConfiguration(
             height = 325,
             x_offset = 125,
             width = 250,
@@ -29,7 +30,7 @@ class TestColumn(TestCase):
         # act
 
         # assert
-        self.assertRaises(TypeError, ColumnInfo, param_1, param_2, param_3, param_4)
+        self.assertRaises(TypeError, ColumnConfiguration, param_1, param_2, param_3, param_4)
 
     def test_last_position_is_occupied(self):
         # arrange

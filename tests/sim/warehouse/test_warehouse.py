@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from src.status_warehouse.container.column import Column, ColumnInfo
+from src.status_warehouse.container.column import Column
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
 from src.warehouse import Warehouse
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, ColumnConfiguration
 
 
 class TestWarehouse(TestCase):
@@ -80,9 +80,9 @@ class TestWarehouse(TestCase):
     def test_gen_rand(self):
         # arrange
         warehouse = Warehouse()
-        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        trays_to_gen = config["simulation"]["trays_to_gen"] + config["simulation"]["gen_bay"] + config["simulation"]["gen_buffer"]
-        materials_to_gen = config["simulation"]["materials_to_gen"]
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration().simulation
+        trays_to_gen = config.trays_to_gen + config.gen_bay + config.gen_buffer
+        materials_to_gen = config.materials_to_gen
         trays_find = 0
         materials_find = 0
 
@@ -124,7 +124,7 @@ class TestWarehouse(TestCase):
     def test_choice_random_tray_with_empty_column(self):
         # arrange
         warehouse = Warehouse()
-        warehouse.add_column(Column(ColumnInfo(
+        warehouse.add_column(Column(ColumnConfiguration(
             height = 325,
             x_offset = 125,
             width = 250,

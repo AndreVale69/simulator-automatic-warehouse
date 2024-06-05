@@ -33,14 +33,13 @@ class TestWarehouseSimulation(TestCase):
     def test_new_simulation(self):
         # arrange
         warehouse_simulation = self.warehouse_simulation
-        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        simulation = config["simulation"]
-        num_actions = simulation["num_actions"]
-        num_gen_trays = simulation["trays_to_gen"]
-        num_gen_materials = simulation["materials_to_gen"]
-        gen_bay = simulation["gen_bay"]
-        gen_buffer = simulation["gen_buffer"]
-        time = simulation["time"]
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration().simulation
+        num_actions = config.num_actions
+        num_gen_trays = config.trays_to_gen
+        num_gen_materials = config.materials_to_gen
+        gen_bay = config.gen_bay
+        gen_buffer = config.gen_buffer
+        time = config.time
 
         # act
         self.assertListEqual(warehouse_simulation.get_store_history().items, [])

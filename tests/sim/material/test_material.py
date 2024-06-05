@@ -2,14 +2,14 @@ import uuid
 from unittest import TestCase
 
 from src.material import gen_rand_material, Material, gen_rand_materials
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, CarouselConfiguration
 
 
 class TestMaterial(TestCase):
     def test_material_too_high(self):
         # arrange
-        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        max_height_material = config["carousel"]["buffer_height"]
+        config: CarouselConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration().carousel
+        max_height_material = config.buffer_height
 
         # act
 

@@ -24,7 +24,7 @@ class TestTray(TestCase):
             width=150
         )
         tray = Tray()
-        self.assertEqual(tray.get_max_height(), config['default_height_space'])
+        self.assertEqual(tray.get_max_height(), config.default_height_space)
 
         # act
         tray.add_material(material_to_add)
@@ -53,7 +53,7 @@ class TestTray(TestCase):
 
         # assert
         self.assertNotIn(material_to_remove, tray.get_items())
-        self.assertEqual(tray.get_max_height(), config['default_height_space'])
+        self.assertEqual(tray.get_max_height(), config.default_height_space)
 
     def test_set_first_trayEntry(self):
         # arrange

@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from src.status_warehouse.container.column import Column, ColumnInfo
+from src.status_warehouse.container.column import Column
 from src.warehouse import Warehouse, MinimumOffsetReturns
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, ColumnConfiguration
 
 
 class TestGetMethodsWarehouse(TestCase):
@@ -100,10 +100,10 @@ class TestGetMethodsWarehouse(TestCase):
     def test_get_num_trays(self):
         # arrange
         warehouse = self.warehouse
-        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration().simulation
 
         # act
-        trays_expected: int = config['simulation']['trays_to_gen'] + config["simulation"]["gen_bay"] + config["simulation"]["gen_buffer"]
+        trays_expected: int = config.trays_to_gen + config.gen_bay + config.gen_buffer
 
         # assert
         self.assertEqual(warehouse.get_num_trays(), trays_expected)
@@ -114,7 +114,7 @@ class TestGetMethodsWarehouse(TestCase):
         config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         # act
-        columns_expected: int = len(config['columns'])
+        columns_expected: int = len(config.columns)
 
         # assert
         self.assertEqual(warehouse.get_num_columns(), columns_expected)
@@ -122,7 +122,7 @@ class TestGetMethodsWarehouse(TestCase):
     def test_get_minimum_offset(self):
         # arrange
         warehouse = Warehouse()
-        col = Column(ColumnInfo(
+        col = Column(ColumnConfiguration(
             width = 200,
             height = 1000,
             x_offset = 1,

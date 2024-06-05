@@ -2,7 +2,7 @@ import copy
 import random
 
 from src.material import Material
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration
 
 
 class Tray:
@@ -12,11 +12,11 @@ class Tray:
     """
     def __init__(self, items: list[Material] = None):
         # items inside the tray
-        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
+        config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         # TODO: create a custom data structure to store the items (such as a set)
         self.items = copy.deepcopy(items if items is not None else [])
-        self.def_space = config["default_height_space"]
+        self.def_space = config.default_height_space
         self.__calculate_max_height()
 
         self.first_trayEntry = None

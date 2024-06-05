@@ -7,21 +7,8 @@ from src.material import gen_rand_materials
 from src.status_warehouse.container.tray_container import TrayContainer
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
+from src.warehouse_configuration_singleton import ColumnConfiguration
 
-
-
-class ColumnInfo:
-    """ Support class used as a parameter to help instantiate the Column class. """
-    def __init__(self, height: int, x_offset: int, width: int, height_last_position: int):
-        if False in {
-            isinstance(height, int), isinstance(x_offset, int),
-            isinstance(width, int), isinstance(height_last_position, int)
-        }:
-            raise TypeError("The parameters must be integers")
-        self.height: int = height
-        self.x_offset: int = x_offset
-        self.width: int = width
-        self.height_last_position = height_last_position
 
 
 class GenMaterialsAndTraysReturns(NamedTuple):
@@ -31,13 +18,13 @@ class GenMaterialsAndTraysReturns(NamedTuple):
 
 
 class Column(TrayContainer):
-    def __init__(self, info: ColumnInfo, warehouse):
+    def __init__(self, info: ColumnConfiguration, warehouse):
         """
         The column is a simple column of the warehouse.
         It can't be where there is the bay and the buffer.
         It is thought to store the trays.
 
-        :type info: dict
+        :type info: ColumnConfiguration
         :type warehouse: Warehouse
         :param info: info about the column (config).
         :param warehouse: the warehouse where the column is located.
@@ -52,7 +39,7 @@ class Column(TrayContainer):
             self.create_new_space(EmptyEntry(info.x_offset, i))
 
     def __deepcopy__(self, memo):
-        info = ColumnInfo(
+        info = ColumnConfiguration(
             height =self.get_num_entries() * self.get_def_space(),
             x_offset = self.get_offset_x(),
             width = self.get_width(),

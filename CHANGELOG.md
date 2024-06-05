@@ -34,6 +34,8 @@
 - Added `get_bay_tray` and `get_buffer_tray` methods to the `Carousel` class (useful methods).
 - Added `last_position_is_occupied` method to the `Column` class.
 - Added `cleanup_columns` and `cleanup_carousel` methods to the `Warehouse` class.
+- Added `update_config_from_file` and `update_config` methods to the `WarehouseConfigurationSingleton` class 
+  to allow loading a new configuration from the file o from an hardcoded object.
 - Added a new exception in `horiz_move` if the offset is not found.
 - Added a new exception in `load` if the offset is not found.
 - Added default config path if none is specified (`configuration/sample_config.yaml`).
@@ -42,10 +44,10 @@
   For example, a tray with three entries; in the container the first trayEntry will be position 2, 
   and entries 0 and 1 are simple trayEntries.
 - Changed `Carousel` class signature.
-  It doesn't accept a dictionary anymore as parameter, but it wants a `CarouselInfo` class instantiation.
+  It doesn't accept a dictionary anymore as parameter, but it wants a `CarouselConfiguration` class instantiation.
   This was done for clarity.
 - Changed `Column` class signature.
-  It doesn't accept a dictionary anymore as parameter, but it wants a `ColumnInfo` class instantiation.
+  It doesn't accept a dictionary anymore as parameter, but it wants a `ColumnConfiguration` class instantiation.
   This was done for clarity.
 - Changed `get_height_container` method to `get_num_entries`. 
   The first returns the height of the container (config value) 

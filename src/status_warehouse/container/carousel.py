@@ -4,37 +4,26 @@ from src.tray import Tray
 from src.status_warehouse.container.tray_container import TrayContainer
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, CarouselConfiguration
 
-
-class CarouselInfo:
-    """ Support class used as a parameter to help instantiate the Carousel class. """
-    def __init__(self, bay_height: int, buffer_height: int, x_offset: int, width: int):
-        if False in {isinstance(bay_height, int), isinstance(buffer_height, int),
-                     isinstance(x_offset, int), isinstance(width, int)}:
-            raise TypeError("The parameters must be integers")
-        self.bay_height: int = bay_height
-        self.buffer_height: int = buffer_height
-        self.x_offset: int = x_offset
-        self.width: int = width
 
 
 class Carousel(TrayContainer):
-    def __init__(self, info: CarouselInfo, warehouse):
+    def __init__(self, info: CarouselConfiguration, warehouse):
         """
         The carousel represents the set of bay and the buffer (tray under the bay).
 
-        :type info: CarouselInfo
+        :type info: CarouselConfiguration
         :type warehouse: Warehouse
         :param info: class containing information about the carousel (config).
         :param warehouse: the warehouse where the carousel is located.
         """
         height_carousel = info.bay_height + info.buffer_height
         super().__init__(height_carousel, info.x_offset, info.width, warehouse)
-        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        self.hole = config["carousel"]["hole_height"] // self.get_def_space()
-        self.bay = config["carousel"]["bay_height"] // self.get_def_space()
-        self.buffer = config["carousel"]["buffer_height"] // self.get_def_space()
+        config: CarouselConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration().carousel
+        self.hole = config.hole_height // self.get_def_space()
+        self.bay = config.bay_height // self.get_def_space()
+        self.buffer = config.buffer_height // self.get_def_space()
 
         # get first y to start
         first_y = self.get_num_entries() + self.get_hole()
@@ -46,11 +35,12 @@ class Carousel(TrayContainer):
         self.create_new_space(EmptyEntry(self.get_offset_x(), first_y + (self.get_bay() + self.get_buffer())))
 
     def __deepcopy__(self, memo):
-        info = CarouselInfo(
+        info = CarouselConfiguration(
             bay_height = self.get_bay() * self.get_def_space(),
             buffer_height = self.get_buffer() * self.get_def_space(),
             x_offset = self.get_offset_x(),
-            width = self.get_width()
+            width = self.get_width(),
+            hole_height= self.get_hole()
         )
         copy_obj = Carousel(info, self.get_warehouse())
         copy_obj.container = deepcopy(self.get_container(), memo)

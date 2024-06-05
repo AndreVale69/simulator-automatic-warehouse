@@ -3,7 +3,7 @@ from abc import abstractmethod
 from src.tray import Tray
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration
 
 
 class TrayContainer:
@@ -21,11 +21,11 @@ class TrayContainer:
         :param warehouse: warehouse where the container is stored.
         """
         # initialize main vars
-        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
+        config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
         self.warehouse = warehouse
         self.container = []
-        self.height_warehouse = config["height_warehouse"]
-        self.def_space = config["default_height_space"]
+        self.height_warehouse = config.height_warehouse
+        self.def_space = config.default_height_space
         self.width = width
         self.height_container = height
         self.num_entries = height // self.get_def_space()

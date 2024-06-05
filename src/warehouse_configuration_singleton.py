@@ -1,8 +1,64 @@
+from dataclasses import dataclass, asdict, field
 from json import loads
 from pathlib import Path
 from platform import system
+from jsonschema import Draft202012Validator
 
 from src.configuration import WAREHOUSE_CONFIGURATION
+
+
+@dataclass
+class ColumnConfiguration:
+    height: int
+    x_offset: int
+    width: int
+    height_last_position: int
+    description: str | None = field(default=None)
+    offset_formula_description: str | None = field(default=None)
+
+    def __post_init__(self):
+        if False in {
+            isinstance(self.width, int), isinstance(self.height, int),
+            isinstance(self.x_offset, int), isinstance(self.height_last_position, int)
+        }:
+            raise TypeError("The parameters must be integers")
+
+
+@dataclass
+class CarouselConfiguration:
+    width: int
+    hole_height: int
+    bay_height: int
+    buffer_height: int
+    x_offset: int
+    description: str | None = field(default=None)
+    offset_formula_description: str | None = field(default=None)
+
+    def __post_init__(self):
+        if False in {isinstance(self.width, int), isinstance(self.hole_height, int),
+                     isinstance(self.bay_height, int), isinstance(self.buffer_height, int),
+                     isinstance(self.x_offset, int)}:
+            raise TypeError("The parameters must be integers")
+
+
+@dataclass
+class SimulationConfiguration:
+    num_actions: int
+    trays_to_gen: int
+    materials_to_gen: int
+    gen_bay: bool
+    gen_buffer: bool
+    time: int | None = None
+
+
+@dataclass
+class WarehouseConfiguration:
+    height_warehouse: int
+    default_height_space: int
+    speed_per_sec: int | float
+    columns: list[ColumnConfiguration]
+    carousel: CarouselConfiguration
+    simulation: SimulationConfiguration
 
 
 class WarehouseConfigurationSingleton:
@@ -26,31 +82,105 @@ class WarehouseConfigurationSingleton:
 
         return WarehouseConfigurationSingleton.instance
 
-    def __init__(self):
+    def __init__(self, file_path: str=WAREHOUSE_CONFIGURATION):
+        # TODO: if the config it's not in this prj dir?
+        # TODO: add if isfile(file_path)
+        self._json_schema: dict | None = None
         # get project directory
-        current_dir = Path(__file__)
-        project_dir = next(p for p in current_dir.parents if p.parts[-1] == 'src').parent
+        project_dir = next(p for p in Path(__file__).parents if p.parts[-1] == 'src').parent
         # https://docs.python.org/3.12/library/platform.html#platform.system
-        user_configuration_path = f"{project_dir}\\{WAREHOUSE_CONFIGURATION}" if system() == 'Windows' else f"{project_dir}/{WAREHOUSE_CONFIGURATION}"
-        json_schema_path = f"{project_dir}\\resources\\configuration\\json_schema.json" if system() == 'Windows' else f"{project_dir}/resources/configuration/json_schema.json"
+        user_configuration_path = f"{project_dir}\\{file_path}" if system() == 'Windows' else f"{project_dir}/{file_path}"
+        self._json_schema_path = f"{project_dir}\\resources\\configuration\\json_schema.json" if system() == 'Windows' else f"{project_dir}/resources/configuration/json_schema.json"
+        raw_config: dict = self._json_schema_validator_from_file(user_configuration_path)
+        self.configuration = WarehouseConfiguration(
+            height_warehouse=raw_config['height_warehouse'],
+            default_height_space=raw_config['default_height_space'],
+            speed_per_sec=raw_config['speed_per_sec'],
+            columns=[
+                ColumnConfiguration(
+                    description=col.get('description'),
+                    width=col['width'],
+                    height=col['height'],
+                    offset_formula_description=col.get('offset_formula_description'),
+                    x_offset=col['x_offset'],
+                    height_last_position=col['height_last_position']
+                ) for col in raw_config['columns']
+            ],
+            carousel=CarouselConfiguration(
+                description=raw_config['carousel'].get('description'),
+                width=raw_config['carousel']['width'],
+                hole_height=raw_config['carousel']['hole_height'],
+                bay_height=raw_config['carousel']['bay_height'],
+                buffer_height=raw_config['carousel']['buffer_height'],
+                offset_formula_description=raw_config['carousel'].get('offset_formula_description'),
+                x_offset=raw_config['carousel']['x_offset']
+            ),
+            simulation=SimulationConfiguration(
+                time=raw_config['simulation'].get('time'),
+                num_actions=raw_config['simulation']['num_actions'],
+                trays_to_gen=raw_config['simulation']['trays_to_gen'],
+                materials_to_gen=raw_config['simulation']['materials_to_gen'],
+                gen_bay=raw_config['simulation']['gen_bay'],
+                gen_buffer=raw_config['simulation']['gen_buffer']
+            )
+        )
 
-        # load json_schema
-        with open(json_schema_path, "r") as json_schema:
-            schema: dict = loads(json_schema.read())
+    def _json_schema_validator_from_file(self, file_path: str):
+        """
+        Validation of a configuration from file.
 
-        # check that the json schema is valid
-        from jsonschema import Draft202012Validator
-        Draft202012Validator.check_schema(schema)
+        :type file_path: str
+        :param file_path: configuration to load.
+        :return: the configuration loaded.
+        :raises jsonschema.exceptions.ValidationError: if the instance is invalid
+        """
+        schema = self._get_json_schema()
 
         # take user configuration
         from yaml import safe_load
-        with open(user_configuration_path, 'r') as file:
-            self.configuration: dict = safe_load(file)
+        with open(file_path, 'r') as file:
+            configuration: dict = safe_load(file)
 
         # check if it's valid, raises jsonschema.exceptions.ValidationError if the instance is invalid
-        Draft202012Validator(schema).validate(self.configuration)
+        Draft202012Validator(schema).validate(configuration)
 
-    def get_configuration(self) -> dict:
+        return configuration
+
+    def _json_schema_validator(self, configuration: WarehouseConfiguration):
+        """
+        Hardcoded validation of a configuration.
+
+        :type configuration: WarehouseConfiguration
+        :param configuration: config to validate.
+        :raises jsonschema.exceptions.ValidationError: if the instance is invalid
+        """
+        schema = self._get_json_schema()
+
+        # check if it's valid, raises jsonschema.exceptions.ValidationError if the instance is invalid
+        Draft202012Validator(schema).validate(asdict(configuration))
+
+    def _get_json_schema(self) -> dict:
+        """
+        Get the json schema.
+        Load the json schema from file iff not already loaded.
+
+        :rtype dict
+        :return: json schema.
+        """
+        # load json_schema iff not in cache
+        schema = self._json_schema
+        if schema:
+            return schema
+
+        with open(self._json_schema_path, "r") as json_schema:
+            self._json_schema = loads(json_schema.read())
+
+        # check that the json schema is valid
+        Draft202012Validator.check_schema(self._json_schema)
+
+        return self._json_schema
+
+    def get_configuration(self) -> WarehouseConfiguration:
         """
         Get the raw configuration from the environment path specified by the user.
 
@@ -58,3 +188,29 @@ class WarehouseConfigurationSingleton:
         :return: raw configuration extracted via YAML.
         """
         return self.configuration
+
+    @staticmethod
+    def update_config_from_file(file_path: str):
+        """
+        Update the configuration from a file.
+
+        :type file_path: str
+        :param file_path: file path of the file.
+        :rtype WarehouseConfigurationSingleton
+        :return: the instance of WarehouseConfigurationSingleton (get_instance()).
+        """
+        WarehouseConfigurationSingleton.instance = WarehouseConfigurationSingleton(file_path)
+        return WarehouseConfigurationSingleton.get_instance()
+
+    def update_config(self, configuration: WarehouseConfiguration):
+        """
+        Update the configuration from a dataclass (hardcoded).
+
+        :type configuration: WarehouseConfiguration
+        :param configuration: hardcoded configuration.
+        :rtype WarehouseConfigurationSingleton
+        :return: the instance of WarehouseConfigurationSingleton (get_instance()).
+        """
+        self._json_schema_validator(configuration)
+        self.configuration = configuration
+        return WarehouseConfigurationSingleton.get_instance()

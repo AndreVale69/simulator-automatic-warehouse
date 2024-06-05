@@ -21,8 +21,7 @@ class Material:
         :param width: width of a material.
         """
         # maximum height of a material to fit into a tray
-        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
-        max_height_material = config["carousel"]["buffer_height"]
+        max_height_material = WarehouseConfigurationSingleton.get_instance().get_configuration().carousel.buffer_height
 
         # check the height of a material
         if height > max_height_material:

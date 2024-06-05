@@ -1,13 +1,14 @@
 from unittest import TestCase
 
-from src.status_warehouse.container.column import Column, ColumnInfo
+from src.status_warehouse.container.column import Column
 from src.warehouse import Warehouse
+from src.warehouse_configuration_singleton import ColumnConfiguration
 
 
 class TestGetMethodsColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.column_config = ColumnInfo(
+        self.column_config = ColumnConfiguration(
             height = 325,
             x_offset = 125,
             width = 250,

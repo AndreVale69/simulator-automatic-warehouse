@@ -1,0 +1,34 @@
+height_warehouse: 1050
+default_height_space: 50
+speed_per_sec: 2
+
+columns:
+  - description: "right_column"
+    width: 516
+    height: 200
+    offset_formula_description: "width / 2"
+    x_offset: 600
+    height_last_position: 750
+  - description: "left_column"
+    width: 2000
+    height: 10000
+    offset_formula_description: "(left_column.width / 2) + right_column.offset + 250"
+    x_offset: 4705
+    height_last_position: 750
+
+carousel:
+  description: "carousel-bay_and_buffer"
+  width: 2500
+  hole_height: 3750
+  bay_height: 1500
+  buffer_height: 1050
+  offset_formula_description: "width / 2"
+  x_offset: 1250
+
+simulation:
+  time: 100000
+  num_actions: 1000
+  trays_to_gen: 50
+  materials_to_gen: 30
+  gen_bay: true
+  gen_buffer: true

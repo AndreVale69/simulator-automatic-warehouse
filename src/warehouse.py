@@ -16,10 +16,10 @@ else:
 
 from copy import deepcopy
 from random import randint, choice
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration, ColumnConfiguration, CarouselConfiguration
 from src.tray import Tray
-from src.status_warehouse.container.carousel import Carousel, CarouselInfo
-from src.status_warehouse.container.column import Column, ColumnInfo
+from src.status_warehouse.container.carousel import Carousel
+from src.status_warehouse.container.column import Column
 from src.material import gen_rand_material
 
 logger = getLogger(__name__)
@@ -41,45 +41,46 @@ class Warehouse:
 
     def __init__(self):
         # open YAML configuration file
-        config: dict = WarehouseConfigurationSingleton.get_instance().get_configuration()
+        config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
-        self.height = config["height_warehouse"]
+        self.height = config.height_warehouse
 
         # add all columns taken from YAML
         self.columns_container = []
         # all columns must be added from minimum offset_x to greats offset_x
         # respecting this order
-        for col_data in config["columns"]:
+        for col_data in config.columns:
             self.add_column(Column(
-                ColumnInfo(
-                    height=col_data["height"],
-                    x_offset=col_data["x_offset"],
-                    width=col_data["width"],
-                    height_last_position=col_data["height_last_position"]
+                ColumnConfiguration(
+                    height=col_data.height,
+                    x_offset=col_data.x_offset,
+                    width=col_data.width,
+                    height_last_position=col_data.height_last_position
                 ),
                 self
             ))
         self.carousel = Carousel(
-            CarouselInfo(
-                bay_height=config["carousel"]["bay_height"],
-                buffer_height=config["carousel"]["buffer_height"],
-                x_offset=config["carousel"]["x_offset"],
-                width=config["carousel"]["width"]
+            CarouselConfiguration(
+                width=config.carousel.width,
+                hole_height=config.carousel.hole_height,
+                bay_height=config.carousel.bay_height,
+                buffer_height=config.carousel.buffer_height,
+                x_offset=config.carousel.x_offset
             ),
             self
         )
 
-        self.def_space = config["default_height_space"]
-        self.speed_per_sec = config["speed_per_sec"]
-        self.max_height_material = config["carousel"]["buffer_height"] // self.get_def_space()
+        self.def_space = config.default_height_space
+        self.speed_per_sec = config.speed_per_sec
+        self.max_height_material = config.carousel.buffer_height // self.get_def_space()
         self.pos_y_floor = self.carousel.get_bay_entry().get_pos_y()
 
         # generate a configuration based on YAML
         self.gen_rand(
-            gen_bay=config["simulation"]["gen_bay"],
-            gen_buffer=config["simulation"]["gen_buffer"],
-            num_trays=config["simulation"]["trays_to_gen"],
-            num_materials=config["simulation"]["materials_to_gen"]
+            gen_bay=config.simulation.gen_bay,
+            gen_buffer=config.simulation.gen_buffer,
+            num_trays=config.simulation.trays_to_gen,
+            num_materials=config.simulation.materials_to_gen
         )
 
     def __deepcopy__(self, memo):
