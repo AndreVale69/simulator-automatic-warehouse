@@ -9,7 +9,7 @@ RUN pip install --upgrade pip -r requirements.txt
 COPY src/ src
 COPY run_simulator.py run_simulator.py
 COPY configuration/ configuration
-COPY resources/ resources
+COPY resources/configuration/json_schema.json resources/configuration/json_schema.json
 
 #ENV PYTHONPATH "${PYTHONPATH}:src/.:src/web_app/.:src/sim/."
 

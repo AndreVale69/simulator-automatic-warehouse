@@ -1,7 +1,13 @@
 services:
-  simulator_automatic_warehouse:
+  debian-simulator_automatic_warehouse:
     build:
       context: ../.
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile-debian
     environment:
-      WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/univr/ICE_lab.yaml
+      WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/sample_config.yaml
+  alpine-simulator_automatic_warehouse:
+    build:
+      context: ../.
+      dockerfile: docker/Dockerfile-alpine
+    environment:
+      WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/sample_config.yaml

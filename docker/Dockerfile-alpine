@@ -1,21 +1,15 @@
-FROM python:3.12.3-slim
+FROM python:3.12.3-alpine
 LABEL authors="AndreVale69"
 
 RUN mkdir /simulator-automatic-warehouse
 WORKDIR /simulator-automatic-warehouse
 
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip \
-    && apt-get update \
-    && apt-get install --yes --no-install-recommends \
-       gcc libc-dev zlib1g-dev \
-    && pip install -r requirements.txt \
-    && apt-get autoremove --yes gcc libc-dev zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip install --upgrade pip -r requirements.txt
 COPY src/ src
 COPY run_simulator.py run_simulator.py
 COPY configuration/ configuration
-COPY resources/ resources
+COPY resources/configuration/json_schema.json resources/configuration/json_schema.json
 
 #ENV PYTHONPATH "${PYTHONPATH}:src/.:src/web_app/.:src/sim/."
 
