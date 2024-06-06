@@ -1,11 +1,10 @@
 from copy import deepcopy
 
-from src.tray import Tray
 from src.status_warehouse.container.tray_container import TrayContainer
-from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, CarouselConfiguration
-
+from src.status_warehouse.entry.tray_entry import TrayEntry
+from src.tray import Tray
+from src.warehouse_configuration_singleton import CarouselConfiguration
 
 
 class Carousel(TrayContainer):
@@ -20,10 +19,9 @@ class Carousel(TrayContainer):
         """
         height_carousel = info.bay_height + info.buffer_height
         super().__init__(height_carousel, info.x_offset, info.width, warehouse)
-        config: CarouselConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration().carousel
-        self.hole = config.hole_height // self.get_def_space()
-        self.bay = config.bay_height // self.get_def_space()
-        self.buffer = config.buffer_height // self.get_def_space()
+        self.hole = info.hole_height // self.get_def_space()
+        self.bay = info.bay_height // self.get_def_space()
+        self.buffer = info.buffer_height // self.get_def_space()
 
         # get first y to start
         first_y = self.get_num_entries() + self.get_hole()

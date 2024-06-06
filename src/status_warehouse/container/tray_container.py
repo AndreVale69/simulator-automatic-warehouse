@@ -20,7 +20,6 @@ class TrayContainer:
         :param width: width of the container.
         :param warehouse: warehouse where the container is stored.
         """
-        # initialize main vars
         config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
         self.warehouse = warehouse
         self.container = []
