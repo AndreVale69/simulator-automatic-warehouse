@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 from src.status_warehouse.container.column import Column
-from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
+from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.warehouse import Warehouse
 from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, ColumnConfiguration
 

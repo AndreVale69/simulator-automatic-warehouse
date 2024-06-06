@@ -4,8 +4,8 @@ from logging import getLogger
 from simpy import Environment
 
 from src.simulation.actions.action_enum import ActionEnum
-from src.simulation.actions.move.go_to_buffer import GoToBuffer
 from src.simulation.actions.move.go_to_bay import GoToBay
+from src.simulation.actions.move.go_to_buffer import GoToBuffer
 from src.simulation.actions.move.move import Move
 from src.simulation.actions.move.unload import Unload
 from src.simulation.actions.move.vertical import Vertical

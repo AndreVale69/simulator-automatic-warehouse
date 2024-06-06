@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 from abc import abstractmethod
 
-from src.tray import Tray
-from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
+from src.status_warehouse.entry.tray_entry import TrayEntry
+from src.tray import Tray
 from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration
 
 

@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from src.tray import Tray
 from src.status_warehouse.container.carousel import Carousel, CarouselConfiguration
-from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
+from src.status_warehouse.entry.tray_entry import TrayEntry
+from src.tray import Tray
 from src.warehouse import Warehouse
 
 

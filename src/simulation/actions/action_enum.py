@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 
 
@@ -24,14 +26,12 @@ class ActionEnum(Enum):
         :param action_str: action as string
         :return: the ActionEnum or None
         """
-        match action_str:
-            case ActionEnum.EXTRACT_TRAY.value:
-                return ActionEnum.EXTRACT_TRAY
-            case ActionEnum.SEND_BACK_TRAY.value:
-                return ActionEnum.SEND_BACK_TRAY
-            case ActionEnum.INSERT_RANDOM_MATERIAL.value:
-                return ActionEnum.INSERT_RANDOM_MATERIAL
-            case ActionEnum.REMOVE_RANDOM_MATERIAL.value:
-                return ActionEnum.REMOVE_RANDOM_MATERIAL
-            case _:
-                return None
+        if action_str == ActionEnum.EXTRACT_TRAY.value:
+            return ActionEnum.EXTRACT_TRAY
+        elif action_str == ActionEnum.SEND_BACK_TRAY.value:
+            return ActionEnum.SEND_BACK_TRAY
+        elif action_str == ActionEnum.INSERT_RANDOM_MATERIAL.value:
+            return ActionEnum.INSERT_RANDOM_MATERIAL
+        elif action_str == ActionEnum.REMOVE_RANDOM_MATERIAL.value:
+            return ActionEnum.REMOVE_RANDOM_MATERIAL
+        return None

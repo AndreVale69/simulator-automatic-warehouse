@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
-from src.warehouse import Warehouse
 from src.simulation.simulation_type.warehouse_simulation.warehouse_simulation import WarehouseSimulation
+from src.warehouse import Warehouse
+from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class TestWarehouseSimulation(TestCase):

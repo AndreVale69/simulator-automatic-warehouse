@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from simpy import Environment
 
+from src.simulation.simulation import Simulation
 from src.simulation.actions.material.remove_material.remove_material import RemoveMaterial
 from src.warehouse import Warehouse
 
@@ -11,7 +12,7 @@ class TestRemoveMaterial(TestCase):
         self.env = Environment()
         self.warehouse = Warehouse()
         self.duration = 10
-        self.remove_material = RemoveMaterial(self.env, self.warehouse, None, self.duration)
+        self.remove_material = RemoveMaterial(self.env, self.warehouse, Simulation(), self.duration)
 
     def test_simulate_action_abstractmethod(self):
         # arrange

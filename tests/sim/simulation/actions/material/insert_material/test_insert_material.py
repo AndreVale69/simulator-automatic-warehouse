@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from simpy import Environment
 
+from src.simulation.simulation import Simulation
 from src.simulation.actions.material.insert_material.insert_material import InsertMaterial
 from src.warehouse import Warehouse
 
@@ -11,7 +12,7 @@ class TestInsertMaterial(TestCase):
         self.env = Environment()
         self.warehouse = Warehouse()
         self.duration = 10
-        self.insert_material = InsertMaterial(self.env, self.warehouse, None, self.duration)
+        self.insert_material = InsertMaterial(self.env, self.warehouse, Simulation(), self.duration)
 
     def test_simulate_action_abstractmethod(self):
         # arrange

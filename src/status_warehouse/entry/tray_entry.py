@@ -1,7 +1,7 @@
 import copy
 
-from src.tray import Tray
 from src.status_warehouse.entry.entry import Entry
+from src.tray import Tray
 
 
 class TrayEntry(Entry):

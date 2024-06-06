@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from src.tray import Tray
 from src.material import gen_rand_materials
+from src.tray import Tray
 
 
 class TestGetMethodsTray(TestCase):
@@ -46,11 +46,11 @@ class TestGetMethodsTray(TestCase):
         tray = self.tray
 
         # act
-        first_trayEntry_get = tray.get_first_tray_entry()
-        first_trayEntry_expected = tray.first_trayEntry
+        first_tray_entry_get = tray.get_first_tray_entry()
+        first_tray_entry_expected = tray.first_trayEntry
 
         # assert
-        self.assertEqual(first_trayEntry_get, first_trayEntry_expected)
+        self.assertEqual(first_tray_entry_get, first_tray_entry_expected)
 
     def test_get_best_offset_x(self):
         # arrange

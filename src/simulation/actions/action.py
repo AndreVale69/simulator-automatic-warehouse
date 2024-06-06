@@ -2,8 +2,8 @@ from abc import abstractmethod
 
 from simpy import Environment
 
-from src.tray import Tray
 from src.status_warehouse.enum_warehouse import EnumWarehouse
+from src.tray import Tray
 from src.warehouse import Warehouse
 
 

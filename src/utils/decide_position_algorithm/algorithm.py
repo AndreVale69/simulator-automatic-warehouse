@@ -30,11 +30,10 @@ def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm)
     assert space_req > 0, "The space requested from the tray must be greater than zero."
 
     # select the algorithm to be used
-    match algorithm:
-        case algorithm.HIGH_POSITION:
-            callable_algorithm = _high_position_algorithm
-        case _:
-            raise NotImplementedError("Algorithm not implemented")
+    if algorithm == algorithm.HIGH_POSITION:
+        callable_algorithm = _high_position_algorithm
+    else:
+        raise NotImplementedError("Algorithm not implemented")
 
     # calculate the index of the first column
     first_column = columns[0]

@@ -2,8 +2,8 @@ import copy
 from unittest import TestCase
 
 from src.status_warehouse.container.tray_container import TrayContainer
-from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.entry.empty_entry import EmptyEntry
+from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.warehouse import Warehouse
 
 

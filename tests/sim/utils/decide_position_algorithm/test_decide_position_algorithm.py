@@ -1,9 +1,9 @@
 import uuid
 from unittest import TestCase
 
-from src.tray import Tray
 from src.material import Material
 from src.status_warehouse.entry.tray_entry import TrayEntry
+from src.tray import Tray
 from src.utils.decide_position_algorithm.algorithm import decide_position
 from src.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from src.warehouse import Warehouse

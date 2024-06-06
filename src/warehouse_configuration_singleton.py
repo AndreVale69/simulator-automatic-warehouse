@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, asdict, field
 from json import loads
 from pathlib import Path
 from platform import system
+
 from jsonschema import Draft202012Validator
 
 from src.configuration import WAREHOUSE_CONFIGURATION

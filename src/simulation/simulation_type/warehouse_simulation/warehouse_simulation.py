@@ -5,7 +5,6 @@ from random import choice
 
 from simpy import Resource, Store
 
-from src.tray import Tray
 from src.simulation.actions.action_enum import ActionEnum
 from src.simulation.actions.buffer import Buffer
 from src.simulation.actions.extract_tray import ExtractTray
@@ -15,6 +14,7 @@ from src.simulation.actions.send_back_tray import SendBackTray
 from src.simulation.simulation import Simulation
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.status_warehouse.enum_warehouse import EnumWarehouse
+from src.tray import Tray
 from src.utils.decide_position_algorithm.algorithm import decide_position
 from src.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from src.warehouse import Warehouse
@@ -113,17 +113,17 @@ class WarehouseSimulation(Simulation):
             elif balance_wh == 2:
                 rand_event = choice(case_2)
             # process the event
-            match rand_event:
-                case ActionEnum.EXTRACT_TRAY.value:
-                    balance_wh += 1
-                    yield env.process(extract_tray.simulate_action(destination=carousel_val))
-                case ActionEnum.SEND_BACK_TRAY.value:
-                    balance_wh -= 1
-                    yield env.process(send_back_tray.simulate_action(destination=column_val))
-                case ActionEnum.INSERT_RANDOM_MATERIAL.value:
-                    yield env.process(insert_random_material.simulate_action())
-                case ActionEnum.REMOVE_RANDOM_MATERIAL.value:
-                    yield env.process(remove_random_material.simulate_action())
+            if rand_event == ActionEnum.EXTRACT_TRAY.value:
+                balance_wh += 1
+                yield env.process(extract_tray.simulate_action(destination=carousel_val))
+            elif rand_event == ActionEnum.SEND_BACK_TRAY.value:
+                balance_wh -= 1
+                yield env.process(send_back_tray.simulate_action(destination=column_val))
+            elif rand_event == ActionEnum.INSERT_RANDOM_MATERIAL.value:
+                yield env.process(insert_random_material.simulate_action())
+            elif rand_event == ActionEnum.REMOVE_RANDOM_MATERIAL.value:
+                yield env.process(remove_random_material.simulate_action())
+
             logger.debug(f"Time {env.now:5.2f} - FINISH {rand_event}\n")
 
         logger.debug(f"Time {env.now:5.2f} - Finish simulation")
