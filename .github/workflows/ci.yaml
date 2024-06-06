@@ -1,26 +1,36 @@
-name: Workflow for Codecov
-on: [push, pull_request]
+name: Test And Codecov
+
+on:
+  - push
+  - pull_request
 
 jobs:
-  run:
+  tests-codecov:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest]
-        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
+        os:
+          - ubuntu-latest
+          - macos-latest
+        python-version:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.6
         with:
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.1.0
         with:
           python-version: ${{ matrix.python }}
+          cache: 'pip'
       - name: Install dependencies
         run: |
-          pip install pytest-cov
-          pip install -r requirements.txt
+          pip install pytest-cov -r requirements.txt
       - name: Run tests and collect coverage
         run: WAREHOUSE_CONFIGURATION_FILE_PATH="tests/test_config.yaml" PYTHONPATH=. pytest --cov ./src
       - name: Upload coverage reports to Codecov
