@@ -46,7 +46,7 @@ class TestGetMethodsTray(TestCase):
         tray = self.tray
 
         # act
-        first_trayEntry_get = tray.get_first_trayEntry()
+        first_trayEntry_get = tray.get_first_tray_entry()
         first_trayEntry_expected = tray.first_trayEntry
 
         # assert

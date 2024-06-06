@@ -29,7 +29,7 @@ class Tray:
                 self.get_items() == other.get_items() and
                 self.get_max_height() == other.get_max_height() and
                 self.get_num_space_occupied() == other.get_num_space_occupied() and
-                self.get_first_trayEntry() == other.get_first_trayEntry()
+                self.get_first_tray_entry() == other.get_first_tray_entry()
         )
 
     def __hash__(self):
@@ -77,7 +77,7 @@ class Tray:
         """
         return self.num_space
 
-    def get_first_trayEntry(self):
+    def get_first_tray_entry(self):
         """
         Get the first tray entry (object) inside the warehouse.
 
@@ -135,7 +135,7 @@ class Tray:
         self.items.remove(material)
         self.__calculate_max_height()
 
-    def set_first_trayEntry(self, tray_entry):
+    def set_first_tray_entry(self, tray_entry):
         """
         Set the first tray entry (object).
         It is a pointer to the first entry in the tray, used in a clever way to avoid iterating over the list.

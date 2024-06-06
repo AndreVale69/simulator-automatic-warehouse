@@ -193,9 +193,9 @@ class Carousel(TrayContainer):
             raise RuntimeError("Collision!")
 
         # add the trayEntry in the buffer iff the bay is full
-        self._create_trayEntry(tray, first_y, is_buffer=is_bay_full)
+        self._create_tray_entry(tray, first_y, is_buffer=is_bay_full)
 
-    def _create_trayEntry(self, tray: Tray, first_y: int, is_buffer: bool):
+    def _create_tray_entry(self, tray: Tray, first_y: int, is_buffer: bool):
         """
         Create a tray entry.
 
@@ -215,7 +215,7 @@ class Carousel(TrayContainer):
         # add to container
         self.get_container()[int(is_buffer)] = tray_entry
         # connect Entry just added to relative Tray
-        tray.set_first_trayEntry(tray_entry)
+        tray.set_first_tray_entry(tray_entry)
 
     # override
     def remove_tray(self, tray: Tray) -> bool:
@@ -227,7 +227,7 @@ class Carousel(TrayContainer):
         :param tray: the tray to remove.
         :return: True if the tray was removed, False otherwise.
         """
-        first_entry: TrayEntry = tray.get_first_trayEntry()
+        first_entry: TrayEntry = tray.get_first_tray_entry()
         entry_y_to_rmv = first_entry.get_pos_y()
         entry_x_to_rmv = first_entry.get_offset_x()
         bay_entry: TrayEntry | EmptyEntry = self.container[0]

@@ -308,8 +308,8 @@ class WarehouseSimulation(Simulation):
         """
         warehouse = self.get_warehouse()
         # save coordinates inside tray
-        y = tray.get_first_trayEntry().get_pos_y()
-        x = tray.get_first_trayEntry().get_offset_x()
+        y = tray.get_first_tray_entry().get_pos_y()
+        x = tray.get_first_tray_entry().get_offset_x()
         tray.set_best_y(y)
         tray.set_best_offset_x(x)
         # start the move
@@ -330,7 +330,7 @@ class WarehouseSimulation(Simulation):
         """
         warehouse = self.get_warehouse()
         # take x offset
-        offset_x_tray = tray.get_first_trayEntry().get_offset_x()
+        offset_x_tray = tray.get_first_tray_entry().get_offset_x()
         # start the move
         yield self.env.timeout(self.horiz_move(offset_x_tray))
         # update warehouse

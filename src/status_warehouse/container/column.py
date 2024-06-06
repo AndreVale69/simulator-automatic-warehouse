@@ -122,12 +122,12 @@ class Column(TrayContainer):
         # For example, tray with 3 entries;
         # in the container the first trayEntry will be position 2,
         # and entries 0 and 1 are simple trayEntries.
-        tray.set_first_trayEntry(self._create_trayEntry(tray, how_many))
+        tray.set_first_tray_entry(self._create_tray_entry(tray, how_many))
 
         for index in range(index, how_many):
-            self._create_trayEntry(tray, index)
+            self._create_tray_entry(tray, index)
 
-    def _create_trayEntry(self, tray: Tray, index: int) -> TrayEntry:
+    def _create_tray_entry(self, tray: Tray, index: int) -> TrayEntry:
         """
         Create a tray entry and add it to the column.
 

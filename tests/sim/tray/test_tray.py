@@ -58,17 +58,17 @@ class TestTray(TestCase):
     def test_set_first_trayEntry(self):
         # arrange
         tray = self.tray
-        tray_entry: TrayEntry = tray.get_first_trayEntry()
+        tray_entry: TrayEntry = tray.get_first_tray_entry()
         offset_x = 1000
         pos_y = 5
 
         # act
         tray_entry_expected = TrayEntry(offset_x, pos_y)
-        tray.set_first_trayEntry(tray_entry_expected)
+        tray.set_first_tray_entry(tray_entry_expected)
 
         # assert
         self.assertNotEqual(tray_entry, tray_entry_expected)
-        self.assertEqual(tray.get_first_trayEntry(), tray_entry_expected)
+        self.assertEqual(tray.get_first_tray_entry(), tray_entry_expected)
 
     def test_set_best_offset_x(self):
         # arrange
