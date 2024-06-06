@@ -5,7 +5,7 @@ RUN mkdir /simulator-automatic-warehouse
 WORKDIR /simulator-automatic-warehouse
 
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip -r requirements.txt
 COPY src/ src
 COPY run_simulator.py run_simulator.py
 COPY configuration/ configuration
