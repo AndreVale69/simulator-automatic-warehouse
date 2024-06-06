@@ -38,7 +38,7 @@ class Carousel(TrayContainer):
             buffer_height = self.get_buffer() * self.get_def_space(),
             x_offset = self.get_offset_x(),
             width = self.get_width(),
-            hole_height= self.get_hole()
+            hole_height= self.get_hole() * self.get_def_space()
         )
         copy_obj = Carousel(info, self.get_warehouse())
         copy_obj.container = deepcopy(self.get_container(), memo)
