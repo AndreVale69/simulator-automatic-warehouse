@@ -87,7 +87,6 @@ class WarehouseConfigurationSingleton:
 
     def __init__(self, file_path: str=WAREHOUSE_CONFIGURATION):
         # TODO: if the config it's not in this prj dir?
-        # TODO: add if isfile(file_path)
         self._json_schema: dict | None = None
         # get project directory
         project_dir = next(p for p in Path(__file__).parents if p.parts[-1] == 'src').parent
