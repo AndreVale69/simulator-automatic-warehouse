@@ -10,7 +10,10 @@ The following variables are required:
     * FILENAME_DEBUG_LOG: if set, save the debug log to file (e.g. log).
 """
 
-WAREHOUSE_CONFIGURATION = environ.get('WAREHOUSE_CONFIGURATION_FILE_PATH', '../configuration/sample_config.yaml')
+WAREHOUSE_CONFIGURATION = environ.get('WAREHOUSE_CONFIGURATION_FILE_PATH')
+if WAREHOUSE_CONFIGURATION is None:
+    from pathlib import Path
+    WAREHOUSE_CONFIGURATION = f'{Path(__file__).parent.parent}/configuration/sample_config.yaml'
 
 
 NO_CONSOLE_LOG = environ.get('NO_CONSOLE_LOG', None)

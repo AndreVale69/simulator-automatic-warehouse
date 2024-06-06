@@ -128,9 +128,9 @@ Here are some benchmarks run with a private Python library and the following com
 | 267'900   | 25 seconds      | 1 month              |
 | 3'250'120 | 9 minutes       | 1 year               |
 
-<img src="resources/doc/relationship_between_simulated_actions_and_media.svg" alt="Relationship between simulated actions and media">
+<img src="docs/doc/relationship_between_simulated_actions_and_media.svg" alt="Relationship between simulated actions and media">
 
-<img src="resources/doc/standard_deviation.svg" alt="Standard deviation">
+<img src="docs/doc/standard_deviation.svg" alt="Standard deviation">
 
 [1]: https://www.ferrettogroup.com/index.cfm/en/solutions/vertical-storage-system/vertical-lift-module-vertimag/
 [2]: https://www.ferrettogroup.com/index.cfm/en/

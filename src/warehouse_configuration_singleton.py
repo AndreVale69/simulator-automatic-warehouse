@@ -89,11 +89,10 @@ class WarehouseConfigurationSingleton:
         # TODO: if the config it's not in this prj dir?
         self._json_schema: dict | None = None
         # get project directory
-        project_dir = next(p for p in Path(__file__).parents if p.parts[-1] == 'src').parent
         # https://docs.python.org/3.12/library/platform.html#platform.system
-        user_configuration_path = f"{project_dir}\\{file_path}" if system() == 'Windows' else f"{project_dir}/{file_path}"
-        self._json_schema_path = f"{project_dir}\\resources\\configuration\\json_schema.json" if system() == 'Windows' else f"{project_dir}/resources/configuration/json_schema.json"
-        raw_config: dict = self._json_schema_validator_from_file(user_configuration_path)
+        path = Path(__file__).parent.parent
+        self._json_schema_path = f"{path}\\resources\\configuration\\json_schema.json" if system() == 'Windows' else f"{path}/resources/configuration/json_schema.json"
+        raw_config: dict = self._json_schema_validator_from_file(file_path)
         self.configuration = WarehouseConfiguration(
             height_warehouse=raw_config['height_warehouse'],
             default_height_space=raw_config['default_height_space'],
