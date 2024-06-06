@@ -17,7 +17,6 @@ class Simulation:
         """
         The main simulation class.
         """
-        # TODO: initial time as parameter? Brainstorming...
         self.env = Environment()
 
         config = WarehouseConfigurationSingleton.get_instance().get_configuration().simulation
