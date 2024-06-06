@@ -11,7 +11,7 @@ from src.warehouse_configuration_singleton import (
 
 class TestWarehouseConfigurationSingleton(TestCase):
     def tearDown(self):
-        WarehouseConfigurationSingleton.get_instance().update_config_from_file('test_config.yaml')
+        WarehouseConfigurationSingleton.get_instance().update_config_from_file('tests/test_config.yaml')
 
     def test_singleton(self):
         # arrange
@@ -27,7 +27,7 @@ class TestWarehouseConfigurationSingleton(TestCase):
         old_config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         # act
-        new_instance = WarehouseConfigurationSingleton.get_instance().update_config_from_file('test_config_2.yaml')
+        new_instance = WarehouseConfigurationSingleton.get_instance().update_config_from_file('tests/test_config_2.yaml')
         new_config = new_instance.get_configuration()
 
         # assert
