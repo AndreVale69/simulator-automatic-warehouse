@@ -1,5 +1,9 @@
 # Simulator Automatic Warehouse
 
+This README is **out of date**. I'm developing a `1.0.0` version on [andre-branch](https://github.com/AndreVale69/simulator-automatic-warehouse/tree/andre-branch). 
+The project is almost finished, and I'm studying how to make it available online using `pip`.
+So the following `README` refers to my bachelor's thesis (see [v0.0.1 pre-release](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v0.0.1-bachelors-degree-thesis)).
+
 This repository was created for a thesis project for the University of Verona (Università di Verona).
 
 The project is a simulator of an automatic warehouse. The inspiration came from the [Vertimag][1] of 
