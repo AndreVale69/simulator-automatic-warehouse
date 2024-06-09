@@ -1,1 +1,4 @@
-pip install pytest pytest-xdist pytest-cov pytest-env
+pip install pytest
+pip install pytest-xdist
+pip install pytest-cov
+pip install pytest-env
