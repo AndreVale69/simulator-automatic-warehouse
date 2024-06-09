@@ -25,3 +25,12 @@ class TestMove(TestCase):
 
         # assert
         self.assertEqual(tray, self.buffer)
+
+    def test_simulate_action_abstractmethod(self):
+        # arrange
+        move = self.move
+
+        # act
+
+        # assert
+        self.assertRaises(NotImplementedError, move.simulate_action)
