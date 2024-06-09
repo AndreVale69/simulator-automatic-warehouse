@@ -31,7 +31,7 @@ columns:
     height: 325
     # The offset depends on the position of the carousel.
     # For example, this right_column has a carousel,
-    # so the distance in cm from the carousel to the center of "elevator" is 125 (325 / 2 = 125).
+    # so the distance in cm from the carousel to the center of "elevator" is 125 (250 / 2 = 125).
     offset_formula_description: "width / 2"
     x_offset: 125
     # The height of the last position.
