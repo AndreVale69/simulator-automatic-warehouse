@@ -13,6 +13,7 @@ class TestColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.column_config = ColumnConfiguration(
+            length=200,
             height = 325,
             x_offset = 125,
             width = 250,
@@ -26,11 +27,12 @@ class TestColumn(TestCase):
         param_2: str = 'str'
         param_3: float = 3.6
         param_4: int = 4
+        param_5: float = 455.1
 
         # act
 
         # assert
-        self.assertRaises(TypeError, ColumnConfiguration, param_1, param_2, param_3, param_4)
+        self.assertRaises(TypeError, ColumnConfiguration, param_1, param_2, param_3, param_4, param_5)
 
     def test_last_position_is_occupied(self):
         # arrange

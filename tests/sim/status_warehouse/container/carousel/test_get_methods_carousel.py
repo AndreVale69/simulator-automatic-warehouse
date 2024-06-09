@@ -10,7 +10,8 @@ from src.warehouse import Warehouse
 class TestGetMethodsCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
-        self.carousel_config = CarouselConfiguration (
+        self.carousel_config = CarouselConfiguration(
+            length=200,
             bay_height = 150,
             buffer_height = 150,
             x_offset = 125,

@@ -53,7 +53,7 @@ class TestTrayContainer(TestCase):
 
     def test_is_full_abstractmethod(self):
         # arrange
-        tray_container = TrayContainer(1000, 425, 200, self.warehouse)
+        tray_container = TrayContainer(1000, 425, 200, 400, self.warehouse)
 
         # act
 
@@ -62,7 +62,7 @@ class TestTrayContainer(TestCase):
 
     def test_is_empty_abstractmethod(self):
         # arrange
-        tray_container = TrayContainer(1000, 425, 200, self.warehouse)
+        tray_container = TrayContainer(1000, 425, 200, 400, self.warehouse)
 
         # act
 

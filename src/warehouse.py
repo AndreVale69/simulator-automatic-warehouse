@@ -52,6 +52,7 @@ class Warehouse:
         for col_data in config.columns:
             self.add_column(Column(
                 ColumnConfiguration(
+                    length=col_data.length,
                     height=col_data.height,
                     x_offset=col_data.x_offset,
                     width=col_data.width,
@@ -61,6 +62,7 @@ class Warehouse:
             ))
         self.carousel = Carousel(
             CarouselConfiguration(
+                length=config.carousel.length,
                 width=config.carousel.width,
                 hole_height=config.carousel.hole_height,
                 bay_height=config.carousel.bay_height,

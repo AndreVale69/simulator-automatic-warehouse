@@ -10,6 +10,7 @@ class TestCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = CarouselConfiguration(
+            length=200,
             bay_height = 150,
             buffer_height = 150,
             x_offset = 125,
@@ -25,6 +26,7 @@ class TestCarousel(TestCase):
         param_3: float = 3.6
         param_4: int = 4
         param_5: float = 5.18
+        param_6: float = 6.2
 
         # act
 
@@ -34,7 +36,8 @@ class TestCarousel(TestCase):
             'buffer_height': param_2,
             'x_offset': param_3,
             'width': param_4,
-            'hole_height': param_5
+            'hole_height': param_5,
+            'length' : param_6
         })
 
     def test_is_full(self):

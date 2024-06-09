@@ -10,6 +10,7 @@ class TestBuiltinCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = CarouselConfiguration(
+            length=200,
             bay_height = 150,
             buffer_height = 150,
             x_offset = 125,
@@ -44,6 +45,7 @@ class TestBuiltinCarousel(TestCase):
         carousel_1 = self.carousel
         carousel_2 = Carousel(
             CarouselConfiguration(
+                length=self.carousel_config.length + 10,
                 bay_height=self.carousel_config.bay_height + 10,
                 buffer_height=self.carousel_config.buffer_height + 10,
                 x_offset=self.carousel_config.x_offset + 25,

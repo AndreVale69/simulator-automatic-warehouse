@@ -123,6 +123,7 @@ class TestGetMethodsWarehouse(TestCase):
         # arrange
         warehouse = Warehouse()
         col = Column(ColumnConfiguration(
+            length=200,
             width = 200,
             height = 1000,
             x_offset = 1,

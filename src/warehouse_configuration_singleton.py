@@ -12,6 +12,7 @@ from src.configuration import WAREHOUSE_CONFIGURATION
 
 @dataclass
 class ColumnConfiguration:
+    length: int
     height: int
     x_offset: int
     width: int
@@ -29,6 +30,7 @@ class ColumnConfiguration:
 
 @dataclass
 class CarouselConfiguration:
+    length: int
     width: int
     hole_height: int
     bay_height: int
@@ -100,6 +102,7 @@ class WarehouseConfigurationSingleton:
             columns=[
                 ColumnConfiguration(
                     description=col.get('description'),
+                    length=col['length'],
                     width=col['width'],
                     height=col['height'],
                     offset_formula_description=col.get('offset_formula_description'),
@@ -110,6 +113,7 @@ class WarehouseConfigurationSingleton:
             carousel=CarouselConfiguration(
                 description=raw_config['carousel'].get('description'),
                 width=raw_config['carousel']['width'],
+                length=raw_config['carousel']['length'],
                 hole_height=raw_config['carousel']['hole_height'],
                 bay_height=raw_config['carousel']['bay_height'],
                 buffer_height=raw_config['carousel']['buffer_height'],

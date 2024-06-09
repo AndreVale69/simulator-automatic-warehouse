@@ -10,6 +10,7 @@ class TestBuiltinColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.column_config = ColumnConfiguration(
+            length=200,
             height = 325,
             x_offset = 125,
             width = 250,
@@ -42,6 +43,7 @@ class TestBuiltinColumn(TestCase):
         # arrange
         column_1 = self.column
         column_2 = Column(ColumnConfiguration(
+            length=300,
             height = 350,
             x_offset = 150,
             width = 275,

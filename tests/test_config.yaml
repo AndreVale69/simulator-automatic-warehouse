@@ -4,12 +4,14 @@ speed_per_sec: 1
 
 columns:
   - description: "right_column"
+    length: 400
     width: 250
     height: 325
     offset_formula_description: "width / 2"
     x_offset: 125
     height_last_position: 75
   - description: "left_column"
+    length: 400
     width: 200
     height: 1000
     offset_formula_description: "(left_column.width / 2) + right_column.offset + 250"
@@ -18,6 +20,7 @@ columns:
 
 carousel:
   description: "carousel-bay_and_buffer"
+  length: 400
   width: 250
   hole_height: 375
   bay_height: 150

@@ -9,17 +9,19 @@ from src.warehouse_configuration_singleton import WarehouseConfigurationSingleto
 
 
 class TrayContainer:
-    def __init__(self, height: int, offset_x: int, width: int, warehouse):
+    def __init__(self, height: int, offset_x: int, width: int, length: int, warehouse):
         """
         A superclass representing the tray container of a column or carousel.
 
         :type height: int
         :type offset_x: int
         :type width: int
+        :type length: int
         :type warehouse: Warehouse
         :param height: height of the container.
         :param offset_x: x offset of the container.
         :param width: width of the container.
+        :param width: length of the container.
         :param warehouse: warehouse where the container is stored.
         """
         config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
@@ -28,6 +30,7 @@ class TrayContainer:
         self.height_warehouse = config.height_warehouse
         self.def_space = config.default_height_space
         self.width = width
+        self.length = length
         self.height_container = height
         self.num_entries = height // self.get_def_space()
         self.offset_x = offset_x
@@ -41,6 +44,7 @@ class TrayContainer:
                 self.get_offset_x() == other.get_offset_x() and
                 self.get_num_entries() == other.get_num_entries() and
                 self.get_width() == other.get_width() and
+                self.get_length() == other.get_length() and
                 self.get_num_trays() == other.get_num_trays() and
                 self.get_num_entries_occupied() == other.get_num_entries_occupied() and
                 self.get_num_entries_free() == other.get_num_entries_free() and
@@ -58,6 +62,7 @@ class TrayContainer:
                 hash(self.get_offset_x()) ^
                 hash(self.get_num_entries()) ^
                 hash(self.get_width()) ^
+                hash(self.get_length()) ^
                 hash(self.get_num_trays()) ^
                 hash(self.get_num_entries_occupied()) ^
                 hash(self.get_num_entries_free()) ^
@@ -167,6 +172,15 @@ class TrayContainer:
         :return: the width of the container.
         """
         return self.width
+
+    def get_length(self) -> int:
+        """
+        Get the length of the container.
+
+        :rtype: int
+        :return: the length of the container.
+        """
+        return self.length
 
     def get_num_trays(self) -> int:
         """

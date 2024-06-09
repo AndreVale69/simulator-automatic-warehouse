@@ -14,7 +14,7 @@ class TestBuiltinTrayContainer(TestCase):
 
     def test_get_num_entries_free_abstractmethod(self):
         # arrange
-        tray_container = TrayContainer(1025, 200, 400, Warehouse())
+        tray_container = TrayContainer(1025, 200, 400, 400, Warehouse())
 
         # act
 
@@ -23,7 +23,7 @@ class TestBuiltinTrayContainer(TestCase):
 
     def test_is_full_abstractmethod(self):
         # arrange
-        tray_container = TrayContainer(1025, 200, 400, Warehouse())
+        tray_container = TrayContainer(1025, 200, 400, 400, Warehouse())
 
         # act
 
@@ -32,7 +32,7 @@ class TestBuiltinTrayContainer(TestCase):
 
     def test_is_empty_abstractmethod(self):
         # arrange
-        tray_container = TrayContainer(1025, 200, 400, Warehouse())
+        tray_container = TrayContainer(1025, 200, 400, 400, Warehouse())
 
         # act
 
@@ -53,6 +53,7 @@ class TestBuiltinTrayContainer(TestCase):
         # arrange
         tray_container_1 = self.tray_container
         tray_container_2 = Column(ColumnConfiguration(
+            length=200,
             height = 5 * 25,
             x_offset = 150,
             width = 200,

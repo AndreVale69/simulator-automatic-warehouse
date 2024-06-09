@@ -20,7 +20,7 @@ class Carousel(TrayContainer):
         :param warehouse: the warehouse where the carousel is located.
         """
         height_carousel = info.bay_height + info.buffer_height
-        super().__init__(height_carousel, info.x_offset, info.width, warehouse)
+        super().__init__(height_carousel, info.x_offset, info.width, info.length, warehouse)
         self.hole = info.hole_height // self.get_def_space()
         self.bay = info.bay_height // self.get_def_space()
         self.buffer = info.buffer_height // self.get_def_space()
@@ -36,6 +36,7 @@ class Carousel(TrayContainer):
 
     def __deepcopy__(self, memo):
         info = CarouselConfiguration(
+            length = self.get_length(),
             bay_height = self.get_bay() * self.get_def_space(),
             buffer_height = self.get_buffer() * self.get_def_space(),
             x_offset = self.get_offset_x(),

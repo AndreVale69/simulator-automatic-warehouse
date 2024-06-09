@@ -125,6 +125,7 @@ class TestWarehouse(TestCase):
         # arrange
         warehouse = Warehouse()
         warehouse.add_column(Column(ColumnConfiguration(
+            length=200,
             height = 325,
             x_offset = 125,
             width = 250,

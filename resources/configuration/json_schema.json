@@ -13,6 +13,10 @@
           "description": {
             "type": "string"
           },
+          "length": {
+            "type": "integer",
+            "minimum": 0
+          },
           "width": {
             "type": "integer",
             "minimum": 0
@@ -34,6 +38,7 @@
           }
         },
         "required": [
+          "length",
           "width",
           "height",
           "x_offset",
@@ -46,6 +51,10 @@
       "properties": {
         "description": {
           "type": "string"
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 0
         },
         "width": {
           "type": "integer",
@@ -72,6 +81,7 @@
         }
       },
       "required": [
+        "length",
         "width",
         "hole_height",
         "bay_height",

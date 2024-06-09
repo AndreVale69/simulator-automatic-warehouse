@@ -28,9 +28,8 @@ class Column(TrayContainer):
         :param info: info about the column (config).
         :param warehouse: the warehouse where the column is located.
         """
-        super().__init__(info.height, info.x_offset, info.width, warehouse)
+        super().__init__(info.height, info.x_offset, info.width, info.length, warehouse)
 
-        self.width = info.width
         self.height_last_position = info.height_last_position // self.get_def_space()
 
         # create container
@@ -39,6 +38,7 @@ class Column(TrayContainer):
 
     def __deepcopy__(self, memo):
         info = ColumnConfiguration(
+            length=self.get_length(),
             height =self.get_num_entries() * self.get_def_space(),
             x_offset = self.get_offset_x(),
             width = self.get_width(),

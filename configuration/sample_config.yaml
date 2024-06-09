@@ -2,7 +2,6 @@
 # Note: every measurement is in centimeters.
 
 # The height of the warehouse (cm).
-# It's an important field largely used by the simulator to calculate the simulation time.
 height_warehouse: 1000
 
 # The height (distance) between two trays.
@@ -24,9 +23,10 @@ speed_per_sec: 1
 columns:
   # Every column is identified by an optional description, used only by the user for readability.
   - description: "right_column"
-    # The width and the height of the column.
+    # The length, width and the height of the column.
     # In this case, the height is much lower than the height of the warehouse.
     # This is because you may have a carousel in the same column (see carousel below).
+    length: 400
     width: 250
     height: 325
     # The offset depends on the position of the carousel.
@@ -42,6 +42,7 @@ columns:
   # The following column has a height equal to the height of the warehouse, and the offset is made up of:
   # the offset of the right column plus the offset of the left column plus the width of the "elevator".
   - description: "left_column"
+    length: 400
     width: 200
     height: 1000
     offset_formula_description: "(left_column.width / 2) + right_column.offset + 250"
@@ -54,9 +55,10 @@ columns:
 # As the column has a description used by the user for readability.
 carousel:
   description: "carousel-bay_and_buffer"
-  # Note: obviously the width should be the same as the column it is in.
+  # Note: obviously the width (and length) should be the same as the column it is in.
   #       So in this case, the right column should be the same width.
   width: 250
+  length: 400
   # The height of the hole.
   # The hole is the space into which an operator can 'enter' the warehouse to place materials.
   hole_height: 375

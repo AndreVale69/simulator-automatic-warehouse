@@ -98,6 +98,17 @@ class TestGetMethodsTrayContainer(TestCase):
         # assert
         self.assertEqual(width_expected, width_get)
 
+    def test_get_length(self):
+        # arrange
+        tray_container = self.tray_container
+
+        # act
+        length_get = tray_container.get_length()
+        length_expected = tray_container.length
+
+        # assert
+        self.assertEqual(length_expected, length_get)
+
     def test_get_num_trays(self):
         # arrange
         tray_container = self.tray_container

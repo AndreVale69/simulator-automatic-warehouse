@@ -47,6 +47,7 @@ class TestWarehouseConfigurationSingleton(TestCase):
                     ColumnConfiguration(
                         description='description',
                         width=1000,
+                        length=200,
                         height=1000,
                         offset_formula_description='description',
                         x_offset=1000,
@@ -56,6 +57,7 @@ class TestWarehouseConfigurationSingleton(TestCase):
                 carousel=CarouselConfiguration(
                     description='desc',
                     width=1000,
+                    length=200,
                     hole_height=1000,
                     bay_height=1000,
                     buffer_height=1000,
