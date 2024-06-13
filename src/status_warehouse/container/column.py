@@ -30,36 +30,36 @@ class Column(TrayContainer):
         """
         super().__init__(info.height, info.x_offset, info.width, info.length, warehouse)
 
-        self.height_last_position = info.height_last_position // self.get_def_space()
+        self.height_last_position = info.height_last_position // self.def_space
 
         # create container
-        for i in range(self.get_num_entries()):
+        for i in range(self.num_entries):
             self.create_new_space(EmptyEntry(info.x_offset, i))
 
     def __deepcopy__(self, memo):
         info = ColumnConfiguration(
-            length=self.get_length(),
-            height =self.get_num_entries() * self.get_def_space(),
-            x_offset = self.get_offset_x(),
-            width = self.get_width(),
-            height_last_position = self.get_height_last_position() * self.get_def_space()
+            length=self.length,
+            height =self.num_entries * self.def_space,
+            x_offset = self.offset_x,
+            width = self.width,
+            height_last_position = self.height_last_position * self.def_space
         )
-        copy_obj = Column(info, self.get_warehouse())
-        copy_obj.container = copy.deepcopy(self.get_container(), memo)
+        copy_obj = Column(info, self.warehouse)
+        copy_obj.container = copy.deepcopy(self.container, memo)
         return copy_obj
 
     def __eq__(self, other):
         return (
             isinstance(other, Column) and
             TrayContainer.__eq__(self, other) and
-            self.get_height_last_position() == other.get_height_last_position()
+            self.height_last_position == other.height_last_position
         )
 
     def __hash__(self):
         return (
             15199 ^
             TrayContainer.__hash__(self) ^
-            hash(self.get_height_last_position())
+            hash(self.height_last_position)
         )
 
     def get_height_last_position(self) -> int:
@@ -73,8 +73,8 @@ class Column(TrayContainer):
 
     def get_num_entries_free(self) -> int:
         count = entries_to_remove = 0
-        container = self.get_container()
-        height_last_position = self.get_height_last_position()
+        container = self.container
+        height_last_position = self.height_last_position
 
         # count the number of empty entries
         for entry in container:
@@ -104,7 +104,7 @@ class Column(TrayContainer):
         return self.get_num_entries_free() == 0
 
     def is_empty(self) -> bool:
-        return (self.get_num_entries() - self.height_last_position + 1) == self.get_num_entries_free()
+        return (self.num_entries - self.height_last_position + 1) == self.get_num_entries_free()
 
     def add_tray(self, tray: Tray, index: int = 0):
         """
@@ -138,11 +138,11 @@ class Column(TrayContainer):
         :return: the TrayEntry created.
         """
         # initialize positions
-        tray_entry = TrayEntry(self.get_offset_x(), index)
+        tray_entry = TrayEntry(self.offset_x, index)
         # connect Tray to Entry
         tray_entry.add_tray(tray)
         # add to container
-        self.get_container()[index] = tray_entry
+        self.container[index] = tray_entry
         # return the tray entry just added
         return tray_entry
 
@@ -157,7 +157,7 @@ class Column(TrayContainer):
         :return: True if the tray was removed, False otherwise.
         """
         entries_to_rmv: int = tray.get_num_space_occupied()
-        container = self.get_container()
+        container = self.container
         for index, entry in enumerate(container):
             # if is a TrayEntry element
             # if the trays are the same (see __eq__ method)
@@ -166,6 +166,7 @@ class Column(TrayContainer):
                 entries_to_rmv -= 1
                 if entries_to_rmv == 0:
                     return True
+        return False
 
     def gen_materials_and_trays(self, num_trays: int, num_materials: int) -> GenMaterialsAndTraysReturns:
         """
@@ -181,11 +182,10 @@ class Column(TrayContainer):
         from src.utils.decide_position_algorithm.algorithm import decide_position
         from src.utils.decide_position_algorithm.enum_algorithm import Algorithm
 
-        trays_to_insert = num_trays
         trays_inserted = 0
         materials_inserted = 0
         # generate (num_trays) trays
-        for _ in range(trays_to_insert):
+        for _ in range(num_trays):
             # check if there is space in the column
             if self.is_full():
                 break

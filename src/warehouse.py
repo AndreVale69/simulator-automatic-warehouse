@@ -74,7 +74,7 @@ class Warehouse:
 
         self.def_space = config.default_height_space
         self.speed_per_sec = config.speed_per_sec
-        self.max_height_material = config.carousel.buffer_height // self.get_def_space()
+        self.max_height_material = config.carousel.buffer_height // self.def_space
         self.pos_y_floor = self.carousel.get_bay_entry().get_pos_y()
 
         # generate a configuration based on YAML
@@ -87,39 +87,39 @@ class Warehouse:
 
     def __deepcopy__(self, memo):
         copy_oby = Warehouse()
-        copy_oby.height = self.get_height()
-        copy_oby.columns_container = deepcopy(self.get_cols_container(), memo)
+        copy_oby.height = self.height
+        copy_oby.columns_container = deepcopy(self.columns_container, memo)
         for col in copy_oby.columns_container:
             col.set_warehouse(copy_oby)
-        copy_oby.carousel = deepcopy(self.get_carousel(), memo)
+        copy_oby.carousel = deepcopy(self.carousel, memo)
         copy_oby.carousel.set_warehouse(copy_oby)
-        copy_oby.def_space = self.get_def_space()
-        copy_oby.speed_per_sec = self.get_speed_per_sec()
+        copy_oby.def_space = self.def_space
+        copy_oby.speed_per_sec = self.speed_per_sec
         return copy_oby
 
     def __eq__(self, other):
         return (
             isinstance(other, Warehouse) and
-            self.get_height() == other.get_height() and
-            self.get_cols_container() == other.get_cols_container() and
-            self.get_carousel() == other.get_carousel() and
-            self.get_def_space() == other.get_def_space() and
-            self.get_speed_per_sec() == other.get_speed_per_sec() and
-            self.get_max_height_material() == other.get_max_height_material() and
-            self.get_pos_y_floor() == other.get_pos_y_floor() and
+            self.height == other.height and
+            self.columns_container == other.columns_container and
+            self.carousel == other.carousel and
+            self.def_space == other.def_space and
+            self.speed_per_sec == other.speed_per_sec and
+            self.max_height_material == other.max_height_material and
+            self.pos_y_floor == other.pos_y_floor and
             self.get_num_trays() == other.get_num_trays()
         )
 
     def __hash__(self):
         return (
             32831 ^
-            hash(self.get_height()) ^
-            hash(tuple(self.get_cols_container())) ^
-            hash(self.get_carousel()) ^
-            hash(self.get_def_space()) ^
-            hash(self.get_speed_per_sec()) ^
-            hash(self.get_max_height_material()) ^
-            hash(self.get_pos_y_floor()) ^
+            hash(self.height) ^
+            hash(tuple(self.columns_container)) ^
+            hash(self.carousel) ^
+            hash(self.def_space) ^
+            hash(self.speed_per_sec) ^
+            hash(self.max_height_material) ^
+            hash(self.pos_y_floor) ^
             hash(self.get_num_trays())
         )
 
@@ -208,9 +208,9 @@ class Warehouse:
         :return: the number of trays in the warehouse.
         """
         ris = 0
-        for col in self.get_cols_container():
+        for col in self.columns_container:
             ris += col.get_num_trays()
-        ris += self.get_carousel().get_num_trays()
+        ris += self.carousel.get_num_trays()
         return ris
 
     def get_num_columns(self) -> int:
@@ -229,12 +229,10 @@ class Warehouse:
         :rtype: MinimumOffsetReturns
         :return: the index of the list and the offset.
         """
-        min_offset = self.get_column(0).get_offset_x()
-        index = 0
-        for i, column in enumerate(self.get_cols_container()):
+        min_offset, index = self.columns_container[0].get_offset_x(), 0
+        for i, column in enumerate(self.columns_container):
             if (col_offset_x := column.get_offset_x()) < min_offset:
-                min_offset = col_offset_x
-                index = i
+                min_offset, index = col_offset_x, i
         return MinimumOffsetReturns(index=index, offset=min_offset)
 
     def set_pos_y_floor(self, pos: int):
@@ -254,7 +252,7 @@ class Warehouse:
         :param col: the column to add.
         """
         assert type(col) is Column, "You cannot add a type other than Column!"
-        self.get_cols_container().append(col)
+        self.columns_container.append(col)
 
     def pop_column(self, index: int = -1) -> Column:
         """
@@ -267,7 +265,7 @@ class Warehouse:
         :raises IndexError: if the index is out of range or the column is empty.
         :return: the column of the warehouse removed.
         """
-        return self.get_cols_container().pop(index)
+        return self.columns_container.pop(index)
 
     def remove_column(self, value: Column):
         """
@@ -278,7 +276,7 @@ class Warehouse:
         :param value: the Column to remove.
         :raises ValueError: if the Column is not in a container.
         """
-        self.get_cols_container().remove(value)
+        self.columns_container.remove(value)
 
     def is_full(self) -> bool:
         """
@@ -287,7 +285,7 @@ class Warehouse:
         :rtype: bool
         :return: True if there is a space inside the warehouse, otherwise False
         """
-        return False not in [col.is_full() for col in self.get_cols_container()]
+        return False not in [col.is_full() for col in self.columns_container]
 
     def gen_rand(self, gen_bay: bool, gen_buffer: bool, num_trays: int, num_materials: int):
         """
@@ -316,7 +314,7 @@ class Warehouse:
             self.carousel.add_tray(tray=Tray([gen_rand_material()]))
 
         # populate the columns
-        columns: list[Column] = self.get_cols_container()
+        columns = self.columns_container
         # until there are trays to insert and the warehouse isn't full
         while num_trays > 0 and not self.is_full():
             # choice a random column
@@ -341,7 +339,7 @@ class Warehouse:
         :return: the random tray chosen from the warehouse
         """
         container_tray_entry = []
-        for col in self.get_cols_container():
+        for col in self.columns_container:
             container_tray_entry.extend(col.get_trays())
         assert len(container_tray_entry) > 0, "The warehouse is empty!"
         return choice(container_tray_entry)
@@ -352,8 +350,10 @@ class Warehouse:
         self.cleanup_carousel()
 
     def cleanup_columns(self):
+        """ Cleanup the columns of the warehouse. Each Entry will be EmptyEntry. """
         for column in self.columns_container:
             column.reset_container()
 
     def cleanup_carousel(self):
+        """ Cleanup the carousel of the warehouse. Each Entry will be EmptyEntry. """
         self.carousel.reset_container()

@@ -1,6 +1,6 @@
 from time import sleep
 
-from src.simulation.simulation_type.warehouse_simulation.warehouse_simulation import WarehouseSimulation
+from simulation.simulation_type.warehouse_simulation import WarehouseSimulation
 from src.warehouse import Warehouse
 
 

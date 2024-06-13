@@ -14,7 +14,7 @@ class EmptyEntry(Entry):
         super().__init__(offset_x, pos_y)
 
     def __deepcopy__(self, memo):
-        copy_obj = EmptyEntry(self.get_offset_x(), self.get_pos_y())
+        copy_obj = EmptyEntry(self.offset_x, self.pos_y)
         return copy_obj
 
     def __eq__(self, other):

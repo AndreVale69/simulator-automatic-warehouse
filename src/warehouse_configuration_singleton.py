@@ -173,17 +173,18 @@ class WarehouseConfigurationSingleton:
         :return: json schema.
         """
         # load json_schema iff not in cache
-        schema = self._json_schema
-        if schema:
+        if schema := self._json_schema:
             return schema
-
         with open(self._json_schema_path, "r") as json_schema:
-            self._json_schema = loads(json_schema.read())
+            schema = loads(json_schema.read())
 
         # check that the json schema is valid
-        Draft202012Validator.check_schema(self._json_schema)
+        Draft202012Validator.check_schema(schema)
 
-        return self._json_schema
+        # if valid, save
+        self._json_schema = schema
+
+        return schema
 
     def get_configuration(self) -> WarehouseConfiguration:
         """

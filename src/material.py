@@ -25,10 +25,7 @@ class Material:
 
         # check the height of a material
         if height > max_height_material:
-            raise ValueError("The height of element " +
-                             name +
-                             " is too high (max height: " +
-                             str(max_height_material) + ")")
+            raise ValueError(f"The height of element {name} is too high (max height: {max_height_material})")
 
         self.barcode = barcode
         self.name = name
@@ -39,22 +36,18 @@ class Material:
     def __eq__(self, other):
         return (
             isinstance(other, Material) and
-            self.get_barcode() == other.get_barcode() and
-            self.get_name() == other.get_name() and
-            self.get_height() == other.get_height() and
-            self.get_length() == other.get_length() and
-            self.get_width() == other.get_width()
+            self.barcode == other.barcode and
+            self.name == other.name and
+            self.height == other.height and
+            self.length == other.length and
+            self.width == other.width
         )
 
     def __hash__(self):
         return 13463 ^ hash((self.barcode, self.name, self.height, self.length, self.width))
 
     def __deepcopy__(self, memo):
-        return Material(self.get_barcode(),
-                        self.get_name(),
-                        self.get_height(),
-                        self.get_length(),
-                        self.get_width())
+        return Material(self.barcode, self.name, self.height, self.length, self.width)
 
     def get_barcode(self) -> int:
         """
@@ -115,10 +108,7 @@ def gen_rand_materials(how_many: int, min_height: int = 25, max_height: int = 50
     :param max_height: the maximum height (upper limit) of the materials.
     :return: the generated materials list.
     """
-    materials: list[Material] = []
-    for i in range(how_many):
-        materials.append(gen_rand_material(min_height, max_height))
-    return materials
+    return [gen_rand_material(min_height, max_height) for _ in range(how_many)]
 
 
 def gen_rand_material(min_height: int = 25, max_height: int = 50) -> Material:

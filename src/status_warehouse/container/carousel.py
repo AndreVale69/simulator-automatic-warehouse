@@ -19,44 +19,43 @@ class Carousel(TrayContainer):
         :param info: class containing information about the carousel (config).
         :param warehouse: the warehouse where the carousel is located.
         """
-        height_carousel = info.bay_height + info.buffer_height
-        super().__init__(height_carousel, info.x_offset, info.width, info.length, warehouse)
-        self.hole = info.hole_height // self.get_def_space()
-        self.bay = info.bay_height // self.get_def_space()
-        self.buffer = info.buffer_height // self.get_def_space()
+        super().__init__(info.bay_height + info.buffer_height, info.x_offset, info.width, info.length, warehouse)
+        self.hole = info.hole_height // (def_space := self.def_space)
+        self.bay = info.bay_height // def_space
+        self.buffer = info.buffer_height // def_space
 
         # get first y to start
-        first_y = self.get_num_entries() + self.get_hole()
+        first_y = self.num_entries + self.hole
 
         # create container with only two positions
         # create bay
-        self.create_new_space(EmptyEntry(self.get_offset_x(), first_y))
+        self.create_new_space(EmptyEntry(self.offset_x, first_y))
         # create buffer
-        self.create_new_space(EmptyEntry(self.get_offset_x(), first_y + (self.get_bay() + self.get_buffer())))
+        self.create_new_space(EmptyEntry(self.offset_x, first_y + (self.bay + self.buffer)))
 
     def __deepcopy__(self, memo):
         info = CarouselConfiguration(
-            length = self.get_length(),
-            bay_height = self.get_bay() * self.get_def_space(),
-            buffer_height = self.get_buffer() * self.get_def_space(),
-            x_offset = self.get_offset_x(),
-            width = self.get_width(),
-            hole_height= self.get_hole() * self.get_def_space()
+            length = self.length,
+            bay_height = self.bay * (def_space := self.def_space),
+            buffer_height = self.buffer * def_space,
+            x_offset = self.offset_x,
+            width = self.width,
+            hole_height= self.hole * def_space
         )
-        copy_obj = Carousel(info, self.get_warehouse())
-        copy_obj.container = deepcopy(self.get_container(), memo)
+        copy_obj = Carousel(info, self.warehouse)
+        copy_obj.container = deepcopy(self.container, memo)
         return copy_obj
 
     def __eq__(self, other):
         return (
             isinstance(other, Carousel) and
-            self.get_buffer() == other.get_buffer() and
-            self.get_bay() == other.get_bay() and
-            self.get_hole() == other.get_hole() and
+            TrayContainer.__eq__(self, other) and
+            self.buffer == other.buffer and
+            self.bay == other.bay and
+            self.hole == other.hole and
             self.get_bay_entry() == other.get_bay_entry() and
             self.get_buffer_entry() == other.get_buffer_entry() and
-            self.get_num_trays() == other.get_num_trays() and
-            TrayContainer.__eq__(self, other)
+            self.get_num_trays() == other.get_num_trays()
         )
 
     def __hash__(self):
@@ -149,7 +148,7 @@ class Carousel(TrayContainer):
 
     def get_num_entries_free(self) -> int:
         count = 0
-        for entry in self.get_container():
+        for entry in self.container:
             if isinstance(entry, EmptyEntry):
                 count += 1
         return count
@@ -188,7 +187,7 @@ class Carousel(TrayContainer):
         :param tray: to show or to save.
         :raises RuntimeError: if the tray already exists.
         """
-        first_y = self.get_num_entries() + self.hole + self.bay
+        first_y = self.num_entries + self.hole + self.bay
         is_bay_full = self.is_bay_full()
 
         # if the carousel is full, exception
@@ -211,12 +210,12 @@ class Carousel(TrayContainer):
         """
         # initialize positions
         if is_buffer:
-            first_y += self.get_buffer()
-        tray_entry = TrayEntry(self.get_offset_x(), first_y)
+            first_y += self.buffer
+        tray_entry = TrayEntry(self.offset_x, first_y)
         # connect Tray to entry
         tray_entry.add_tray(tray)
         # add to container
-        self.get_container()[int(is_buffer)] = tray_entry
+        self.container[int(is_buffer)] = tray_entry
         # connect Entry just added to relative Tray
         tray.set_first_tray_entry(tray_entry)
 

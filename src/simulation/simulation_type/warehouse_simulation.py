@@ -42,10 +42,10 @@ class WarehouseSimulation(Simulation):
     def __eq__(self, other):
         return (
             isinstance(other, WarehouseSimulation) and
-            self.get_warehouse() == other.get_warehouse() and
-            self.get_res_buffer() == other.get_res_buffer() and
-            self.get_res_bay() == other.get_res_bay() and
-            Simulation.__eq__(self, other)
+            Simulation.__eq__(self, other) and
+            self.warehouse == other.warehouse and
+            self.res_buffer == other.res_buffer and
+            self.res_bay == other.res_bay
         )
 
     def get_warehouse(self) -> Warehouse:
@@ -176,22 +176,20 @@ class WarehouseSimulation(Simulation):
         """
         Simulation method used to go to bay.
         """
-        warehouse = self.get_warehouse()
         # take current position (y)
-        curr_pos = warehouse.get_pos_y_floor()
+        curr_pos = (warehouse := self.warehouse).get_pos_y_floor()
         # take destination position (y)
-        dep_pos = warehouse.get_carousel().get_bay_entry().get_pos_y()
-        yield self.env.timeout(self.vertical_move(curr_pos, dep_pos))
+        bay_pos = warehouse.get_carousel().get_bay_entry().get_pos_y()
+        yield self.env.timeout(self.vertical_move(curr_pos, bay_pos))
         # set new y position of the floor
-        warehouse.set_pos_y_floor(dep_pos)
+        warehouse.set_pos_y_floor(bay_pos)
 
     def go_to_buffer(self):
         """
         Simulation method used to go to buffer.
         """
-        warehouse = self.get_warehouse()
         # take current position (y)
-        curr_pos = warehouse.get_pos_y_floor()
+        curr_pos = (warehouse := self.warehouse).get_pos_y_floor()
         # take destination position (y)
         buf_pos = warehouse.get_carousel().get_buffer_entry().get_pos_y()
         yield self.env.timeout(self.vertical_move(curr_pos, buf_pos))
@@ -209,8 +207,8 @@ class WarehouseSimulation(Simulation):
         :param destination: destination of the tray
         :param load_in_buffer: True to load the carousel into the buffer, otherwise into the bay
         """
-        warehouse = self.get_warehouse()
-        carousel = warehouse.get_carousel()
+        env = self.env
+        carousel = (warehouse := self.warehouse).get_carousel()
         y_dep = carousel.get_bay_entry().get_pos_y()
         y_buf = carousel.get_buffer_entry().get_pos_y()
         # update the y position
@@ -223,26 +221,23 @@ class WarehouseSimulation(Simulation):
                 raise NotImplementedError("Bay and buffer are full! Collision!")
             # update the y destination
             tray_to_insert.set_best_y(y_buf)
-            logger.debug(f"Time {self.env.now:5.2f} - Bay is full! Start vertical move to buffer")
-            yield self.env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
+            logger.debug(f"Time {env.now:5.2f} - Bay is full! Start vertical move to buffer")
+            yield env.timeout(self.vertical_move(start_pos=y_dep, end_pos=y_buf))
             # set new y position of the floor
             warehouse.set_pos_y_floor(y_buf)
-            logger.debug(f"Time {self.env.now:5.2f} - Start to load in the buffer")
+            logger.debug(f"Time {env.now:5.2f} - Start to load in the buffer")
 
         # and load inside the carousel
-        yield self.env.process(self.load(tray_to_insert, destination))
+        yield env.process(self.load(tray_to_insert, destination))
 
     def loading_buffer_and_remove(self):
         """
         Vertical movement of carousel loading from buffer to bay.
         """
-        carousel = self.get_warehouse().get_carousel()
-        buffer: TrayEntry = carousel.get_buffer_entry()
+        buffer: TrayEntry = (carousel := self.warehouse.get_carousel()).get_buffer_entry()
 
         # calculate loading buffer time
-        start_pos = buffer.get_pos_y()
-        end_pos = carousel.get_bay_entry().get_pos_y()
-        loading_buffer_time = self.vertical_move(start_pos, end_pos)
+        loading_buffer_time = self.vertical_move(buffer.get_pos_y(), carousel.get_bay_entry().get_pos_y())
 
         # exec simulate
         yield self.env.timeout(loading_buffer_time)
@@ -265,11 +260,10 @@ class WarehouseSimulation(Simulation):
         :param end_pos: ending position
         :return: distance travelled divided by speed per second
         """
-        warehouse = self.get_warehouse()
         # calculate the distance of index between two points
         index_distance = abs(end_pos - start_pos)
         # calculate effective distance with real measures
-        eff_distance = index_distance * warehouse.get_def_space()
+        eff_distance = index_distance * (warehouse := self.get_warehouse()).get_def_space()
         # formula of vertical move
         return (eff_distance / 100) / warehouse.get_speed_per_sec()
 
@@ -280,9 +274,8 @@ class WarehouseSimulation(Simulation):
         :type tray: Tray
         :param tray: tray to allocate
         """
-        warehouse = self.get_warehouse()
         # start position
-        start_pos = warehouse.get_pos_y_floor()
+        start_pos = (warehouse := self.warehouse).get_pos_y_floor()
         # calculate destination position
         decide_position_res = decide_position(
             columns=warehouse.get_cols_container(),
@@ -306,14 +299,13 @@ class WarehouseSimulation(Simulation):
         :type tray: Tray
         :param tray: tray to reach
         """
-        warehouse = self.get_warehouse()
         # save coordinates inside tray
         y = tray.get_first_tray_entry().get_pos_y()
         x = tray.get_first_tray_entry().get_offset_x()
         tray.set_best_y(y)
         tray.set_best_offset_x(x)
         # start the move
-        vertical_move = self.vertical_move(start_pos=warehouse.get_pos_y_floor(),
+        vertical_move = self.vertical_move(start_pos=(warehouse := self.get_warehouse()).get_pos_y_floor(),
                                            end_pos=y)
         yield self.env.timeout(vertical_move)
         # set new y position of the floor
@@ -328,7 +320,7 @@ class WarehouseSimulation(Simulation):
         :param tray: tray to unload
         :param rmv_from_cols: True to unload the tray from the columns, otherwise unload from the carousel
         """
-        warehouse = self.get_warehouse()
+        warehouse = self.warehouse
         # take x offset
         offset_x_tray = tray.get_first_tray_entry().get_offset_x()
         # start the move
@@ -341,11 +333,6 @@ class WarehouseSimulation(Simulation):
                     break
         else:
             warehouse.get_carousel().remove_tray(tray)
-        # if not self.get_carousel().remove_tray(tray):
-        #     # find in a column and terminate
-        #     for col in self.get_cols_container():
-        #         if col.remove_tray(tray):
-        #             break
 
     def load(self, tray: Tray, destination: EnumWarehouse) -> None:
         """
@@ -357,7 +344,7 @@ class WarehouseSimulation(Simulation):
         :param destination: destination of the tray
         :raises ValueError: if the offset of the tray is not equal to any column in the warehouse
         """
-        warehouse = self.get_warehouse()
+        warehouse = self.warehouse
         # take destination coordinates
         dest_x_tray = tray.get_best_offset_x()
         dest_y_tray = tray.get_best_y()
@@ -383,9 +370,8 @@ class WarehouseSimulation(Simulation):
         :return: the time estimated or None if not found
         :raises ValueError: if the offset is not valid
         """
-        warehouse = self.get_warehouse()
         # check the carousel
-        if warehouse.get_carousel().get_offset_x() == offset_x:
+        if (warehouse := self.warehouse).get_carousel().get_offset_x() == offset_x:
             return (warehouse.get_carousel().get_width() / 100) / warehouse.get_speed_per_sec()
         # otherwise, check every column
         for col in warehouse.get_cols_container():

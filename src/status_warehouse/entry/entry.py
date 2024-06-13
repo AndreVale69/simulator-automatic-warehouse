@@ -14,8 +14,8 @@ class Entry:
     def __eq__(self, other):
         return (
             isinstance(other, Entry) and
-            self.get_offset_x() == other.get_offset_x() and
-            self.get_pos_y() == other.get_pos_y()
+            self.offset_x == other.offset_x and
+            self.pos_y == other.pos_y
         )
 
     def __hash__(self):

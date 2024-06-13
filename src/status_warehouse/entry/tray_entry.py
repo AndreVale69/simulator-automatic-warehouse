@@ -18,9 +18,9 @@ class TrayEntry(Entry):
         self.tray = None
 
     def __deepcopy__(self, memo):
-        copy_obj = TrayEntry(self.get_offset_x(), self.get_pos_y())
-        copy_obj.tray = copy.deepcopy(self.get_tray(), memo)
-        if copy_obj == self.get_tray().get_first_tray_entry():
+        copy_obj = TrayEntry(self.offset_x, self.pos_y)
+        copy_obj.tray = copy.deepcopy(self.tray, memo)
+        if copy_obj == self.tray.get_first_tray_entry():
             copy_obj.tray.set_first_tray_entry(copy_obj)
         return copy_obj
 

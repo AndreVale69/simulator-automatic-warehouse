@@ -11,7 +11,6 @@ from src.warehouse_configuration_singleton import WarehouseConfigurationSingleto
 logger = getLogger(__name__)
 
 
-
 class Simulation:
     def __init__(self):
         """
@@ -29,11 +28,11 @@ class Simulation:
     def __eq__(self, other):
         return (
             isinstance(other, Simulation) and
-            self.get_environment() == other.get_environment() and
-            self.get_store_history() == other.get_store_history() and
-            self.get_sim_time() == other.get_sim_time() and
-            self.get_sim_num_actions() == other.get_sim_num_actions() and
-            self.get_events_to_simulate() == other.get_events_to_simulate()
+            self.env == other.env and
+            self.store_history == other.store_history and
+            self.sim_time == other.sim_time and
+            self.sim_num_actions == other.sim_num_actions and
+            self.events_to_simulate == other.events_to_simulate
         )
 
     def get_environment(self) -> Environment:

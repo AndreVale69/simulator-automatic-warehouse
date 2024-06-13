@@ -28,10 +28,10 @@ class Tray:
     def __eq__(self, other):
         return (
                 isinstance(other, Tray) and
-                self.get_items() == other.get_items() and
-                self.get_max_height() == other.get_max_height() and
-                self.get_num_space_occupied() == other.get_num_space_occupied() and
-                self.get_first_tray_entry() == other.get_first_tray_entry()
+                self.items == other.items and
+                self.max_height == other.max_height and
+                self.num_space == other.num_space and
+                self.first_trayEntry == other.first_trayEntry
         )
 
     def __hash__(self):
@@ -43,13 +43,13 @@ class Tray:
         )
 
     def __deepcopy__(self, memo):
-        copy_obj = Tray(self.get_items())
+        copy_obj = Tray(self.items)
         # copy_obj.items = copy.deepcopy(self.get_items(), memo)
-        copy_obj.def_space = self.__get_def_space()
-        copy_obj.max_height = self.get_max_height()
-        copy_obj.num_space = self.get_num_space_occupied()
-        copy_obj.best_offset_x = self.get_best_offset_x()
-        copy_obj.best_y = self.get_best_y()
+        copy_obj.def_space = self.def_space
+        copy_obj.max_height = self.max_height
+        copy_obj.num_space = self.num_space
+        copy_obj.best_offset_x = self.best_offset_x
+        copy_obj.best_y = self.best_y
         return copy_obj
 
     def get_items(self) -> list[Material]:
@@ -123,7 +123,7 @@ class Tray:
         :param material: material to be added to the tray.
         """
         # insert in tail
-        self.get_items().append(material)
+        self.items.append(material)
         self.__calculate_max_height()
 
     def remove_material(self, material: Material):
@@ -165,21 +165,11 @@ class Tray:
         """
         self.best_y = pos_y
 
-    def __get_def_space(self) -> int:
-        """
-        Get the default space of the tray.
-
-        :rtype: int
-        :return: the default space of the tray.
-        """
-        return self.def_space
-
     def __calculate_max_height(self):
         """
         Private method to calculate the height of a tray after an insert o remove a material.
         """
-        def_space = self.__get_def_space()
-        materials = self.get_items()
+        def_space, materials = self.def_space, self.items
 
         # if there are no materials, use the default space
         # otherwise, calculate the maximum height and how many entries are occupied
