@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from src.simulation.actions.action_enum import ActionEnum
 from src.simulation.actions.material.remove_material.remove_random_material import RemoveRandomMaterial
-from simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
 from src.warehouse import Warehouse
 
 

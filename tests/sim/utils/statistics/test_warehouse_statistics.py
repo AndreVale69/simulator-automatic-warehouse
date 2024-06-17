@@ -4,7 +4,7 @@ from numpy import int64
 from pandas import DataFrame, Timestamp, Timedelta
 
 from src.simulation.actions.action_enum import ActionEnum
-from simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
 from src.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
 from src.warehouse import Warehouse
 

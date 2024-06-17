@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from src.simulation.actions.action_enum import ActionEnum
 from src.simulation.actions.send_back_tray import SendBackTray
-from simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
 from src.status_warehouse.enum_warehouse import EnumWarehouse
 from src.tray import Tray
 from src.warehouse import Warehouse

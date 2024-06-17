@@ -1,6 +1,4 @@
-from time import sleep
-
-from simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
 from src.warehouse import Warehouse
 
 
@@ -12,4 +10,3 @@ def run_simulator():
 
 if __name__ == '__main__':
     run_simulator()
-    sleep(100000)
