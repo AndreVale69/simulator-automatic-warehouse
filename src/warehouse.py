@@ -47,6 +47,7 @@ class Warehouse:
 
         # add all columns taken from YAML
         self.columns_container = []
+        self._columns_x_offset = set()
         # all columns must be added from minimum offset_x to greats offset_x
         # respecting this order
         for col_data in config.columns:
@@ -250,9 +251,13 @@ class Warehouse:
 
         :type col: Column
         :param col: the column to add.
+        :raises ValueError: if the column x_offset is not unique.
         """
         assert type(col) is Column, "You cannot add a type other than Column!"
+        if (offset_x := col.get_offset_x()) in self._columns_x_offset:
+            raise ValueError(f"Each column should have a unique x_offset; Duplicate found: {offset_x}")
         self.columns_container.append(col)
+        self._columns_x_offset.add(offset_x)
 
     def pop_column(self, index: int = -1) -> Column:
         """
@@ -265,7 +270,8 @@ class Warehouse:
         :raises IndexError: if the index is out of range or the column is empty.
         :return: the column of the warehouse removed.
         """
-        return self.columns_container.pop(index)
+        self._columns_x_offset.remove((col_removed := self.columns_container.pop(index)).get_offset_x())
+        return col_removed
 
     def remove_column(self, value: Column):
         """
@@ -277,6 +283,7 @@ class Warehouse:
         :raises ValueError: if the Column is not in a container.
         """
         self.columns_container.remove(value)
+        self._columns_x_offset.remove(value.get_offset_x())
 
     def is_full(self) -> bool:
         """

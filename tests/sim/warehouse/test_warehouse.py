@@ -22,7 +22,17 @@ class TestWarehouse(TestCase):
     def test_add_column(self):
         # arrange
         warehouse = Warehouse()
-        col = warehouse.get_column(0)
+        col_0 = warehouse.get_column(0)
+        col = Column(
+            ColumnConfiguration(
+                length=col_0.get_length(),
+                height=col_0.get_height_container(),
+                x_offset=col_0.get_offset_x() + 500,
+                width=col_0.get_width(),
+                height_last_position=col_0.get_height_last_position()
+            ),
+            warehouse
+        )
 
         # act
         warehouse.add_column(col)
@@ -30,6 +40,8 @@ class TestWarehouse(TestCase):
         # assert
         self.assertEqual(warehouse.get_column(-1), col)
         self.assertRaises(Exception, warehouse.add_column, None)
+        self.assertRaises(ValueError, warehouse.add_column, col)
+        self.assertRaises(ValueError, warehouse.add_column, col_0)
 
     def test_pop_column(self):
         # arrange
@@ -127,7 +139,7 @@ class TestWarehouse(TestCase):
         warehouse.add_column(Column(ColumnConfiguration(
             length=200,
             height = 325,
-            x_offset = 125,
+            x_offset = warehouse.get_column(0).get_offset_x() + 200,
             width = 250,
             height_last_position = 75
         ), warehouse))

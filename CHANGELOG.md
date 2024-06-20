@@ -53,6 +53,7 @@
 - Changed `get_height_container` method to `get_num_entries`. 
   The first returns the height of the container (config value) 
   and the second returns the number of entries in the warehouse.
+- Changed the `add_column` method. It raises a `ValueError` if the x-offset of the column is not unique. 
 - `Drawer` name changed to `Tray`.
 - `Deposit` name changed to `Bay`.
 
