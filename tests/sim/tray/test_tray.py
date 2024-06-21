@@ -23,6 +23,13 @@ class TestTray(TestCase):
             length=config.tray.length-10,
             width=config.tray.width-10
         )
+        material_to_add_2 = Material(
+            barcode=uuid.uuid4().hex,
+            name='NameMaterial',
+            height=config.tray.maximum_height,
+            length=config.tray.length,
+            width=config.tray.width
+        )
         tray = Tray()
         self.assertEqual(tray.get_max_height(), config.default_height_space)
 
@@ -32,6 +39,8 @@ class TestTray(TestCase):
         # assert
         self.assertIn(material_to_add, tray.get_items())
         self.assertEqual(tray.get_max_height(), height_material)
+        self.assertRaises(ValueError, tray.add_material, material_to_add_2)
+        self.assertRaises(ValueError, tray.add_materials, [material_to_add_2])
 
     def test_add_materials(self):
         # arrange

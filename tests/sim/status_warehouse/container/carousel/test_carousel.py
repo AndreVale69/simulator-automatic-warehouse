@@ -4,6 +4,7 @@ from src.status_warehouse.container.carousel import Carousel, CarouselConfigurat
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.tray import Tray
 from src.warehouse import Warehouse
+from src.warehouse_configuration_singleton import TrayConfiguration, WarehouseConfigurationSingleton
 
 
 class TestCarousel(TestCase):
@@ -86,6 +87,7 @@ class TestCarousel(TestCase):
 
     def test_add_tray(self):
         # arrange
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
         tray = Tray()
         warehouse = self.warehouse
         carousel = warehouse.get_carousel()
@@ -98,6 +100,11 @@ class TestCarousel(TestCase):
         # assert
         self.assertTrue(carousel.is_bay_full())
         self.assertFalse(carousel.is_buffer_full())
+        self.assertRaises(ValueError, carousel.add_tray, Tray(TrayConfiguration(
+            length=config.carousel.length,
+            width=config.carousel.width,
+            maximum_height=config.carousel.buffer_height
+        )))
 
     def test_add_tray_full(self):
         # arrange

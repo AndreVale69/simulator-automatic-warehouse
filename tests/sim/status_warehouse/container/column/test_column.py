@@ -6,7 +6,11 @@ from src.status_warehouse.entry.empty_entry import EmptyEntry
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.tray import Tray
 from src.warehouse import Warehouse
-from src.warehouse_configuration_singleton import ColumnConfiguration
+from src.warehouse_configuration_singleton import (
+    ColumnConfiguration,
+    TrayConfiguration,
+    WarehouseConfigurationSingleton
+)
 
 
 class TestColumn(TestCase):
@@ -76,6 +80,7 @@ class TestColumn(TestCase):
 
     def test_add_tray(self):
         # arrange
+        config = WarehouseConfigurationSingleton.get_instance().get_configuration()
         tray = Tray()
         column = self.column
         index = column.get_num_entries() - 1
@@ -85,6 +90,11 @@ class TestColumn(TestCase):
 
         # assert
         self.assertTrue(isinstance(column.get_container()[index], TrayEntry))
+        self.assertRaises(ValueError, column.add_tray, Tray(TrayConfiguration(
+            length=column.length,
+            width=column.width,
+            maximum_height=column.height_container
+        )))
 
     def test_remove_tray(self):
         # arrange

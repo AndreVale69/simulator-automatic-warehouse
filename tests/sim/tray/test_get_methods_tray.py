@@ -19,6 +19,39 @@ class TestGetMethodsTray(TestCase):
         # assert
         self.assertEqual(items_get, items_expected)
 
+    def test_get_length(self):
+        # arrange
+        tray = self.tray
+
+        # act
+        length_get = tray.get_length()
+        length_expected = tray.length
+
+        # assert
+        self.assertEqual(length_get, length_expected)
+
+    def test_get_width(self):
+        # arrange
+        tray = self.tray
+
+        # act
+        width_get = tray.get_width()
+        width_expected = tray.width
+
+        # assert
+        self.assertEqual(width_get, width_expected)
+
+    def test_get_height_limit(self):
+        # arrange
+        tray = self.tray
+
+        # act
+        height_limit_get = tray.get_height_limit()
+        height_limit_expected = tray.height_limit
+
+        # assert
+        self.assertEqual(height_limit_get, height_limit_expected)
+
     def test_get_max_height(self):
         # arrange
         tray = self.tray
