@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from simpy import Environment
 
@@ -7,7 +7,7 @@ from src.simulation.simulation import Simulation
 from src.warehouse import Warehouse
 
 
-class RemoveMaterial(Action):
+class RemoveMaterial(ABC, Action):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         """
         A superclass of remove material action.
@@ -21,7 +21,7 @@ class RemoveMaterial(Action):
         :param simulation: the simulation where the action is performed.
         :param duration: the duration of the action in seconds.
         """
-        super().__init__(env, warehouse, simulation)
+        Action.__init__(self, env, warehouse, simulation)
         self.duration = duration
 
     def get_duration(self) -> int:

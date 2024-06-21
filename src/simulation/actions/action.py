@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from simpy import Environment
 
@@ -7,7 +7,7 @@ from src.tray import Tray
 from src.warehouse import Warehouse
 
 
-class Action:
+class Action(ABC):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation):
         """
         Superclass for all actions.
