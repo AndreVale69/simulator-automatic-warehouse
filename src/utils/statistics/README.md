@@ -36,12 +36,14 @@ This object must be instantiated using the history of the warehouse simulation:
 ```python
 from pandas import DataFrame
 from src.utils.statistics.warehouse_statistics import WarehouseStatistics
+from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
 from src.warehouse import Warehouse
 
 warehouse = Warehouse()
-warehouse.run_simulation()
+simulation = WarehouseSimulation(warehouse)
+simulation.run_simulation()
 warehouse_statistics = WarehouseStatistics(
-    DataFrame(warehouse.get_simulation().get_store_history().items)
+    DataFrame(simulation.get_store_history_dataframe())
 )
 ```
 
