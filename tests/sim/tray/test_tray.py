@@ -33,6 +33,35 @@ class TestTray(TestCase):
         self.assertIn(material_to_add, tray.get_items())
         self.assertEqual(tray.get_max_height(), height_material)
 
+    def test_add_materials(self):
+        # arrange
+        config = self.config.get_configuration()
+        height_material = config.tray.maximum_height-1
+        material_to_add = Material(
+            barcode=uuid.uuid4().hex,
+            name='NameMaterial',
+            height=height_material-24,
+            length=config.tray.length-10,
+            width=config.tray.width-10
+        )
+        material_to_add_2 = Material(
+            barcode=uuid.uuid4().hex,
+            name='NameMaterial',
+            height=height_material,
+            length=config.tray.length - 10,
+            width=config.tray.width - 10
+        )
+        tray = Tray()
+        self.assertEqual(tray.get_max_height(), config.default_height_space)
+
+        # act
+        tray.add_materials([material_to_add, material_to_add_2])
+
+        # assert
+        self.assertIn(material_to_add, tray.get_items())
+        self.assertIn(material_to_add_2, tray.get_items())
+        self.assertEqual(tray.get_max_height(), height_material)
+
     def test_remove_material(self):
         # arrange
         config = self.config.get_configuration()
@@ -53,6 +82,36 @@ class TestTray(TestCase):
 
         # assert
         self.assertNotIn(material_to_remove, tray.get_items())
+        self.assertEqual(tray.get_max_height(), config.default_height_space)
+
+    def test_remove_materials(self):
+        # arrange
+        config = self.config.get_configuration()
+        height_material = config.tray.maximum_height-1
+        material_to_remove = Material(
+            barcode=uuid.uuid4().hex,
+            name='NameMaterial',
+            height=height_material,
+            length=config.tray.length-10,
+            width=config.tray.width-10
+        )
+        material_to_remove_2 = Material(
+            barcode=uuid.uuid4().hex,
+            name='NameMaterial',
+            height=height_material,
+            length=config.tray.length - 10,
+            width=config.tray.width - 10
+        )
+        tray = Tray(items=[material_to_remove, material_to_remove_2])
+        self.assertEqual(tray.get_max_height(), height_material)
+        self.assertIn(material_to_remove, tray.get_items())
+
+        # act
+        tray.remove_materials([material_to_remove, material_to_remove_2])
+
+        # assert
+        self.assertNotIn(material_to_remove, tray.get_items())
+        self.assertNotIn(material_to_remove_2, tray.get_items())
         self.assertEqual(tray.get_max_height(), config.default_height_space)
 
     def test_set_first_trayEntry(self):
