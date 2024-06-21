@@ -5,7 +5,8 @@ from src.warehouse_configuration_singleton import (
     WarehouseConfiguration,
     ColumnConfiguration,
     CarouselConfiguration,
-    SimulationConfiguration
+    SimulationConfiguration,
+    TrayConfiguration
 )
 
 
@@ -43,6 +44,11 @@ class TestWarehouseConfigurationSingleton(TestCase):
                 height_warehouse=1000,
                 default_height_space=1000,
                 speed_per_sec=1000,
+                tray=TrayConfiguration(
+                    length=1000,
+                    width=1000,
+                    maximum_height=1000
+                ),
                 columns=[
                     ColumnConfiguration(
                         description='description',

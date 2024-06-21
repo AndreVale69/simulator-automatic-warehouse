@@ -2,9 +2,17 @@ from __future__ import annotations
 
 import copy
 import random
+from logging import getLogger
 
 from src.material import Material
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration
+from src.warehouse_configuration_singleton import (
+    WarehouseConfigurationSingleton,
+    WarehouseConfiguration,
+    TrayConfiguration
+)
+
+
+logger = getLogger(__name__)
 
 
 class Tray:
@@ -12,44 +20,71 @@ class Tray:
     Representation of the tray (or tray) inside the warehouse.
     It contains all the information about the tray and the methods for add/remove a material, and so on.
     """
-    def __init__(self, items: list[Material] = None):
+    def __init__(self, info: TrayConfiguration = None, items: list[Material] = None):
+        """
+        Representation of the tray (or tray) inside the warehouse.
+
+        :type info: TrayConfiguration
+        :type items: list[Material]
+        :param info: configure the tray, leave None if you want to set the default (config) value.
+        :param items: list of items to be added to the tray.
+        """
         # items inside the tray
         config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
-        # TODO: create a custom data structure to store the items (such as a set)
-        self.items = copy.deepcopy(items if items is not None else [])
-        self.def_space = config.default_height_space
-        self.__calculate_max_height()
-
+        self.def_space: int = config.default_height_space
         self.first_trayEntry = None
-        self.best_offset_x = None
-        self.best_y = None
+        self.best_offset_x: None | int = None
+        self.best_y: None | int = None
+        if info is not None:
+            self.length: int = info.length
+            self.width: int = info.width
+            self.height_limit: int = info.maximum_height
+        else:
+            self.length: int = config.tray.length
+            self.width: int = config.tray.width
+            self.height_limit: int = config.tray.maximum_height
+        # TODO: create a custom data structure to store the items (such as a set)
+        self.items: list[Material] = []
+        self.height: None | int = None
+        self.add_materials(copy.deepcopy(items if items is not None else []))
 
     def __eq__(self, other):
         return (
-                isinstance(other, Tray) and
-                self.items == other.items and
-                self.max_height == other.max_height and
-                self.num_space == other.num_space and
-                self.first_trayEntry == other.first_trayEntry
+            isinstance(other, Tray) and
+            self.items == other.items and
+            self.height == other.height and
+            self.num_space == other.num_space and
+            self.first_trayEntry == other.first_trayEntry and
+            self.length == other.length and
+            self.width == other.width and
+            self.height_limit == other.height_limit
         )
 
     def __hash__(self):
         return (
-                12637 ^
-                hash(tuple(self.items)) ^
-                hash(self.max_height) ^
-                hash(self.num_space)
+            12637 ^
+            hash(tuple(self.items)) ^
+            hash(self.height) ^
+            hash(self.num_space) ^
+            hash(self.length) ^
+            hash(self.width) ^
+            hash(self.height_limit)
         )
 
     def __deepcopy__(self, memo):
-        copy_obj = Tray(self.items)
-        # copy_obj.items = copy.deepcopy(self.get_items(), memo)
+        copy_obj = Tray(TrayConfiguration(
+            length=self.length,
+            width=self.width,
+            maximum_height=self.height_limit
+        ), self.items)
         copy_obj.def_space = self.def_space
-        copy_obj.max_height = self.max_height
+        copy_obj.height = self.height
         copy_obj.num_space = self.num_space
         copy_obj.best_offset_x = self.best_offset_x
         copy_obj.best_y = self.best_y
+        copy_obj.length = self.length
+        copy_obj.width = self.width
         return copy_obj
 
     def get_items(self) -> list[Material]:
@@ -68,7 +103,7 @@ class Tray:
         :rtype: int
         :return: maximum height of a material inside tray
         """
-        return self.max_height
+        return self.height
 
     def get_num_space_occupied(self) -> int:
         """
@@ -106,6 +141,33 @@ class Tray:
         """
         return self.best_y
 
+    def get_length(self) -> int:
+        """
+        Get the length of the tray.
+
+        :rtype: int
+        :return: the length of the tray.
+        """
+        return self.length
+
+    def get_width(self) -> int:
+        """
+        Get the width of the tray.
+
+        :rtype: int
+        :return: the width of the tray.
+        """
+        return self.width
+
+    def get_height_limit(self) -> int:
+        """
+        Get the height limit of the tray.
+
+        :rtype: int
+        :return: the height limit of the tray.
+        """
+        return self.height_limit
+
     def get_num_materials(self) -> int:
         """
         Get the number of materials.
@@ -118,13 +180,45 @@ class Tray:
     def add_material(self, material: Material):
         """
         Add a material to the tray.
+        Note: The material to be added should respect the following rules:
+        1. width smaller than the width of the tray;
+        2. height less than the maximum height of the tray (maximum_height field in the configuration);
+        3. length less than the length of the tray.
 
         :type material: Material
         :param material: material to be added to the tray.
+        :raises ValueError: if the material it is too large.
         """
+        if not (material.width < self.width and material.height < self.height_limit and material.length < self.length):
+            logger.error("The material cannot be added to the tray because it is too large.")
+            raise ValueError
         # insert in tail
         self.items.append(material)
         self.__calculate_max_height()
+
+    def add_materials(self, materials: list[Material]):
+        """
+        Add materials to the tray.
+        Note: Each material to be added should respect the following rules:
+        1. width smaller than the width of the tray;
+        2. height less than the maximum height of the tray (maximum_height field in the configuration);
+        3. length less than the length of the tray.
+
+        :type materials: list[Material]
+        :param materials: materials to be added to the tray.
+        :raises ValueError: if the materials are too large.
+        """
+        for material in materials:
+            if not (
+                material.width < self.width and
+                material.height < self.height_limit and
+                material.length < self.length
+            ):
+                logger.error("The material cannot be added to the tray because it is too large.")
+                raise ValueError
+            self.items.append(material)
+        self.__calculate_max_height()
+
 
     def remove_material(self, material: Material):
         """
@@ -133,8 +227,18 @@ class Tray:
         :type material: Material
         :param material: material to be removed from the tray.
         """
-        # remove
         self.items.remove(material)
+        self.__calculate_max_height()
+
+    def remove_materials(self, materials: list[Material]):
+        """
+        Remove materials from the tray.
+
+        :type materials: list[Material]
+        :param materials: materials to be removed from the tray.
+        """
+        for material in materials:
+            self.items.remove(material)
         self.__calculate_max_height()
 
     def set_first_tray_entry(self, tray_entry):
@@ -173,22 +277,23 @@ class Tray:
 
         # if there are no materials, use the default space
         # otherwise, calculate the maximum height and how many entries are occupied
-        self.max_height = max([material.get_height() for material in materials], default=def_space)
-        self.num_space = self.max_height // def_space
-        if (self.max_height % def_space) != 0:
-            # odd, approx the next
-            self.num_space += 1
+        self.height = max([material.get_height() for material in materials], default=def_space)
+        self.num_space = self.height // def_space
+        # odd, approx the next
+        if (self.height % def_space) != 0: self.num_space += 1
 
 
 
-def gen_rand_trays(how_many: int, materials_to_insert: list[Material]) -> list[Tray]:
+def gen_rand_trays(how_many: int, materials_to_insert: list[Material], info: TrayConfiguration = None) -> list[Tray]:
     """
     Static method to generate random trays.
 
     :type how_many: int
+    :type info: TrayConfiguration
     :type materials_to_insert: list[Material]
     :rtype: list[Tray]
     :param how_many: how many trays to generate.
+    :param info: information about the tray.
     :param materials_to_insert: a list of materials to insert.
     :return: the generated trays list.
     """
@@ -199,7 +304,7 @@ def gen_rand_trays(how_many: int, materials_to_insert: list[Material]) -> list[T
         # select a random material if there are materials, otherwise None
         random_material: Material | None = random.choice(materials_to_insert) if len(materials_to_insert) > 0 else None
         # create a random tray with a random material
-        trays.append(gen_rand_tray(random_material))
+        trays.append(gen_rand_tray(info, random_material))
         # remove the material just added
         try:
             materials_to_insert.remove(random_material)
@@ -218,13 +323,15 @@ def gen_rand_trays(how_many: int, materials_to_insert: list[Material]) -> list[T
         materials_to_insert.remove(random_material)
     return trays
 
-def gen_rand_tray(material_to_insert: Material = None) -> Tray:
+def gen_rand_tray(info: TrayConfiguration = None, material_to_insert: Material = None) -> Tray:
     """
     Static method to generate a random tray.
 
+    :type info: TrayConfiguration
     :type material_to_insert: Material
     :rtype: Tray
+    :param info: the tray configuration.
     :param material_to_insert: a material to insert.
     :return: the generated tray.
     """
-    return Tray([material_to_insert] if material_to_insert is not None else material_to_insert)
+    return Tray(info, [material_to_insert] if material_to_insert is not None else material_to_insert)

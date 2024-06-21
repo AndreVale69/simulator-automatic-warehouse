@@ -10,18 +10,18 @@ from src.warehouse_configuration_singleton import WarehouseConfigurationSingleto
 class TestTray(TestCase):
     def setUp(self):
         self.config = WarehouseConfigurationSingleton.get_instance()
-        self.tray = Tray(gen_rand_materials(2))
+        self.tray = Tray(items=gen_rand_materials(2))
 
     def test_add_material(self):
         # arrange
         config = self.config.get_configuration()
-        height_material = 150
+        height_material = config.tray.maximum_height-1
         material_to_add = Material(
             barcode=uuid.uuid4().hex,
             name='NameMaterial',
             height=height_material,
-            length=150,
-            width=150
+            length=config.tray.length-10,
+            width=config.tray.width-10
         )
         tray = Tray()
         self.assertEqual(tray.get_max_height(), config.default_height_space)
@@ -36,15 +36,15 @@ class TestTray(TestCase):
     def test_remove_material(self):
         # arrange
         config = self.config.get_configuration()
-        height_material = 150
+        height_material = config.tray.maximum_height-1
         material_to_remove = Material(
             barcode=uuid.uuid4().hex,
             name='NameMaterial',
             height=height_material,
-            length=150,
-            width=150
+            length=config.tray.length-10,
+            width=config.tray.width-10
         )
-        tray = Tray([material_to_remove])
+        tray = Tray(items=[material_to_remove])
         self.assertEqual(tray.get_max_height(), height_material)
         self.assertIn(material_to_remove, tray.get_items())
 
@@ -98,25 +98,26 @@ class TestTray(TestCase):
 
     def test_calculate_max_height(self):
         # arrange
+        config = self.config.get_configuration()
         height_material = 50
-        max_height_material = 140
+        max_height_material = config.tray.maximum_height-1
         material = Material(
             barcode=uuid.uuid4().hex,
             name='NameMaterial',
             height=height_material,
-            length=150,
-            width=150
+            length=config.tray.length-10,
+            width=config.tray.width-10
         )
         max_material = Material(
             barcode=uuid.uuid4().hex,
             name='NameMaterial',
             height=max_height_material,
-            length=150,
-            width=150
+            length=config.tray.length-10,
+            width=config.tray.width-10
         )
 
         # act
-        tray = Tray([material, max_material])
+        tray = Tray(items=[material, max_material])
 
         # assert
         self.assertIn(material, tray.get_items())

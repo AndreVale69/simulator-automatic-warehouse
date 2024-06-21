@@ -11,6 +11,13 @@ from src.configuration import WAREHOUSE_CONFIGURATION
 
 
 @dataclass
+class TrayConfiguration:
+    length: int
+    width: int
+    maximum_height: int
+
+
+@dataclass
 class ColumnConfiguration:
     length: int
     height: int
@@ -61,6 +68,7 @@ class WarehouseConfiguration:
     height_warehouse: int
     default_height_space: int
     speed_per_sec: int | float
+    tray: TrayConfiguration
     columns: list[ColumnConfiguration]
     carousel: CarouselConfiguration
     simulation: SimulationConfiguration
@@ -99,6 +107,11 @@ class WarehouseConfigurationSingleton:
             height_warehouse=raw_config['height_warehouse'],
             default_height_space=raw_config['default_height_space'],
             speed_per_sec=raw_config['speed_per_sec'],
+            tray=TrayConfiguration(
+                length=raw_config['tray']['length'],
+                width=raw_config['tray']['width'],
+                maximum_height=raw_config['tray']['maximum_height']
+            ),
             columns=[
                 ColumnConfiguration(
                     description=col.get('description'),

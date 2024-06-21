@@ -18,8 +18,10 @@
 - [ ] The number of trays to be generated cannot be greater than the sum of the heights of the columns 
    (not including the carousel).
 - [ ] hole carousel > maximum_height of the tray
-- [ ] length of the tray <= of each length of the cols/carousel
-- [ ] width of the tray <= of each length of the cols/carousel
+- [x] length of the tray < of each length of the cols/carousel
+- [x] width of the tray < of each width of the cols/carousel
+- [x] height of the tray < maximum height limit
+- [ ] maximum height limit < of each height of the cols/carousel
 
 ------------------------------------------------------------------------------------------------------------------------
 

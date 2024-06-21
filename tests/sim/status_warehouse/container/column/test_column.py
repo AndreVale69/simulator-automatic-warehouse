@@ -13,7 +13,7 @@ class TestColumn(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.column_config = ColumnConfiguration(
-            length=200,
+            length=450,
             height = 325,
             x_offset = 125,
             width = 250,

@@ -11,6 +11,15 @@ default_height_space: 25
 # It's used by the simulator to calculate the time it takes to move between columns and up and down.
 speed_per_sec: 1
 
+# The trays.
+# It's a general definition of a tray used in the warehouse to store materials.
+# The definition contains the minimum information.
+tray:
+  length: 390
+  width: 180
+  # The maximum height of a tray is a limit to avoid placing a material too high.
+  maximum_height: 150
+
 
 # The columns of the warehouse.
 # It is a list of columns that can be found in the automatic warehouse.

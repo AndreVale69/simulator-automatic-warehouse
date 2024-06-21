@@ -1,5 +1,6 @@
-import copy
-import random
+from copy import deepcopy
+from random import randint
+from logging import getLogger
 from typing import NamedTuple
 
 from src.material import gen_rand_materials
@@ -7,7 +8,10 @@ from src.status_warehouse.container.tray_container import TrayContainer
 from src.status_warehouse.entry.empty_entry import EmptyEntry
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.tray import Tray
-from src.warehouse_configuration_singleton import ColumnConfiguration
+from src.warehouse_configuration_singleton import ColumnConfiguration, WarehouseConfigurationSingleton
+
+
+logger = getLogger(__name__)
 
 
 class GenMaterialsAndTraysReturns(NamedTuple):
@@ -45,7 +49,7 @@ class Column(TrayContainer):
             height_last_position = self.height_last_position * self.def_space
         )
         copy_obj = Column(info, self.warehouse)
-        copy_obj.container = copy.deepcopy(self.container, memo)
+        copy_obj.container = deepcopy(self.container, memo)
         return copy_obj
 
     def __eq__(self, other):
@@ -73,8 +77,7 @@ class Column(TrayContainer):
 
     def get_num_entries_free(self) -> int:
         count = entries_to_remove = 0
-        container = self.container
-        height_last_position = self.height_last_position
+        container, height_last_position = self.container, self.height_last_position
 
         # count the number of empty entries
         for entry in container:
@@ -113,8 +116,13 @@ class Column(TrayContainer):
         :type tray: Tray
         :type index: int
         :param tray: tray to be added.
-        :param index: index of the column where to add the tray.
+        :param index: index of the entry inside the column where to add the tray.
+        :raises ValueError: if the tray is longer or wider that the carousel.
         """
+        if not (tray.length < self.length and tray.width < self.width):
+            logger.error("A tray cannot be longer or wider than the carousel")
+            raise ValueError
+
         how_many = tray.get_num_space_occupied() + index - 1
 
         # Set as first trayEntry the lower limit.
@@ -146,7 +154,6 @@ class Column(TrayContainer):
         # return the tray entry just added
         return tray_entry
 
-    # override
     def remove_tray(self, tray: Tray) -> bool:
         """
         Remove a tray from the column.
@@ -182,19 +189,17 @@ class Column(TrayContainer):
         from src.utils.decide_position_algorithm.algorithm import decide_position
         from src.utils.decide_position_algorithm.enum_algorithm import Algorithm
 
-        trays_inserted = 0
-        materials_inserted = 0
+        materials_inserted = trays_inserted = 0
         # generate (num_trays) trays
         for _ in range(num_trays):
             # check if there is space in the column
-            if self.is_full():
-                break
+            if self.is_full(): break
 
             # check if there are materials to generate
-            num_materials_to_put = random.randint(1, num_materials) if num_materials > 0 else 0
+            num_materials_to_put = randint(1, num_materials) if num_materials > 0 else 0
 
             # create a tray
-            tray_to_insert = Tray(gen_rand_materials(num_materials_to_put))
+            tray_to_insert = Tray(items=gen_rand_materials(num_materials_to_put))
             # looking for the index where put the tray
             try:
                 decide_position_res = decide_position(

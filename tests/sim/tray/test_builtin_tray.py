@@ -25,9 +25,9 @@ class TestBuiltinTray(TestCase):
                          height=50,
                          length=50,
                          width=50)
-        tray_1 = Tray([mat_1, mat_2])
-        tray_2 = Tray([mat_1, mat_2])
-        tray_3 = Tray([mat_1, mat_2, mat_3])
+        tray_1 = Tray(items=[mat_1, mat_2])
+        tray_2 = Tray(items=[mat_1, mat_2])
+        tray_3 = Tray(items=[mat_1, mat_2, mat_3])
 
         # act
 
@@ -54,9 +54,9 @@ class TestBuiltinTray(TestCase):
                          height=50,
                          length=50,
                          width=50)
-        tray_1 = Tray([mat_1, mat_2])
-        tray_2 = Tray([mat_1, mat_2])
-        tray_3 = Tray([mat_1, mat_2, mat_3])
+        tray_1 = Tray(items=[mat_1, mat_2])
+        tray_2 = Tray(items=[mat_1, mat_2])
+        tray_3 = Tray(items=[mat_1, mat_2, mat_3])
 
         # act
 

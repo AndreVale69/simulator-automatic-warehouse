@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from logging import getLogger
 from copy import deepcopy
 
 from src.status_warehouse.container.tray_container import TrayContainer
@@ -7,6 +8,9 @@ from src.status_warehouse.entry.empty_entry import EmptyEntry
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.tray import Tray
 from src.warehouse_configuration_singleton import CarouselConfiguration
+
+
+logger = getLogger(__name__)
 
 
 class Carousel(TrayContainer):
@@ -186,7 +190,12 @@ class Carousel(TrayContainer):
         :type tray: Tray
         :param tray: to show or to save.
         :raises RuntimeError: if the tray already exists.
+        :raises ValueError: if the tray is longer or wider that the carousel.
         """
+        if not (tray.length < self.length and tray.width < self.width):
+            logger.error("A tray cannot be longer or wider than the carousel")
+            raise ValueError
+
         first_y = self.num_entries + self.hole + self.bay
         is_bay_full = self.is_bay_full()
 

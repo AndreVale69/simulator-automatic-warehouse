@@ -100,6 +100,15 @@
     "speed_per_sec": {
       "type": "number"
     },
+    "tray": {
+      "type": "object",
+      "properties": {
+        "maximum_height": {"type": "number", "minimum": 1},
+        "length": {"type": "number", "minimum": 1},
+        "width": {"type": "number", "minimum": 1}
+      },
+      "required": ["maximum_height", "length", "width"]
+    },
     "simulation": {
       "type": "object",
       "properties": {
@@ -136,6 +145,7 @@
     }
   },
   "required": [
+    "tray",
     "columns",
     "carousel",
     "height_warehouse",

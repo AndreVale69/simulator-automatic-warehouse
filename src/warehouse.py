@@ -315,10 +315,10 @@ class Warehouse:
         # generate a tray in the bay and/or buffer
         if gen_bay:
             # create a new one
-            self.carousel.add_tray(tray=Tray([gen_rand_material()]))
+            self.carousel.add_tray(tray=Tray(items=[gen_rand_material()]))
         if gen_buffer:
             # create a new one
-            self.carousel.add_tray(tray=Tray([gen_rand_material()]))
+            self.carousel.add_tray(tray=Tray(items=[gen_rand_material()]))
 
         # populate the columns
         columns = self.columns_container

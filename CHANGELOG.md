@@ -36,11 +36,15 @@
 - Added `cleanup_columns` and `cleanup_carousel` methods to the `Warehouse` class.
 - Added `update_config_from_file` and `update_config` methods to the `WarehouseConfigurationSingleton` class 
   to allow loading a new configuration from the file o from an hardcoded object.
+- Added `add_materials` and `remove_materials` methods to the `Tray` class.
 - Added a new exception in `horiz_move` if the offset is not found.
 - Added a new exception in `load` if the offset is not found.
+- Added a new exception when a tray is too large to be inserted into a container. 
+- Added a new exception when a material is too large to be inserted into a tray.
 - Added default config path if none is specified (`configuration/sample_config.yaml`).
 - Added total simulation time.
 - Added `length` field in the configuration.
+- Added `tray` field in the configuration (`length`, `width`, `maximum height`).
 - Changed the first trayEntry reference. Now the first trayEntry will be the lower limit.
   For example, a tray with three entries; in the container the first trayEntry will be position 2, 
   and entries 0 and 1 are simple trayEntries.
@@ -49,6 +53,9 @@
   This was done for clarity.
 - Changed `Column` class signature.
   It doesn't accept a dictionary anymore as parameter, but it wants a `ColumnConfiguration` class instantiation.
+  This was done for clarity.
+- Changed `Tray` class signature.
+  It wants a `TrayConfiguration` class instantiation and the list of materials.
   This was done for clarity.
 - Changed `get_height_container` method to `get_num_entries`. 
   The first returns the height of the container (config value) 

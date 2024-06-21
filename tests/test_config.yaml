@@ -2,6 +2,11 @@ height_warehouse: 1000
 default_height_space: 25
 speed_per_sec: 1
 
+tray:
+  length: 390
+  width: 190
+  maximum_height: 140
+
 columns:
   - description: "right_column"
     length: 400

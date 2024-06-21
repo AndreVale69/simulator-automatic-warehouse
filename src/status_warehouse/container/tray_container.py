@@ -37,38 +37,38 @@ class TrayContainer:
 
     def __eq__(self, other):
         return (
-                isinstance(other, TrayContainer) and
-                self.height_warehouse == other.height_warehouse and
-                self.def_space == other.def_space and
-                self.container == other.container and
-                self.offset_x == other.offset_x and
-                self.num_entries == other.num_entries and
-                self.width == other.width and
-                self.length == other.length and
-                self.get_num_trays() == other.get_num_trays() and
-                self.get_num_entries_occupied() == other.get_num_entries_occupied() and
-                self.get_num_entries_free() == other.get_num_entries_free() and
-                self.get_trays() == other.get_trays() and
-                self.get_entries_occupied() == other.get_entries_occupied() and
-                self.get_num_materials() == other.get_num_materials()
+            isinstance(other, TrayContainer) and
+            self.height_warehouse == other.height_warehouse and
+            self.def_space == other.def_space and
+            self.container == other.container and
+            self.offset_x == other.offset_x and
+            self.num_entries == other.num_entries and
+            self.width == other.width and
+            self.length == other.length and
+            self.get_num_trays() == other.get_num_trays() and
+            self.get_num_entries_occupied() == other.get_num_entries_occupied() and
+            self.get_num_entries_free() == other.get_num_entries_free() and
+            self.get_trays() == other.get_trays() and
+            self.get_entries_occupied() == other.get_entries_occupied() and
+            self.get_num_materials() == other.get_num_materials()
         )
 
     def __hash__(self):
         return (
-                16963 ^
-                hash(self.height_warehouse) ^
-                hash(self.def_space) ^
-                hash(tuple(self.container)) ^
-                hash(self.offset_x) ^
-                hash(self.num_entries) ^
-                hash(self.width) ^
-                hash(self.length) ^
-                hash(self.get_num_trays()) ^
-                hash(self.get_num_entries_occupied()) ^
-                hash(self.get_num_entries_free()) ^
-                hash(tuple(self.get_trays())) ^
-                hash(tuple(self.get_entries_occupied())) ^
-                hash(self.get_num_materials())
+            16963 ^
+            hash(self.height_warehouse) ^
+            hash(self.def_space) ^
+            hash(tuple(self.container)) ^
+            hash(self.offset_x) ^
+            hash(self.num_entries) ^
+            hash(self.width) ^
+            hash(self.length) ^
+            hash(self.get_num_trays()) ^
+            hash(self.get_num_entries_occupied()) ^
+            hash(self.get_num_entries_free()) ^
+            hash(tuple(self.get_trays())) ^
+            hash(tuple(self.get_entries_occupied())) ^
+            hash(self.get_num_materials())
         )
 
     @abstractmethod
@@ -190,12 +190,10 @@ class TrayContainer:
         :return: how many trays there are in the container.
         """
         count = index = 0
-        col: list[TrayEntry | EmptyEntry] = self.container
-        len_col = len(col)
+        len_col = len(col := self.container)
         while index < len_col:
-            entry = col[index]
-            if isinstance(entry, TrayEntry):
-                # how many entries occupies the tray
+            if isinstance((entry := col[index]), TrayEntry):
+                # how many entries occupy the tray
                 index += entry.get_tray().get_num_space_occupied()
                 count += 1
             else:

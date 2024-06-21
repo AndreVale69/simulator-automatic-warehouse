@@ -31,12 +31,12 @@ class TestHighPositionAlgorithm(BaseDecidePositionAlgorithm):
         def_space_warehouse = self.warehouse.get_def_space()
 
         # act
-        tray = Tray([Material(
+        tray = Tray(items=[Material(
             barcode=uuid.uuid4().hex, name='MaterialName',
             height=(last_pos_height + 1) * def_space_warehouse,
             length=100, width=100
         )])
-        tray_last_position = Tray([Material(
+        tray_last_position = Tray(items=[Material(
             barcode=uuid.uuid4().hex, name='MaterialName',
             height=1 * def_space_warehouse,
             length=100, width=100
@@ -63,12 +63,12 @@ class TestHighPositionAlgorithm(BaseDecidePositionAlgorithm):
             full_column_container[i] = TrayEntry(entry.get_offset_x(), entry.get_pos_y())
 
         # act
-        tray = Tray([Material(
+        tray = Tray(items=[Material(
             barcode=uuid.uuid4().hex, name='MaterialName',
             height=(last_pos_height + 1) * def_space_warehouse,
             length=100, width=100
         )])
-        tray_last_position = Tray([Material(
+        tray_last_position = Tray(items=[Material(
             barcode=uuid.uuid4().hex, name='MaterialName',
             height=1 * def_space_warehouse,
             length=100, width=100
@@ -94,7 +94,7 @@ class TestHighPositionAlgorithm(BaseDecidePositionAlgorithm):
             column_container[i] = TrayEntry(entry.get_offset_x(), entry.get_pos_y())
 
         # act
-        tray = Tray([Material(
+        tray = Tray(items=[Material(
             barcode=uuid.uuid4().hex, name='MaterialName',
             height=1 * def_space_warehouse,
             length=100, width=100

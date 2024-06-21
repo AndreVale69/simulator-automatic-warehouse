@@ -11,7 +11,7 @@ class TestGetMethodsCarousel(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.carousel_config = CarouselConfiguration(
-            length=200,
+            length=450,
             bay_height = 150,
             buffer_height = 150,
             x_offset = 125,

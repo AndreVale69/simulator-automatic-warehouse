@@ -6,7 +6,7 @@ from src.tray import Tray
 
 class TestGetMethodsTray(TestCase):
     def setUp(self):
-        self.tray = Tray(gen_rand_materials(2))
+        self.tray = Tray(items=gen_rand_materials(2))
 
     def test_get_items(self):
         # arrange
@@ -25,7 +25,7 @@ class TestGetMethodsTray(TestCase):
 
         # act
         max_height_get = tray.get_max_height()
-        max_height_expected = tray.max_height
+        max_height_expected = tray.height
 
         # assert
         self.assertEqual(max_height_get, max_height_expected)
