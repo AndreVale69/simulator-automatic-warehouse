@@ -45,6 +45,8 @@
 - Added total simulation time.
 - Added `length` field in the configuration.
 - Added `tray` field in the configuration (`length`, `width`, `maximum height`).
+- Added a configuration validator to check that some properties are respected
+  (e.g. "_the height property of each column can't be greater than the height of the warehouse (height_warehouse)._").
 - Changed the first trayEntry reference. Now the first trayEntry will be the lower limit.
   For example, a tray with three entries; in the container the first trayEntry will be position 2, 
   and entries 0 and 1 are simple trayEntries.

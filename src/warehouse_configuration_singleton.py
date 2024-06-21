@@ -142,6 +142,8 @@ class WarehouseConfigurationSingleton:
                 gen_buffer=raw_config['simulation']['gen_buffer']
             )
         )
+        from src.configuration_validator import ConfigurationValidator
+        ConfigurationValidator(self.configuration).validate()
 
     def _json_schema_validator_from_file(self, file_path: str):
         """

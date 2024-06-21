@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from src.configuration_validator import ConfigValidatorError
 from src.warehouse_configuration_singleton import (
     WarehouseConfigurationSingleton,
     WarehouseConfiguration,
@@ -28,11 +29,12 @@ class TestWarehouseConfigurationSingleton(TestCase):
         old_config = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
         # act
-        new_instance = WarehouseConfigurationSingleton.get_instance().update_config_from_file('tests/test_config_2.yaml')
+        new_instance = WarehouseConfigurationSingleton.get_instance().update_config_from_file('tests/test_config.yaml')
         new_config = new_instance.get_configuration()
 
         # assert
-        self.assertNotEqual(old_config, new_config)
+        self.assertEqual(old_config, new_config)
+        self.assertRaises(ConfigValidatorError, WarehouseConfigurationSingleton.get_instance().update_config_from_file, 'tests/test_config_2.yaml')
 
     def test_update_config(self):
         # arrange
