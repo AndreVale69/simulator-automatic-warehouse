@@ -11,7 +11,6 @@ from src.warehouse_configuration_singleton import (
     TrayConfiguration
 )
 
-
 logger = getLogger(__name__)
 
 

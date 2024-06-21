@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from logging import getLogger
 from copy import deepcopy
+from logging import getLogger
 
 from src.status_warehouse.container.tray_container import TrayContainer
 from src.status_warehouse.entry.empty_entry import EmptyEntry
 from src.status_warehouse.entry.tray_entry import TrayEntry
 from src.tray import Tray
 from src.warehouse_configuration_singleton import CarouselConfiguration
-
 
 logger = getLogger(__name__)
 

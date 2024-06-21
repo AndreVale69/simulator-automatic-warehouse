@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from logging import getLogger
 
 from src.warehouse_configuration_singleton import WarehouseConfiguration, ColumnConfiguration, CarouselConfiguration
