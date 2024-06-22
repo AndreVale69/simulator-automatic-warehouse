@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "simulator-automatic-warehouse"
 dynamic = ["version"]
-description = 'Simulator of an automatic warehouse. The inspiration came from the Vertimag of Ferretto Group, an Italian company based in Vicenza. So the logic of the warehouse digitalized is the same of the real Vertimag.'
+description = 'Simulator (and not only) of an Automatic Warehouse.'
 readme = "README.md"
 requires-python = ">= 3.9"
 license = "MIT"
@@ -33,39 +33,13 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AndreVale69/simulator-automatic-warehouse"
+PyPi = "https://pypi.org/project/simulator-automatic-warehouse"
+GitHub = "https://github.com/AndreVale69/simulator-automatic-warehouse"
 Documentation = "https://github.com/AndreVale69/simulator-automatic-warehouse/#readme"
 Issues = "https://github.com/AndreVale69/simulator-automatic-warehouse/issues"
 
 [tool.hatch.version]
 path = "automatic_warehouse/__about__.py"
-
-[tool.hatch.envs.types]
-extra-dependencies = [
-  "mypy>=1.0.0",
-]
-[tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/simulator_automatic_warehouse tests}"
-
-# Coverage should be fixed in the future, but for now we use GitHub actions, so...
-[tool.coverage.run]
-source_pkgs = ["simulator_automatic_warehouse", "tests"]
-branch = true
-parallel = true
-omit = [
-  "src/simulator_automatic_warehouse/__about__.py",
-]
-
-[tool.coverage.paths]
-simulator_automatic_warehouse = ["src/simulator_automatic_warehouse", "*/simulator-automatic-warehouse/src/simulator_automatic_warehouse"]
-tests = ["tests", "*/simulator-automatic-warehouse/tests"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
 
 [tool.hatch.envs.test]
 dependencies = [
@@ -75,11 +49,11 @@ dependencies = [
   "pytest-env"
 ]
 
-[template.plugins.default]
-src-layout = true
-
 [[tool.hatch.envs.test.matrix]]
 python = ["3.9", "3.10", "3.11", "3.12"]
+
+[template.plugins.default]
+src-layout = true
 
 [tool.hatch.build.targets.sdist]
 exclude = [
