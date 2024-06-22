@@ -1,0 +1,97 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "simulator-automatic-warehouse"
+dynamic = ["version"]
+description = 'Simulator of an automatic warehouse. The inspiration came from the Vertimag of Ferretto Group, an Italian company based in Vicenza. So the logic of the warehouse digitalized is the same of the real Vertimag.'
+readme = "README.md"
+requires-python = ">= 3.9"
+license = "MIT"
+keywords = ["warehouse", "automatic warehouse", "simulator automatic warehouse", "simulator", "univr", "ferretto", "vertimag"]
+authors = [
+  { name = "Andrea Valentini", email = "no-provided@mail.com" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft",
+  "Operating System :: Unix"
+]
+dependencies = [
+  "pandas==2.2.2",
+  "simpy==4.1.1",
+  "numpy==1.26.4",
+  "PyYAML==6.0.1",
+  "jsonschema==4.22.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/AndreVale69/simulator-automatic-warehouse"
+Documentation = "https://github.com/AndreVale69/simulator-automatic-warehouse/#readme"
+Issues = "https://github.com/AndreVale69/simulator-automatic-warehouse/issues"
+
+[tool.hatch.version]
+path = "automatic_warehouse/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/simulator_automatic_warehouse tests}"
+
+# Coverage should be fixed in the future, but for now we use GitHub actions, so...
+[tool.coverage.run]
+source_pkgs = ["simulator_automatic_warehouse", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/simulator_automatic_warehouse/__about__.py",
+]
+
+[tool.coverage.paths]
+simulator_automatic_warehouse = ["src/simulator_automatic_warehouse", "*/simulator-automatic-warehouse/src/simulator_automatic_warehouse"]
+tests = ["tests", "*/simulator-automatic-warehouse/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.hatch.envs.test]
+dependencies = [
+  "pytest",
+  "pytest-xdist",
+  "pytest-cov",
+  "pytest-env"
+]
+
+[template.plugins.default]
+src-layout = true
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.9", "3.10", "3.11", "3.12"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/configuration/univr",
+  "/docker",
+  "/docs",
+  "/tests",
+  ".gitignore",
+  "CHANGELOG.md",
+  "run_simulator.py"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["automatic_warehouse", "automatic_warehouse-config", "automatic_warehouse-res"]

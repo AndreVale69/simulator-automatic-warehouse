@@ -19,6 +19,11 @@ class ConfigurationValidator:
         self._schema = schema
 
     def validate(self):
+        """
+        Validates the configuration against the schema.
+
+        :raises ConfigValidatorError: if validation fails.
+        """
         schema = self._schema
         height_warehouse = schema.height_warehouse
         default_height_space = schema.default_height_space

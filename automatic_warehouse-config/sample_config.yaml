@@ -18,7 +18,7 @@ tray:
   length: 390
   width: 180
   # The maximum height of a tray is a limit to avoid placing a material too high.
-  maximum_height: 150
+  maximum_height: 140
 
 
 # The columns of the warehouse.

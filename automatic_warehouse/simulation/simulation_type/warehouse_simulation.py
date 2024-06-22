@@ -33,6 +33,7 @@ class WarehouseSimulation(Simulation):
         """
         super().__init__()
         # start the move process everytime an instance is created
+        logger.info("Create a copy of the Warehouse")
         self.warehouse = deepcopy(warehouse)
 
         # allocation of carousel resources

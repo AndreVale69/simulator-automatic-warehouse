@@ -1,4 +1,6 @@
 from os import environ
+from platform import system
+from pathlib import Path
 
 DOCUMENTATION = """
 The configuration file contains all the variables required to run the simulation.
@@ -10,12 +12,12 @@ The following variables are required:
     * FILENAME_DEBUG_LOG: if set, save the debug log to file (e.g. log).
 """
 
-WAREHOUSE_CONFIGURATION = environ.get('WAREHOUSE_CONFIGURATION_FILE_PATH')
-if WAREHOUSE_CONFIGURATION is None:
-    from pathlib import Path
-    WAREHOUSE_CONFIGURATION = f'{Path(__file__).parent.parent}/configuration/sample_config.yaml'
-
-
+config_file_path = Path(__file__).parent.parent
+WAREHOUSE_CONFIGURATION = environ.get(
+    'WAREHOUSE_CONFIGURATION_FILE_PATH',
+    f'{config_file_path}\\automatic_warehouse-config\\sample_config.yaml' if system() == 'Windows'
+    else f'{config_file_path}/automatic_warehouse-config/sample_config.yaml'
+)
 NO_CONSOLE_LOG = environ.get('NO_CONSOLE_LOG', None)
 DEBUG_LOG = environ.get('DEBUG_LOG', None)
 FILENAME_DEBUG_LOG = environ.get('FILENAME_DEBUG_LOG', None)

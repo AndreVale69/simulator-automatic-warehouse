@@ -101,7 +101,11 @@ class WarehouseConfigurationSingleton:
         # get project directory
         # https://docs.python.org/3.12/library/platform.html#platform.system
         path = Path(__file__).parent.parent
-        self._json_schema_path = f"{path}\\resources\\configuration\\json_schema.json" if system() == 'Windows' else f"{path}/resources/configuration/json_schema.json"
+        self._json_schema_path = (
+            f"{path}\\automatic_warehouse-res\\configuration\\json_schema.json"
+            if system() == 'Windows' else
+            f"{path}/automatic_warehouse-res/configuration/json_schema.json"
+        )
         raw_config: dict = self._json_schema_validator_from_file(file_path)
         self.configuration = WarehouseConfiguration(
             height_warehouse=raw_config['height_warehouse'],
@@ -153,6 +157,7 @@ class WarehouseConfigurationSingleton:
         :param file_path: configuration to load.
         :return: the configuration loaded.
         :raises jsonschema.exceptions.ValidationError: if the instance is invalid
+        :raises FileNotFoundError: if the file is not found
         """
         schema = self._get_json_schema()
 
@@ -231,7 +236,10 @@ class WarehouseConfigurationSingleton:
         :param configuration: hardcoded configuration.
         :rtype WarehouseConfigurationSingleton
         :return: the instance of WarehouseConfigurationSingleton (get_instance()).
+        :raises jsonschema.exceptions.ValidationError: if the instance is invalid
         """
         self._json_schema_validator(configuration)
+        from automatic_warehouse.configuration_validator import ConfigurationValidator
+        ConfigurationValidator(self.configuration).validate()
         self.configuration = configuration
         return WarehouseConfigurationSingleton.get_instance()

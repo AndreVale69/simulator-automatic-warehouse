@@ -52,19 +52,19 @@ Each simulation uses a yaml file to set up the automatic warehouse
 [configuration/sample_config.yaml](configuration/sample_config.yaml):
 
 ```bash
-export WAREHOUSE_CONFIGURATION_FILE_PATH=configuration/univr/ICE_lab.yaml
+export WAREHOUSE_CONFIGURATION_FILE_PATH=automatic_warehouse-config/univr/ICE_lab.yaml
 python3.12 run_simulator.py
 ```
 
 Or one line:
 
 ```bash
-WAREHOUSE_CONFIGURATION_FILE_PATH=configuration/univr/ICE_lab.yaml python3.12 run_simulator.py
+WAREHOUSE_CONFIGURATION_FILE_PATH=automatic_warehouse-config/univr/ICE_lab.yaml python3.12 run_simulator.py
 ```
 
 The loaded configuration represents the Vertimag in ICELab. 
 You can create another configuration following the json schema 
-([resources/configuration/json_schema.json](resources/configuration/json_schema.json)).
+([resources/configuration/json_schema.json](automatic_warehouse-res/configuration/json_schema.json)).
 
 Finally, it's possible to manage the console log using the environment variables:
  - `NO_CONSOLE_LOG`: If set, console logs are not displayed.
@@ -85,7 +85,7 @@ you need to specify:
 For example, in localhost:
 
 ```bash
-export WAREHOUSE_CONFIGURATION_FILE_PATH=configuration/univr/ICE_lab.yaml
+export WAREHOUSE_CONFIGURATION_FILE_PATH=automatic_warehouse-config/univr/ICE_lab.yaml
 export HOST=127.0.0.1
 export PORT=8050
 python3.12 run_webpage.py

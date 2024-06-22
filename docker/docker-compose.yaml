@@ -4,10 +4,10 @@ services:
       context: ../.
       dockerfile: docker/Dockerfile-debian
     environment:
-      WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/sample_config.yaml
+      WAREHOUSE_CONFIGURATION_FILE_PATH: automatic_warehouse-config/sample_config.yaml
   alpine-simulator_automatic_warehouse:
     build:
       context: ../.
       dockerfile: docker/Dockerfile-alpine
     environment:
-      WAREHOUSE_CONFIGURATION_FILE_PATH: configuration/sample_config.yaml
+      WAREHOUSE_CONFIGURATION_FILE_PATH: automatic_warehouse-config/sample_config.yaml
