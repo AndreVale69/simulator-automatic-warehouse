@@ -6,9 +6,9 @@ WORKDIR /simulator-automatic-warehouse
 
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip -r requirements.txt
-COPY src/ src
+COPY automatic_warehouse/ automatic_warehouse
 COPY run_simulator.py run_simulator.py
-COPY configuration/ configuration
-COPY resources/configuration/json_schema.json resources/configuration/json_schema.json
+COPY automatic_warehouse-config/ automatic_warehouse-config
+COPY automatic_warehouse-res/configuration/json_schema.json automatic_warehouse-res/configuration/json_schema.json
 
 CMD ["python", "run_simulator.py"]

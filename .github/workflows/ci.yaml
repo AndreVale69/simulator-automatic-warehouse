@@ -38,7 +38,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
           $env:PYTHONPATH=Get-Location
-          pytest --cov ./src --cov-report=xml --config-file='tests/pytest.ini'
+          pytest --cov ./automatic_warehouse --cov-report=xml --config-file='tests/pytest.ini'
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4.4.1
         with:
