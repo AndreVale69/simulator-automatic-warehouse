@@ -2,10 +2,10 @@ from unittest import TestCase
 
 import simpy
 
-from src.simulation.actions.buffer import Buffer
-from src.simulation.actions.move.move import Move
-from src.simulation.simulation import Simulation
-from src.warehouse import Warehouse
+from automatic_warehouse.simulation.actions.buffer import Buffer
+from automatic_warehouse.simulation.actions.move.move import Move
+from automatic_warehouse.simulation.simulation import Simulation
+from automatic_warehouse.warehouse import Warehouse
 
 
 class TestMove(TestCase):

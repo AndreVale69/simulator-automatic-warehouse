@@ -33,7 +33,7 @@ jobs:
           pip install -r tests/test-requirements.txt -r requirements.txt
       - name: Run tests and generate coverage report (ubuntu/macos)
         if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' }}
-        run: PYTHONPATH=. pytest --cov ./src --cov-report=xml --config-file='tests/pytest.ini'
+        run: PYTHONPATH=. pytest --cov ./automatic_warehouse --cov-report=xml --config-file='tests/pytest.ini'
       - name: Run tests and generate coverage report (windows)
         if: ${{ matrix.os == 'windows-latest'}}
         run: |

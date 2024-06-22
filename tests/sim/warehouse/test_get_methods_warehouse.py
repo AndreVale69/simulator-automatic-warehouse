@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from src.status_warehouse.container.column import Column
-from src.warehouse import Warehouse, MinimumOffsetReturns
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, ColumnConfiguration
+from automatic_warehouse.status_warehouse.container.column import Column
+from automatic_warehouse.warehouse import Warehouse, MinimumOffsetReturns
+from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton, ColumnConfiguration
 
 
 class TestGetMethodsWarehouse(TestCase):

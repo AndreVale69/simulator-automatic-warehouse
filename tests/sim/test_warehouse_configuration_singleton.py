@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from src.configuration_validator import ConfigValidatorError
-from src.warehouse_configuration_singleton import (
+from automatic_warehouse.configuration_validator import ConfigValidatorError
+from automatic_warehouse.warehouse_configuration_singleton import (
     WarehouseConfigurationSingleton,
     WarehouseConfiguration,
     ColumnConfiguration,

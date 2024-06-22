@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from src.simulation.actions.action_enum import ActionEnum
-from src.simulation.actions.extract_tray import ExtractTray
-from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
-from src.status_warehouse.enum_warehouse import EnumWarehouse
-from src.tray import Tray
-from src.warehouse import Warehouse
+from automatic_warehouse.simulation.actions.action_enum import ActionEnum
+from automatic_warehouse.simulation.actions.extract_tray import ExtractTray
+from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from automatic_warehouse.status_warehouse.enum_warehouse import EnumWarehouse
+from automatic_warehouse.tray import Tray
+from automatic_warehouse.warehouse import Warehouse
 
 
 class TestExtractTray(TestCase):

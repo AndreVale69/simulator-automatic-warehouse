@@ -1,5 +1,5 @@
-from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
-from src.warehouse import Warehouse
+from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from automatic_warehouse.warehouse import Warehouse
 
 
 def run_simulator():

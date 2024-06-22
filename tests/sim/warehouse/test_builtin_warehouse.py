@@ -1,7 +1,7 @@
 import copy
 from unittest import TestCase
 
-from src.warehouse import Warehouse
+from automatic_warehouse.warehouse import Warehouse
 
 
 class TestBuiltinWarehouse(TestCase):

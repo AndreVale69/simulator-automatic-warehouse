@@ -63,6 +63,7 @@
   The first returns the height of the container (config value) 
   and the second returns the number of entries in the warehouse.
 - Changed the `add_column` method. It raises a `ValueError` if the x-offset of the column is not unique. 
+- Changed `src` folder name in `automatic_warehouse`.
 - `Drawer` name changed to `Tray`.
 - `Deposit` name changed to `Bay`.
 

@@ -1,10 +1,10 @@
 import uuid
 from unittest import TestCase
 
-from src.material import Material, gen_rand_materials
-from src.status_warehouse.entry.tray_entry import TrayEntry
-from src.tray import gen_rand_trays, Tray
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton
+from automatic_warehouse.material import Material, gen_rand_materials
+from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
+from automatic_warehouse.tray import gen_rand_trays, Tray
+from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
 
 class TestTray(TestCase):

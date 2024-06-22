@@ -1,8 +1,8 @@
 import uuid
 from unittest import TestCase
 
-from src.material import gen_rand_material, Material, gen_rand_materials
-from src.warehouse_configuration_singleton import WarehouseConfigurationSingleton, CarouselConfiguration
+from automatic_warehouse.material import gen_rand_material, Material, gen_rand_materials
+from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton, CarouselConfiguration
 
 
 class TestMaterial(TestCase):

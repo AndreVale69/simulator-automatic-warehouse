@@ -1,7 +1,7 @@
 import copy
 from unittest import TestCase
 
-from src.status_warehouse.entry.empty_entry import EmptyEntry
+from automatic_warehouse.status_warehouse.entry.empty_entry import EmptyEntry
 
 
 class TestEmptyEntry(TestCase):

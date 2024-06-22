@@ -3,10 +3,10 @@ from unittest import TestCase
 from numpy import int64
 from pandas import DataFrame, Timestamp, Timedelta
 
-from src.simulation.actions.action_enum import ActionEnum
-from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
-from src.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
-from src.warehouse import Warehouse
+from automatic_warehouse.simulation.actions.action_enum import ActionEnum
+from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from automatic_warehouse.utils.statistics.warehouse_statistics import WarehouseStatistics, TimeEnum
+from automatic_warehouse.warehouse import Warehouse
 
 
 class TestWarehouseStatistics(TestCase):

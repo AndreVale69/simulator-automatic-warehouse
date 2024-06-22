@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from src.status_warehouse.container.column import Column
-from src.status_warehouse.container.tray_container import TrayContainer
-from src.warehouse import Warehouse
-from src.warehouse_configuration_singleton import ColumnConfiguration
+from automatic_warehouse.status_warehouse.container.column import Column
+from automatic_warehouse.status_warehouse.container.tray_container import TrayContainer
+from automatic_warehouse.warehouse import Warehouse
+from automatic_warehouse.warehouse_configuration_singleton import ColumnConfiguration
 
 
 class TestBuiltinTrayContainer(TestCase):

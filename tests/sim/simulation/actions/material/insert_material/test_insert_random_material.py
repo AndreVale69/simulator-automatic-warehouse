@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from src.simulation.actions.action_enum import ActionEnum
-from src.simulation.actions.material.insert_material.insert_random_material import InsertRandomMaterial
-from src.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
-from src.warehouse import Warehouse
+from automatic_warehouse.simulation.actions.action_enum import ActionEnum
+from automatic_warehouse.simulation.actions.material.insert_material.insert_random_material import InsertRandomMaterial
+from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+from automatic_warehouse.warehouse import Warehouse
 
 
 class TestInsertRandomMaterial(TestCase):

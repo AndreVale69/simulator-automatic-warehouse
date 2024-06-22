@@ -1,9 +1,9 @@
 import copy
 from unittest import TestCase
 
-from src.status_warehouse.container.carousel import Carousel
-from src.warehouse import Warehouse
-from src.warehouse_configuration_singleton import CarouselConfiguration
+from automatic_warehouse.status_warehouse.container.carousel import Carousel
+from automatic_warehouse.warehouse import Warehouse
+from automatic_warehouse.warehouse_configuration_singleton import CarouselConfiguration
 
 
 class TestBuiltinCarousel(TestCase):
