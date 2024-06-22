@@ -1,118 +1,121 @@
 # Simulator Automatic Warehouse
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/simulator-automatic-warehouse?logo=python)
+![GitHub Release](https://img.shields.io/github/v/release/AndreVale69/simulator-automatic-warehouse?display_name=release&logo=github)
+![PyPI - Version](https://img.shields.io/pypi/v/simulator-automatic-warehouse?logo=pypi)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AndreVale69/simulator-automatic-warehouse/.github%2Fworkflows%2Fci.yaml?branch=main&logo=github)
 [![codecov](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse/branch/andre-branch/graph/badge.svg)](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse)
 
-🚧 _Codecov and tests work in progress..._ 🚧
+## Table of Contents
 
-This README is **out of date**. I'm developing a `1.0.0` version on [andre-branch](https://github.com/AndreVale69/simulator-automatic-warehouse/tree/andre-branch). 
-The project is almost finished, and I'm studying how to make it available online using `pip`.
-So the following `README` refers to my bachelor's thesis (see [v0.0.1 pre-release](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v0.0.1-bachelors-degree-thesis)).
+- [Description](#description)
+  - [What is an Automatic Warehouse?](#what-is-an-automatic-warehouse)
+  - [How it was born](#how-it-was-born)
+- [How to Install and Run the Project](#how-to-install-and-run-the-project)
+  - [Python Installation](#python-installation)
+  - [Basic Example](#basic-example)
+  - [Docker](#docker)
+- [Benchmarks](#benchmarks)
 
-This repository was created for a thesis project for the University of Verona (Università di Verona).
+------------------------------------------------------------------------------------------------------------------------
 
-The project is a simulator of an automatic warehouse. The inspiration came from the [Vertimag][1] of 
-[Ferretto Group][2], an Italian company based in Vicenza. 
-So the logic of the warehouse digitalized is the same of the real Vertimag.
+## Description
 
-As a case study, the Vertimag present in the [ICE Laboratory][3] was chosen.
-The warehouse you'll find is made for education/research purposes, so it's different from a classic Vertimag 
-that you can find in the industries (see the differences in these photos: [ICELab Vertimag][4] and [Industries Vertimag][1]). 
-However, this does not mean that the project is not valid!
-In fact, the project is used as a base by the researchers at the ICELab to make another simulator using different 
-technologies.
+The Simulator Automatic Warehouse is a Python library that provides two main functions:
+a [digital twin][5] of an automatic warehouse and a simulator of an automatic warehouse.
 
-The repository contains a `src` directory where you can find: the **simulator** and the **webpage**.
+### What is an Automatic Warehouse?
 
-The simulator is mainly made using [SimPy v4.0.2][5] and simulates 4 actions (you can implement more if you need to). 
-The webpage is made using [Dash v2.15.0][6] (with the support of [Dash Bootstrap Components v1.5.0][7]) and 
-[Plotly v5.17.0][8] to allow the end-user, in this case the thesis advisor, 
-to interact with the simulator in a user-friendly way.
+An Automatic Warehouse, or rather an Automatic Vertical Storage System, 
+is a storage system designed to simplify the storage of materials. 
+It is generally used in industrial environments and is designed according to the _goods-to-man_ principle: 
+the products are brought directly to the picking area (called bay).
+
+### How it was born
+
+This repository was created in 2022 for a bachelor thesis project at the University of Verona, Italy 
+(Università di Verona). 
+After the creator graduated, he continued to improve the project in order to publish it.
+
+The inspiration came from the [Vertimag][1] by [Ferretto][2], an Italian company based in Vicenza.
+The logic of the digitalized warehouse is therefore the same as that of the real Vertimag.
+
+The digitisation of the warehouse was made possible thanks to the [ICE Laboratory][3] of Verona, 
+as part of a thesis project at the University of Verona. 
+In addition, [Sebastiano Gaiardelli][6] (mainly) and [Marco Panato][7] 
+helped the creator at the beginning of the project.
 
 ------------------------------------------------------------------------------------------------------------------------
 
 ## How to Install and Run the Project
 
-You can choose to run the project in one of two ways: using [Python v3.12.2][9] or using [Docker][10] 
-and [Docker compose][13].
+### Dependencies
 
-### Python
+| Dependency       | Version      |
+|------------------|--------------|
+| [pandas][8]     | [2.2.2][9]  |
+| [simpy][10]      | [4.1.1][11]  |
+| [PyYAML][12]     | [6.0.1][13]  |
+| [jsonschema][14] | [4.22.0][15] |
 
-Install the requirements using [pip][11]:
+### Python Installation
+
+The Simulator Automatic Warehouse requires `Python >= 3.9`.
+Python 3.8 is no longer supported, as Python will end support on 2024-10.
+
+It's possible to install the package using [pip][4]:
 
 ```bash
+pip install simulator-automatic-warehouse
+```
+
+Otherwise, you can clone the whole project and install the requirements:
+
+```bash
+git clone https://github.com/AndreVale69/simulator-automatic-warehouse
 pip install -r requirements.txt
 ```
 
-#### Simulator
+### Basic Example
 
-To run only the simulator without the webpage, go to the project directory simulator-automatic-warehouse 
-and set the environment variable for the configuration. 
-Each simulation uses a yaml file to set up the automatic warehouse 
-(a full explanation of the config file can be found in 
-[configuration/sample_config.yaml](configuration/sample_config.yaml):
-
-```bash
-export WAREHOUSE_CONFIGURATION_FILE_PATH=automatic_warehouse-config/univr/ICE_lab.yaml
-python3.12 run_simulator.py
-```
-
-Or one line:
-
-```bash
-WAREHOUSE_CONFIGURATION_FILE_PATH=automatic_warehouse-config/univr/ICE_lab.yaml python3.12 run_simulator.py
-```
-
-The loaded configuration represents the Vertimag in ICELab. 
-You can create another configuration following the json schema 
-([resources/configuration/json_schema.json](automatic_warehouse-res/configuration/json_schema.json)).
-
-Finally, it's possible to manage the console log using the environment variables:
- - `NO_CONSOLE_LOG`: If set, console logs are not displayed.
- - `DEBUG_LOG`: if set, debug logging will be printed to the console.
- - `FILENAME_DEBUG_LOG`: if set, save the debug log to file (e.g. `log`).
-
-#### Website
-
-To run the website, in addition to the environment variables specified in the [Simulator](#simulator) section,
-you need to specify:
- - `HOST`: Host IP used to serve the application.
- - `PORT`: Port used to serve the application.
- - (optional) `PROXY`: If this application will be served to a different URL via a proxy configured outside of Python, 
-                     you can list it here as a string of the form `{input}::{output}`, for example: 
-                     `http://0.0.0.0:8050::https://my.domain.com` 
-                     so that the startup message will display an accurate URL.
-
-For example, in localhost:
-
-```bash
-export WAREHOUSE_CONFIGURATION_FILE_PATH=automatic_warehouse-config/univr/ICE_lab.yaml
-export HOST=127.0.0.1
-export PORT=8050
-python3.12 run_webpage.py
-```
-
-**Note**: 
-the username and password to access at the page can be found in the [`index.py`](tmp/web_app/index.py) file 
-after the `app` variable declaration. 
-The default, the values are:
+The following code generate a warehouse, create a simulation environment and run a simulation.
 
 ```python
-USER_PWD = {
-    "admin": "admin"
-}
+from automatic_warehouse.warehouse import Warehouse
+from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
+
+# generate a Warehouse
+warehouse = Warehouse()
+
+# generate a simulation environment
+simulation = WarehouseSimulation(warehouse)
+
+# run the simulation
+simulation.run_simulation()
+
+# print the results
+print(simulation.get_store_history_dataframe().to_markdown())
 ```
 
-But you can specify other users (see the complete documentation: [Dash Authentication][12]).
+Note: if a configuration is not specified as an environment variable or is not updated at runtime, 
+the [default configuration][16] is used.
 
 ### Docker
 
-Everything is easier with Docker. Go to the [docker](docker) folder and use docker compose to build:
+Everything is easier with Docker.
+In the GitHub project, there are a [docker folder][17] and use docker compose to build:
 
 ```bash
-cd docker && docker compose up
+cd docker
+docker compose up alpine-simulator_automatic_warehouse
 ```
 
-If you want to change or add some environment variables, edit [docker-compose.yaml](docker/docker-compose.yaml).
+The available docker images are:
+
+- `alpine-simulator_automatic_warehouse`
+- `debian-simulator_automatic_warehouse`
+
+To change or add some environment variables, edit [docker-compose.yaml][18].
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -125,27 +128,39 @@ Here are some benchmarks run with a private Python library and the following com
  - SSD NVMe M.2 128 GB
  - NVIDIA GeForce GTX 1050
 
-| Actions   | Time to process | Real-time simulation |
-|-----------|-----------------|----------------------|
-| 10'000    | 1 second        | 1d. 2h. 48m.         |
-| 63'000    | 7.5 seconds     | 1 week               |
-| 267'900   | 25 seconds      | 1 month              |
-| 3'250'120 | 9 minutes       | 1 year               |
+| Actions   | Time to process  | Real-time simulation |
+|-----------|------------------|----------------------|
+| 10'000    | 570 milliseconds | 1d. 2h. 48m.         |
+| 63'000    | 3,5 seconds      | 1 week               |
+| 267'900   | 15,3 seconds     | 1 month              |
+| 3'250'120 | 3,1 minutes      | 1 year               |
+
+Use the following links if the images are not displayed:
+- [Relationship between simulated actions and mean][19]
+- [Standard Deviation][20]
+
 
 <img src="docs/doc/relationship_between_simulated_actions_and_media.svg" alt="Relationship between simulated actions and media">
 
 <img src="docs/doc/standard_deviation.svg" alt="Standard deviation">
 
-[1]: https://www.ferrettogroup.com/index.cfm/en/solutions/vertical-storage-system/vertical-lift-module-vertimag/
-[2]: https://www.ferrettogroup.com/index.cfm/en/
+[1]: https://www.ferretto.com/en/solutions/vertical-lift-modules-vertimag/
+[2]: https://www.ferretto.com/en/
 [3]: https://www.icelab.di.univr.it/
-[4]: https://icewebsitestorage.blob.core.windows.net/icewebsitemediablob/gallery/IMG_0855.JPG
-[5]: https://simpy.readthedocs.io/en/4.0.2/
-[6]: https://dash.plotly.com/
-[7]: https://dash-bootstrap-components.opensource.faculty.ai/
-[8]: https://plotly.com/python/
-[9]: https://www.get-python.org/downloads/release/python-3122/
-[10]: https://docs.docker.com/engine/
-[11]: https://pip.pypa.io/en/stable/getting-started/
-[12]: https://dash.plotly.com/authentication
-[13]: https://docs.docker.com/compose/
+[4]: https://pip.pypa.io/en/stable/getting-started/
+[5]: https://en.wikipedia.org/wiki/Digital_twin
+[6]: https://sbgaia.github.io/
+[7]: https://www.linkedin.com/in/marco-panato-vr
+[8]: https://github.com/pandas-dev/pandas
+[9]: https://github.com/pandas-dev/pandas/releases/tag/v2.2.2
+[10]: https://gitlab.com/team-simpy/simpy
+[11]: https://gitlab.com/team-simpy/simpy/-/tree/4.1.1?ref_type=tags
+[12]: https://github.com/yaml/pyyaml
+[13]: https://github.com/yaml/pyyaml/releases/tag/6.0.1
+[14]: https://github.com/python-jsonschema/jsonschema
+[15]: https://github.com/python-jsonschema/jsonschema/releases/tag/v4.22.0
+[16]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/configuration/sample_config.yaml
+[17]: https://github.com/AndreVale69/simulator-automatic-warehouse/tree/main/docker
+[18]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docker/docker-compose.yaml
+[19]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/doc/relationship_between_simulated_actions_and_media.svg
+[20]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/doc/standard_deviation.svg
