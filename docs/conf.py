@@ -17,11 +17,15 @@ extensions = [
     "myst_parser",
     "sphinx_design",
     "sphinx_rtd_theme",
-    "sphinx.ext.autodoc"
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.duration"
 ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 
 
