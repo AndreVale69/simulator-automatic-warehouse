@@ -1,3 +1,4 @@
 sphinx==7.2.6
 myst_parser==3.0.1
 sphinx_design==0.6.0
+sphinx-rtd-theme=2.0.0
