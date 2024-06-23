@@ -9,9 +9,18 @@ description = 'Simulator and Digital Twin of an Automatic Warehouse.'
 readme = "README.md"
 requires-python = ">= 3.9"
 license = "MIT"
-keywords = ["warehouse", "automatic warehouse", "simulator automatic warehouse", "simulator", "univr", "ferretto", "vertimag", "digital twin"]
+keywords = [
+  "warehouse",
+  "automatic warehouse",
+  "simulator automatic warehouse",
+  "simulator",
+  "univr",
+  "ferretto",
+  "vertimag",
+  "digital twin"
+]
 authors = [
-  { name = "Andrea Valentini", email = "no-provided@mail.com" },
+  { name = "Andrea Valentini", email = "andrea.valentini.0000@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -33,9 +42,9 @@ dependencies = [
 ]
 
 [project.urls]
+Documentation = "https://simulator-automatic-warehouse.readthedocs.io/en/latest/"
 PyPI = "https://pypi.org/project/simulator-automatic-warehouse"
 GitHub = "https://github.com/AndreVale69/simulator-automatic-warehouse"
-Documentation = "https://github.com/AndreVale69/simulator-automatic-warehouse/#readme"
 Issues = "https://github.com/AndreVale69/simulator-automatic-warehouse/issues"
 
 [tool.hatch.version]
