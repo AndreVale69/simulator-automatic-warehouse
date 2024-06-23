@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "simulator-automatic-warehouse"
 dynamic = ["version"]
-description = 'Simulator (and not only) of an Automatic Warehouse.'
+description = 'Simulator and Digital Twin of an Automatic Warehouse.'
 readme = "README.md"
 requires-python = ">= 3.9"
 license = "MIT"
-keywords = ["warehouse", "automatic warehouse", "simulator automatic warehouse", "simulator", "univr", "ferretto", "vertimag"]
+keywords = ["warehouse", "automatic warehouse", "simulator automatic warehouse", "simulator", "univr", "ferretto", "vertimag", "digital twin"]
 authors = [
   { name = "Andrea Valentini", email = "no-provided@mail.com" },
 ]
