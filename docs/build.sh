@@ -1,1 +1,0 @@
-rm -rf _build && PYTHONPATH=.. make html
