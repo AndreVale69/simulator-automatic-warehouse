@@ -1,0 +1,18 @@
+version: 2
+
+formats: all
+
+build:
+  os: ubuntu-lts-latest
+  tools:
+    python: "3.12"
+
+sphinx:
+  configuration: docs/conf.py
+
+python:
+  install:
+    - requirements: docs/requirements.txt
+    - requirements: requirements.txt
+    - method: pip
+      path: .
