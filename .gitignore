@@ -8,3 +8,4 @@ tmp/web_app/cache
 tmp/web_app/images
 windows-tests.ps1
 docs/_build
+docs/build.sh
