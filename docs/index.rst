@@ -46,12 +46,8 @@ Table of Contents
 -----------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    Overview <self>
    description
-
-Try me:
-
-.. autoclass:: automatic_warehouse.warehouse.Warehouse
-   :inherited-members:
+   installation
