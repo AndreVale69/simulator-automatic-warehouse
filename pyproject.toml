@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.urls]
-PyPi = "https://pypi.org/project/simulator-automatic-warehouse"
+PyPI = "https://pypi.org/project/simulator-automatic-warehouse"
 GitHub = "https://github.com/AndreVale69/simulator-automatic-warehouse"
 Documentation = "https://github.com/AndreVale69/simulator-automatic-warehouse/#readme"
 Issues = "https://github.com/AndreVale69/simulator-automatic-warehouse/issues"
