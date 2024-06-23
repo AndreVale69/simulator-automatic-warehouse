@@ -53,7 +53,7 @@ helped the creator at the beginning of the project.
 
 | Dependency       | Version      |
 |------------------|--------------|
-| [pandas][8]     | [2.2.2][9]  |
+| [pandas][8]      | [2.2.2][9]   |
 | [simpy][10]      | [4.1.1][11]  |
 | [PyYAML][12]     | [6.0.1][13]  |
 | [jsonschema][14] | [4.22.0][15] |
