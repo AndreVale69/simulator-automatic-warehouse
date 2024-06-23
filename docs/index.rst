@@ -50,3 +50,8 @@ Table of Contents
 
    Overview <self>
    description
+
+Try me:
+
+.. autoclass:: automatic_warehouse.warehouse.Warehouse
+   :inherited-members:
