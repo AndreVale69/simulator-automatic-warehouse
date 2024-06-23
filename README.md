@@ -4,6 +4,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/AndreVale69/simulator-automatic-warehouse?display_name=release&logo=github)
 ![PyPI - Version](https://img.shields.io/pypi/v/simulator-automatic-warehouse?logo=pypi)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AndreVale69/simulator-automatic-warehouse/.github%2Fworkflows%2Fci.yaml?branch=main&logo=github)
+![Read the Docs](https://img.shields.io/readthedocs/simulator-automatic-warehouse?logo=readthedocs)
 [![codecov](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse/branch/andre-branch/graph/badge.svg)](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse)
 
 ## Table of Contents
