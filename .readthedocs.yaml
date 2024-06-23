@@ -4,6 +4,9 @@ formats: all
 
 build:
   os: ubuntu-lts-latest
+  jobs:
+    pre_build:
+      - export PYTHONPATH=..:.
   tools:
     python: "3.12"
 
