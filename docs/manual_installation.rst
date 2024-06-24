@@ -54,6 +54,7 @@ The wheel file can be installed using the following:
 
     $ pip install simulator_automatic_warehouse-1.0.0-py3-none-any.whl
 
+.. _build-the-project:
 
 -----------------
 Build the project
@@ -90,9 +91,95 @@ It can be installed using ``pip``:
     $ cd dist
     $ pip install simulator_automatic_warehouse-1.0.0-py3-none-any.whl
 
+Once the package is installed, you can remove the repository from your local computer and uninstall Hatch.
+
 
 -------------------------
 Create and use a ``venv``
 -------------------------
 
-Create and use a venv
+The following steps can also be applied to the previous section (:ref:`build-the-project`).
+It's always recommended to use a virtual environment.
+
+1. First, we create a virtual environment using the command:
+
+   .. code-block:: bash
+
+       $ python3 -m venv ~/.virtualenvs/choose-a-name-for-your-venv
+
+   .. note::
+
+       On Windows, invoke the venv command as follows:
+
+       .. code-block:: bash
+
+           c:\>Python35\python -m venv c:\path\to\myenv
+
+       Alternatively, if you configured the PATH and PATHEXT variables for your Python installation:
+
+       .. code-block:: bash
+
+           c:\>python -m venv c:\path\to\myenv
+
+2. Then, we activate the virtual environment:
+
+   .. code-block:: bash
+
+       $ source ~/.virtualenvs/choose-a-name-for-your-venv/bin/activate
+
+   .. note::
+
+       On Windows, see the following chapter in the
+       `Python documentation <https://docs.python.org/3/library/venv.html#how-venvs-work>`_.
+
+3a. Once the venv is enabled, you can easily install the package using pip and PyPI (:ref:`pypi` section).
+
+3b. If you want to contribute to the project and set up the environment, read on.
+
+    Download the repository using git clone:
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/AndreVale69/simulator-automatic-warehouse.git
+
+4. Go to the repository and install the dependencies of the project.
+   The Simulator Automatic Warehouse uses 4 main packages: ``pandas``, ``simpy``, ``PyYAML``, ``jsonschema``.
+   See the :ref:`dependencies` section for more information.
+
+   The packages and their required versions can be found in the ``requirements.txt`` file.
+   Use the following command to install them:
+
+   .. code-block:: bash
+
+       $ pip install -r requirements.txt
+
+5. Once the dependencies are installed, you are in! You are ready to run the simulator and the digital twin.
+   At this stage, **it's a good idea to run the tests and check that everything works**.
+
+   The tests have the ``pytest`` package dependencies.
+   The versions and packages to install can be found in ``tests/test-requirements.txt``.
+   Then we can simply install them with the command:
+
+   .. code-block:: bash
+
+       $ pip install -r tests/test-requirements.txt
+
+6. Finally, once the pytest dependencies have been successfully installed, run the tests with the command:
+
+   .. code-block:: bash
+      :caption: Make sure you are in the project home, not the tests folder.
+
+       $ PYTHONPATH=. pytest --config-file='tests/pytest.ini'
+
+   .. note::
+
+       On Windows, the ``PYTHONPATH`` in one line doesn't work.
+       If you then open a PowerShell and go to the home of the project,
+       you can export the ``PYTHONPATH`` environment variable using the
+       `Get-Location <https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-location>`_
+       command:
+
+       .. code-block:: bash
+
+           $env:PYTHONPATH=Get-Location
+           pytest --config-file='tests/pytest.ini'
