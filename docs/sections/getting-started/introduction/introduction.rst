@@ -1,7 +1,7 @@
 
-===========
-Description
-===========
+============
+Introduction
+============
 
 The Simulator Automatic Warehouse is a Python library that provides two main functions:
 a `digital twin <https://en.wikipedia.org/wiki/Digital_twin>`_ of an automatic warehouse and a simulator

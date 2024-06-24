@@ -46,8 +46,7 @@ Table of Contents
 -----------------
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
 
    Overview <self>
-   sections/description/description
-   sections/installation/installation
+   sections/getting-started/getting-started
