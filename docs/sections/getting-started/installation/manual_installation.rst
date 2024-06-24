@@ -136,11 +136,11 @@ It's always recommended to use a virtual environment.
 
 3. If you want to contribute to the project and set up the environment, read on.
 
-    Download the repository using git clone:
+   Download the repository using git clone:
 
-    .. code-block:: bash
+   .. code-block:: bash
 
-        $ git clone https://github.com/AndreVale69/simulator-automatic-warehouse.git
+       $ git clone https://github.com/AndreVale69/simulator-automatic-warehouse.git
 
 4. Go to the repository and install the dependencies of the project.
    The Simulator Automatic Warehouse uses 4 main packages: ``pandas``, ``simpy``, ``PyYAML``, ``jsonschema``.
