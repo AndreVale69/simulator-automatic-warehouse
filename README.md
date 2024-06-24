@@ -7,6 +7,8 @@
 ![Read the Docs](https://img.shields.io/readthedocs/simulator-automatic-warehouse?logo=readthedocs)
 [![codecov](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse/branch/andre-branch/graph/badge.svg)](https://codecov.io/gh/AndreVale69/simulator-automatic-warehouse)
 
+Go to the complete documentation: [Simulator Automatic Warehouse doc][21].
+
 ## Table of Contents
 
 - [Description](#description)
@@ -165,3 +167,4 @@ Use the following links if the images are not displayed:
 [18]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docker/docker-compose.yaml
 [19]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/doc/relationship_between_simulated_actions_and_media.svg
 [20]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/doc/standard_deviation.svg
+[21]: https://simulator-automatic-warehouse.readthedocs.io/en/latest/
