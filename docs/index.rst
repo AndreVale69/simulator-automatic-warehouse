@@ -50,3 +50,5 @@ Table of Contents
 
    Overview <self>
    sections/getting-started/getting-started
+   sections/step-by-step-guide/step-by-step-guide
+   sections/concepts-and-configuration/concepts-and-configuration
