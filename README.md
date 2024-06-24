@@ -143,9 +143,9 @@ Use the following links if the images are not displayed:
 - [Standard Deviation][20]
 
 
-<img src="docs/doc/relationship_between_simulated_actions_and_media.svg" alt="Relationship between simulated actions and media">
+<img src="docs/_static/benchmark-results/relationship_between_simulated_actions_and_media.svg" alt="Relationship between simulated actions and media">
 
-<img src="docs/doc/standard_deviation.svg" alt="Standard deviation">
+<img src="docs/_static/benchmark-results/standard_deviation.svg" alt="Standard deviation">
 
 [1]: https://www.ferretto.com/en/solutions/vertical-lift-modules-vertimag/
 [2]: https://www.ferretto.com/en/
@@ -165,6 +165,6 @@ Use the following links if the images are not displayed:
 [16]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/configuration/sample_config.yaml
 [17]: https://github.com/AndreVale69/simulator-automatic-warehouse/tree/main/docker
 [18]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docker/docker-compose.yaml
-[19]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/doc/relationship_between_simulated_actions_and_media.svg
-[20]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/doc/standard_deviation.svg
+[19]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/_static/benchmark-results/relationship_between_simulated_actions_and_media.svg
+[20]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/_static/benchmark-results/standard_deviation.svg
 [21]: https://simulator-automatic-warehouse.readthedocs.io/en/latest/
