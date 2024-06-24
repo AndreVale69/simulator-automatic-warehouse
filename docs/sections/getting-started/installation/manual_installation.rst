@@ -111,13 +111,13 @@ It's always recommended to use a virtual environment.
 
        On Windows, invoke the venv command as follows:
 
-       .. code-block:: bash
+       .. code-block::
 
            c:\>Python35\python -m venv c:\path\to\myenv
 
        Alternatively, if you configured the PATH and PATHEXT variables for your Python installation:
 
-       .. code-block:: bash
+       .. code-block::
 
            c:\>python -m venv c:\path\to\myenv
 
@@ -132,9 +132,9 @@ It's always recommended to use a virtual environment.
        On Windows, see the following chapter in the
        `Python documentation <https://docs.python.org/3/library/venv.html#how-venvs-work>`_.
 
-3a. Once the venv is enabled, you can easily install the package using pip and PyPI (:ref:`pypi` section).
+3. Once the venv is enabled, you can easily install the package using pip and PyPI (:ref:`pypi` section).
 
-3b. If you want to contribute to the project and set up the environment, read on.
+3. If you want to contribute to the project and set up the environment, read on.
 
     Download the repository using git clone:
 
