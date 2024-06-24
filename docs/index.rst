@@ -49,5 +49,5 @@ Table of Contents
    :maxdepth: 3
 
    Overview <self>
-   description
-   installation
+   sections/description/description
+   sections/installation/installation
