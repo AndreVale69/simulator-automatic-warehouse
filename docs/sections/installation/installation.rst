@@ -12,3 +12,4 @@ and what dependencies the project has.
    dependencies
    pypi
    manual_installation
+   docker
