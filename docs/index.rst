@@ -38,7 +38,7 @@ creating a simulation environment and running a simulation.
     simulation.run_simulation()
 
     # print the results
-    print(simulation.get_store_history_dataframe().to_markdown())
+    print(simulation.get_store_history_dataframe())
 
 
 -----------------

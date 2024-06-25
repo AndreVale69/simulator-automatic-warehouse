@@ -23,7 +23,7 @@ You'll also want to create a simulation and run it to see what happens.
     simulation.run_simulation()
 
     # print the results
-    print(simulation.get_store_history_dataframe().to_markdown())
+    print(simulation.get_store_history_dataframe())
 
 We will call this script ``my-script.py``.
 

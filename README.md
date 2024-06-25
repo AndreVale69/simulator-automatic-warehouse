@@ -97,7 +97,7 @@ simulation = WarehouseSimulation(warehouse)
 simulation.run_simulation()
 
 # print the results
-print(simulation.get_store_history_dataframe().to_markdown())
+print(simulation.get_store_history_dataframe())
 ```
 
 Note: if a configuration is not specified as an environment variable or is not updated at runtime, 
