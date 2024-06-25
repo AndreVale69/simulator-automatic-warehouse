@@ -14,3 +14,4 @@ The guide aims to introduce a new user to the library and explains how to run it
     :maxdepth: 2
 
     modelling-process/modelling-process
+    write-the-code/write-the-code
