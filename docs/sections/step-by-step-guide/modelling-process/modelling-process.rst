@@ -69,6 +69,8 @@ The Json Schema used to validate your configuration can be found in the package 
 
 A full explanation of each field in the configuration can be found in the dedicated section (:ref:`configuration`).
 Here we present a sample configuration that you can use to run your first code.
+Don't worry if you don't understand some of the fields, we have a special section where we talked about that.
+Also, this section should be a step-by-step guide to understand *how to approach* the library.
 
 As you can see in the configuration, we have a warehouse with a height of 1000.
 The warehouse has two columns and a carousel.
