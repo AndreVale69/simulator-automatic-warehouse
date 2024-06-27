@@ -12,7 +12,8 @@ The library accepts four environment variables:
 - To check which configuration you want to load:
 
     - ``WAREHOUSE_CONFIGURATION_FILE_PATH``. It represents a file path to a YAML file used by the simulator to configure the warehouse.
-      The **default value** is ``automatic_warehouse-config/sample_config.yaml``.
+
+  The **default value** is ``automatic_warehouse-config/sample_config.yaml``.
 
 - To control the console output:
 
@@ -23,6 +24,12 @@ The library accepts four environment variables:
     - ``FILENAME_DEBUG_LOG``. If set, save the debug log to file (e.g. log).
 
   The **default value** is ``INFO``, so you will only see the minimum on the console.
+
+  .. warning::
+
+        You need to specify only one (or none) environment variable for the console output,
+        otherwise the library throws an exception.
+
 
 After modelling and writing the code, it's time to run our Python code!
 Let us assume that our workspace is as follows:
