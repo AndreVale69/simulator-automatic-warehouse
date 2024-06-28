@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 from automatic_warehouse.status_warehouse.container.column import Column
 from automatic_warehouse.status_warehouse.container.tray_container import TrayContainer
@@ -11,6 +12,12 @@ class TestBuiltinTrayContainer(TestCase):
         self.warehouse = Warehouse()
         self.warehouse.get_column(0).gen_materials_and_trays(6, 10)
         self.tray_container = self.warehouse.get_column(0)
+        # use mock.patch to test abstract classes
+        self.patch_tray_container = patch.multiple(TrayContainer, __abstractmethods__=set())
+        self.patch_tray_container.start()
+
+    def tearDown(self):
+        self.patch_tray_container.stop()
 
     def test_get_num_entries_free_abstractmethod(self):
         # arrange

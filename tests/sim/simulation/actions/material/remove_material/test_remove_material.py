@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 from simpy import Environment
 
@@ -12,7 +13,16 @@ class TestRemoveMaterial(TestCase):
         self.env = Environment()
         self.warehouse = Warehouse()
         self.duration = 10
+        # use mock.patch to test abstract classes
+        self.patch_remove_material = patch.multiple(RemoveMaterial, __abstractmethods__=set())
+        self.patch_simulation = patch.multiple(Simulation, __abstractmethods__=set())
+        self.patch_remove_material.start()
+        self.patch_simulation.start()
         self.remove_material = RemoveMaterial(self.env, self.warehouse, Simulation(), self.duration)
+
+    def tearDown(self):
+        self.patch_remove_material.stop()
+        self.patch_simulation.stop()
 
     def test_simulate_action_abstractmethod(self):
         # arrange

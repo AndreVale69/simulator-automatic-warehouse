@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from simpy import Environment
 
@@ -7,7 +7,7 @@ from status_warehouse.tray import Tray
 from automatic_warehouse.warehouse import Warehouse
 
 
-class Action:
+class Action(ABC):
     def __init__(self, env: Environment, warehouse: Warehouse, simulation):
         """
         Superclass for all actions.
@@ -19,9 +19,7 @@ class Action:
         :param warehouse: the warehouse where the action is performed.
         :param simulation: the simulation where the action is performed.
         """
-        self.env = env
-        self.warehouse = warehouse
-        self.simulation = simulation
+        self.env, self.warehouse, self.simulation = env, warehouse, simulation
 
     def get_env(self) -> Environment:
         """

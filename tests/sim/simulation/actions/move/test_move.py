@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 import simpy
 
@@ -10,10 +11,16 @@ from automatic_warehouse.warehouse import Warehouse
 
 class TestMove(TestCase):
     def setUp(self):
+        # use mock.patch to test abstract classes
+        self.patch_simulation = patch.multiple(Simulation, __abstractmethods__=set())
+        self.patch_simulation.start()
         simulation = Simulation()
         warehouse = Warehouse()
         self.buffer = Buffer(simpy.Environment(), warehouse, simulation)
         self.move = Move(simulation.get_environment(), warehouse, simulation)
+
+    def tearDown(self):
+        self.patch_simulation.stop()
 
     def test_get_buffer(self):
         # arrange

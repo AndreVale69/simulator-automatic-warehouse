@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from logging import getLogger
 
 from pandas import DataFrame
@@ -11,7 +11,7 @@ from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfi
 logger = getLogger(__name__)
 
 
-class Simulation:
+class Simulation(ABC):
     def __init__(self):
         """
         The main simulation class.

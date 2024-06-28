@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 from simpy import Environment
 
@@ -10,7 +11,13 @@ class TestAction(TestCase):
     def setUp(self):
         self.env = Environment()
         self.warehouse = Warehouse()
+        # use mock.patch to test abstract classes
+        self.patch_action = patch.multiple(Action, __abstractmethods__=set())
+        self.patch_action.start()
         self.action = Action(self.env, self.warehouse, None)
+
+    def tearDown(self):
+        self.patch_action.stop()
 
     def test_get_env(self):
         # arrange

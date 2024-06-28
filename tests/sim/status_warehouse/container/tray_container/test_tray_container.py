@@ -1,5 +1,6 @@
 import copy
 from unittest import TestCase
+from unittest.mock import patch
 
 from automatic_warehouse.status_warehouse.container.tray_container import TrayContainer
 from automatic_warehouse.status_warehouse.entry.empty_entry import EmptyEntry
@@ -11,6 +12,12 @@ class TestTrayContainer(TestCase):
     def setUp(self):
         self.warehouse = Warehouse()
         self.tray_container = self.warehouse.get_column(0)
+        # use mock.patch to test abstract classes
+        self.patch_tray_container = patch.multiple(TrayContainer, __abstractmethods__=set())
+        self.patch_tray_container.start()
+
+    def tearDown(self):
+        self.patch_tray_container.stop()
 
     def test_set_warehouse(self):
         # arrange

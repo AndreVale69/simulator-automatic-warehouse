@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 from automatic_warehouse.status_warehouse.entry.empty_entry import EmptyEntry
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
@@ -8,7 +8,7 @@ from status_warehouse.tray import Tray
 from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration
 
 
-class TrayContainer:
+class TrayContainer(ABC):
     def __init__(self, height: int, offset_x: int, width: int, length: int, warehouse):
         """
         A superclass representing the tray container of a column or carousel.

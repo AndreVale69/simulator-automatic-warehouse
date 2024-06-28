@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 from pandas import DataFrame
 
@@ -7,7 +8,13 @@ from automatic_warehouse.simulation.simulation import Simulation
 
 class TestSimulation(TestCase):
     def setUp(self):
+        # use mock.patch to test abstract classes
+        self.patch_simulation = patch.multiple(Simulation, __abstractmethods__=set())
+        self.patch_simulation.start()
         self.simulation = Simulation()
+
+    def tearDown(self):
+        self.patch_simulation.stop()
 
     def test_eq(self):
         # arrange
