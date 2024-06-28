@@ -1,7 +1,7 @@
 import uuid
 from unittest import TestCase
 
-from automatic_warehouse.material import gen_rand_material, Material, gen_rand_materials
+from status_warehouse.material import gen_rand_material, Material, gen_rand_materials
 from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton, CarouselConfiguration
 
 

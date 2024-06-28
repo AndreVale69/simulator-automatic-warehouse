@@ -2,7 +2,7 @@ import copy
 import uuid
 from unittest import TestCase
 
-from automatic_warehouse.material import gen_rand_material, Material
+from status_warehouse.material import gen_rand_material, Material
 
 
 class TestBuiltinMaterial(TestCase):

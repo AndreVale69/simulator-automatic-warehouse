@@ -1,6 +1,6 @@
 from enum import IntEnum
 
 
-class EnumWarehouse(IntEnum):
+class EnumContainer(IntEnum):
     COLUMN = 1
     CAROUSEL = 2

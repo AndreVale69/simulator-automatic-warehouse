@@ -3,8 +3,8 @@ from unittest import TestCase
 from automatic_warehouse.simulation.actions.action_enum import ActionEnum
 from automatic_warehouse.simulation.actions.extract_tray import ExtractTray
 from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
-from automatic_warehouse.status_warehouse.enum_warehouse import EnumWarehouse
-from automatic_warehouse.tray import Tray
+from status_warehouse.container.enum_container import EnumContainer
+from status_warehouse.tray import Tray
 from automatic_warehouse.warehouse import Warehouse
 
 
@@ -17,7 +17,7 @@ class TestExtractTray(TestCase):
         action = ExtractTray(simulation.env, simulation.warehouse, simulation)
 
         # act
-        simulation.env.process(action.simulate_action(destination=EnumWarehouse.CAROUSEL))
+        simulation.env.process(action.simulate_action(destination=EnumContainer.CAROUSEL))
         simulation.env.run()
         action_performed: list = simulation.get_store_history().items
 
@@ -36,7 +36,7 @@ class TestExtractTray(TestCase):
 
         # act
         num_entries_occupied_pre_sim = simulation.warehouse.get_carousel().get_num_entries_occupied()
-        simulation.env.process(action.simulate_action(destination=EnumWarehouse.CAROUSEL))
+        simulation.env.process(action.simulate_action(destination=EnumContainer.CAROUSEL))
         simulation.env.run()
         action_performed: list = simulation.get_store_history().items
 

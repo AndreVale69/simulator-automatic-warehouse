@@ -1,7 +1,7 @@
 from logging import basicConfig, DEBUG, INFO, getLogger
 from typing import NamedTuple
 
-from automatic_warehouse.configuration import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
+from automatic_warehouse.env_vars import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
 
 if NO_CONSOLE_LOG:
     basicConfig(format='%(asctime)s - [%(levelname)s] - (%(name)s) - %(message)s')
@@ -17,10 +17,10 @@ else:
 from copy import deepcopy
 from random import randint, choice
 from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration, ColumnConfiguration, CarouselConfiguration
-from automatic_warehouse.tray import Tray
+from status_warehouse.tray import Tray
 from automatic_warehouse.status_warehouse.container.carousel import Carousel
 from automatic_warehouse.status_warehouse.container.column import Column
-from automatic_warehouse.material import gen_rand_material
+from status_warehouse.material import gen_rand_material
 
 logger = getLogger(__name__)
 __VERSION__ = '1.0.0'

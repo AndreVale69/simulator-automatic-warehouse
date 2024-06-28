@@ -2,8 +2,8 @@ from abc import abstractmethod
 
 from simpy import Environment
 
-from automatic_warehouse.status_warehouse.enum_warehouse import EnumWarehouse
-from automatic_warehouse.tray import Tray
+from status_warehouse.container.enum_container import EnumContainer
+from status_warehouse.tray import Tray
 from automatic_warehouse.warehouse import Warehouse
 
 
@@ -51,12 +51,12 @@ class Action:
         return self.simulation
 
     @abstractmethod
-    def simulate_action(self, tray: Tray=None, destination: EnumWarehouse=None):
+    def simulate_action(self, tray: Tray=None, destination: EnumContainer=None):
         """
         Abstract method that simulates the action of the instance.
 
         :type tray: Tray
-        :type destination: EnumWarehouse
+        :type destination: EnumContainer
         :param tray: A tray used in the simulation, sometimes it is not useful (e.g. GoToBay).
         :param destination: A destination used in the simulation, sometimes it is not useful (e.g. GoToBay).
         """

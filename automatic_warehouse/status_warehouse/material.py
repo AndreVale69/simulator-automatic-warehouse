@@ -5,23 +5,25 @@ from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfi
 
 
 class Material:
-    def __init__(self, barcode: hex, name: str, height: int, length: int, width: int):
-        """
-        Class that represents a material that can be found inside a tray.
+    """
+    Class that represents a material that can be found inside a tray.
 
-        :type barcode: hex
-        :type name: str
-        :type height: int
-        :type length: int
-        :type width: int
-        :param barcode: unique ID of a material.
-        :param name: name of a material.
-        :param height: height of a material.
-        :param length: length of a material.
-        :param width: width of a material.
-        """
+    :type barcode: str
+    :type name: str
+    :type height: int
+    :type length: int
+    :type width: int
+    :param barcode: unique ID of a material.
+    :param name: name of a material.
+    :param height: height of a material.
+    :param length: length of a material.
+    :param width: width of a material.
+    :raises ValueError: if the specified height is greater than the maximum height of the tray (config value).
+    """
+
+    def __init__(self, barcode: str, name: str, height: int, length: int, width: int):
         # maximum height of a material to fit into a tray
-        max_height_material = WarehouseConfigurationSingleton.get_instance().get_configuration().carousel.buffer_height
+        max_height_material = WarehouseConfigurationSingleton.get_instance().get_configuration().tray.maximum_height
 
         # check the height of a material
         if height > max_height_material:
@@ -49,11 +51,11 @@ class Material:
     def __deepcopy__(self, memo):
         return Material(self.barcode, self.name, self.height, self.length, self.width)
 
-    def get_barcode(self) -> int:
+    def get_barcode(self) -> str:
         """
         Get the barcode of the material.
 
-        :rtype: int
+        :rtype: str
         :return: the barcode of the material.
         """
         return self.barcode

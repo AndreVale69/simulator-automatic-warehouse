@@ -22,10 +22,20 @@ class TimeEnum(Enum):
 class WarehouseStatistics:
     """
     The purpose of use is:
-    ```
-    warehouse = Warehouse()
-    WarehouseStatistics(DataFrame(warehouse.get_simulation().get_store_history().items))
-    ```
+
+    .. code-block:: python
+
+        # generate a Warehouse
+        warehouse = Warehouse()
+
+        # generate a simulation environment
+        simulation = WarehouseSimulation(warehouse)
+
+        # run the simulation
+        simulation.run_simulation()
+
+        statistics = WarehouseStatistics(simulation.get_store_history_dataframe())
+
     """
     def __init__(self, warehouse_actions: DataFrame):
         self._warehouse_actions = warehouse_actions

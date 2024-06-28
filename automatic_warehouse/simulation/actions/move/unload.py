@@ -4,7 +4,7 @@ from simpy import Environment
 
 from automatic_warehouse.simulation.actions.move.move import Move
 from automatic_warehouse.simulation.simulation import Simulation
-from automatic_warehouse.status_warehouse.enum_warehouse import EnumWarehouse
+from status_warehouse.container.enum_container import EnumContainer
 from automatic_warehouse.warehouse import Warehouse
 
 logger = getLogger(__name__)
@@ -29,4 +29,4 @@ class Unload(Move):
         assert destination is not None, logger.error("The destination cannot be None!")
         env = self.env
         logger.debug(f"Time {env.now:5.2f} - Start unloading a tray")
-        yield env.process(self.simulation.unload(tray, destination == EnumWarehouse.CAROUSEL))
+        yield env.process(self.simulation.unload(tray, destination == EnumContainer.CAROUSEL))

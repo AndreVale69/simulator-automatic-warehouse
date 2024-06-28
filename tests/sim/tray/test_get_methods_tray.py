@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from automatic_warehouse.material import gen_rand_materials
-from automatic_warehouse.tray import Tray
+from status_warehouse.material import gen_rand_materials
+from status_warehouse.tray import Tray
 
 
 class TestGetMethodsTray(TestCase):

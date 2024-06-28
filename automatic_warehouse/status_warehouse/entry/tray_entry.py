@@ -1,7 +1,7 @@
 import copy
 
 from automatic_warehouse.status_warehouse.entry.entry import Entry
-from automatic_warehouse.tray import Tray
+from status_warehouse.tray import Tray
 
 
 class TrayEntry(Entry):

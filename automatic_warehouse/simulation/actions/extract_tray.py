@@ -73,7 +73,7 @@ class ExtractTray(Move):
         Perform the real action.
         If the bay is full, load_in_buffer should be True.
 
-        :type destination: EnumWarehouse
+        :type destination: EnumContainer
         :type load_in_buffer: bool
         :param destination: the destination.
         :param load_in_buffer: True to send the tray inside the buffer, False to send the tray in the bay.

@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from automatic_warehouse.status_warehouse.container.carousel import Carousel, CarouselConfiguration
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from automatic_warehouse.tray import Tray
+from status_warehouse.tray import Tray
 from automatic_warehouse.warehouse import Warehouse
 from automatic_warehouse.warehouse_configuration_singleton import TrayConfiguration, WarehouseConfigurationSingleton
 

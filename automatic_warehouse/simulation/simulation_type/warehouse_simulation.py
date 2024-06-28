@@ -13,8 +13,8 @@ from automatic_warehouse.simulation.actions.material.remove_material.remove_rand
 from automatic_warehouse.simulation.actions.send_back_tray import SendBackTray
 from automatic_warehouse.simulation.simulation import Simulation
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from automatic_warehouse.status_warehouse.enum_warehouse import EnumWarehouse
-from automatic_warehouse.tray import Tray
+from status_warehouse.container.enum_container import EnumContainer
+from status_warehouse.tray import Tray
 from automatic_warehouse.utils.decide_position_algorithm.algorithm import decide_position
 from automatic_warehouse.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from automatic_warehouse.warehouse import Warehouse
@@ -91,8 +91,8 @@ class WarehouseSimulation(Simulation):
         extract_tray = ExtractTray(env, warehouse, self)
         insert_random_material = InsertRandomMaterial(env, warehouse, self, 2)
         remove_random_material = RemoveRandomMaterial(env, warehouse, self, 2)
-        column_val = EnumWarehouse.COLUMN
-        carousel_val = EnumWarehouse.CAROUSEL
+        column_val = EnumContainer.COLUMN
+        carousel_val = EnumContainer.CAROUSEL
         extract_tray_val = ActionEnum.EXTRACT_TRAY.value
         send_back_tray_val = ActionEnum.SEND_BACK_TRAY.value
         insert_random_material_val = ActionEnum.INSERT_RANDOM_MATERIAL.value
@@ -197,12 +197,12 @@ class WarehouseSimulation(Simulation):
         # set new y position of the floor
         warehouse.set_pos_y_floor(buf_pos)
 
-    def load_in_carousel(self, tray_to_insert: Tray, destination: EnumWarehouse, load_in_buffer: bool):
+    def load_in_carousel(self, tray_to_insert: Tray, destination: EnumContainer, load_in_buffer: bool):
         """
         Simulation method used to load the carousel into the warehouse.
 
         :type tray_to_insert: Tray
-        :type destination: EnumWarehouse
+        :type destination: EnumContainer
         :type load_in_buffer: bool
         :param tray_to_insert: tray that will be inserted into the warehouse
         :param destination: destination of the tray
@@ -335,12 +335,12 @@ class WarehouseSimulation(Simulation):
         else:
             warehouse.get_carousel().remove_tray(tray)
 
-    def load(self, tray: Tray, destination: EnumWarehouse) -> None:
+    def load(self, tray: Tray, destination: EnumContainer) -> None:
         """
         Simulation method used to load the tray into the warehouse.
 
         :type tray: Tray
-        :type destination: EnumWarehouse
+        :type destination: EnumContainer
         :param tray: tray to load
         :param destination: destination of the tray
         :raises ValueError: if the offset of the tray is not equal to any column in the warehouse
@@ -353,7 +353,7 @@ class WarehouseSimulation(Simulation):
         yield self.env.timeout(self.horiz_move(dest_x_tray))
         # update warehouse
         # if destination is carousel, add
-        if destination == EnumWarehouse.CAROUSEL:
+        if destination == EnumContainer.CAROUSEL:
             return warehouse.get_carousel().add_tray(tray)
         # otherwise, check the offset of column
         for col in warehouse.get_cols_container():

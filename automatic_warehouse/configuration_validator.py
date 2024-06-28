@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from logging import getLogger
 
-from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfiguration, ColumnConfiguration, CarouselConfiguration
+from automatic_warehouse.warehouse_configuration_singleton import (
+    WarehouseConfiguration,
+    ColumnConfiguration,
+    CarouselConfiguration
+)
 
 logger = getLogger(__name__)
 
@@ -15,6 +19,12 @@ class ConfigValidatorError(Exception):
 
 
 class ConfigurationValidator:
+    """
+    A configuration validator used to validate a ``WarehouseConfiguration`` schema.
+
+    :type schema: :class:`WarehouseConfiguration`
+    :param schema: schema to validate.
+    """
     def __init__(self, schema: WarehouseConfiguration):
         self._schema = schema
 

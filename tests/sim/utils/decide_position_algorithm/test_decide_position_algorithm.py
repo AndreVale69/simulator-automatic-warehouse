@@ -1,9 +1,9 @@
 import uuid
 from unittest import TestCase
 
-from automatic_warehouse.material import Material
+from status_warehouse.material import Material
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from automatic_warehouse.tray import Tray
+from status_warehouse.tray import Tray
 from automatic_warehouse.utils.decide_position_algorithm.algorithm import decide_position
 from automatic_warehouse.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from automatic_warehouse.warehouse import Warehouse

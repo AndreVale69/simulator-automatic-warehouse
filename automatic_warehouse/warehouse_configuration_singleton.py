@@ -7,11 +7,12 @@ from platform import system
 
 from jsonschema import Draft202012Validator
 
-from automatic_warehouse.configuration import WAREHOUSE_CONFIGURATION
+from automatic_warehouse.env_vars import WAREHOUSE_CONFIGURATION
 
 
 @dataclass
 class TrayConfiguration:
+    """ Tray Configuration """
     length: int
     width: int
     maximum_height: int
@@ -19,6 +20,7 @@ class TrayConfiguration:
 
 @dataclass
 class ColumnConfiguration:
+    """ Column Configuration """
     length: int
     height: int
     x_offset: int
@@ -37,6 +39,7 @@ class ColumnConfiguration:
 
 @dataclass
 class CarouselConfiguration:
+    """ Carousel Configuration """
     length: int
     width: int
     hole_height: int
@@ -55,6 +58,7 @@ class CarouselConfiguration:
 
 @dataclass
 class SimulationConfiguration:
+    """ Simulation Configuration """
     num_actions: int
     trays_to_gen: int
     materials_to_gen: int
@@ -65,6 +69,7 @@ class SimulationConfiguration:
 
 @dataclass
 class WarehouseConfiguration:
+    """ Warehouse Configuration """
     height_warehouse: int
     default_height_space: int
     speed_per_sec: int | float
@@ -78,7 +83,7 @@ class WarehouseConfigurationSingleton:
     """
     Singleton class to provide access to a single configuration.
 
-    Use it as follows: `WarehouseConfigurationSingleton.get_instance().get_configuration()`
+    Use it as follows: ``WarehouseConfigurationSingleton.get_instance().get_configuration()``
     """
     instance = None
 
@@ -96,7 +101,6 @@ class WarehouseConfigurationSingleton:
         return WarehouseConfigurationSingleton.instance
 
     def __init__(self, file_path: str=WAREHOUSE_CONFIGURATION):
-        # TODO: if the config it's not in this prj dir?
         self._json_schema: dict | None = None
         # get project directory
         # https://docs.python.org/3.12/library/platform.html#platform.system

@@ -3,11 +3,11 @@ from logging import getLogger
 from random import randint
 from typing import NamedTuple
 
-from automatic_warehouse.material import gen_rand_materials
+from status_warehouse.material import gen_rand_materials
 from automatic_warehouse.status_warehouse.container.tray_container import TrayContainer
 from automatic_warehouse.status_warehouse.entry.empty_entry import EmptyEntry
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from automatic_warehouse.tray import Tray
+from status_warehouse.tray import Tray
 from automatic_warehouse.warehouse_configuration_singleton import ColumnConfiguration
 
 logger = getLogger(__name__)
@@ -20,17 +20,17 @@ class GenMaterialsAndTraysReturns(NamedTuple):
 
 
 class Column(TrayContainer):
-    def __init__(self, info: ColumnConfiguration, warehouse):
-        """
-        The column is a simple column of the warehouse.
-        It can't be where there is the bay and the buffer.
-        It is thought to store the trays.
+    """
+    The column is a simple column of the warehouse.
+    It can't be where there is the bay and the buffer.
+    It is thought to store the trays.
 
-        :type info: ColumnConfiguration
-        :type warehouse: Warehouse
-        :param info: info about the column (config).
-        :param warehouse: the warehouse where the column is located.
-        """
+    :type info: ColumnConfiguration
+    :type warehouse: Warehouse
+    :param info: info about the column (config).
+    :param warehouse: the warehouse where the column is located.
+    """
+    def __init__(self, info: ColumnConfiguration, warehouse):
         super().__init__(info.height, info.x_offset, info.width, info.length, warehouse)
 
         self.height_last_position = info.height_last_position // self.def_space
