@@ -2,8 +2,8 @@ import copy
 import uuid
 from unittest import TestCase
 
-from status_warehouse.material import gen_rand_material, Material
-from status_warehouse.tray import gen_rand_trays, Tray
+from automatic_warehouse.status_warehouse.material import gen_rand_material, Material
+from automatic_warehouse.status_warehouse.tray import gen_rand_trays, Tray
 
 
 class TestBuiltinTray(TestCase):

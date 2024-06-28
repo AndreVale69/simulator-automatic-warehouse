@@ -4,7 +4,7 @@ from simpy import Environment
 
 from automatic_warehouse.simulation.actions.move.move import Move
 from automatic_warehouse.simulation.simulation import Simulation
-from status_warehouse.container.enum_container import EnumContainer
+from automatic_warehouse.status_warehouse.container.enum_container import EnumContainer
 from automatic_warehouse.warehouse import Warehouse
 
 logger = getLogger(__name__)

@@ -2,7 +2,7 @@ import copy
 from unittest import TestCase
 
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from status_warehouse.tray import Tray
+from automatic_warehouse.status_warehouse.tray import Tray
 
 
 class TestTrayEntry(TestCase):

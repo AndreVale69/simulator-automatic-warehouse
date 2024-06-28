@@ -2,8 +2,8 @@ from abc import abstractmethod, ABC
 
 from simpy import Environment
 
-from status_warehouse.container.enum_container import EnumContainer
-from status_warehouse.tray import Tray
+from automatic_warehouse.status_warehouse.container.enum_container import EnumContainer
+from automatic_warehouse.status_warehouse.tray import Tray
 from automatic_warehouse.warehouse import Warehouse
 
 

@@ -13,8 +13,8 @@ from automatic_warehouse.simulation.actions.material.remove_material.remove_rand
 from automatic_warehouse.simulation.actions.send_back_tray import SendBackTray
 from automatic_warehouse.simulation.simulation import Simulation
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from status_warehouse.container.enum_container import EnumContainer
-from status_warehouse.tray import Tray
+from automatic_warehouse.status_warehouse.container.enum_container import EnumContainer
+from automatic_warehouse.status_warehouse.tray import Tray
 from automatic_warehouse.utils.decide_position_algorithm.algorithm import decide_position
 from automatic_warehouse.utils.decide_position_algorithm.enum_algorithm import Algorithm
 from automatic_warehouse.warehouse import Warehouse

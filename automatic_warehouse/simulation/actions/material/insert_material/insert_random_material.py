@@ -34,7 +34,7 @@ class InsertRandomMaterial(InsertMaterial):
                                               "so the tray parameter is not taken into account.")
         assert destination is None, logger.warning("The default destination parameter is bay, "
                                                    "so the destination parameter is not taken into account.")
-        from status_warehouse.material import gen_rand_material
+        from automatic_warehouse.status_warehouse.material import gen_rand_material
 
         env, simulation = self.env, self.simulation
 

@@ -4,7 +4,7 @@ import copy
 import random
 from logging import getLogger
 
-from status_warehouse.material import Material
+from automatic_warehouse.status_warehouse.material import Material
 from automatic_warehouse.warehouse_configuration_singleton import (
     WarehouseConfigurationSingleton,
     WarehouseConfiguration,

@@ -3,11 +3,11 @@ from logging import getLogger
 from random import randint
 from typing import NamedTuple
 
-from status_warehouse.material import gen_rand_materials
+from automatic_warehouse.status_warehouse.material import gen_rand_materials
 from automatic_warehouse.status_warehouse.container.tray_container import TrayContainer
 from automatic_warehouse.status_warehouse.entry.empty_entry import EmptyEntry
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from status_warehouse.tray import Tray
+from automatic_warehouse.status_warehouse.tray import Tray
 from automatic_warehouse.warehouse_configuration_singleton import ColumnConfiguration
 
 logger = getLogger(__name__)

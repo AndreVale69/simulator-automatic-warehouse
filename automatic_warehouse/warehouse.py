@@ -17,10 +17,10 @@ else:
 from copy import deepcopy
 from random import randint, choice
 from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton, WarehouseConfiguration, ColumnConfiguration, CarouselConfiguration
-from status_warehouse.tray import Tray
+from automatic_warehouse.status_warehouse.tray import Tray
 from automatic_warehouse.status_warehouse.container.carousel import Carousel
 from automatic_warehouse.status_warehouse.container.column import Column
-from status_warehouse.material import gen_rand_material
+from automatic_warehouse.status_warehouse.material import gen_rand_material
 
 logger = getLogger(__name__)
 __VERSION__ = '1.0.0'

@@ -4,7 +4,7 @@ from unittest import TestCase
 from automatic_warehouse.status_warehouse.container.column import Column
 from automatic_warehouse.status_warehouse.entry.empty_entry import EmptyEntry
 from automatic_warehouse.status_warehouse.entry.tray_entry import TrayEntry
-from status_warehouse.tray import Tray
+from automatic_warehouse.status_warehouse.tray import Tray
 from automatic_warehouse.warehouse import Warehouse
 from automatic_warehouse.warehouse_configuration_singleton import (
     ColumnConfiguration,

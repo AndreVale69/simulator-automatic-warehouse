@@ -3,8 +3,8 @@ from unittest import TestCase
 from automatic_warehouse.simulation.actions.action_enum import ActionEnum
 from automatic_warehouse.simulation.actions.send_back_tray import SendBackTray
 from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
-from status_warehouse.container.enum_container import EnumContainer
-from status_warehouse.tray import Tray
+from automatic_warehouse.status_warehouse.container.enum_container import EnumContainer
+from automatic_warehouse.status_warehouse.tray import Tray
 from automatic_warehouse.warehouse import Warehouse
 
 
