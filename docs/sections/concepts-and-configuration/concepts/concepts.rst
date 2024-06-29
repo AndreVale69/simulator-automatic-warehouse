@@ -12,22 +12,10 @@ However, we **strongly recommend** that you read this section to understand how 
 simulator works under the hood.
 This section might explain to you some tricky operations that the end user doesn't see at all (again, under the hood).
 
------------------
-Table of Contents
------------------
+.. toctree::
+   :maxdepth: 2
 
-TODO:
-
-- Warehouse
-
-- Tray and Material
-
-- Containers
-
-    - Column
-
-    - Carousel
-
-- Entries
-
-    - (one page) Empty and Tray
+   warehouse
+   tray-and-material
+   containers/containers
+   entries

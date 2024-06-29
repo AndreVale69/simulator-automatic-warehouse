@@ -10,6 +10,7 @@ In this section we will give a detailed explanation of the concepts used through
 library (e.g. columns, materials, etc.) and of each of the fields you will find in the configuration.
 
 .. toctree::
+   :maxdepth: 3
 
-    concepts/concepts
-    configuration/configuration
+   concepts/concepts
+   configuration/configuration
