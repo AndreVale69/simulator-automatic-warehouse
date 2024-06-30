@@ -1,5 +1,5 @@
-import random
-import uuid
+from random import randint, choice
+from uuid import uuid4
 
 from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfigurationSingleton
 
@@ -113,33 +113,33 @@ def gen_rand_materials(how_many: int, min_height: int = 25, max_height: int = 50
     return [gen_rand_material(min_height, max_height) for _ in range(how_many)]
 
 
-def gen_rand_material(min_height: int = 25, max_height: int = 50) -> Material:
+def gen_rand_material(min_height: int = 25, max_height: int = 50, name: str = None) -> Material:
     """
     Static method to generate a random material.
 
     :type min_height: int
     :type max_height: int
+    :type name: str | None
     :rtype: Material
     :param min_height: the minimum height (lower limit) of the material.
     :param max_height: the maximum height (upper limit) of the material.
+    :param name: name of the random material to be generated,
+                 otherwise the name will be taken from the ``random_name_materials`` variable
+                 (you can see the list if you import with ``Material.random_name_materials``).
     :return: the material generated.
     """
     assert min_height <= max_height, "min_height must be less than max_height"
     assert min_height > 0, "min_height must be greater than 0"
     assert max_height > 0, "max_height must be greater than 0"
-    name_materials = ['Shirt',
-                      'Pasta',
-                      'Tomato',
-                      'Bottle',
-                      'Tablet',
-                      'Helmet']
+    tray_config = WarehouseConfigurationSingleton.get_instance().get_configuration().tray
+    return Material(
+        uuid4().hex,
+        choice(random_name_materials) if name is None else name,
+        randint(min_height, max_height),
+        randint(25, tray_config.length-1),
+        randint(25, tray_config.width-1)
+    )
 
-    # UUID to avoid the same hex barcode
-    barcode = uuid.uuid4().hex
-    name = random.choice(name_materials)
-    # height max is buffer height = 150
-    height = random.randint(min_height, max_height)
-    length = random.randint(25, 150)
-    width = random.randint(25, 150)
-
-    return Material(barcode, name, height, length, width)
+random_name_materials = [
+    'Shirt', 'Screwdriver', 'Bottle', 'Tablet', 'Helmet', 'GPU', 'CPU'
+]
