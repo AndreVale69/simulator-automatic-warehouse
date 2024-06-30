@@ -16,7 +16,7 @@ In the Simulator Automatic Warehouse library, the Tray is a unit that can be mod
 length, width and maximum height (limit to avoid placing a material too high).
 
 .. figure:: ../../../_static/tray/tray.jpeg
-   :scale: 8 %
+   :scale: 6 %
    :align: center
    :alt: General tray dimensions
 
@@ -32,3 +32,13 @@ Do you not want to create each tray to be inserted in the warehouse?
 No problem, we have created some useful methods to help you.
 In the :ref:`api-reference` section,
 you can see some random generation that will help you randomise your custom Digital Twin.
+
+--------
+Material
+--------
+
+The material is the atomic element that can be added to a tray.
+In the Simulator Automatic Warehouse,
+a material is a class that contains some information such as barcode, name, height, length and width.
+
+Like the Tray class, the Material class contains some useful methods for generating random materials.
