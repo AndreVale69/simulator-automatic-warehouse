@@ -40,14 +40,13 @@ class Column(TrayContainer):
             self.create_new_space(EmptyEntry(info.x_offset, i))
 
     def __deepcopy__(self, memo):
-        info = ColumnConfiguration(
+        copy_obj = Column(ColumnConfiguration(
             length=self.length,
             height =self.num_entries * self.def_space,
             x_offset = self.offset_x,
             width = self.width,
             height_last_position = self.height_last_position * self.def_space
-        )
-        copy_obj = Column(info, self.warehouse)
+        ), self.warehouse)
         copy_obj.container = deepcopy(self.container, memo)
         return copy_obj
 

@@ -37,15 +37,14 @@ class Carousel(TrayContainer):
         self.create_new_space(EmptyEntry(self.offset_x, first_y + (self.bay + self.buffer)))
 
     def __deepcopy__(self, memo):
-        info = CarouselConfiguration(
+        copy_obj = Carousel(CarouselConfiguration(
             length = self.length,
             bay_height = self.bay * (def_space := self.def_space),
             buffer_height = self.buffer * def_space,
             x_offset = self.offset_x,
             width = self.width,
             hole_height= self.hole * def_space
-        )
-        copy_obj = Carousel(info, self.warehouse)
+        ), self.warehouse)
         copy_obj.container = deepcopy(self.container, memo)
         return copy_obj
 
