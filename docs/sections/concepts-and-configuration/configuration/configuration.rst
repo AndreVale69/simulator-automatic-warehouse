@@ -104,7 +104,74 @@ Example of a tray definition with a length of 390 centimetres (3.9 metres), a wi
 Columns
 ^^^^^^^
 
-TODO
+The :ref:`columns` section is a list of columns that can be found in the automatic warehouse.
+As we can see from the columns section, this container is intended to be used for storage.
+Each of the following fields must be inserted below the ``columns`` field:
+
+- ``description``
+
+  **Type**: `string`
+
+  **Description**: each column is identified by an optional description, which is only used by the user for readability. This field is **optional**.
+
+
+- ``length``
+
+  **Type**: `integer`
+
+  **Description**: length of the column.
+
+
+- ``width``
+
+  **Type**: `integer`
+
+  **Description**: width of the column.
+
+
+- ``height``
+
+  **Type**: `integer`
+
+  **Description**: height of the column.
+
+
+- ``offset_formula_description``
+
+  **Type**: `string`
+
+  **Description**: an optional description of the offset formula used during the simulation to calculate the time of the movement. This is an **optional** field and its purpose is to improve the readability of the configuration. If you are an end user, you can omit this field.
+
+
+- ``x_offset``
+
+  **Type**: `integer`
+
+  **Description**: the position identifier used by the library to understand where a column is located in the environment. See the :ref:`columns` section in the :ref:`concepts` chapter for a practical example.
+
+
+- ``height_last_position``
+
+  **Type**: `integer`
+
+  **Description**: the height of the last position is a special feature of these automatic warehouses. It is the last position (at the top of the store) where a tray can be found.
+
+
+Example of a column definition with a length of 400 centimetres (4 metres), a width of 250 centimetres (2.5 metres), a height of 325 centimetres (3.25 metres), an offset of 125 centimetres (1.25 metres) and a height of the last position of 75 centimetres:
+
+.. code-block:: yaml
+
+    columns:
+      # description is optional
+      - description: "right_column"
+        length: 400
+        width: 250
+        height: 325
+        # optional
+        # offset_formula_description: "width / 2"
+        x_offset: 125
+        height_last_position: 75
+
 
 ^^^^^^^^
 Carousel
