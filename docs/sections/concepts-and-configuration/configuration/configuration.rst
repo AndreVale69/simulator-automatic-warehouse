@@ -104,15 +104,15 @@ Example of a tray definition with a length of 390 centimetres (3.9 metres), a wi
 Columns
 ^^^^^^^
 
-The :ref:`columns` section is a list of columns that can be found in the automatic warehouse.
-As we can see from the columns section, this container is intended to be used for storage.
+The Columns section is a list of columns that can be found in the automatic warehouse.
+As we can see from the :ref:`columns` section, this container is intended to be used for storage.
 Each of the following fields must be inserted below the ``columns`` field:
 
 - ``description``
 
   **Type**: `string`
 
-  **Description**: each column is identified by an optional description, which is only used by the user for readability. This field is **optional**.
+  **Description**: each column is identified by an **optional** description, which is only used by the user for readability.
 
 
 - ``length``
@@ -177,7 +177,65 @@ Example of a column definition with a length of 400 centimetres (4 metres), a wi
 Carousel
 ^^^^^^^^
 
-TODO
+The Carousel section is a definition of the picking area and two trays: bay and buffer.
+As we can see from the :ref:`carousel` section, this container is intended to be used as a picking area and to buffer a tray.
+Each of the following fields must be inserted below the ``carousel`` field:
+
+- ``description``
+
+  **Type**: `string`
+
+  **Description**: the carousel is identified by an **optional** description, which is only used by the user for readability.
+
+
+- ``length``
+
+  **Type**: `integer`
+
+  **Description**: length of the carousel.
+
+
+- ``width``
+
+  **Type**: `integer`
+
+  **Description**: width of the carousel.
+
+
+- ``hole_height``
+
+  **Type**: `integer`
+
+  **Description**: is the height of the hole. We suggest you look at the illustration on the :ref:`carousel` section to understand.
+
+
+- ``bay_height``
+
+  **Type**: `integer`
+
+  **Description**: is the height of the bay. Again, we suggest you look at the illustration on the :ref:`carousel` section to understand.
+
+
+- ``buffer_height``
+
+  **Type**: `integer`
+
+  **Description**: is the height of the buffer, the tray under the bay. Again, we suggest you look at the illustration on the :ref:`carousel` section to understand.
+
+
+- ``offset_formula_description``
+
+  **Type**: `string`
+
+  **Description**: an optional description of the offset formula used during the simulation to calculate the time of the movement. This is an **optional** field and its purpose is to improve the readability of the configuration. If you are an end user, you can omit this field.
+
+
+- ``x_offset``
+
+  **Type**: `integer`
+
+  **Description**: the position identifier used by the library to understand where a column is located in the environment. See the :ref:`columns` section in the :ref:`concepts` chapter for a practical example.
+
 
 ^^^^^^^^^^
 Simulation
