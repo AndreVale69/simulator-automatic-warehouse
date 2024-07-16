@@ -60,7 +60,7 @@ columns:
 
 
 # The carousel of the warehouse, composed by a buffer and a bay.
-# At the moment (version 0.0.1) there can only be one carousel in the warehouse.
+# At the moment (version 1.0.0) there can only be one carousel in the warehouse.
 # As the column has a description used by the user for readability.
 carousel:
   description: "carousel-bay_and_buffer"
@@ -87,7 +87,7 @@ simulation:
   # The number of actions to be performed.
   num_actions: 100
   # The number of trays to be generated.
-  # At the moment (version 0.0.1), the warehouse is filled from top to bottom.
+  # At the moment (version 1.0.0), the warehouse is filled from top to bottom.
   trays_to_gen: 5
   # The number of materials to be generated.
   # The materials are placed in random trays.
