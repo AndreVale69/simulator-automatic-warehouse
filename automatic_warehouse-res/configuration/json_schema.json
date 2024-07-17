@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema#",
-  "$id": "https://github.com/AndreVale69/simulator-automatic-warehouse/tree/main/resources/configuration/json_schema.json",
+  "$id": "https://github.com/AndreVale69/simulator-automatic-warehouse/tree/main/automatic_warehouse-res/configuration/json_schema.json",
   "title": "Configuration Automatic Warehouse",
   "description": "A configuration of an Automatic Warehouse in the real world.",
   "type": "object",
@@ -141,7 +141,21 @@
         "materials_to_gen",
         "gen_bay",
         "gen_buffer"
-      ]
+      ],
+      "if": {
+        "properties": {
+          "gen_bay": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "gen_buffer": {
+            "const": false
+          }
+        }
+      }
     }
   },
   "required": [
