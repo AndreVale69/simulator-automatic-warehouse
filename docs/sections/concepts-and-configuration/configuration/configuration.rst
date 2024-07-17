@@ -257,7 +257,64 @@ Example of a carousel definition with a length of 400 centimetres (4 metres), a 
 Simulation
 ^^^^^^^^^^
 
-TODO
+The Simulation section is a definition of the simulation configuration.
+Each of the following fields must be inserted below the ``simulation`` field:
+
+- ``time``
+
+  **Type**: `integer`
+
+  **Description**: the maximum simulation time. If the total time of the actions to be carried out is greater than the time allowed, the execution will be interrupted. The time is not necessary, it is an **optional** field. If you want to be sure that each action will be performed, clear this field.
+
+
+- ``num_actions``
+
+  **Type**: `integer`
+
+  **Description**: the number of actions to be performed.
+
+
+- ``trays_to_gen``
+
+  **Type**: `integer`
+
+  **Description**: the number of trays to be generated. Note that the warehouse is filled from top to bottom.
+
+
+- ``materials_to_gen``
+
+  **Type**: `integer`
+
+  **Description**: the number of materials to be generated. Note that the materials are placed in random trays.
+
+
+- ``gen_bay``
+
+  **Type**: `boolean`
+
+  **Description**: true if you want to generate a tray in the bay, false otherwise.
+
+
+- ``gen_buffer``
+
+  **Type**: `boolean`
+
+  **Description**: true if you want to generate a bay in the buffer (position below the bay), false otherwise. Be careful, if ``gen_bay`` is false, this field cannot be true! Because in general, a warehouse cannot have a status with one tray in the buffer and none in the bay.
+
+
+Example of a simulation definition with no simulation time requested, 100 actions, 5 trays to be generated in the warehouse, 7 materials to be generated randomly and one tray in the buffer and in the bay:
+
+.. code-block:: yaml
+
+    simulation:
+      # optional
+      # time: 10000
+      num_actions: 100
+      trays_to_gen: 5
+      materials_to_gen: 7
+      gen_bay: true
+      gen_buffer: true
+
 
 ---------
 Hardcoded
