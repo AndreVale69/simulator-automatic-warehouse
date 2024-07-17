@@ -237,6 +237,22 @@ Each of the following fields must be inserted below the ``carousel`` field:
   **Description**: the position identifier used by the library to understand where a column is located in the environment. See the :ref:`columns` section in the :ref:`concepts` chapter for a practical example.
 
 
+Example of a carousel definition with a length of 400 centimetres (4 metres), a width of 250 centimetres (2.5 metres), an hole height of 375 centimetres (3.75 metres), a bay height of 150 centimetres (1.5 meters), a buffer height of 150 centimetres (1.5 metres), an offset of 125 centimetres (1.25 metres):
+
+.. code-block:: yaml
+
+    carousel:
+      # optional
+      description: "carousel-bay_and_buffer"
+      width: 250
+      length: 400
+      hole_height: 375
+      bay_height: 150
+      buffer_height: 150
+      # optional
+      # offset_formula_description: "width / 2"
+      x_offset: 125
+
 ^^^^^^^^^^
 Simulation
 ^^^^^^^^^^
