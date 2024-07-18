@@ -27,6 +27,11 @@ The configuration is divided into five groups:
 
 .. important:: Every measurement is in centimeters.
 
+It's highly recommended to use the json schema when writing a YAML file. 
+In the PyCharm IDE you can see the following guide to setting up the json schema: `JetBrains guide <https://www.jetbrains.com/help/pycharm/yaml.html#select-schema-for-file>`_.
+
+You can download the schema directly from the repository: `json_schema <https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/automatic_warehouse-res/configuration/json_schema.json>`_.
+
 ^^^^^^^
 General
 ^^^^^^^
@@ -385,6 +390,3 @@ The hardcoded object used to create a new configuration is called ``WarehouseCon
            gen_buffer=False
        )
    )
-
-
-TODO: Explain how to use the json schema.
