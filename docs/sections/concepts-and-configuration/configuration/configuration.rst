@@ -320,7 +320,71 @@ Example of a simulation definition with no simulation time requested, 100 action
 Hardcoded
 ---------
 
-TODO
+Once you understand the YAML configuration and its fields, the hardcoded part is very simple.
 
-TODO: Add detailed explanation of each field of the config: yaml and hardcoded.
+The Simulator Automatic Warehouse library allows you to use a hardcoded configuration. 
+By default, the library tries to load a configuration from a file located in the path specified by the user using an environment variable.
+If you don't set an env variable for the configuration file, a default configuration will be loaded.
+
+At this point you can load (override) a new configuration from a file path or use a hardcoded configuration.
+So you cannot load a hardcoded configuration at startup because the library was designed to work with the yaml files.
+
+
+The ability to override an existing configuration with a new one is given to allow you to create as many configurations as you want. 
+In the ``WarehouseConfigurationSingleton`` class you will find some useful methods to override an existing one.
+
+The hardcoded object used to create a new configuration is called ``WarehouseConfiguration`` which is a simpler ``dataclass`` containing the fields used by the configuration. A simple example of a hardcoded configuration:
+
+.. code-block:: python
+
+   from automatic_warehouse.warehouse_configuration_singleton import (
+       WarehouseConfigurationSingleton,
+       WarehouseConfiguration,
+       ColumnConfiguration,
+       CarouselConfiguration,
+       SimulationConfiguration,
+       TrayConfiguration
+   )
+
+   WarehouseConfiguration(
+       height_warehouse=1000,
+       default_height_space=1000,
+       speed_per_sec=1000,
+       tray=TrayConfiguration(
+           length=1000,
+           width=1000,
+           maximum_height=1000
+       ),
+       columns=[
+           ColumnConfiguration(
+               description='description',
+               width=1000,
+               length=200,
+               height=1000,
+               offset_formula_description='description',
+               x_offset=1000,
+               height_last_position=1000
+           )
+       ],
+       carousel=CarouselConfiguration(
+           description='desc',
+           width=1000,
+           length=200,
+           hole_height=1000,
+           bay_height=1000,
+           buffer_height=1000,
+           offset_formula_description='desc',
+           x_offset=1000
+       ),
+       simulation=SimulationConfiguration(
+           time=1000,
+           num_actions=1000,
+           trays_to_gen=1000,
+           materials_to_gen=1000,
+           gen_bay=True,
+           gen_buffer=False
+       )
+   )
+
+
 TODO: Explain how to use the json schema.
