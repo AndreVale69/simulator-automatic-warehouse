@@ -46,10 +46,11 @@ Table of Contents
 -----------------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 6
 
    Overview <self>
    sections/getting-started/getting-started
    sections/step-by-step-guide/step-by-step-guide
    sections/concepts-and-configuration/concepts-and-configuration
+   sections/simulation-results/simulation-results
    sections/api-reference/api-reference
