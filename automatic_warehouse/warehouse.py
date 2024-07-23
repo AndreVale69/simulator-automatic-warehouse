@@ -23,7 +23,6 @@ from automatic_warehouse.status_warehouse.container.column import Column
 from automatic_warehouse.status_warehouse.material import gen_rand_material
 
 logger = getLogger(__name__)
-__VERSION__ = '1.0.0'
 
 
 
