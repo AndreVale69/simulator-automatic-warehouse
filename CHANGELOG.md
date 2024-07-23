@@ -6,7 +6,7 @@
 
 - Random tray generation added to the `Tray` class. It's now possible to generate only one tray.
 - Improved `get_minimum_offset` method to calculate the minimum offset between columns in the warehouse.
-- Improved `gen_rand` method in the `Warehouse` class. Now it cleanup the warehouse and then generate a bay 
+- Improved `gen_rand` method in the `Warehouse` class. Now it cleanup the warehouse and then generate a bay
   (bool parameter), a buffer (bool parameter), and populates the columns.
 - Improved simulation execution. Moved **all** simulation methods from `Warehouse` class to `Simulation` class.
   The list of moved methods is:
@@ -35,12 +35,12 @@
 - Added `get_bay_tray` and `get_buffer_tray` methods to the `Carousel` class (useful methods).
 - Added `last_position_is_occupied` method to the `Column` class.
 - Added `cleanup_columns` and `cleanup_carousel` methods to the `Warehouse` class.
-- Added `update_config_from_file` and `update_config` methods to the `WarehouseConfigurationSingleton` class 
+- Added `update_config_from_file` and `update_config` methods to the `WarehouseConfigurationSingleton` class
   to allow loading a new configuration from the file o from an hardcoded object.
 - Added `add_materials` and `remove_materials` methods to the `Tray` class.
 - Added a new exception in `horiz_move` if the offset is not found.
 - Added a new exception in `load` if the offset is not found.
-- Added a new exception when a tray is too large to be inserted into a container. 
+- Added a new exception when a tray is too large to be inserted into a container.
 - Added a new exception when a material is too large to be inserted into a tray.
 - Added default config path if none is specified (`configuration/sample_config.yaml`).
 - Added total simulation time.
@@ -49,7 +49,7 @@
 - Added a configuration validator to check that some properties are respected
   (e.g. "_the height property of each column can't be greater than the height of the warehouse (height_warehouse)._").
 - Changed the first trayEntry reference. Now the first trayEntry will be the lower limit.
-  For example, a tray with three entries; in the container the first trayEntry will be position 2, 
+  For example, a tray with three entries; in the container the first trayEntry will be position 2,
   and entries 0 and 1 are simple trayEntries.
 - Changed `Carousel` class signature.
   It doesn't accept a dictionary anymore as parameter, but it wants a `CarouselConfiguration` class instantiation.
@@ -60,10 +60,10 @@
 - Changed `Tray` class signature.
   It wants a `TrayConfiguration` class instantiation and the list of materials.
   This was done for clarity.
-- Changed `get_height_container` method to `get_num_entries`. 
-  The first returns the height of the container (config value) 
+- Changed `get_height_container` method to `get_num_entries`.
+  The first returns the height of the container (config value)
   and the second returns the number of entries in the warehouse.
-- Changed the `add_column` method. It raises a `ValueError` if the x-offset of the column is not unique. 
+- Changed the `add_column` method. It raises a `ValueError` if the x-offset of the column is not unique.
 - Changed `src` folder name in `automatic_warehouse`.
 - Changed `resources` folder name in `automatic_warehouse-res`.
 - Changed `configuration` folder name in `automatic_warehouse-config`.
@@ -74,12 +74,12 @@
 
 - Fixed random trays generation in `Tray` class. There were some problems (raise `ValueError`) when the
   `materials_to_insert` parameter was larger than the `how_many` parameter.
-- Fixed `get_num_entries_free` in `Column` class. 
-  There were some problems because the last position of the warehouse was considered multiple times 
+- Fixed `get_num_entries_free` in `Column` class.
+  There were some problems because the last position of the warehouse was considered multiple times
   (instead of only once).
 - Fixed `__hash__` in `Tray` class. It throws an exception because Python can't hash a list.
-- Fixed `remove_tray` in the `Carousel` class. 
-  It returns true if a tray isn't in the carousel. 
+- Fixed `remove_tray` in the `Carousel` class.
+  It returns true if a tray isn't in the carousel.
   This fix improves performance because it only checks two items (not the whole container...).
 - Fixed `is_empty` in `Column` class. It used a wrong height.
 - Fixed `__hash__` in Entry class. It always returns the same value.
@@ -106,5 +106,5 @@
 
 ## [v0.0.1-bachelors-degree-thesis](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v0.0.1-bachelors-degree-thesis)
 
-- This is an alpha version of the project. It is only made to see how the project was at the start. It corresponds to my bachelor thesis in computer science at the University of Verona. 
+- This is an alpha version of the project. It is only made to see how the project was at the start. It corresponds to my bachelor thesis in computer science at the University of Verona.
   This version should be stable, but it doesn't have any tests (next improvement)! So for now it is not very reliable.
