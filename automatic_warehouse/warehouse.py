@@ -27,15 +27,18 @@ logger = getLogger(__name__)
 
 
 class MinimumOffsetReturns(NamedTuple):
-    """ Values returned by the get_minimum_offset method. """
+    """ Values returned by the :attr:`Warehouse.get_minimum_offset` method. """
     index: int
+    "Index of the minimum offset found."
     offset: int
+    "Offset found."
 
 
 class Warehouse:
     """
     Representation of the real warehouse.
-    It contains all the information about the warehouse and the methods for running a simulation.
+    It contains all the information about the warehouse and 
+    the methods for calculating the internal movements of its components.
     """
 
     def __init__(self):
@@ -45,7 +48,7 @@ class Warehouse:
         self.height = config.height_warehouse
 
         # add all columns taken from YAML
-        self.columns_container = []
+        self.columns_container: list[Column] = []
         self._columns_x_offset = set()
         # all columns must be added from minimum offset_x to greats offset_x
         # respecting this order
@@ -143,12 +146,13 @@ class Warehouse:
 
     def get_column(self, index: int) -> Column:
         """
-        Get the (index) column of the warehouse.
+        Get the (i-)column of the warehouse.
 
         :type index: int
         :rtype: Column
         :param index: the index of the column.
-        :return: the columns of the warehouse.
+        :return: get the column of the warehouse with the given index.
+        :raises IndexError: list index out of range.
         """
         return self.columns_container[index]
 
@@ -172,18 +176,19 @@ class Warehouse:
 
     def get_speed_per_sec(self) -> int:
         """
-        Get the speed of the platform.
+        Get the speed of the platform (config value).
         It's used by the simulator to calculate the time it takes to move between columns and up and down.
 
         :rtype: int
-        :return: the speed of the platform.
+        :return: the speed of the platform (config value).
         """
         return self.speed_per_sec
 
     def get_max_height_material(self) -> int:
         """
-        Get the maximum height of a material.
-        It's the value calculated by dividing the buffer height by the return value of get_def_space().
+        Get the maximum height of a :class:`Material`.
+        It's the value calculated by dividing the buffer height by 
+        the return value of :attr:`get_def_space` method.
 
         :rtype: int
         :return: the maximum height of a material.
@@ -240,17 +245,18 @@ class Warehouse:
         Set the y-position of the floor.
 
         :param pos: new position of the floor.
+        :raises AssertionError: if the ``pos`` parameter is not greater than or equal to zero.
         """
         assert pos >= 0, "y-position of the floor must be positive!"
         self.pos_y_floor = pos
 
     def add_column(self, col: Column):
         """
-        Add a column to the container of the columns the warehouse.
+        Add a column to the warehouse column container.
 
         :type col: Column
         :param col: the column to add.
-        :raises ValueError: if the column x_offset is not unique.
+        :raises ValueError: if the column ``x_offset`` is not unique.
         """
         assert type(col) is Column, "You cannot add a type other than Column!"
         if (offset_x := col.get_offset_x()) in self._columns_x_offset:
@@ -260,7 +266,7 @@ class Warehouse:
 
     def pop_column(self, index: int = -1) -> Column:
         """
-        Pop a column from the container of the columns the warehouse.
+        Remove a :class:`Column` from the column container in the warehouse.
         If no index is given, the last column of the container is removed by default.
 
         :type index: int
@@ -278,8 +284,8 @@ class Warehouse:
         If two or more values are the same, remove the first one found.
 
         :type value: Column
-        :param value: the Column to remove.
-        :raises ValueError: if the Column is not in a container.
+        :param value: the column to remove.
+        :raises ValueError: if the column is not in a container.
         """
         self.columns_container.remove(value)
         self._columns_x_offset.remove(value.get_offset_x())
@@ -289,24 +295,24 @@ class Warehouse:
         Verify if there is a space inside the warehouse.
 
         :rtype: bool
-        :return: True if there is a space inside the warehouse, otherwise False
+        :return: ``True`` if there is a space inside the warehouse, otherwise ``False``.
         """
         return False not in [col.is_full() for col in self.columns_container]
 
     def gen_rand(self, gen_bay: bool, gen_buffer: bool, num_trays: int, num_materials: int):
         """
         Generate a random warehouse.
-        Be careful!
-        Every entry in the warehouse will be reset!
+        **Be careful!
+        Every entry in the warehouse will be reset!**
 
         :type gen_bay: bool
         :type gen_buffer: bool
         :type num_trays: int
         :type num_materials: int
-        :param gen_bay: True generate a tray in the bay, otherwise generate an EmptyEntry
-        :param gen_buffer: True generate a tray in the buffer, otherwise generate an EmptyEntry
-        :param num_trays: numbers of trays
-        :param num_materials: numbers of materials
+        :param gen_bay: ``True`` generate a :class:`Tray` in the bay, otherwise generate an :class:`EmptyEntry`.
+        :param gen_buffer: ``True`` generate a :class:`Tray` in the buffer, otherwise generate an :class:`EmptyEntry`.
+        :param num_trays: numbers of trays.
+        :param num_materials: numbers of materials.
         """
         # cleanup the warehouse
         self.cleanup()
@@ -339,10 +345,11 @@ class Warehouse:
 
     def choice_random_tray(self) -> Tray:
         """
-        Choose a random tray from the warehouse.
+        Pick a random tray from the columns in the warehouse.
 
         :rtype: Tray
-        :return: the random tray chosen from the warehouse
+        :return: the random tray chosen from the columns in the warehouse.
+        :raises AssertionError: if each column doesn't have a tray.
         """
         container_tray_entry = []
         for col in self.columns_container:
@@ -351,15 +358,15 @@ class Warehouse:
         return choice(container_tray_entry)
 
     def cleanup(self):
-        """ Cleanup the warehouse (columns and carousel). Each Entry will be EmptyEntry. """
+        """ Cleanup the warehouse (columns and carousel). Each :class:`Entry` will be :class:`EmptyEntry`. """
         self.cleanup_columns()
         self.cleanup_carousel()
 
     def cleanup_columns(self):
-        """ Cleanup the columns of the warehouse. Each Entry will be EmptyEntry. """
+        """ Cleanup the columns of the warehouse. Each :class:`Entry` will be :class:`EmptyEntry`. """
         for column in self.columns_container:
             column.reset_container()
 
     def cleanup_carousel(self):
-        """ Cleanup the carousel of the warehouse. Each Entry will be EmptyEntry. """
+        """ Cleanup the carousel of the warehouse. Each :class:`Entry` will be :class:`EmptyEntry`. """
         self.carousel.reset_container()
