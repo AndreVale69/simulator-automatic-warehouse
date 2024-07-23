@@ -3,11 +3,12 @@
 ## v1.0.0
 
 ### New Features and Improvements
+
 - Random tray generation added to the `Tray` class. It's now possible to generate only one tray.
 - Improved `get_minimum_offset` method to calculate the minimum offset between columns in the warehouse.
 - Improved `gen_rand` method in the `Warehouse` class. Now it cleanup the warehouse and then generate a bay 
   (bool parameter), a buffer (bool parameter), and populates the columns.
-- Improved simulation execution. Moved **all** simulation methods from `Warehouse` class to `Simulation` class. 
+- Improved simulation execution. Moved **all** simulation methods from `Warehouse` class to `Simulation` class.
   The list of moved methods is:
   - `run_simulation`
   - `new_simulation`
@@ -70,6 +71,7 @@
 - `Deposit` name changed to `Bay`.
 
 ### Bug Fixes and Enhancements
+
 - Fixed random trays generation in `Tray` class. There were some problems (raise `ValueError`) when the
   `materials_to_insert` parameter was larger than the `how_many` parameter.
 - Fixed `get_num_entries_free` in `Column` class. 
@@ -96,11 +98,13 @@
 - Changed name of `get_height_col` method (`TrayContainer` class) to `get_height_container`.
 
 ### Other
+
 - Refactoring comments, change comment style.
 - Added tests.
 
 ------------------------------------------------------------------------------------------------------------------------
 
 ## [v0.0.1-bachelors-degree-thesis](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v0.0.1-bachelors-degree-thesis)
+
 - This is an alpha version of the project. It is only made to see how the project was at the start. It corresponds to my bachelor thesis in computer science at the University of Verona. 
   This version should be stable, but it doesn't have any tests (next improvement)! So for now it is not very reliable.
