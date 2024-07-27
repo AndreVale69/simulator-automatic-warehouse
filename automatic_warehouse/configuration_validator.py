@@ -20,9 +20,10 @@ class ConfigValidatorError(Exception):
 
 class ConfigurationValidator:
     """
-    A configuration validator used to validate a ``WarehouseConfiguration`` schema.
+    A configuration validator used to validate a 
+    :class:`automatic_warehouse.warehouse_configuration_singleton.WarehouseConfiguration` schema.
 
-    :type schema: :class:`WarehouseConfiguration`
+    :type schema: WarehouseConfiguration
     :param schema: schema to validate.
     """
     def __init__(self, schema: WarehouseConfiguration):
@@ -31,6 +32,21 @@ class ConfigurationValidator:
     def validate(self):
         """
         Validates the configuration against the schema.
+
+        The properties checked are:
+
+            1. The height property of each column can't be greater than the height of the warehouse (``height_warehouse``).
+            2. The ``default_height_space`` should be a multiple of the column, otherwise the number of drawers in a column could be float (impossible).
+            3. The ``height_last_position`` should be a multiple of ``default_height_space`` because it indicates how many entries are in the last position of the column.
+            4. If a column has the same x_offset as the carousel, then that column is above the carousel. This means that:
+
+                a. The sum of the height of the column plus the height of the hole, buffer and bay of the carousel should be equal to or less than ``height_warehouse``.
+                b. (not an error, but a warning) The length should be equal.
+
+            5. The maximum height of the tray should be less than the height of each column/carousel.
+            6. The height of the hole in the carousel should be greater than the maximum height of the tray.
+            7. Two columns should have a distance greater than or equal to zero.
+            8. The height of the buffer plus the height of the carousel bay must not exceed the height of the warehouse.
 
         :raises ConfigValidatorError: if validation fails.
         """

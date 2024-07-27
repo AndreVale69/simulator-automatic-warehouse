@@ -12,7 +12,7 @@ from automatic_warehouse.env_vars import WAREHOUSE_CONFIGURATION
 
 @dataclass
 class TrayConfiguration:
-    """ Tray Configuration """
+    """ `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - Tray Configuration. """
     length: int
     width: int
     maximum_height: int
@@ -20,7 +20,7 @@ class TrayConfiguration:
 
 @dataclass
 class ColumnConfiguration:
-    """ Column Configuration """
+    """ `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - Column Configuration. """
     length: int
     height: int
     x_offset: int
@@ -39,7 +39,7 @@ class ColumnConfiguration:
 
 @dataclass
 class CarouselConfiguration:
-    """ Carousel Configuration """
+    """ `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - Carousel Configuration. """
     length: int
     width: int
     hole_height: int
@@ -58,7 +58,7 @@ class CarouselConfiguration:
 
 @dataclass
 class SimulationConfiguration:
-    """ Simulation Configuration """
+    """ `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - Simulation Configuration. """
     num_actions: int
     trays_to_gen: int
     materials_to_gen: int
@@ -69,7 +69,7 @@ class SimulationConfiguration:
 
 @dataclass
 class WarehouseConfiguration:
-    """ Warehouse Configuration """
+    """ `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - Warehouse Configuration. """
     height_warehouse: int
     default_height_space: int
     speed_per_sec: int | float
@@ -81,9 +81,18 @@ class WarehouseConfiguration:
 
 class WarehouseConfigurationSingleton:
     """
-    Singleton class to provide access to a single configuration.
+    `Singleton class <https://en.wikipedia.org/wiki/Singleton_pattern>`_ 
+    to provide access to a single configuration.
 
-    Use it as follows: ``WarehouseConfigurationSingleton.get_instance().get_configuration()``
+    This class is responsible for safely loading yaml from a file, 
+    overriding an existing configuration with a new yaml file or hardcoded configuration. 
+    It also calls the :class:`automatic_warehouse.configuration_validator.ConfigurationValidator` class to check some additional logical properties.
+
+    Use it as follows: ``WarehouseConfigurationSingleton.get_instance().get_configuration()``.
+
+    :type file_path: str
+    :param file_path: the configuration to load into the simulator. 
+                      If not specified, the sample configuration will be loaded.
     """
     instance = None
 
@@ -93,7 +102,7 @@ class WarehouseConfigurationSingleton:
         Use this method to get an instance and get the configuration file.
 
         :rtype: WarehouseConfigurationSingleton
-        :return: the instance of WarehouseConfigurationSingleton
+        :return: the instance of WarehouseConfigurationSingleton.
         """
         if WarehouseConfigurationSingleton.instance is None:
             WarehouseConfigurationSingleton.instance = WarehouseConfigurationSingleton()
@@ -160,8 +169,8 @@ class WarehouseConfigurationSingleton:
         :type file_path: str
         :param file_path: configuration to load.
         :return: the configuration loaded.
-        :raises jsonschema.exceptions.ValidationError: if the instance is invalid
-        :raises FileNotFoundError: if the file is not found
+        :raises jsonschema.exceptions.ValidationError: if the instance is invalid.
+        :raises FileNotFoundError: if the file is not found.
         """
         schema = self._get_json_schema()
 
@@ -181,7 +190,7 @@ class WarehouseConfigurationSingleton:
 
         :type configuration: WarehouseConfiguration
         :param configuration: config to validate.
-        :raises jsonschema.exceptions.ValidationError: if the instance is invalid
+        :raises jsonschema.exceptions.ValidationError: if the instance is invalid.
         """
         schema = self._get_json_schema()
 
@@ -225,9 +234,9 @@ class WarehouseConfigurationSingleton:
         Update the configuration from a file.
 
         :type file_path: str
+        :rtype: WarehouseConfigurationSingleton
         :param file_path: file path of the file.
-        :rtype WarehouseConfigurationSingleton
-        :return: the instance of WarehouseConfigurationSingleton (get_instance()).
+        :return: the instance of WarehouseConfigurationSingleton (:attr:`get_instance()`).
         """
         WarehouseConfigurationSingleton.instance = WarehouseConfigurationSingleton(file_path)
         return WarehouseConfigurationSingleton.get_instance()
@@ -237,10 +246,10 @@ class WarehouseConfigurationSingleton:
         Update the configuration from a dataclass (hardcoded).
 
         :type configuration: WarehouseConfiguration
+        :rtype: WarehouseConfigurationSingleton
         :param configuration: hardcoded configuration.
-        :rtype WarehouseConfigurationSingleton
-        :return: the instance of WarehouseConfigurationSingleton (get_instance()).
-        :raises jsonschema.exceptions.ValidationError: if the instance is invalid
+        :return: the instance of WarehouseConfigurationSingleton (:attr:`get_instance()`).
+        :raises jsonschema.exceptions.ValidationError: if the instance is invalid.
         """
         self._json_schema_validator(configuration)
         from automatic_warehouse.configuration_validator import ConfigurationValidator
