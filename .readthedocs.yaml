@@ -7,6 +7,7 @@ build:
   jobs:
     pre_build:
       - export PYTHONPATH=..:.
+      - export WAREHOUSE_CONFIGURATION_FILE_PATH='value/of/WAREHOUSE_CONFIGURATION_FILE_PATH/envvar'
   tools:
     python: "3.12"
 
