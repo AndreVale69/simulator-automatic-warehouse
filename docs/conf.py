@@ -49,7 +49,7 @@ html_theme_options = {
     ],
     "switcher": {
         "version_match": version,
-        "json_url": "https://simulator-automatic-warehouse.readthedocs.io/en/latest/_static/versions.json",
+        "json_url": "https://simulator-automatic-warehouse.readthedocs.io/en/latest/_static/switcher.json"
     },
    "navbar_align": "right",
    "header_links_before_dropdown": 3,
