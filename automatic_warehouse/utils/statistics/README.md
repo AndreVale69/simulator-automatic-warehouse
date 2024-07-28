@@ -1,7 +1,7 @@
 # Warehouse Statistics API documentation
 
 This file contains a list of the API available within the `WarehouseStatistics` class.
-The main purpose of this object is to provide a set of methods to allow the programmer to easily manipulate the data of the 
+The main purpose of this object is to provide a set of methods to allow the programmer to easily manipulate the data of the
 simulation.
 
 ## API List

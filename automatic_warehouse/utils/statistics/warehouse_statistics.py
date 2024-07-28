@@ -21,9 +21,15 @@ class TimeEnum(Enum):
 
 class WarehouseStatistics:
     """
+    The main purpose of this object is to provide a set of methods 
+    to allow the programmer to easily manipulate the data of the simulation.
+
     The purpose of use is:
 
     .. code-block:: python
+
+        from automatic_warehouse.warehouse import Warehouse
+        from automatic_warehouse.simulation.simulation_type.warehouse_simulation import WarehouseSimulation
 
         # generate a Warehouse
         warehouse = Warehouse()
@@ -55,14 +61,16 @@ class WarehouseStatistics:
 
     def actions_started_every(self, time: TimeEnum) -> DataFrame:
         """
-        Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
-        The counter refers to all actions in the simulation.
+        Calculate a `Series <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html>`_ 
+        with a number of rows with datetime and their relative count (number of actions started ONLY).
+
+        The counter refers to **all** actions in the simulation.
 
         :type time: TimeEnum
         :rtype: DataFrame
         :param time: Time requested.
         :return: A table of actions started each "time" given as a parameter.
-                 The DataFrame contains two columns: Start and Count.
+                 The ``DataFrame`` contains two columns: `Start` and `Count`.
         """
         value_counts: Series = self._get_start().dt.to_period(time.value).value_counts(sort=False)
         start = value_counts.index.to_list()
@@ -72,14 +80,16 @@ class WarehouseStatistics:
 
     def actions_finished_every(self, time: TimeEnum) -> DataFrame:
         """
-        Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
-        The counter refers to all actions in the simulation.
+        Calculate a `Series <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html>`_ 
+        with a number of rows with datetime and their relative count (number of actions finished ONLY).
+
+        The counter refers to **all** actions in the simulation.
 
         :type time: TimeEnum
         :rtype: DataFrame
         :param time: Time requested.
         :return: A table of actions finished each "time" given as a parameter.
-                 The DataFrame contains two columns: Finish and Count.
+                 The ``DataFrame`` contains two columns: `Finish` and `Count`.
         """
         value_counts: Series = self._get_finish().dt.to_period(time.value).value_counts(sort=False)
         finish = value_counts.index.to_list()
@@ -92,15 +102,17 @@ class WarehouseStatistics:
 
     def actions_completed_every(self, time: TimeEnum) -> DataFrame:
         """
-        Calculate a Series with Start datetime, Finish datetime and their relative count.
-        If an order is started at (e.g.) 10:58 and finished at 11:05, it will not be counted in the 10-hour counter.
+        Calculate a `Series <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html>`_ 
+        with Start datetime, Finish datetime and their relative count.
+
+        If an action is started at (e.g.) 10:58 and finished at 11:05, it will not be counted in the 10-hour counter.
         So it's possible to find some lines with a Start time different from the Finish time.
 
         :type time: TimeEnum
         :rtype: DataFrame
         :param time: Time requested.
         :return: A table of actions completed each "time" given as a parameter.
-                 The DataFrame contains three columns: Start, Finish, and Count.
+                 The ``DataFrame`` contains three columns: `Start`, `Finish`, and `Count`.
         """
         value_counts: Series = DataFrame({
             'Start': self._get_start().dt.to_period(time.value),
@@ -117,7 +129,9 @@ class WarehouseStatistics:
 
     def action_started_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame:
         """
-        Calculate a Series with a number of rows with datetime and their relative count (number of actions started ONLY).
+        Calculate a `Series <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html>`_ 
+        with a number of rows with datetime and their relative count (number of actions started ONLY).
+
         The counter only refers to the action specified in the "action" parameter.
 
         :type action: ActionEnum
@@ -126,7 +140,7 @@ class WarehouseStatistics:
         :param action: action requested.
         :param time: time requested.
         :return: a table of the requested action started each "time" given as a parameter.
-                 The DataFrame contains three columns: Type of Action, Start, and Count.
+                 The ``DataFrame`` contains three columns: `Type of Action`, `Start`, and `Count`.
         """
         action_val: str = action.value
         value_counts: Series = DataFrame({
@@ -144,7 +158,9 @@ class WarehouseStatistics:
 
     def action_finished_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame:
         """
-        Calculate a Series with a number of rows with datetime and their relative count (number of actions finished ONLY).
+        Calculate a `Series <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html>`_ 
+        with a number of rows with datetime and their relative count (number of actions finished ONLY).
+
         The counter only refers to the action specified in the "action" parameter.
 
         :type action: ActionEnum
@@ -153,7 +169,7 @@ class WarehouseStatistics:
         :param action: action requested.
         :param time: time requested.
         :return: a table of the requested action finished each "time" given as a parameter.
-                 The DataFrame contains three columns: Type of Action, Finish, and Count.
+                 The ``DataFrame`` contains three columns: `Type of Action`, `Finish`, and `Count`.
         """
         action_val: str = action.value
         value_counts: Series = DataFrame({
@@ -172,8 +188,10 @@ class WarehouseStatistics:
     def action_completed_every(self, action: ActionEnum, time: TimeEnum) -> DataFrame:
         """
         Request the action to be completed, specifying the action requested and the time period.
-        Calculate a Series with Start datetime, Finish datetime and their relative count.
-        If an order is started at (e.g.) 10:58 and finished at 11:05, it will not be counted in the 10-hour counter.
+        Calculate a `Series <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html>`_ 
+        with Start datetime, Finish datetime and their relative count.
+        
+        If an action is started at (e.g.) 10:58 and finished at 11:05, it will not be counted in the 10-hour counter.
         So it's possible to find some lines with a Start time different from the Finish time.
 
         :type action: ActionEnum
@@ -182,7 +200,7 @@ class WarehouseStatistics:
         :param action: the type of action to consider.
         :param time: time period requested.
         :return: a table of "action" actions completed each "time", both given as parameters.
-                 The DataFrame contains three columns: Type of Action, Start, Finish, and Count
+                 The ``DataFrame`` contains three columns: `Type of Action`, `Start`, `Finish`, and `Count`.
         """
         action_val: str = action.value
         value_counts: Series = DataFrame({
@@ -205,7 +223,7 @@ class WarehouseStatistics:
         Calculate how many actions are completed for a given action.
 
         :type action: ActionEnum
-        :rtype: numpy.int64
+        :rtype: `numpy.int64 <https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64>`_
         :param action: count calculation actions
         :return: how many actions are completed in the whole simulation.
         """

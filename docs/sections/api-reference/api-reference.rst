@@ -9,7 +9,7 @@ In this section you can see the documentation of each class and method in the Si
 The same documentation is of course available directly in the code.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    warehouse/warehouse
    status-warehouse/status-warehouse

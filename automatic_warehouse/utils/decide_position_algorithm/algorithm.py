@@ -1,11 +1,12 @@
-from typing import NamedTuple
+from dataclasses import dataclass
 
 from automatic_warehouse.status_warehouse.container.column import Column
 from automatic_warehouse.status_warehouse.entry.empty_entry import EmptyEntry
 from automatic_warehouse.utils.decide_position_algorithm.enum_algorithm import Algorithm
 
 
-class DecidePositionReturns(NamedTuple):
+@dataclass
+class DecidePositionReturns:
     index: int
     column: Column
 
@@ -13,7 +14,7 @@ class DecidePositionReturns(NamedTuple):
 def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm) -> DecidePositionReturns:
     """
     Run the algorithm to decide where to insert a tray.
-    It returns a NamedTuple where we can find the index and the best column.
+    It returns :class:`DecidePositionReturns` dataclass where you can find the index and the best column.
 
     :type columns: list[Column]
     :type space_req: int
@@ -22,7 +23,7 @@ def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm)
     :param columns: the columns checked by the algorithm to find the best position.
     :param space_req: space requested from tray.
     :param algorithm: algorithm used.
-    :return: if there is a space [index_position_where_insert, column_where_insert].
+    :return: if there is a space, dataclass with the fields ``index_position_where_insert``, ``column_where_insert``.
     :raises NotImplementedError: if the algorithm is not implemented.
     :raises ValueError: if the algorithm cannot find a position for the space requested.
     """
