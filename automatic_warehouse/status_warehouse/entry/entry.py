@@ -1,13 +1,14 @@
 class Entry:
-    def __init__(self, offset_x: int, pos_y: int):
-        """
-        Superclass for all entries.
+    """
+    Superclass for all entries.
 
-        :type offset_x: int
-        :type pos_y: int
-        :param offset_x: offset x of the entry.
-        :param pos_y: position y of the entry.
-        """
+    :type offset_x: int
+    :type pos_y: int
+    :param offset_x: offset x of the entry.
+    :param pos_y: position y of the entry.
+    """
+
+    def __init__(self, offset_x: int, pos_y: int):
         self.offset_x = offset_x
         self.pos_y = pos_y
 

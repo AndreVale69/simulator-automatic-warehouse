@@ -5,15 +5,16 @@ from automatic_warehouse.status_warehouse.tray import Tray
 
 
 class TrayEntry(Entry):
-    def __init__(self, offset_x: int, pos_y: int):
-        """
-        It is an entry of the warehouse where the tray is located.
+    """
+    It is an entry of the warehouse where the tray is located.
 
-        :type offset_x: int
-        :type pos_y: int
-        :param offset_x: offset x of the tray entry.
-        :param pos_y: y of the tray entry.
-        """
+    :type offset_x: int
+    :type pos_y: int
+    :param offset_x: offset x of the tray entry.
+    :param pos_y: y of the tray entry.
+    """
+
+    def __init__(self, offset_x: int, pos_y: int):
         super().__init__(offset_x, pos_y)
         self.tray = None
 
@@ -35,7 +36,7 @@ class TrayEntry(Entry):
 
     def get_tray(self) -> Tray:
         """
-        Get the pointer to the tray to which the TrayEntry belongs.
+        Get the pointer to the tray to which the ``TrayEntry`` belongs.
 
         :rtype: Tray
         :return: the Tray pointer.

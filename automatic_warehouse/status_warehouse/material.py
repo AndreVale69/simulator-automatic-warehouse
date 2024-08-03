@@ -106,14 +106,14 @@ def gen_rand_materials(how_many: int, min_height: int = 25, max_height: int = 50
     :type max_height: int
     :rtype: list[Material]
     :param how_many: how many materials to generate.
-    :param min_height: the minimum height (lower limit) of the material.
+    :param min_height: the minimum height (lower limit) of the materials.
     :param max_height: the maximum height (upper limit) of the materials.
     :return: the generated materials list.
     """
     return [gen_rand_material(min_height, max_height) for _ in range(how_many)]
 
 
-def gen_rand_material(min_height: int = 25, max_height: int = 50, name: str = None) -> Material:
+def gen_rand_material(min_height: int = 25, max_height: int = 50, name: str | None = None) -> Material:
     """
     Static method to generate a random material.
 
@@ -124,8 +124,7 @@ def gen_rand_material(min_height: int = 25, max_height: int = 50, name: str = No
     :param min_height: the minimum height (lower limit) of the material.
     :param max_height: the maximum height (upper limit) of the material.
     :param name: name of the random material to be generated,
-                 otherwise the name will be taken from the ``random_name_materials`` variable
-                 (you can see the list if you import with ``Material.random_name_materials``).
+                 otherwise the name will be taken from the :attr:`random_name_materials` variable.
     :return: the material generated.
     """
     assert min_height <= max_height, "min_height must be less than max_height"
@@ -143,3 +142,4 @@ def gen_rand_material(min_height: int = 25, max_height: int = 50, name: str = No
 random_name_materials = [
     'Shirt', 'Screwdriver', 'Bottle', 'Tablet', 'Helmet', 'GPU', 'CPU'
 ]
+""" A list of random materials used by the library when generating random materials. """

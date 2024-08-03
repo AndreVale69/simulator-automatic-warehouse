@@ -18,16 +18,13 @@ class Tray:
     """
     Representation of the tray (or tray) inside the warehouse.
     It contains all the information about the tray and the methods for add/remove a material, and so on.
-    """
-    def __init__(self, info: TrayConfiguration = None, items: list[Material] = None):
-        """
-        Representation of the tray (or tray) inside the warehouse.
 
-        :type info: TrayConfiguration
-        :type items: list[Material]
-        :param info: configure the tray, leave None if you want to set the default (config) value.
-        :param items: list of items to be added to the tray.
-        """
+    :type info: TrayConfiguration | None
+    :type items: list[Material] | None
+    :param info: configure the tray, leave ``None`` if you want to set the default (config) value.
+    :param items: list of items to be added to the tray.
+    """
+    def __init__(self, info: TrayConfiguration | None = None, items: list[Material] | None = None):
         # items inside the tray
         config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
 
@@ -91,7 +88,7 @@ class Tray:
         Returns all the items inside the tray.
 
         :rtype: list[Material]
-        :return: the list of items inside the tray
+        :return: the list of items inside the tray.
         """
         return self.items
 
@@ -100,7 +97,7 @@ class Tray:
         Get the maximum height of the tray.
 
         :rtype: int
-        :return: maximum height of a material inside tray
+        :return: maximum height of a material inside tray.
         """
         return self.height
 
@@ -109,7 +106,7 @@ class Tray:
         Get the number of occupied spaces in the warehouse.
 
         :rtype: int
-        :return: number of occupied spaces in the warehouse
+        :return: number of occupied spaces in the warehouse.
         """
         return self.num_space
 
@@ -118,7 +115,7 @@ class Tray:
         Get the first tray entry (object) inside the warehouse.
 
         :rtype: TrayEntry
-        :return: first tray entry (object) inside the warehouse
+        :return: first tray entry (object) inside the warehouse.
         """
         return self.first_trayEntry
 
@@ -127,7 +124,7 @@ class Tray:
         Get the best offset x of the tray.
 
         :rtype: int
-        :return: the best offset x of the tray
+        :return: the best offset x of the tray.
         """
         return self.best_offset_x
 
@@ -136,7 +133,7 @@ class Tray:
         Get the best y of the tray.
 
         :rtype: int
-        :return: the best y of the tray
+        :return: the best y of the tray.
         """
         return self.best_y
 
@@ -172,16 +169,20 @@ class Tray:
         Get the number of materials.
 
         :rtype: int
-        :return:
+        :return: the number of materials.
         """
         return len(self.items)
 
     def add_material(self, material: Material):
         """
         Add a material to the tray.
+        
         Note: The material to be added should respect the following rules:
+        
         1. width smaller than the width of the tray;
-        2. height less than the maximum height of the tray (maximum_height field in the configuration);
+        
+        2. height less than the maximum height of the tray (``maximum_height`` field in the configuration);
+        
         3. length less than the length of the tray.
 
         :type material: Material
@@ -198,9 +199,13 @@ class Tray:
     def add_materials(self, materials: list[Material]):
         """
         Add materials to the tray.
+
         Note: Each material to be added should respect the following rules:
+        
         1. width smaller than the width of the tray;
-        2. height less than the maximum height of the tray (maximum_height field in the configuration);
+        
+        2. height less than the maximum height of the tray (``maximum_height`` field in the configuration);
+        
         3. length less than the length of the tray.
 
         :type materials: list[Material]
@@ -243,7 +248,9 @@ class Tray:
     def set_first_tray_entry(self, tray_entry):
         """
         Set the first tray entry (object).
-        It is a pointer to the first entry in the tray, used in a clever way to avoid iterating over the list.
+
+        It is a pointer to the first entry in the tray, 
+        used in a clever way to avoid iterating over the list.
 
         :type tray_entry: TrayEntry
         :param tray_entry: the first tray entry pointer.
@@ -270,7 +277,8 @@ class Tray:
 
     def __calculate_max_height(self):
         """
-        Private method to calculate the height of a tray after an insert o remove a material.
+        Private method to calculate the height of a tray 
+        after an insert or remove a material.
         """
         def_space, materials = self.def_space, self.items
 
@@ -283,17 +291,17 @@ class Tray:
 
 
 
-def gen_rand_trays(how_many: int, materials_to_insert: list[Material], info: TrayConfiguration = None) -> list[Tray]:
+def gen_rand_trays(how_many: int, materials_to_insert: list[Material], info: TrayConfiguration | None = None) -> list[Tray]:
     """
     Static method to generate random trays.
 
     :type how_many: int
-    :type info: TrayConfiguration
     :type materials_to_insert: list[Material]
+    :type info: TrayConfiguration | None
     :rtype: list[Tray]
     :param how_many: how many trays to generate.
-    :param info: information about the tray.
     :param materials_to_insert: a list of materials to insert.
+    :param info: information about the tray, leave ``None`` if you want to set the default (config) value.
     :return: the generated trays list.
     """
     trays: list[Tray] = []
@@ -329,7 +337,7 @@ def gen_rand_tray(info: TrayConfiguration = None, material_to_insert: Material =
     :type info: TrayConfiguration
     :type material_to_insert: Material
     :rtype: Tray
-    :param info: the tray configuration.
+    :param info: the tray configuration, leave ``None`` if you want to set the default (config) value.
     :param material_to_insert: a material to insert.
     :return: the generated tray.
     """

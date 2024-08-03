@@ -3,12 +3,19 @@
 Configuration
 -------------
 
+^^^^^^^^^^^^^^^^^^^
+Configuration class
+^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: automatic_warehouse.warehouse_configuration_singleton
 
 .. autoclass:: WarehouseConfigurationSingleton
     :members:
 
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Hardcoded configuration
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. autoclass:: WarehouseConfiguration
     :members:
@@ -29,6 +36,10 @@ Configuration
 .. autoclass:: TrayConfiguration
     :members:
 
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Configuration validator
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: automatic_warehouse.configuration_validator
 
