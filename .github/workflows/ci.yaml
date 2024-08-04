@@ -40,6 +40,7 @@ jobs:
           $env:PYTHONPATH=Get-Location
           pytest --cov ./automatic_warehouse --cov-report=xml --config-file='tests/pytest.ini'
       - name: Upload coverage to Codecov
+        if: github.actor != 'dependabot[bot]'
         uses: codecov/codecov-action@v4.4.1
         with:
           directory: .
