@@ -1,6 +1,14 @@
 # CHANGELOG
 
-## v1.0.0
+## v.1.0.1
+
+- Updated `jsonschema` from 4.22.0 to 4.23.0
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+## [v1.0.0](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v1.0.0)
 
 ### New Features and Improvements
 
