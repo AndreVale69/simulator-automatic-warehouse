@@ -21,7 +21,7 @@ class ConfigValidatorError(Exception):
 class ConfigurationValidator:
     """
     A configuration validator used to validate a 
-    :class:`automatic_warehouse.warehouse_configuration_singleton.WarehouseConfiguration` schema.
+    :class:`WarehouseConfiguration <automatic_warehouse.warehouse_configuration_singleton.WarehouseConfiguration>` schema.
 
     :type schema: WarehouseConfiguration
     :param schema: schema to validate.

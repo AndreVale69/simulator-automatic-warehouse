@@ -86,7 +86,7 @@ class WarehouseConfigurationSingleton:
 
     This class is responsible for safely loading yaml from a file, 
     overriding an existing configuration with a new yaml file or hardcoded configuration. 
-    It also calls the :class:`automatic_warehouse.configuration_validator.ConfigurationValidator` class to check some additional logical properties.
+    It also calls the :class:`ConfigurationValidator <automatic_warehouse.configuration_validator.ConfigurationValidator>` class to check some additional logical properties.
 
     Use it as follows: ``WarehouseConfigurationSingleton.get_instance().get_configuration()``.
 

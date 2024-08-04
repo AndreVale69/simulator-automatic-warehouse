@@ -7,16 +7,29 @@ from automatic_warehouse.simulation.actions.action_enum import ActionEnum
 
 
 class TimeEnum(Enum):
-    NANOSECONDS = 'ns'
-    MICROSECONDS = 'us'
-    MILLISECONDS = 'ms'
+    """ Enum of supported time units. """
+
+    NANOSECOND = 'ns'
+    """ Nanosecond. """
+    MICROSECOND = 'us'
+    """ Microsecond. """
+    MILLISECOND = 'ms'
+    """ Millisecond. """
     SECOND = 's'
+    """ Second. """
     MINUTE = 'min'
+    """ Minute. """
     HOUR = 'h'
+    """ Hour. """
     DAY = 'D'
+    """ Day. """
     BUSINESS_DAY = 'B'
+    """ Business day. """
     MONTH = 'M'
+    """ Month. """
     YEAR = 'Y'
+    """ Year. """
+
 
 
 class WarehouseStatistics:
@@ -43,6 +56,7 @@ class WarehouseStatistics:
         statistics = WarehouseStatistics(simulation.get_store_history_dataframe())
 
     """
+
     def __init__(self, warehouse_actions: DataFrame):
         self._warehouse_actions = warehouse_actions
 

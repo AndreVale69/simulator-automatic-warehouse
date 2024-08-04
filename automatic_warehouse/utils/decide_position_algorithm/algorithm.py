@@ -7,8 +7,15 @@ from automatic_warehouse.utils.decide_position_algorithm.enum_algorithm import A
 
 @dataclass
 class DecidePositionReturns:
+    """ `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - 
+    It is the return value of the :attr:`decide_position <automatic_warehouse.utils.decide_position_algorithm.algorithm.decide_position>` function. """
+
     index: int
+    """ Index position where the tray is to be placed. """
+
     column: Column
+    """ Column on which the tray is to be placed. """
+
 
 
 def decide_position(columns: list[Column], space_req: int, algorithm: Algorithm) -> DecidePositionReturns:
