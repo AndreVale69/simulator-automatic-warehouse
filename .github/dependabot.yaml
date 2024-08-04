@@ -5,7 +5,7 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "andre-branch"
+    target-branch: "main"
     labels:
       - "pip dependencies"
     versioning-strategy: increase
