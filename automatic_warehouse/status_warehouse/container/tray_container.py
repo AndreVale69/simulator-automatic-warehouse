@@ -9,21 +9,24 @@ from automatic_warehouse.warehouse_configuration_singleton import WarehouseConfi
 
 
 class TrayContainer(ABC):
-    def __init__(self, height: int, offset_x: int, width: int, length: int, warehouse):
-        """
-        A superclass representing the tray container of a column or carousel.
+    """
+    A superclass representing the tray container of a 
+    :class:`Column <automatic_warehouse.status_warehouse.container.column.Column>` or 
+    :class:`Carousel <automatic_warehouse.status_warehouse.container.carousel.Carousel>`.
 
-        :type height: int
-        :type offset_x: int
-        :type width: int
-        :type length: int
-        :type warehouse: Warehouse
-        :param height: height of the container.
-        :param offset_x: x offset of the container.
-        :param width: width of the container.
-        :param width: length of the container.
-        :param warehouse: warehouse where the container is stored.
-        """
+    :type height: int
+    :type offset_x: int
+    :type width: int
+    :type length: int
+    :type warehouse: Warehouse
+    :param height: height of the container.
+    :param offset_x: x offset of the container.
+    :param width: width of the container.
+    :param width: length of the container.
+    :param warehouse: warehouse where the container is stored.
+    """
+
+    def __init__(self, height: int, offset_x: int, width: int, length: int, warehouse):
         config: WarehouseConfiguration = WarehouseConfigurationSingleton.get_instance().get_configuration()
         self.warehouse = warehouse
         self.container = []
@@ -87,7 +90,7 @@ class TrayContainer(ABC):
         Check if the container is full.
 
         :rtype: bool
-        :return: True if the container is full, False otherwise.
+        :return: ``True`` if the container is full, ``False`` otherwise.
         """
         raise NotImplementedError
 
@@ -97,7 +100,7 @@ class TrayContainer(ABC):
         Check if the container is empty.
 
         :rtype: bool
-        :return: True if the container is empty, False otherwise.
+        :return: ``True`` if the container is empty, ``False`` otherwise.
         """
         raise NotImplementedError
 
@@ -148,7 +151,7 @@ class TrayContainer(ABC):
 
     def get_num_entries(self) -> int:
         """
-        Get the number of entries (= get_height_container() // get_def_space()).
+        Get the number of entries (:attr:`get_height_container` ``//`` :attr:`get_def_space`).
 
         :rtype: int
         :return: the number of entries.
@@ -215,7 +218,7 @@ class TrayContainer(ABC):
 
     def get_trays(self) -> list[Tray]:
         """
-        Get every Tray in the container.
+        Get every :class:`Tray <automatic_warehouse.status_warehouse.tray.Tray>` in the container.
 
         :rtype: list[Tray]
         :return: a list of Trays in the container.
@@ -237,10 +240,10 @@ class TrayContainer(ABC):
 
     def get_entries_occupied(self) -> list[TrayEntry]:
         """
-        Get every TrayEntry in the container.
+        Get every :class:`TrayEntry <automatic_warehouse.status_warehouse.entry.tray_entry.TrayEntry>` in the container.
 
         :rtype: list[TrayEntry]
-        :return: a list of TrayEntry in the container.
+        :return: a list of :class:`TrayEntry <automatic_warehouse.status_warehouse.entry.tray_entry.TrayEntry>` in the container.
         """
         return [entry for entry in self.container if isinstance(entry, TrayEntry)]
 
@@ -275,7 +278,7 @@ class TrayContainer(ABC):
         self.container.append(element)
 
     def reset_container(self):
-        """ Clean up the container using EmptyEntry instances. """
+        """ Clean up the container using :class:`EmptyEntry <automatic_warehouse.status_warehouse.entry.empty_entry.EmptyEntry>` instances. """
         offset_x, ptr_container = self.offset_x, self.container
         for index, entry in enumerate(ptr_container):
             # if it's a tray, remove it (overwriting)

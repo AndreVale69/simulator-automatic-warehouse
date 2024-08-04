@@ -13,15 +13,16 @@ logger = getLogger(__name__)
 
 
 class Carousel(TrayContainer):
-    def __init__(self, info: CarouselConfiguration, warehouse):
-        """
-        The carousel represents the set of bay and the buffer (tray under the bay).
+    """
+    The carousel represents the set of bay and the buffer (tray under the bay).
 
-        :type info: CarouselConfiguration
-        :type warehouse: Warehouse
-        :param info: class containing information about the carousel (config).
-        :param warehouse: the warehouse where the carousel is located.
-        """
+    :type info: CarouselConfiguration
+    :type warehouse: Warehouse
+    :param info: class containing information about the carousel (config).
+    :param warehouse: the warehouse where the carousel is located.
+    """
+
+    def __init__(self, info: CarouselConfiguration, warehouse):
         super().__init__(info.bay_height + info.buffer_height, info.x_offset, info.width, info.length, warehouse)
         self.hole = info.hole_height // (def_space := self.def_space)
         self.bay = info.bay_height // def_space
@@ -93,6 +94,7 @@ class Carousel(TrayContainer):
     def get_hole(self) -> int:
         """
         Get the height of the hole.
+
         The hole is the height from the bay to the start of the column,
         it is the space where a person can place a material inside the warehouse.
 
@@ -115,7 +117,7 @@ class Carousel(TrayContainer):
         Get the bay tray.
 
         :rtype: Tray
-        :return: the Tray object of the bay.
+        :return: the :class:`Tray <automatic_warehouse.status_warehouse.tray.Tray>` of the bay.
         :raises AttributeError: when the bay is empty and there is no tray.
         """
         return self.container[0].get_tray()
@@ -166,7 +168,7 @@ class Carousel(TrayContainer):
         Check if the buffer is full.
 
         :rtype: bool
-        :return: True if is full, False otherwise.
+        :return: ``True`` if is full, ``False`` otherwise.
         """
         # check if the first position of buffer have a Tray
         return isinstance(self.get_buffer_entry(), TrayEntry)
@@ -176,7 +178,7 @@ class Carousel(TrayContainer):
         Check if the bay is full.
 
         :rtype: bool
-        :return: True if is full, False otherwise.
+        :return: ``True`` if is full, ``False`` otherwise.
         """
         # check if the first position of bay have a Tray
         return isinstance(self.get_bay_entry(), TrayEntry)
@@ -213,7 +215,7 @@ class Carousel(TrayContainer):
         :type is_buffer: bool
         :param tray: the tray to insert.
         :param first_y: the y position of the tray to insert.
-        :param is_buffer: True if to insert in the buffer position, False if to insert in the bay position.
+        :param is_buffer: ``True`` if to insert in the buffer position, ``False`` if to insert in the bay position.
         """
         # initialize positions
         if is_buffer:
@@ -226,7 +228,6 @@ class Carousel(TrayContainer):
         # connect Entry just added to relative Tray
         tray.set_first_tray_entry(tray_entry)
 
-    # override
     def remove_tray(self, tray: Tray) -> bool:
         """
         Remove a tray.
@@ -234,7 +235,7 @@ class Carousel(TrayContainer):
         :type tray: Tray
         :rtype: bool
         :param tray: the tray to remove.
-        :return: True if the tray was removed, False otherwise.
+        :return: ``True`` if the tray was removed, ``False`` otherwise.
         """
         first_entry: TrayEntry = tray.get_first_tray_entry()
         entry_y_to_rmv = first_entry.get_pos_y()

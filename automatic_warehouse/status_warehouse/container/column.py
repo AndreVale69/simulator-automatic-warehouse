@@ -1,7 +1,7 @@
 from copy import deepcopy
 from logging import getLogger
 from random import randint
-from typing import NamedTuple
+from dataclasses import dataclass
 
 from automatic_warehouse.status_warehouse.material import gen_rand_materials
 from automatic_warehouse.status_warehouse.container.tray_container import TrayContainer
@@ -13,16 +13,25 @@ from automatic_warehouse.warehouse_configuration_singleton import ColumnConfigur
 logger = getLogger(__name__)
 
 
-class GenMaterialsAndTraysReturns(NamedTuple):
-    """ Values returned by the gen_materials_and_trays method. """
+@dataclass
+class GenMaterialsAndTraysReturns:
+    """
+    `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - 
+    Values returned by the 
+    :attr:`gen_materials_and_trays <automatic_warehouse.status_warehouse.container.column.Column.gen_materials_and_trays>` 
+    method.
+    """
     trays_inserted: int
+    """ The number of trays inserted. """
     materials_inserted: int
+    """ The number of materials inserted. """
 
 
 class Column(TrayContainer):
     """
     The column is a simple column of the warehouse.
     It can't be where there is the bay and the buffer.
+
     It is thought to store the trays.
 
     :type info: ColumnConfiguration
@@ -30,6 +39,7 @@ class Column(TrayContainer):
     :param info: info about the column (config).
     :param warehouse: the warehouse where the column is located.
     """
+    
     def __init__(self, info: ColumnConfiguration, warehouse):
         super().__init__(info.height, info.x_offset, info.width, info.length, warehouse)
 
@@ -97,7 +107,7 @@ class Column(TrayContainer):
         Check if the last position is occupied.
 
         :rtype: bool
-        :return: True if the last position is occupied, False otherwise.
+        :return: ``True`` if the last position is occupied, ``False`` otherwise.
         """
         return isinstance(self.container[self.height_last_position - 1], TrayEntry)
 
@@ -115,10 +125,10 @@ class Column(TrayContainer):
         :type index: int
         :param tray: tray to be added.
         :param index: index of the entry inside the column where to add the tray.
-        :raises ValueError: if the tray is longer or wider that the carousel.
+        :raises ValueError: if the tray is longer or wider that the column.
         """
         if not (tray.length < self.length and tray.width < self.width):
-            logger.error("A tray cannot be longer or wider than the carousel")
+            logger.error("A tray cannot be longer or wider than the column")
             raise ValueError
 
         how_many = tray.get_num_space_occupied() + index - 1
@@ -159,7 +169,7 @@ class Column(TrayContainer):
         :type tray: Tray
         :rtype: bool
         :param tray: the tray to be removed.
-        :return: True if the tray was removed, False otherwise.
+        :return: ``True`` if the tray was removed, ``False`` otherwise.
         """
         entries_to_rmv: int = tray.get_num_space_occupied()
         container = self.container
@@ -182,7 +192,7 @@ class Column(TrayContainer):
         :rtype: GenMaterialsAndTraysReturns
         :param num_trays: number of trays to create in the warehouse
         :param num_materials: number of materials to create in the trays
-        :return: a NamedTuple where we can find the trays_inserted and the materials_inserted
+        :return: a dataclass where we can find the ``trays_inserted`` and the ``materials_inserted``
         """
         from automatic_warehouse.utils.decide_position_algorithm.algorithm import decide_position
         from automatic_warehouse.utils.decide_position_algorithm.enum_algorithm import Algorithm

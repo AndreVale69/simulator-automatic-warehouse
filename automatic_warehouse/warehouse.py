@@ -1,5 +1,5 @@
 from logging import basicConfig, DEBUG, INFO, getLogger
-from typing import NamedTuple
+from dataclasses import dataclass
 
 from automatic_warehouse.env_vars import NO_CONSOLE_LOG, DEBUG_LOG, FILENAME_DEBUG_LOG
 
@@ -25,9 +25,9 @@ from automatic_warehouse.status_warehouse.material import gen_rand_material
 logger = getLogger(__name__)
 
 
-
-class MinimumOffsetReturns(NamedTuple):
-    """ Values returned by the :attr:`Warehouse.get_minimum_offset` method. """
+@dataclass
+class MinimumOffsetReturns:
+    """ `Python Dataclass <https://docs.python.org/3/library/dataclasses.html>`_ - Values returned by the :attr:`Warehouse.get_minimum_offset` method. """
     index: int
     "Index of the minimum offset found."
     offset: int
