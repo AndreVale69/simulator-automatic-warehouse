@@ -59,7 +59,7 @@ helped the creator at the beginning of the project.
 | [pandas][8]      | [2.2.2][9]   |
 | [simpy][10]      | [4.1.1][11]  |
 | [PyYAML][12]     | [6.0.1][13]  |
-| [jsonschema][14] | [4.22.0][15] |
+| [jsonschema][14] | [4.23.0][15] |
 
 ### Python Installation
 
@@ -161,7 +161,7 @@ Use the following links if the images are not displayed:
 [12]: https://github.com/yaml/pyyaml
 [13]: https://github.com/yaml/pyyaml/releases/tag/6.0.1
 [14]: https://github.com/python-jsonschema/jsonschema
-[15]: https://github.com/python-jsonschema/jsonschema/releases/tag/v4.22.0
+[15]: https://github.com/python-jsonschema/jsonschema/releases/tag/v4.23.0
 [16]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/configuration/sample_config.yaml
 [17]: https://github.com/AndreVale69/simulator-automatic-warehouse/tree/main/docker
 [18]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docker/docker-compose.yaml
