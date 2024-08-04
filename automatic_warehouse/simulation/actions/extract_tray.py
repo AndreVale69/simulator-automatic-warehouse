@@ -16,17 +16,18 @@ logger = getLogger(__name__)
 
 
 class ExtractTray(Move):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
-        """
-        The extract of a tray (ExtractTray action) is the movement from a column to the bay.
+    """
+    The extract of a tray (ExtractTray action) is the movement from a column to the bay.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    """
+
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
         self._go_to_bay: GoToBay = GoToBay(env, warehouse, simulation)
         self._go_to_buffer: GoToBuffer = GoToBuffer(env, warehouse, simulation)

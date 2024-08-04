@@ -11,17 +11,18 @@ logger = getLogger(__name__)
 
 
 class Unload(Move):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
-        """
-        Horizontal movement from the center of the column to the center of the lift.
+    """
+    Horizontal movement from the center of the column to the center of the lift.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    """
+    
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
 
     def simulate_action(self, tray=None, destination=None):

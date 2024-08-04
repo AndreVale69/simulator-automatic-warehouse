@@ -13,20 +13,21 @@ logger = getLogger(__name__)
 
 
 class RemoveRandomMaterial(RemoveMaterial):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
-        """
-        The remove random material action is the movement
-        performed by the person who has removed a material from the bay to their hand.
+    """
+    The remove random material action is the movement
+    performed by the person who has removed a material from the bay to their hand.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :type duration: int
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        :param duration: the duration of the action in seconds.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :type duration: int
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    :param duration: the duration of the action in seconds.
+    """
+
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation, duration: int):
         super().__init__(env, warehouse, simulation, duration)
 
     # override

@@ -16,18 +16,19 @@ logger = getLogger(__name__)
 
 
 class SendBackTray(Move):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
-        """
-        The send-back of a tray (SendBackTray action)
-        is the movement of a tray from the bay to one of the columns.
+    """
+    The send-back of a tray (SendBackTray action)
+    is the movement of a tray from the bay to one of the columns.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    """
+
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
         self._go_to_bay: GoToBay = GoToBay(env, warehouse, simulation)
         self._unload: Unload = Unload(env, warehouse, simulation)

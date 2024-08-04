@@ -8,24 +8,25 @@ from automatic_warehouse.warehouse import Warehouse
 
 
 class Action(ABC):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation):
-        """
-        Superclass for all actions.
+    """
+    Superclass for all actions.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    """
+
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation):
         self.env, self.warehouse, self.simulation = env, warehouse, simulation
 
     def get_env(self) -> Environment:
         """
         Get the simulation environment (see SimPy Environment).
 
-        :rtype: Environment
+        :rtype: simpy.Environment
         :return: the simulation environment.
         """
         return self.env
@@ -51,7 +52,7 @@ class Action(ABC):
     @abstractmethod
     def simulate_action(self, tray: Tray=None, destination: EnumContainer=None):
         """
-        Abstract method that simulates the action of the instance.
+        Method that simulates the action of the instance.
 
         :type tray: Tray
         :type destination: EnumContainer

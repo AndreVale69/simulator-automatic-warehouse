@@ -24,13 +24,14 @@ logger = getLogger(__name__)
 
 
 class WarehouseSimulation(Simulation):
-    def __init__(self, warehouse: Warehouse):
-        """
-        The warehouse simulation class.
+    """
+    The warehouse simulation class.
 
-        :type warehouse: Warehouse
-        :param warehouse: the Warehouse used to perform the simulation.
-        """
+    :type warehouse: Warehouse
+    :param warehouse: the warehouse used to perform the simulation.
+    """
+
+    def __init__(self, warehouse: Warehouse):
         super().__init__()
         # start the move process everytime an instance is created
         logger.info("Create a copy of the Warehouse")
@@ -61,7 +62,7 @@ class WarehouseSimulation(Simulation):
     def get_res_buffer(self) -> Resource:
         """
         Get the resource of the buffer.
-        It can be thought of as a resource lock (see SimPy resource).
+        It can be thought of as a resource lock (see `SimPy resource <https://simpy.readthedocs.io/en/latest/api_reference/simpy.resources.html#module-simpy.resources.resource>`_).
 
         :rtype: simpy.Resource
         :return: the resource of the buffer.
@@ -71,7 +72,7 @@ class WarehouseSimulation(Simulation):
     def get_res_bay(self) -> Resource:
         """
         Get the resource of the bay.
-        It can be thought of as a resource lock (see SimPy resource).
+        It can be thought of as a resource lock (see `SimPy resource <https://simpy.readthedocs.io/en/latest/api_reference/simpy.resources.html#module-simpy.resources.resource>`_).
 
         :rtype: simpy.Resource
         :return: the resource of the bay.
@@ -142,8 +143,15 @@ class WarehouseSimulation(Simulation):
         # run simulation
         self.env.run(until=self.sim_time)
 
-    def new_simulation(self, num_actions: int, num_gen_trays: int, num_gen_materials: int,
-                       gen_bay: bool, gen_buffer: bool, time: int=None):
+    def new_simulation(
+            self, 
+            num_actions: int, 
+            num_gen_trays: int, 
+            num_gen_materials: int,
+            gen_bay: bool, 
+            gen_buffer: bool, 
+            time: int=None
+        ):
         """
         Run a new simulation using custom parameters.
 
@@ -153,12 +161,12 @@ class WarehouseSimulation(Simulation):
         :type gen_bay: bool
         :type gen_buffer: bool
         :type time: int or None
-        :param num_actions: number of actions to simulate
-        :param num_gen_trays: number of trays to generate in the warehouse
-        :param num_gen_materials: number of materials to generate in the warehouse
-        :param gen_bay: True to generate a tray in the bay, False otherwise
-        :param gen_buffer: True to generate a tray in the buffer, False otherwise
-        :param time: the maximum time of the simulation, otherwise None to remove the limit
+        :param num_actions: number of actions to simulate.
+        :param num_gen_trays: number of trays to generate in the warehouse.
+        :param num_gen_materials: number of materials to generate in the warehouse.
+        :param gen_bay: ``True`` to generate a tray in the bay, ``False`` otherwise.
+        :param gen_buffer: ``True`` to generate a tray in the buffer, ``False`` otherwise.
+        :param time: the maximum time of the simulation, otherwise ``None`` to remove the limit.
         """
         # setting new simulation settings:
         self.sim_time = time
@@ -204,9 +212,9 @@ class WarehouseSimulation(Simulation):
         :type tray_to_insert: Tray
         :type destination: EnumContainer
         :type load_in_buffer: bool
-        :param tray_to_insert: tray that will be inserted into the warehouse
-        :param destination: destination of the tray
-        :param load_in_buffer: True to load the carousel into the buffer, otherwise into the bay
+        :param tray_to_insert: tray that will be inserted into the warehouse.
+        :param destination: destination of the tray.
+        :param load_in_buffer: ``True`` to load the carousel into the buffer, otherwise into the bay.
         """
         env = self.env
         carousel = (warehouse := self.warehouse).get_carousel()
@@ -257,9 +265,9 @@ class WarehouseSimulation(Simulation):
         :type start_pos: int
         :type end_pos: int
         :rtype: float
-        :param start_pos: starting position
-        :param end_pos: ending position
-        :return: distance travelled divided by speed per second
+        :param start_pos: starting position.
+        :param end_pos: ending position.
+        :return: distance travelled divided by speed per second.
         """
         # calculate the distance of index between two points
         index_distance = abs(end_pos - start_pos)
@@ -273,7 +281,7 @@ class WarehouseSimulation(Simulation):
         Simulation method used to allocate the best position of the tray in the warehouse.
 
         :type tray: Tray
-        :param tray: tray to allocate
+        :param tray: tray to allocate.
         """
         # start position
         start_pos = (warehouse := self.warehouse).get_pos_y_floor()
@@ -298,7 +306,7 @@ class WarehouseSimulation(Simulation):
         Simulation method used to reach the height of the tray in the warehouse.
 
         :type tray: Tray
-        :param tray: tray to reach
+        :param tray: tray to reach.
         """
         # save coordinates inside tray
         y = tray.get_first_tray_entry().get_pos_y()
@@ -318,8 +326,8 @@ class WarehouseSimulation(Simulation):
 
         :type tray: Tray
         :type rmv_from_cols: bool
-        :param tray: tray to unload
-        :param rmv_from_cols: True to unload the tray from the columns, otherwise unload from the carousel
+        :param tray: tray to unload.
+        :param rmv_from_cols: True to unload the tray from the columns, otherwise unload from the carousel.
         """
         warehouse = self.warehouse
         # take x offset
@@ -335,15 +343,15 @@ class WarehouseSimulation(Simulation):
         else:
             warehouse.get_carousel().remove_tray(tray)
 
-    def load(self, tray: Tray, destination: EnumContainer) -> None:
+    def load(self, tray: Tray, destination: EnumContainer):
         """
         Simulation method used to load the tray into the warehouse.
 
         :type tray: Tray
         :type destination: EnumContainer
-        :param tray: tray to load
-        :param destination: destination of the tray
-        :raises ValueError: if the offset of the tray is not equal to any column in the warehouse
+        :param tray: tray to load.
+        :param destination: destination of the tray.
+        :raises ValueError: if the offset of the tray is not equal to any column in the warehouse.
         """
         warehouse = self.warehouse
         # take destination coordinates
@@ -367,9 +375,9 @@ class WarehouseSimulation(Simulation):
 
         :type offset_x: int
         :rtype: float | None
-        :param offset_x: offset of the tray to search
-        :return: the time estimated or None if not found
-        :raises ValueError: if the offset is not valid
+        :param offset_x: offset of the tray to search.
+        :return: the time estimated or ``None`` if not found.
+        :raises ValueError: if the offset is not valid.
         """
         # check the carousel
         if (warehouse := self.warehouse).get_carousel().get_offset_x() == offset_x:

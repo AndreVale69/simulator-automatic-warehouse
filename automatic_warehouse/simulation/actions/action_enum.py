@@ -7,10 +7,18 @@ class ActionEnum(Enum):
     """
     Enumerate of the possible actions.
     """
+    
     EXTRACT_TRAY = "ExtractTray"
+    """ Extract Tray action. """
+
     SEND_BACK_TRAY = "SendBackTray"
+    """ Send Back Tray action. """
+
     INSERT_RANDOM_MATERIAL = "InsertRandomMaterial"
+    """ Insert Random Material action. """
+
     REMOVE_RANDOM_MATERIAL = "RemoveRandomMaterial"
+    """ Remove Random Material action. """
 
     def __str__(self):
         # override string method to avoid .value whenever you want to print
@@ -22,9 +30,9 @@ class ActionEnum(Enum):
         Static method from string.
 
         :type action_str: str
-        :rtype ActionEnum | None
-        :param action_str: action as string
-        :return: the ActionEnum or None
+        :rtype: ActionEnum | None
+        :param action_str: action as string.
+        :return: the ``ActionEnum`` or ``None``.
         """
         if action_str == ActionEnum.EXTRACT_TRAY.value:
             return ActionEnum.EXTRACT_TRAY

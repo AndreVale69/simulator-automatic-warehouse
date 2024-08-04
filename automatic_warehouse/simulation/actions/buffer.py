@@ -10,17 +10,18 @@ logger = getLogger(__name__)
 
 
 class Buffer(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
-        """
-        The buffer action is the movement from the buffer entry to the bay entry.
+    """
+    The buffer action is the movement from the buffer entry to the bay entry.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    """
+    
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
 
     # override

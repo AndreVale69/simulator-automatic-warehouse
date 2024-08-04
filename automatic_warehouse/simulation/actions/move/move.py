@@ -7,17 +7,18 @@ from automatic_warehouse.warehouse import Warehouse
 
 
 class Move(Action):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
-        """
-        Superclass for all simple moves.
+    """
+    Superclass for all simple moves.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    """
+
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
         self.buffer = Buffer(env, warehouse, simulation)
 

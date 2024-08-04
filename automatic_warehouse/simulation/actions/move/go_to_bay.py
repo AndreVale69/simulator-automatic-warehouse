@@ -10,17 +10,18 @@ logger = getLogger(__name__)
 
 
 class GoToBay(Move):
-    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
-        """
-        Movement to go to the bay.
+    """
+    Movement to go to the bay.
 
-        :type env: Environment
-        :type warehouse: Warehouse
-        :type simulation: Simulation
-        :param env: the simulation environment (SimPy Environment).
-        :param warehouse: the warehouse where the action is performed.
-        :param simulation: the simulation where the action is performed.
-        """
+    :type env: Environment
+    :type warehouse: Warehouse
+    :type simulation: Simulation
+    :param env: the simulation environment (SimPy Environment).
+    :param warehouse: the warehouse where the action is performed.
+    :param simulation: the simulation where the action is performed.
+    """
+    
+    def __init__(self, env: Environment, warehouse: Warehouse, simulation: Simulation):
         super().__init__(env, warehouse, simulation)
 
     # override

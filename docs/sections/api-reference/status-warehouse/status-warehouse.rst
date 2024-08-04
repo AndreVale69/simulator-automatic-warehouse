@@ -9,7 +9,7 @@ each entry of the warehouse, such as column and carousel.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
 
    material-and-tray
    entries

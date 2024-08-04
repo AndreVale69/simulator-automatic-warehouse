@@ -12,10 +12,9 @@ logger = getLogger(__name__)
 
 
 class Simulation(ABC):
+    """ The abstract simulation class. """
+
     def __init__(self):
-        """
-        The main simulation class.
-        """
         self.env = Environment()
 
         config = WarehouseConfigurationSingleton.get_instance().get_configuration().simulation
@@ -37,7 +36,7 @@ class Simulation(ABC):
 
     def get_environment(self) -> Environment:
         """
-        Get the environment of SimPy.
+        Get the environment (see `SimPy environment <https://simpy.readthedocs.io/en/latest/api_reference/simpy.core.html#simpy.core.Environment>`_) of SimPy.
 
         :rtype: simpy.Environment
         :return: the environment of SimPy.
@@ -46,7 +45,8 @@ class Simulation(ABC):
 
     def get_store_history(self) -> Store:
         """
-        Get the SimPy store (see SimPy store) of the simulation.
+        Get the SimPy store (see `SimPy store <https://simpy.readthedocs.io/en/latest/api_reference/simpy.resources.html#module-simpy.resources.store>`_) of the simulation.
+        
         It is used to store the simulation history.
 
         :rtype: simpy.Store
@@ -58,7 +58,7 @@ class Simulation(ABC):
         """
         Get the SimPy store of the simulation as DataFrame object.
 
-        :rtype pandas.DataFrame
+        :rtype: pandas.DataFrame
         :return: the store of the simulation history as pandas DataFrame
         """
         return DataFrame(self.store_history.items)
@@ -67,7 +67,7 @@ class Simulation(ABC):
         """
         The maximum time of the simulation (config value).
 
-        :rtype: int or None
+        :rtype: int | None
         :return: time of the simulation or None if it isn't specified.
         """
         return self.sim_time
@@ -94,6 +94,7 @@ class Simulation(ABC):
     def run_simulation(self):
         """
         Run a new simulation.
+
         Note: the simulation will create a new sequence of actions.
         """
         raise NotImplementedError
