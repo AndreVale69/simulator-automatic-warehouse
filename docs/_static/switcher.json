@@ -1,6 +1,10 @@
 [
     {
-        "version": "1.0 (stable)",
+        "version": "1.0.1 (stable)",
         "url": "https://simulator-automatic-warehouse.readthedocs.io/en/latest/"
+    },
+    {
+        "version": "1.0.0",
+        "url": "https://simulator-automatic-warehouse.readthedocs.io/en/1.0.0/"
     }
 ]
