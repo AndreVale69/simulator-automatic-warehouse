@@ -44,6 +44,7 @@ dependencies = [
 Documentation = "https://simulator-automatic-warehouse.readthedocs.io/en/latest/"
 PyPI = "https://pypi.org/project/simulator-automatic-warehouse"
 GitHub = "https://github.com/AndreVale69/simulator-automatic-warehouse"
+Changelog = "https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/CHANGELOG.md"
 Issues = "https://github.com/AndreVale69/simulator-automatic-warehouse/issues"
 
 [tool.hatch.version]
