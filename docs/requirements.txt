@@ -45,10 +45,8 @@ mdurl==0.1.2
 myst-parser==4.0.0
     # via -r docs/requirements.in
 packaging==24.1
-    # via
-    #   pydata-sphinx-theme
-    #   sphinx
-pydata-sphinx-theme==0.15.4
+    # via sphinx
+pydata-sphinx-theme==0.16.0
     # via -r docs/requirements.in
 pygments==2.18.0
     # via
