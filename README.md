@@ -56,9 +56,9 @@ helped the creator at the beginning of the project.
 
 | Dependency       | Version      |
 |------------------|--------------|
-| [pandas][8]      | [2.2.2][9]   |
+| [pandas][8]      | [2.2.3][9]   |
 | [simpy][10]      | [4.1.1][11]  |
-| [PyYAML][12]     | [6.0.1][13]  |
+| [PyYAML][12]     | [6.0.2][13]  |
 | [jsonschema][14] | [4.23.0][15] |
 
 ### Python Installation
@@ -155,11 +155,11 @@ Use the following links if the images are not displayed:
 [6]: https://sbgaia.github.io/
 [7]: https://www.linkedin.com/in/marco-panato-vr
 [8]: https://github.com/pandas-dev/pandas
-[9]: https://github.com/pandas-dev/pandas/releases/tag/v2.2.2
+[9]: https://github.com/pandas-dev/pandas/releases/tag/v2.2.3
 [10]: https://gitlab.com/team-simpy/simpy
 [11]: https://gitlab.com/team-simpy/simpy/-/tree/4.1.1?ref_type=tags
 [12]: https://github.com/yaml/pyyaml
-[13]: https://github.com/yaml/pyyaml/releases/tag/6.0.1
+[13]: https://github.com/yaml/pyyaml/releases/tag/6.0.2
 [14]: https://github.com/python-jsonschema/jsonschema
 [15]: https://github.com/python-jsonschema/jsonschema/releases/tag/v4.23.0
 [16]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/configuration/sample_config.yaml

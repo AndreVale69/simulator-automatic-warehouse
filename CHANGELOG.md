@@ -1,8 +1,18 @@
 # CHANGELOG
 
-## v.1.0.1
 
-- Updated `jsonschema` from 4.22.0 to 4.23.0
+## [v1.0.2](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v1.0.2)
+
+- Bump `pandas` from `2.2.2` to `2.2.3`
+- Bump `PyYAML` from `6.0.1` to `6.0.2`
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+## [v1.0.1](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v1.0.1)
+
+- Bump `jsonschema` from `4.22.0` to `4.23.0`
 
 
 ------------------------------------------------------------------------------------------------------------------------
