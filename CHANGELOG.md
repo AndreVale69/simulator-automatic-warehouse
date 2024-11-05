@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## [v1.0.3](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v1.0.3)
+
+- Remove useless `Numpy` dependencies from requirements.
+- Add compatibility with `Python 3.13`.
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
 ## [v1.0.2](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v1.0.2)
 
 - Bump `pandas` from `2.2.2` to `2.2.3`
