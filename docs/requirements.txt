@@ -46,7 +46,7 @@ myst-parser==4.0.0
     # via -r docs/requirements.in
 packaging==24.1
     # via sphinx
-pydata-sphinx-theme==0.16.0
+pydata-sphinx-theme==0.16.1
     # via -r docs/requirements.in
 pygments==2.18.0
     # via
