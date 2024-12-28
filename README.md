@@ -162,7 +162,7 @@ Use the following links if the images are not displayed:
 [13]: https://github.com/yaml/pyyaml/releases/tag/6.0.2
 [14]: https://github.com/python-jsonschema/jsonschema
 [15]: https://github.com/python-jsonschema/jsonschema/releases/tag/v4.23.0
-[16]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/configuration/sample_config.yaml
+[16]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/automatic_warehouse-config/sample_config.yaml
 [17]: https://github.com/AndreVale69/simulator-automatic-warehouse/tree/main/docker
 [18]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docker/docker-compose.yaml
 [19]: https://github.com/AndreVale69/simulator-automatic-warehouse/blob/main/docs/_static/benchmark-results/relationship_between_simulated_actions_and_media.svg
