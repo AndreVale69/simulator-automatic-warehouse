@@ -16,18 +16,3 @@ The same documentation is of course available directly in the code.
    configuration/configuration
    simulation/simulation
    utils/utils
-
-TODO:
-
-- Warehouse
-- Configuration
-- Utils
-    - Decide position algorithm
-    - Statistics
-- Status Warehouse
-    - Material and Tray
-    - Entries
-    - Containers
-- Simulation
-    - Types
-    - Actions
