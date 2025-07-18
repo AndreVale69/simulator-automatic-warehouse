@@ -38,7 +38,7 @@ dependencies = [
   "pandas==2.2.3",
   "simpy==4.1.1",
   "PyYAML==6.0.2",
-  "jsonschema==4.23.0"
+  "jsonschema==4.24.1"
 ]
 
 [project.urls]
