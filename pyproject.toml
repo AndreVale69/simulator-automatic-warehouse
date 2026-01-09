@@ -35,7 +35,7 @@ classifiers = [
   "Operating System :: Unix"
 ]
 dependencies = [
-  "pandas==2.2.3",
+  "pandas==2.3.3",
   "simpy==4.1.1",
   "PyYAML==6.0.2",
   "jsonschema==4.23.0"
