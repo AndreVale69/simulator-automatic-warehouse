@@ -9,16 +9,17 @@ This document outlines the guidelines to help maintain a clean, consistent, and 
 
 ## Table of Contents
 
-* [Code of Conduct](#code-of-conduct)
-* [How Can I Contribute?](#how-can-i-contribute)
-  * [Reporting Bugs](#reporting-bugs)
-  * [Suggesting Enhancements](#suggesting-enhancements)
-  * [Contributing Code](#contributing-code)
-* [Development Workflow](#development-workflow)
-* [Coding Guidelines](#coding-guidelines)
-* [Commit Messages](#commit-messages)
-* [Pull Requests](#pull-requests)
-* [Questions & Support](#questions--support)
+- [Code of Conduct](#code-of-conduct)
+- [How Can I Contribute?](#how-can-i-contribute)
+  - [Reporting Bugs 🐛](#reporting-bugs-)
+  - [Suggesting Enhancements ✨](#suggesting-enhancements-)
+  - [Contributing Code 💻](#contributing-code-)
+- [Development Workflow](#development-workflow)
+- [Coding Guidelines](#coding-guidelines)
+- [Commit Messages](#commit-messages)
+- [Pull Requests](#pull-requests)
+- [Questions \& Support](#questions--support)
+- [Final Notes](#final-notes)
 
 ---
 
