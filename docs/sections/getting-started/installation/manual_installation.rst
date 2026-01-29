@@ -173,6 +173,23 @@ It's always recommended to use a virtual environment.
 
    .. note::
 
+       The project also provides a ``tests/tox.ini`` configuration. You can run it from
+       the project root with:
+
+       .. code-block:: bash
+
+           $ tox -c tests/tox.ini
+
+       Or, to run environments in parallel:
+
+       .. code-block:: bash
+
+           $ tox run-parallel -c tests/tox.ini
+
+       These commands assume Python 3.9 through 3.14 are already installed on your system.
+
+   .. note::
+
        On Windows, the ``PYTHONPATH`` in one line doesn't work.
        If you then open a PowerShell and go to the home of the project,
        you can export the ``PYTHONPATH`` environment variable using the
