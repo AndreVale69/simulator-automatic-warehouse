@@ -1,7 +1,7 @@
 # general
-pandas==2.2.3
+pandas>=2.2.0
 
 # simulator
-simpy==4.1.1
-PyYAML==6.0.2
-jsonschema==4.23.0
+simpy>=3.0
+PyYAML>=5.1
+jsonschema>=4.0.0
