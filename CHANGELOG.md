@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [v1.0.4](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v1.0.4)
+
+- Add support for `Python 3.14`.
+- Relax dependency version constraints:
+  - Change Pandas from `2.2.3` to `>= 2.2.0`
+  - Change SimPy from `4.1.1` to `>= 3.0`
+  - Change PyYAML from `6.0.2` to `>= 5.1`
+  - Change JsonSchema from `4.22.0` to `>= 4.0.0`
+- Add tox configuration for multi-Python testing.
+
+
+------------------------------------------------------------------------------------------------------------------------
+
 
 ## [v1.0.3](https://github.com/AndreVale69/simulator-automatic-warehouse/releases/tag/v1.0.3)
 
