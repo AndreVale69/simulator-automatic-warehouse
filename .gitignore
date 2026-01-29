@@ -3,6 +3,7 @@
 .vscode
 .coverage
 .pytest_cache
+.tox
 __pycache__
 tmp/*
 tmp/web_app/cache
