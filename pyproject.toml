@@ -29,16 +29,17 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "License :: OSI Approved :: MIT License",
   "Operating System :: MacOS",
   "Operating System :: Microsoft",
   "Operating System :: Unix"
 ]
 dependencies = [
-  "pandas==2.2.3",
-  "simpy==4.1.1",
-  "PyYAML==6.0.2",
-  "jsonschema==4.23.0"
+  "pandas>=2.2.0",
+  "simpy>=3.0",
+  "PyYAML>=5.1",
+  "jsonschema>=4.0.0"
 ]
 
 [project.urls]
@@ -60,7 +61,7 @@ dependencies = [
 ]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+python = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [template.plugins.default]
 src-layout = true

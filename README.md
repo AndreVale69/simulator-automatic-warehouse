@@ -54,12 +54,12 @@ helped the creator at the beginning of the project.
 
 ### Dependencies
 
-| Dependency       | Version      |
-|------------------|--------------|
-| [pandas][8]      | [2.2.3][9]   |
-| [simpy][10]      | [4.1.1][11]  |
-| [PyYAML][12]     | [6.0.2][13]  |
-| [jsonschema][14] | [4.23.0][15] |
+| Dependency       | Version    |
+|------------------|------------|
+| [pandas][8]      | `>= 2.2.0` |
+| [simpy][10]      | `>= 3.0`   |
+| [PyYAML][12]     | `>= 5.1`   |
+| [jsonschema][14] | `>= 4.0.0` |
 
 ### Python Installation
 
